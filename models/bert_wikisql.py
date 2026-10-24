@@ -3,8 +3,8 @@ paper reports with the table's columns as candidates (RESULTS 8c / 8d): the SELE
 the encoder's [CLS] on '[CLS] question [SEP] column header [SEP]', softmax over the table's columns) and the AGGREGATOR (6-way from
 '[CLS] question [SEP]'). Training sizes 1k / 5k / 56k (the paper's curve); dev split into calibration (even rows: thresholds, rule 25)
 and report (odd rows); test once at 56k. Margins: top1 - top2 probability over the table's columns (sel) and over the 6 aggregators.
-Data: the main repository's loader (experiment/v11_wikisql.py: corp/wikisql/data/{train,dev,test}.jsonl and .tables.jsonl), so the
-questions, tables and splits are the paper's. Reference numbers (main repository): reader sel 0.816 / 0.760 / 0.632 at 56k / 5k / 1k
+Data: common/wikisql_data.py, the training pool of the main repository's v12_wikisql_baselines.py (the same questions at every size for
+every model) and the paper's dev / test files. Reference numbers (main repository): reader sel 0.816 / 0.760 / 0.632 at 56k / 5k / 1k
 (dev), transformer 0.543 / 0.510 / 0.415, BoW+LR 0.499 / 0.502 / 0.475; aggregator reader 0.80, transformer 0.89.
 Run: python3 models/bert_wikisql.py --model bert-base-uncased [--scratch] [--sizes 1000,5000,56355] [--seeds 5] [--device cuda]"""
 import argparse, os, sys, time, json
@@ -17,7 +17,7 @@ from transformers import AutoTokenizer, AutoModel, AutoConfig, get_linear_schedu
 import v11_wikisql as v11
 from eval import metrics
 
-v11.P = os.environ.get("WIKISQL_DATA", os.path.join(mainrepo.EXP, "corp", "wikisql", "data")) + os.sep
+from common import wikisql_data
 
 class WikiModel(nn.Module):
     def __init__(self, name, scratch):
@@ -72,13 +72,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="bert-base-uncased"); ap.add_argument("--scratch", action="store_true"); ap.add_argument("--sizes", default="1000,5000,56355")
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--batch", type=int, default=32); ap.add_argument("--device", default="cuda")
-    ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--n_dev", type=int, default=8421); ap.add_argument("--test", action="store_true")
+    ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--n_dev", type=int, default=8421); ap.add_argument("--test", action="store_true"); ap.add_argument("--n_val", type=int, default=2000)
     a = ap.parse_args()
     lrs = [float(x) for x in (a.lrs or ("1e-4,3e-4,1e-3" if a.scratch else "2e-5,3e-5,5e-5")).split(",")]
     eps = [int(x) for x in (a.epochs or ("10,20,40" if a.scratch else "3,5,10")).split(",")]
     name = f"{a.model}{' from scratch' if a.scratch else ' pretrained'}"; tag = f"wikisql_{a.model.replace('/', '_')}_{'scratch' if a.scratch else 'pre'}"
-    train_rows, ttabs = v11.load("train"); dev, dtabs = v11.load("dev"); dev = dev[:a.n_dev]; cal, rep = dev[0::2], dev[1::2]
-    test, xtabs = v11.load("test") if a.test else ([], {})
+    wd = wikisql_data.load(n_val=a.n_val, n_dev=a.n_dev, with_test=a.test); train_rows, ttabs, dtabs, cal, rep = wd["pool"], wd["ttabs"], wd["dtabs"], wd["cal"], wd["rep"]
+    test, xtabs = wd["test"], wd["tetabs"]       # the training pool of v12 (train permuted by rng(0), 2,000 validation questions held out), as the reader
     print(f"bert_wikisql: {name}; main repository {mainrepo.check_pinned()}; device {a.device}; sizes {a.sizes}; seeds {a.seeds}; grid lr {lrs} x epochs {eps}; dev calibration {len(cal)} / report {len(rep)}; test {len(test)}")
     print("regime: questions read with the table's columns as candidates (as RESULTS 8c); chance sel ~0.15 (mean 1/columns), majority aggregator 0.72")
     tok = AutoTokenizer.from_pretrained(a.model); results = {}
@@ -97,7 +97,7 @@ if __name__ == "__main__":
             model, pc = best[3], best[4]
             tau_sel = metrics.set_tau(metrics.role_decisions([{"frame": {"sel": r["sql"]["sel"]}} for r in cal], pc, ["sel"]), 0.05)
             tau_agg = metrics.set_tau(metrics.role_decisions([{"frame": {"agg": r["sql"]["agg"]}} for r in cal], pc, ["agg"]), 0.05)
-            pr = predict(model, tok, rep, dtabs, a.device); row = {"model": name, "size": size, "seed": seed, "tau": {"sel": tau_sel, "agg": tau_agg}, "dev_report": score(rep, pr, tau_sel, tau_agg)}
+            pr = predict(model, tok, rep, dtabs, a.device); row = {"model": name, "size": size, "seed": seed, "tau": {"sel": tau_sel, "agg": tau_agg}, "dev_report": score(rep, pr, tau_sel, tau_agg), "report_items": [{"i": 2 * j + 1, "pred": p} for j, p in enumerate(pr)]}
             if a.test and size == max(int(x) for x in a.sizes.split(",")): row["test"] = score(test, predict(model, tok, test, xtabs, a.device), tau_sel, tau_agg)
             d = row["dev_report"]; print(f"  size {size} seed {seed} dev-report sel {d['sel']:.3f} agg {d['agg']:.3f} both {d['both']:.3f} | tau_sel {tau_sel:.3f}: cov {d['cal_sel']['coverage']:.2f} cw {d['cal_sel']['confident_wrong']:.3f}" + (f" | test sel {row['test']['sel']:.3f} agg {row['test']['agg']:.3f}" if "test" in row else ""), flush=True)
             with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_{size}_seed{seed}.json"), "w") as f: json.dump(row, f)
