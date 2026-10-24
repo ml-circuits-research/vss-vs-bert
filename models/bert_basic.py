@@ -105,7 +105,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="bert-base-uncased"); ap.add_argument("--scratch", action="store_true"); ap.add_argument("--tokenizer", default="wordpiece", choices=["wordpiece", "whole"])
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=32)
-    ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200)
+    ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 model and tokenizer to logs/models/ for eval/determinism.py")
     a = ap.parse_args()
     lrs = [float(x) for x in (a.lrs or ("1e-4,3e-4,1e-3" if a.scratch else "2e-5,3e-5,5e-5")).split(",")]
     eps = [int(x) for x in (a.epochs or ("10,20,40" if a.scratch else "3,5,10")).split(",")]
@@ -137,6 +137,10 @@ if __name__ == "__main__":
         ms = 1000 * (time.time() - t0) / len(sents); row["cost"] = {"params": sum(p.numel() for p in model.parameters()), "bytes": model_bytes(model), "cpu_ms_per_sentence": ms}
         print(f"  seed {seed} occupancy (free tags) {row['occupancy']}; cost {row['cost']['params']/1e6:.1f}M params, {row['cost']['bytes']/1e6:.0f} MB, {ms:.1f} ms/sentence on CPU")
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_seed{seed}.json"), "w") as f: json.dump(row, f)
+        if a.save_model and seed == 0:
+            md = os.path.join(mainrepo.ROOT, "logs", "models", tag + "_seed0"); os.makedirs(md, exist_ok=True)
+            torch.save(model.state_dict(), os.path.join(md, "tagger.pt")); tok.save_pretrained(md)
+            json.dump({"model": a.model, "scratch": a.scratch, "n_tokens": len(tok)}, open(os.path.join(md, "config.json"), "w"))
         rows.append(row); model.to(a.device); del model
     report.summarize(rows, name)
     print("written interpretation (INSTRUCTIONS table 3): new ids > 0.9 => the pieces carry the role; < 0.5 => the vocabulary gap is structural; depth 3 > 0.9 would contradict the paper's same-input claim, < 0.5 confirms it; in between reported with both readings")

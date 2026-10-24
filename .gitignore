@@ -6,3 +6,5 @@ logs/*.pt
 tests/wikisql_fake/
 paper/tables/
 .venv/
+logs/models/
+.hf_cache/

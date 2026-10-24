@@ -57,6 +57,29 @@ def basic_tables(out):
         ax.set_xlabel("coverage"); ax.set_ylabel("accuracy among answered"); ax.set_title("depth 3 (UNSEEN): accuracy vs coverage, seed 0"); ax.legend(fontsize=7); fig.tight_layout(); fig.savefig(os.path.join(out, "coverage_depth3.png"), dpi=200)
     except Exception as e: print("figure skipped:", e)
 
+def ref_tables(out):
+    """reference world (run 4): FULL frame per axis, roles FULL at depth 3, predicate and event, occupancy, depth-3 FULL by template, calibration"""
+    rows = load("results_ref_*_seed*.json")
+    if not rows: return
+    from common import reference_world as rw
+    from common.report_ref import COLS as RCOLS
+    lines = ["# Reference world (10b-quinquies): FULL frame (A, B, C or absent, speakers, predicate), mean ± std over seeds [per seed]", "",
+             "| model | " + " | ".join(RCOLS) + " | roles FULL depth 3 | predicate seen | event seen |", "|---|" + "---|" * (len(RCOLS) + 3)]
+    for m, rs in rows.items():
+        lines.append(f"| {m} | " + " | ".join(ms([r["axes"][a]["full"] for r in rs]) if all(r["axes"][a] for r in rs) else "nan" for a in rw.AXES)
+                     + f" | {ms([r['axes']['depth3_unseen']['roles_full'] for r in rs])} | {ms([r['axes']['seen']['per_role']['pred'] for r in rs])} | {ms([r['axes']['seen']['event'] for r in rs])} |")
+    lines += ["", "## Occupancy of the recipient (share read correctly as present / absent)", "", "| model | known filler | unknown filler | not given |", "|---|---|---|---|"]
+    for m, rs in rows.items(): lines.append(f"| {m} | " + " | ".join(f"{np.mean([r['occupancy'][k] for r in rs]):.3f}" for k in rs[0]["occupancy"]) + " |")
+    keys = list(next(iter(rows.values()))[0]["depth3_full_by_template"])
+    lines += ["", "## Depth 3 (UNSEEN) FULL by template (passives T2, T3, T5, T14; fronted recipient T9)", "", "| model | " + " | ".join(keys) + " |", "|---|" + "---|" * len(keys)]
+    for m, rs in rows.items(): lines.append(f"| {m} | " + " | ".join(f"{np.mean([r['depth3_full_by_template'].get(k, np.nan) for r in rs]):.3f}" for k in keys) + " |")
+    lines += ["", "## Calibration (tau on calibration rows)", "", "| model | axis | tau | coverage | confident-wrong |", "|---|---|---|---|---|"]
+    for m, rs in rows.items():
+        for ax in ("depth3_unseen", "unseen_trans", "new_ids"):
+            c = [r["calibration"][ax] for r in rs]
+            lines.append(f"| {m} | {ax} | {np.mean([r['calibration']['tau'] for r in rs]):.3f} | {np.mean([x['coverage'] for x in c]):.3f} | {np.mean([x['confident_wrong'] for x in c]):.3f} |")
+    open(os.path.join(out, "reference_world.md"), "w").write("\n".join(lines) + "\n"); print("\n".join(lines))
+
 def wikisql_tables(out):
     rows = collections.defaultdict(lambda: collections.defaultdict(list))
     for p in sorted(glob.glob(os.path.join(mainrepo.ROOT, "logs", "results_wikisql_*_seed*.json"))):
@@ -72,4 +95,4 @@ def wikisql_tables(out):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--out", default=os.path.join(mainrepo.ROOT, "paper", "tables")); a = ap.parse_args()
-    os.makedirs(a.out, exist_ok=True); basic_tables(a.out); wikisql_tables(a.out)
+    os.makedirs(a.out, exist_ok=True); basic_tables(a.out); ref_tables(a.out); wikisql_tables(a.out)
