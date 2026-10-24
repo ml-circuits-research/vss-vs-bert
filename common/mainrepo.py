@@ -14,6 +14,14 @@ def check_pinned():
     if not h.startswith(PINNED): raise RuntimeError(f"third_party/vsa-semantic-space is at {h}, expected {PINNED}; run: git submodule update --init")
     return h
 
+TOOL = os.path.join(MAIN, "tool")
+
+def import_sop():
+    """the main repository's reader-as-a-tool package (tool/sop), imported unmodified; returns the package"""
+    if TOOL not in sys.path: sys.path.insert(0, TOOL)
+    import sop
+    return sop
+
 def import_experiment():
     """returns (v5_scale, v7_nested) with the paper's regime set: English, prefixed reporting forms"""
     if EXP not in sys.path: sys.path.insert(0, EXP)

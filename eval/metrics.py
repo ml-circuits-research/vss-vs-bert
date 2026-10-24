@@ -68,3 +68,75 @@ def checklist(a_seeds, extra=""):
     print(f"\nchecklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes "
           f"[x] margin [{'x' if a_seeds >= 3 else ' '}] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) "
           f"[x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) {extra}")
+
+# ------------------------------------------------------------------ real data (INSTRUCTIONS_REAL_2026-10-24.md): head-token frames
+# A gold or predicted frame here is FLAT: {path: value} from common/real_data.flatten ("intent", "<slot>", "<slot>/intent", ...; a slot
+# holding a nested intent has the value "@frame"). A prediction is {"frame": flat frame, "margins": {path: margin}}, where the margins
+# also cover the roles the model read as ABSENT (its confidence that they are absent), so that a missed role is scored with the
+# model's own margin. Decisions are made on the paths in gold OR prediction (a role absent in both is not a decision, but it is
+# counted in the occupancy case 'absent read absent').
+
+def real_decisions(golds, preds, kind="all"):
+    """(path, correct, margin, gold_present) over items; kind: 'all' | 'intent' (paths ending in 'intent') | 'slot' (the others)"""
+    out = []
+    for g, p in zip(golds, preds):
+        f, m = p["frame"], p["margins"]
+        for k in sorted(set(g) | set(f)):
+            isint = k == "intent" or k.endswith("/intent")
+            if (kind == "intent" and not isint) or (kind == "slot" and isint): continue
+            out.append((k, g.get(k) == f.get(k), float(m.get(k, 0.0)), k in g))
+    return out
+
+def frame_margin(p):
+    """the frame's own confidence: the smallest margin over what it SAYS (the intent and the filled roles); the presence margins of the
+    roles it leaves empty are not included (stated)"""
+    return float(min([p["margins"].get(k, 0.0) for k in p["frame"]] or [0.0]))
+
+def frame_decisions(golds, preds):
+    return [("frame", g == p["frame"], frame_margin(p), True) for g, p in zip(golds, preds)]
+
+def set_taus(cal_golds, cal_preds, max_cw=0.05):
+    """the written threshold rule (set_tau) applied on the CALIBRATION rows, once per decision kind"""
+    return {"intent": set_tau(real_decisions(cal_golds, cal_preds, "intent"), max_cw), "slot": set_tau(real_decisions(cal_golds, cal_preds, "slot"), max_cw),
+            "frame": set_tau(frame_decisions(cal_golds, cal_preds), max_cw), "rule": f"smallest tau with confident-wrong <= {max_cw} on the calibration rows, per decision kind"}
+
+def score_real(golds, preds, roles, taus, new_paths=None, depths=None):
+    """golds: flat gold frames; preds: predictions; roles: the top-level slot types of the schema (for 'absent read absent');
+    new_paths: per item the paths whose head token is new (the 'new slot values' axis) or None; depths: per item, for FULL by depth"""
+    n = len(golds)
+    if n == 0: return None
+    full = [g == p["frame"] for g, p in zip(golds, preds)]
+    intent = [g["intent"] == p["frame"].get("intent") for g, p in zip(golds, preds)]
+    sp = [(g[k] == p["frame"].get(k)) for g, p in zip(golds, preds) for k in g if k != "intent"]
+    pp = [(g.get(k) == p["frame"][k]) for g, p in zip(golds, preds) for k in p["frame"] if k != "intent"]
+    lev = [(g[k] == p["frame"].get(k)) for g, p in zip(golds, preds) for k in g if k.endswith("/intent")]
+    pres = [(k in p["frame"]) for g, p in zip(golds, preds) for k in g if k != "intent"]
+    absn = [(r not in p["frame"]) for g, p in zip(golds, preds) for r in roles if r not in g]
+    per_role = {}
+    for r in roles:
+        v = [g.get(r) == p["frame"].get(r) for g, p in zip(golds, preds) if r in g or r in p["frame"]]
+        if v: per_role[r] = (float(np.mean(v)), len(v))
+    out = {"n": n, "full": float(np.mean(full)), "intent": float(np.mean(intent)), "slot_heads_on_gold": float(np.mean(sp)) if sp else None,
+           "slot_heads_precision": float(np.mean(pp)) if pp else None, "nested_intents": float(np.mean(lev)) if lev else None,
+           "occupancy": {"present_read_present": float(np.mean(pres)) if pres else None, "absent_read_absent": float(np.mean(absn)) if absn else None,
+                         "false_fills_per_item": float(sum(len([k for k in p["frame"] if k not in g]) for g, p in zip(golds, preds)) / n)},
+           "per_role": per_role}
+    if new_paths is not None:
+        v = [(g.get(k) == p["frame"].get(k)) for g, p, ks in zip(golds, preds, new_paths) for k in (ks or [])]
+        out["new_value_heads"] = float(np.mean(v)) if v else None; out["n_new_value_heads"] = len(v)
+    if depths is not None:
+        by = {}
+        for d, f in zip(depths, full): by.setdefault(int(d), []).append(f)
+        out["full_by_depth"] = {str(d): (float(np.mean(v)), len(v)) for d, v in sorted(by.items())}
+    di, ds, dfm = real_decisions(golds, preds, "intent"), real_decisions(golds, preds, "slot"), frame_decisions(golds, preds)
+    out["calibration"] = {"intent": calibration(di, taus["intent"]), "slot": calibration(ds, taus["slot"]) if ds else None, "frame": calibration(dfm, taus["frame"]),
+                          "frame_curve": coverage_curve(dfm), "ece_rank_intent": expected_calibration_error(di)}
+    out["abstain"] = {"intent_margin_below_tau": float(np.mean([p["margins"].get("intent", 0.0) < taus["intent"] for p in preds])),
+                      "frame_margin_below_tau": float(np.mean([frame_margin(p) < taus["frame"] for p in preds]))}
+    return out
+
+def span_f1(gold_spans, pred_spans):
+    """exact span micro precision / recall / F1 over (type, start, end) (the standard slot F1 of these benchmarks)"""
+    tp = sum(len(set(g) & set(p)) for g, p in zip(gold_spans, pred_spans)); ng = sum(len(set(g)) for g in gold_spans); npred = sum(len(set(p)) for p in pred_spans)
+    P = tp / npred if npred else 0.0; R = tp / ng if ng else 0.0
+    return {"precision": P, "recall": R, "f1": 2 * P * R / (P + R) if P + R else 0.0, "n_gold": ng, "n_pred": npred}

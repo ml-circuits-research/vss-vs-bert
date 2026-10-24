@@ -149,3 +149,11 @@ Fine-tuning instability on small data: pretrained encoders at 1k examples vary s
 - A paper outline in paper/ with the protocol section written and the result sections pointing to RESULTS.
 
 - current_status.md at the root at every judgment point, as in the main repository.
+
+## 11. Addendum: the real-data round (24 October 2026)
+
+At the author's request, the comparison is extended beyond WikiSQL to real user commands annotated with frames (intent = event, slots =
+roles): MASSIVE, SNIPS and TOPv2. These are the closest public analogue of the product, a voice or text command interpreter. The question,
+the hypotheses, the splits, the axes with their written interpretation and the runs (8 onward, after judgment point 2 unless the
+reviewing session moves them earlier) are fixed in **INSTRUCTIONS_REAL_2026-10-24.md**, written before any of its runs. Sections 1-10
+above are unchanged.

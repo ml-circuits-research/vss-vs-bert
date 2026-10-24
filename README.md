@@ -19,7 +19,7 @@ the choice between the last two is made once and recorded in RESULTS.md). WikiSQ
 ## Order of runs
 
 The exact commands, the exit check of each run and what to write after it are in **RUNBOOK.md** (environment setup, pre-download of
-the encoders, runs 0-7 with the two judgment points, smoke tests). In short (INSTRUCTIONS section 7; one change per run; `./run.sh` logs
+the encoders, runs 0-7 with the two judgment points, smoke tests; section 4: the real-data round, runs 8-12, with the download step). In short (INSTRUCTIONS section 7; one change per run; `./run.sh` logs
 each run under logs/ with the commit in the name):
 
 | run | what | scripts |
@@ -34,6 +34,11 @@ each run under logs/ with the commit in the name):
 | 6 | tables, abstention curves, the 50-item confident-error analysis | `eval/compare.py`, `eval/error_analysis.py` |
 | 7 | determinism and cost | `eval/determinism.py` (cost is in every model's JSON) |
 | JP 2 | judgment point 2 | |
+| 8 | real data, SNIPS: frozen splits (committed, ids only), the reader through the sop tool, the encoders with BIO + intent heads | `data/real/make_real_splits.py`, `vss/run_reader_real.py`, `models/bert_real.py` |
+| 9 | real data, MASSIVE en-US (downloaded on the DGX): the same models and conditions | the same |
+| 10 | real data, TOPv2: nested intents, the depth split (train at depth <= 1, test at depth 2) | the same |
+| 11 | determinism and cost of the real-data models | `eval/determinism.py --real_dataset` |
+| JP 3 / 12 | judgment point 3; MASSIVE multilingual (mBERT, XLM-R) | `eval/compare.py` |
 
 ## What is where
 
@@ -49,5 +54,12 @@ each run under logs/ with the commit in the name):
   and dev halves every WikiSQL script uses (v12's). `vss/run_reader_wikisql.py`: the reader's WikiSQL row (main repository code, v12's
   setup reproduced). `eval/error_analysis.py`, `eval/determinism.py`: runs 6 and 7. `tests/`: a local tiny BERT config and a fake
   WikiSQL generator for CPU smoke tests.
+- Real-data round (INSTRUCTIONS_REAL_2026-10-24.md): `data/real/` (download with sha256, checksums, the split maker and the frozen
+  split files of ids; README with licences, counts and conversion rules; **no dataset file is committed**), `common/real_data.py`
+  (loaders for SNIPS, MASSIVE, TOPv2; tokens, spans, trees, head-token frames, BIO, templates, conditions), `common/report_real.py`
+  (the common evaluation of the round), `vss/run_reader_real.py` (the reader through the main repository's sop tool: a world folder per
+  condition, sop.train.train_one, Reader.formalize; the intent as a closed-value role; the nested readout wrapper),
+  `models/bert_real.py` (BIO + intent + nested heads, recursive), `tests/make_fake_real.py` and `tests/test_real_data.py` (fake MASSIVE /
+  TOPv2, conversion round trips on gold).
 - `eval/metrics.py`: the one scorer (per role, FULL, calibration with the written threshold rule, coverage curve, rule of three, ECE,
   checklist); `eval/compare.py`: tables and figures from logs/results_*.json only.

@@ -16,3 +16,12 @@
 | occupancy (not given) | taggers | PLANNED | | | false fillers on absent roles |
 | size and cost; determinism | all | PLANNED | | | reported; the ratio is part of every claim |
 | 50-item confident-error analysis | reader, BERT | PLANNED | | | by kind, side by side |
+| real data: conversion and frozen splits (SNIPS committed; MASSIVE, TOPv2 at runs 9a / 10a) | (none) | BUILT (SNIPS) / PLANNED | | | exit check: annotation round trips exact, gold frames 1.000 (tests/test_real_data.py) |
+| real data, SNIPS / MASSIVE base 1k / 5k / full: FULL head frame, intent, slot heads, span F1 (dev report; test once) | VSS reader (sop tool) | PLANNED | | | INSTRUCTIONS_REAL table R7: BERT pretrained expected above; the gap, the size and the cost are the result |
+| real data, SNIPS / MASSIVE base: the same | BERT-base, small encoder, from scratch | PLANNED | | | the size at which each model reaches 0.8 FULL |
+| real data: new slot values (head accuracy on heads never in training) | all | PLANNED | | | > 0.8 read from context; < 0.3 needs the value seen |
+| real data: held-out templates (retrained) and unseen templates (natural) | all | PLANNED | | | the seen-to-held-out drop per model |
+| real data: out-of-domain intents (abstained / confidently mapped; AUROC of the intent margin) | all, softmax and temperature for the taggers | PLANNED | | | higher abstention at equal in-domain coverage rejects better |
+| real data, TOPv2: depth 2 (hops seen), FULL and nested intents | all | PLANNED | | | reader > 0.8 and encoders < 0.5 carries the constructed-world result to real data |
+| real data: size, cost, determinism | all | PLANNED | | | reported; the ratio is part of every claim |
+| real data, MASSIVE multilingual (round 2) | reader, mBERT, XLM-R | PLANNED | | | decided at judgment point 3 |

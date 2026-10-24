@@ -8,3 +8,6 @@ paper/tables/
 .venv/
 logs/models/
 .hf_cache/
+data/real/raw/
+tests/real_fake/
+logs/worlds/

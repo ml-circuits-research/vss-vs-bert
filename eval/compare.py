@@ -1,7 +1,9 @@
 """compare.py: the comparison tables and figures, produced from logs/results_*.json only (INSTRUCTIONS section 8: never by hand).
 Basic-world rows (results_reader_basic_*, results_transformer7b_*, results_bert_*): one table of mean role accuracy per axis and model,
 mean ± std over seeds with the per-seed list and a 95% interval of the difference to the reader (t over seeds); the depth-3 per-role
-table; the calibration table; the cost table. WikiSQL rows (results_wikisql_*): the data-efficiency table and figure.
+table; the calibration table; the cost table. WikiSQL rows (results_wikisql_*): the data-efficiency table and figure. Real-data rows
+(results_real_*, runs 8-10): paper/tables/real_<dataset>.md per condition (FULL, intent, slot heads, new-value heads, span F1, abstention),
+the difference to the reader with its interval, the out-of-domain abstention table, FULL by depth (TOPv2), the cost table.
 Run: python3 eval/compare.py [--out paper/tables]"""
 import argparse, glob, json, os, sys, collections
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -93,6 +95,65 @@ def wikisql_tables(out):
     lines += ["", "Reference (main repository, dev): reader sel 0.632 / 0.760 / 0.816 at 1k / 5k / 56k; transformer 0.415 / 0.510 / 0.543; BoW+LR 0.475 / 0.502 / 0.499."]
     open(os.path.join(out, "wikisql.md"), "w").write("\n".join(lines) + "\n"); print("\n".join(lines))
 
+def real_tables(out):
+    """the real-data round (INSTRUCTIONS_REAL_2026-10-24.md): one file per dataset, paper/tables/real_<dataset>.md, from
+    logs/results_real_<dataset>_<condition>_<tag>[_temperature]_<size>_seed<k>.json only"""
+    rows = collections.defaultdict(lambda: collections.defaultdict(list))         # dataset -> (condition, model, variant, size) -> rows
+    for p in sorted(glob.glob(os.path.join(mainrepo.ROOT, "logs", "results_real_*_seed*.json"))):
+        r = json.load(open(p)); rows[r["dataset"]][(r["condition"], r["model"], r.get("variant") or ("own margins" if r["model"].startswith("VSS") else "softmax"), r["size"] or "full")].append(r)
+    for ds, by in rows.items():
+        key = lambda k: (k[0], 0 if k[1].startswith("VSS") else 1, k[1], k[2], str(k[3]))
+        L = [f"# Real data: {ds} (head-token frame: intent + the last token of the first span of each slot type; mean ± std over seeds [per seed])", "",
+             "Thresholds on the dev calibration half by the written rule (confident-wrong <= 0.05 per decision kind). 'softmax' / 'temperature' = the "
+             "tagger's margins without / with temperature scaling fitted on the calibration half; the reader's rows carry its own margins (top1 - top2 cosine, presence margins).", ""]
+        for cond in sorted({k[0] for k in by}):
+            ks = sorted([k for k in by if k[0] == cond], key=key); sets = list(by[ks[0]][0]["sets"])
+            L += [f"## Condition `{cond}`", "", "| model | margins | size | set | n | FULL | intent | slot heads | new-value heads | nested intents | span F1 | frame coverage | frame confident-wrong | intent abstain |", "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+            for k in ks:
+                rs = by[k]
+                for st in sets:
+                    S = [r["sets"].get(st) for r in rs if r["sets"].get(st)]
+                    if not S: continue
+                    g = lambda f: ms([f(x) for x in S if f(x) is not None]) if any(f(x) is not None for x in S) else "-"
+                    sp = [r["spans"][st]["f1"] for r in rs if st in r.get("spans", {})]
+                    L.append(f"| {k[1]} | {k[2]} | {k[3]} | {st} | {S[0]['n']} | {g(lambda x: x['full'])} | {g(lambda x: x['intent'])} | {g(lambda x: x['slot_heads_on_gold'])} | {g(lambda x: x.get('new_value_heads'))} | "
+                             f"{g(lambda x: x.get('nested_intents'))} | {ms(sp) if sp else '-'} | {np.mean([x['calibration']['frame']['coverage'] for x in S]):.3f} | {np.mean([x['calibration']['frame']['confident_wrong'] for x in S]):.3f} | {np.mean([x['abstain']['intent_margin_below_tau'] for x in S]):.3f} |")
+            ref = next((k for k in ks if k[1].startswith("VSS")), None)
+            if ref:
+                L += ["", f"Difference of FULL to the reader (model minus reader), 95% interval over paired seeds, per set and size", "", "| model | margins | size | set | difference |", "|---|---|---|---|---|"]
+                for k in ks:
+                    if k[1].startswith("VSS"): continue
+                    rr = by.get((cond, ref[1], ref[2], k[3]))
+                    if not rr: continue
+                    for st in sets:
+                        a_ = [r["sets"][st]["full"] for r in by[k] if r["sets"].get(st)]; b_ = [r["sets"][st]["full"] for r in rr if r["sets"].get(st)]
+                        if a_ and b_: L.append(f"| {k[1]} | {k[2]} | {k[3]} | {st} | {ci_diff(a_, b_)} |")
+            if cond == "ood_intents":
+                L += ["", "Out-of-domain intents (every reading of a held-out intent is wrong): the share ABSTAINED (intent margin below the intent tau set on in-domain calibration rows) "
+                      "and the share mapped CONFIDENTLY to a known intent (1 - abstained); the reader's tool status counts and mean residual beside it", "",
+                      "| model | margins | set | abstained (intent) | confidently mapped | abstained (frame) | AUROC of the intent margin, in-domain vs this set | tool status | residual (mean) |", "|---|---|---|---|---|---|---|---|---|"]
+                for k in ks:
+                    for st in [x for x in sets if x.startswith("ood") or x.endswith("in_domain")]:
+                        S = [r["sets"][st] for r in by[k] if r["sets"].get(st)]
+                        if not S: continue
+                        ab = [x["abstain"]["intent_margin_below_tau"] for x in S]; tl = [r["tool"].get(st) for r in by[k] if r.get("tool", {}).get(st)]
+                        au = [r.get("ood_auroc_intent_margin", {}).get(st) for r in by[k]]; au = [x for x in au if x is not None]
+                        L.append(f"| {k[1]} | {k[2]} | {st} | {ms(ab)} | {ms([1 - x for x in ab])} | {ms([x['abstain']['frame_margin_below_tau'] for x in S])} | {ms(au) if au else '-'} | "
+                                 f"{tl[0]['status'] if tl else '-'} | {np.mean([t['residual_mean'] for t in tl]) if tl else float('nan'):.3f} |")
+            if cond == "depth":
+                L += ["", "FULL by depth (depth = intents nested under the top one; training at depth <= 1)", "", "| model | margins | set | FULL by depth (mean over seeds; n) |", "|---|---|---|---|"]
+                for k in ks:
+                    for st in sets:
+                        S = [r["sets"][st] for r in by[k] if r["sets"].get(st)]
+                        if S: L.append(f"| {k[1]} | {k[2]} | {st} | " + ", ".join(f"depth {d}: {np.mean([x['full_by_depth'][d][0] for x in S if d in x['full_by_depth']]):.3f} (n {S[0]['full_by_depth'][d][1]})" for d in S[0]["full_by_depth"]) + " |")
+            L.append("")
+        cost = {(k[1], k[3]): v[0]["cost"] for k, v in by.items() if k[0] == "base" and v and "cost" in v[0]}
+        if cost:
+            L += ["## Size and cost (condition base)", "", "| model | size | parameters | MB on disk | CPU ms / sentence |", "|---|---|---|---|---|"]
+            for (m, sz), c in sorted(cost.items(), key=lambda x: (not x[0][0].startswith("VSS"), x[0][0], str(x[0][1]))):
+                L.append(f"| {m} | {sz} | {c['params']/1e6:.2f} M | {c['bytes']/1e6:.1f} | {c['cpu_ms_per_sentence']:.1f} |")
+        open(os.path.join(out, f"real_{ds}.md"), "w").write("\n".join(L) + "\n"); print("\n".join(L))
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--out", default=os.path.join(mainrepo.ROOT, "paper", "tables")); a = ap.parse_args()
-    os.makedirs(a.out, exist_ok=True); basic_tables(a.out); ref_tables(a.out); wikisql_tables(a.out)
+    os.makedirs(a.out, exist_ok=True); basic_tables(a.out); ref_tables(a.out); wikisql_tables(a.out); real_tables(a.out)

@@ -86,3 +86,54 @@ WIKISQL_DATA=tests/wikisql_fake/data python3 eval/error_analysis.py dump --size 
 ```
 Smoke numbers are not results: delete `logs/results_*.json` and `logs/models/` after a smoke test, before the real runs, so that
 eval/compare.py reads only real runs.
+
+## 4. The real-data round (runs 8-12; INSTRUCTIONS_REAL_2026-10-24.md)
+
+When: after judgment point 2, unless the reviewing session moves it earlier (recorded in JOURNAL.md). Nothing in this round needs a
+constructed world. **No dataset file is ever committed**: downloads go to `data/real/raw/` (untracked). Only `data/real/checksums.json`
+(pins written on first download) and `data/real/splits_<dataset>.json` (ids, seeds, rules) are committed.
+
+Download step (DGX, once per source). `download.py` checks every file against `data/real/checksums.json` and stops on a mismatch.
+MASSIVE and TOPv2 could not be fetched from the preparation machine, so their pins are written on the first download: commit
+checksums.json right after it. The LICENSE the archive carries is printed: record it in data/real/README.md.
+```
+python3 data/real/download.py snips        # pinned already; must print 'ok' for 15 files
+python3 data/real/download.py massive      # Amazon S3 tarball (all locales); first download pins the sha256
+python3 data/real/download.py topv2        # TOPv2_Dataset.zip; first download pins the sha256; read the printed LICENSE
+git add data/real/checksums.json && git commit -m "real data: sha256 pins of MASSIVE and TOPv2 (first download)"
+```
+
+| run | command(s) | exit check |
+|---|---|---|
+| 8a | `./run.sh data/real/make_real_splits.py snips` then `python3 tests/test_real_data.py --real snips` | `git diff --stat data/real/` shows no change (the committed split file was made by the same code on the same pinned files); test PASS |
+| 8b | `./run.sh vss/run_reader_real.py --dataset snips --sizes 1000,5000,full --seeds 5 --test --save_model` | the table prints for every size; FULL on dev_rep at full ≥ 0.5, otherwise the reader is under-trained on this data and its other rows are not interpreted (INSTRUCTIONS_REAL R7) |
+| 8b | `./run.sh models/bert_real.py --dataset snips --model bert-base-uncased --sizes 1000,5000,full --seeds 5 --test --save_model` | the table prints for every size, softmax and temperature rows |
+| 8b | the same with `--model <small>` and with `--model <small> --scratch` | the same; the from-scratch row at full is the under-training check |
+| 8c | `./run.sh vss/run_reader_real.py --dataset snips --condition heldout_templates --seeds 5`, the same with `--condition ood_intents --test`; and `models/bert_real.py` with the same two conditions for the three encoders | the held-out and out-of-domain rows (abstained / confidently mapped / AUROC) print |
+| 9a | `./run.sh data/real/make_real_splits.py massive`; `python3 tests/test_real_data.py --real massive`; commit `data/real/splits_massive.json` | test PASS (annot_utt round trip exact on every line); counts written into data/real/README.md |
+| 9b | `./run.sh vss/run_reader_real.py --dataset massive --sizes 1000,5000,full --seeds 5 --test --save_model`; `./run.sh models/bert_real.py --dataset massive --model bert-base-uncased --sizes 1000,5000,full --seeds 5 --test --save_model`; the small encoder, pretrained and `--scratch` | as 8b |
+| 9c | conditions `heldout_templates` and `ood_intents` (with `--test`) for the four models on MASSIVE | as 8c |
+| 10a | `./run.sh data/real/make_real_splits.py topv2 --domains navigation,event,reminder`; `python3 tests/test_real_data.py --real topv2`; commit `data/real/splits_topv2.json` | test PASS (parse round trip exact); the log prints the per-depth counts and whether the depth condition is supported; if not, it is recorded as such in RESULTS and run 10b is the base condition only |
+| 10b | `./run.sh vss/run_reader_real.py --dataset topv2 --condition depth --seeds 5 --test` (the log must print both `[check]` lines: the wrapper with nesting off equal to the tool's readout on every item, and the wrapper exact on the compiled gold target states); `./run.sh models/bert_real.py --dataset topv2 --condition depth --model bert-base-uncased --seeds 5 --test`; the small encoder and `--scratch`; and the base condition (`--sizes full`) for the four models | the depth rows: FULL and nested intents on `depth2_unseen:hops_seen` |
+| 11 | `./run.sh eval/determinism.py --real_dataset massive --real_reader logs/models/reader_real_massive_base_full_seed0 --real_tagger logs/models/bert_real_massive_base_bert-base-uncased_pre_full_seed0` | "DETERMINISTIC" for both; the cost rows are in the JSONs of 8b / 9b and in paper/tables/real_<dataset>.md |
+| JP 3 | `python3 eval/compare.py` (writes paper/tables/real_snips.md, real_massive.md, real_topv2.md); RESULTS sections 8-11; STATUS rows; JOURNAL; current_status; commit; push | the multilingual round (run 12) is decided |
+| 12 | per locale L (whitespace-segmented, for example de-DE fr-FR es-ES ro-RO ru-RU): `./run.sh data/real/make_real_splits.py massive --locale L`; `./run.sh vss/run_reader_real.py --dataset massive --locale L --sizes 1000,full --seeds 5 --test`; `./run.sh models/bert_real.py --dataset massive --locale L --model bert-base-multilingual-cased ...` and `--model xlm-roberta-base ...` | the multilingual rows; pre-download the two encoders as in section 0 |
+
+`<small>` is the encoder recorded before run 3. Pre-download the two multilingual encoders before run 12, as in section 0:
+`for m in ("bert-base-multilingual-cased", "xlm-roberta-base")`. The reader writes one world folder per condition and size under
+`logs/worlds/` (untracked). It contains the converted examples, so keep it on the DGX only.
+
+Smoke tests of the round (CPU; SNIPS is downloadable here; no result):
+```
+python3 data/real/download.py snips && python3 data/real/make_real_splits.py snips && python3 tests/test_real_data.py
+VSA_MIN_AVAILABLE_GB=1 python3 vss/run_reader_real.py --dataset snips --sizes 500 --epochs 3 --seeds 1 --D 128 --n_cal 100 --max_eval 60 --k_clusters 16 --n_freq 20 --cost_n 10 --device cpu --save_model
+VSA_MIN_AVAILABLE_GB=1 python3 models/bert_real.py --dataset snips --model tests/tiny-bert --scratch --sizes 300 --seeds 1 --lrs 1e-3 --epochs 2 --max_eval 60 --cost_n 10 --device cpu --save_model
+VSA_MIN_AVAILABLE_GB=1 python3 eval/determinism.py --real_dataset snips --real_reader logs/models/reader_real_snips_base_500_seed0 --real_tagger logs/models/bert_real_snips_base_tests_tiny-bert_scratch_300_seed0 --device cpu
+export REAL_DATA=$PWD/tests/real_fake REAL_SPLITS=$PWD/tests/real_fake/splits     # the fake MASSIVE / TOPv2 written by tests/test_real_data.py
+VSA_MIN_AVAILABLE_GB=1 python3 vss/run_reader_real.py --dataset topv2 --condition depth --seeds 1 --epochs 15 --D 256 --n_cal 100 --k_clusters 8 --n_freq 20 --cost_n 5 --device cpu
+VSA_MIN_AVAILABLE_GB=1 python3 models/bert_real.py --dataset topv2 --condition depth --model tests/tiny-bert --scratch --seeds 1 --lrs 1e-3 --epochs 15 --cost_n 5 --device cpu
+VSA_MIN_AVAILABLE_GB=1 python3 vss/run_reader_real.py --dataset massive --condition ood_intents --seeds 2 --epochs 10 --D 128 --n_cal 80 --k_clusters 8 --n_freq 20 --cost_n 5 --device cpu --test
+unset REAL_DATA REAL_SPLITS; python3 eval/compare.py --out /tmp/real_tables
+```
+Smoke numbers are not results: afterwards delete `logs/results_real_*.json`, `logs/results_determinism_real_*.json`, `logs/models/`
+and `logs/worlds/`.
