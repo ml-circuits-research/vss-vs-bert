@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+logs/.run.lock
+logs/.ckpt_*
+logs/*.pt
+tests/wikisql_fake/
+paper/tables/
+.venv/

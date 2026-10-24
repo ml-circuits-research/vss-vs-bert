@@ -1,0 +1,6 @@
+# the main repository's requirements apply to the reader (torch, numpy); these are the additions of this repository
+torch>=2.2
+numpy
+transformers==4.57.0     # pinned at the first run; change only with a RESULTS note
+scipy                    # eval/compare.py: the t interval over seeds
+matplotlib               # eval/compare.py: figures

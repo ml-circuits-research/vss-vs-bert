@@ -1,0 +1,3 @@
+[submodule "third_party/vsa-semantic-space"]
+	path = third_party/vsa-semantic-space
+	url = https://github.com/ml-circuits-research/vsa-semantic-space
