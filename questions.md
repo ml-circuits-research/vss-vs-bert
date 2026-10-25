@@ -43,3 +43,15 @@ C, chosen at random): two candidates in the same position class, equally support
 other roles keep their values. 300 of each per seed, from their own generator (rng 73_000 + seed), disjoint from every frozen split.
 If you prefer another construction (for example new words for the extra information, accepting that the reader cannot encode them),
 say so before the R26 row runs (after JP 1); the frozen files would then be regenerated in a stated commit before any model sees them.
+
+## Q20. R27 item 2: the LLM reference row needs a model, a provider and a budget cap (no call is made until answered)
+
+This environment has no Anthropic API key; it has an OpenRouter key (OPENROUTING_API_KEY). The prompt and the item list are frozen and
+committed (eval/llm_reference_prompt.txt, eval/llm_reference_items.json, eval/llm_reference.py): the legend's six questions (as BERT-MRC's),
+the six-line answer format with "not given", ten solved examples from seed 0's training sentences; 200 report items per axis of seed 0
+(8 axes, 1,600 items), temperature 0, three repeats (determinism): 4,800 calls, about 2.14 M input tokens (prompt about 415 tokens + the
+sentence) and 0.19 M output tokens. Cost = 2.14 x (input price per M tokens) + 0.19 x (output price per M tokens): at $1 / $5 per M about
+$3; at $3 / $15 about $9; at $15 / $75 about $46 (prices to be read on the provider's page at call time; prompt caching would lower the
+input part). Default: the row stays PLANNED with the prompt committed until you name (1) the model and provider (e.g. a current Claude
+model through OpenRouter), (2) a budget cap in dollars at which the run stops, (3) whether sending these synthetic sentences to that
+provider is fine (they contain no personal data). Needed before the row runs; it is not on the critical path before JP 1.

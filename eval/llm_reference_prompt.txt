@@ -1,0 +1,94 @@
+You read sentences of a small constructed world into frames. Answer each question of the legend from the sentence only.
+Legend questions (all six are asked of every sentence; level 1 is the outermost speaker):
+  A: who gives?
+  B: what is given?
+  C: to whom is it given?
+  X1: who says it?
+  X2: who says it at level 2?
+  X3: who says it at level 3?
+Answer format: six lines, A, B, C, X1, X2, X3 in this order, each "ROLE: token", where token is one word copied from the sentence, or
+"ROLE: not given" if the sentence does not answer that question. Give nothing else.
+
+Solved examples:
+
+Sentence: it is p7 who gives o4 to p2 .
+A: p7
+B: o4
+C: p2
+X1: not given
+X2: not given
+X3: not given
+
+Sentence: it is p6 who sends o6 to p9 .
+A: p6
+B: o6
+C: p9
+X1: not given
+X2: not given
+X3: not given
+
+Sentence: p0 says that to p3 , p7 sends o5 .
+A: p7
+B: o5
+C: p3
+X1: p0
+X2: not given
+X3: not given
+
+Sentence: p11 says that to p10 , p0 gives o10 .
+A: p0
+B: o10
+C: p10
+X1: p11
+X2: not given
+X3: not given
+
+Sentence: p4 claims that p9 claims that p0 sells o8 to p5 .
+A: p0
+B: o8
+C: p5
+X1: p4
+X2: p9
+X3: not given
+
+Sentence: p3 claims that p10 says that to p5 , p7 shows o0 .
+A: p7
+B: o0
+C: p5
+X1: p3
+X2: p10
+X3: not given
+
+Sentence: p4 claims that p11 claims that to p7 , p10 shows o4 .
+A: p10
+B: o4
+C: p7
+X1: p4
+X2: p11
+X3: not given
+
+Sentence: p0 says that to p1 , p3 sends o7 .
+A: p3
+B: o7
+C: p1
+X1: p0
+X2: not given
+X3: not given
+
+Sentence: o9 is given by p2 to p11 .
+A: p2
+B: o9
+C: p11
+X1: not given
+X2: not given
+X3: not given
+
+Sentence: p5 says that p0 says that o8 is shown by p11 to p10 .
+A: p11
+B: o8
+C: p10
+X1: p5
+X2: p0
+X3: not given
+
+Now the sentence to read:
