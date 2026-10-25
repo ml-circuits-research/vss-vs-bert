@@ -1322,3 +1322,8 @@ confirmatory comparisons on fresh seeds; never pooled with seeds 0-4. MEASURED.
 | exact match depth 3, depth NOT given: six / inner | 0.000 / 0.943 ± 0.104 [0.736 1.000 0.979 1.000 1.000] | 0.000 / 0.972 | 0.992 / 0.992 |
 | confident error depth 3 | 0.176 | 0.171 | 0.001 |
 | R17 (i) 2% threshold: random / reference / nonce; false rejection | 0.970 / 0.965 / 0.954; 0.318 | 0.992 / 0.943 / 0.954; 0.280 | (R42 fresh row) |
+
+**Confirmatory comparisons, first attempt failed (logs/2026-10-25_1857_confirmatory_cb9ef69.txt, BERT-tiny; _1858_ BERT-mini and
+_1859_confirmatory_d613149.txt, fresh seeds, both stopped by hand when the first failed):** TypeError in json.dump (numpy integers in
+the result) after the first pair's numbers were printed; no result file kept (a truncated one was deleted). Fix: a JSON default for
+numpy scalars (separate commit); the three runs are started again. The printed numbers of the first attempt are not used.

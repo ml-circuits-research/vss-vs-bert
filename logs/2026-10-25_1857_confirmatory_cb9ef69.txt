@@ -1,0 +1,147 @@
+# 2026-10-25T18:57:03+01:00  commit=cb9ef69  cmd: python3 eval/confirmatory.py --mrc mrc_google_bert_uncased_L-2_H-128_A-2_zs,mrc_google_bert_uncased_L-2_H-128_A-2_zs_scratch,mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 102 GB; slot logs/.run.lock.4 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+confirmatory (R30 item 8): main repository e531283; reader 1a against mrc_google_bert_uncased_L-2_H-128_A-2_zs,mrc_google_bert_uncased_L-2_H-128_A-2_zs_scratch,mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds; seeds [0, 1, 2, 3, 4]: seeds 0-4 (the pre-specified seeds; design set since R39); two-level bootstrap 1000 resamples; Holm at 0.05 over the three comparisons of each pair
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 (trained labels 0.982, inner 0.982) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.92 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9964646464646465 (n 3960), unseen 1.0 (n 360)
+  reader seed 0: loaded logs/models/reader_basic_seed0.pt; EQUAL; tau 0.0000, coverage depth 3 (not given) 1.000
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 check                              1.00 (m 0.45) | 1.00 (m 0.47) | 0.82 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.39) | 1.00 (m 0.37) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 0.79 | 0.93 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.992 (trained 0.992, inner 0.992); depth3 cw 0.002
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.9936868686868687 (n 3960), unseen 1.0 (n 360)
+# post-launch guard (slots 16): MemAvailable 90 s after the start 88 GB
+  reader seed 1: loaded logs/models/reader_basic_seed1.pt; EQUAL; tau 0.0000, coverage depth 3 (not given) 1.000
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 check                              1.00 (m 0.47) | 1.00 (m 0.48) | 0.77 (m 0.22) | 0.79 (m 0.16) | 1.00 (m 0.37) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 0.77 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  reader seed 2: loaded logs/models/reader_basic_seed2.pt; EQUAL; tau 0.0000, coverage depth 3 (not given) 1.000
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.95 (m 0.27) | 0.88 (m 0.17) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 (trained labels 0.986, inner 0.986) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 0.99 | 0.90 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.9972222222222222 (n 3960), unseen 1.0 (n 360)
+  reader seed 3: loaded logs/models/reader_basic_seed3.pt; EQUAL; tau 0.0000, coverage depth 3 (not given) 1.000
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 check                              1.00 (m 0.45) | 1.00 (m 0.46) | 0.84 (m 0.26) | 0.89 (m 0.15) | 1.00 (m 0.38) | 1.00 (m 0.38) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 0.84 | 0.92 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.993 (trained 0.993, inner 0.993); depth3 cw 0.002
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.9939393939393939 (n 3960), unseen 1.0 (n 360)
+  reader seed 4: loaded logs/models/reader_basic_seed4.pt; EQUAL; tau 0.0000, coverage depth 3 (not given) 1.000
+  reader: exact match six (depth 3, not given) 0.982 ± 0.010 [0.982 0.971 0.999 0.986 0.971]; coverage 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]; confident error 0.003 ± 0.002 [0.003 0.006 0.000 0.003 0.006]; AUROC residual 0.876 ± 0.005 [0.873 0.871 0.884 0.874 0.879]; AUROC margin 0.887 ± 0.016 [0.885 0.866 0.914 0.890 0.879]
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 0: threshold -inf for coverage 1.000 (achieved 1.000); exact match six 0.000, inner 0.969
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 1: threshold -inf for coverage 1.000 (achieved 1.000); exact match six 0.000, inner 0.928
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 2: threshold -inf for coverage 1.000 (achieved 1.000); exact match six 0.000, inner 0.965
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 3: threshold -inf for coverage 1.000 (achieved 1.000); exact match six 0.000, inner 1.000
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 4: threshold -inf for coverage 1.000 (achieved 1.000); exact match six 0.000, inner 1.000
+
+== reader 1a vs mrc_google_bert_uncased_L-2_H-128_A-2_zs ==
+  mrc_google_bert_uncased_L-2_H-128_A-2_zs: exact match six 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]; inner 0.972 ± 0.027 [0.969 0.928 0.965 1.000 1.000]; confident error at matched coverage 0.171 ± 0.004 [0.172 0.179 0.172 0.167 0.167]; AUROC Mahalanobis 0.822 ± 0.037 [0.800 0.877 0.781 0.797 0.856]; AUROC MSP 0.915 ± 0.035 [0.915 0.901 0.960 0.858 0.941]
+  i_exact_match_six_depth3_not_given: reader - model +0.9817 (95% +0.9719 .. +0.9911), bootstrap p 0.0000; per seed diff +0.982 +0.971 +0.999 +0.986 +0.971; 4-df t p 4.74e-09; seeds ahead reader 5 / model 0, sign p 0.0625
+  ii_confident_error_matched_coverage: reader - model -0.1678 (95% -0.1719 .. -0.1638), bootstrap p 0.0000; per seed diff -0.169 -0.173 -0.172 -0.164 -0.161; 4-df t p 2.07e-07; seeds ahead reader 0 / model 5, sign p 0.0625
+  iii_oow_auroc_residual_vs_mahalanobis: reader - model +0.0541 (95% +0.0168 .. +0.0871), bootstrap p 0.0020; per seed diff +0.073 -0.006 +0.103 +0.077 +0.023; 4-df t p 0.0523; seeds ahead reader 4 / model 1, sign p 0.375
+  Holm (alpha 0.05, three comparisons): i_exact_match_six_depth3_not_given REJECT H0; ii_confident_error_matched_coverage REJECT H0; iii_oow_auroc_residual_vs_mahalanobis REJECT H0
+  auroc_reader_residual: 0.876 ± 0.005 [0.873 0.871 0.884 0.874 0.879]
+  auroc_reader_margin: 0.887 ± 0.016 [0.885 0.866 0.914 0.890 0.879]
+  auroc_reader_explained_residual: 0.730 ± 0.007 [0.740 0.728 0.720 0.734 0.728]
+  auroc_mrc_mahalanobis: 0.822 ± 0.037 [0.800 0.877 0.781 0.797 0.856]
+  auroc_mrc_msp: 0.915 ± 0.035 [0.915 0.901 0.960 0.858 0.941]
+  auroc_mrc_null_gap: 0.591 ± 0.043 [0.629 0.578 0.606 0.628 0.513]
+  aurc_reader: 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  aurc_mrc: 0.157 ± 0.021 [0.166 0.173 0.173 0.117 0.159]
+  coverage_reader: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  coverage_mrc: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/confirmatory.py", line 183, in <module>
+    json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}_s{a.seed_start}.json"), "w"), indent=1)
+  File "/usr/lib/python3.12/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+  File "/usr/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/usr/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int64 is not JSON serializable

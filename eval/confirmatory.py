@@ -180,5 +180,5 @@ if __name__ == "__main__":
                             "aurc_reader": [r["aurc"] for r in R], "aurc_mrc": [m["aurc"] for m in M], "coverage_reader": [r["cov"] for r in R], "coverage_mrc": [m["cov"] for m in M]}
         for k, v in res["secondary"].items(): print(f"  {k}: {ms(v)}")
         res["seeds"] = list(SEEDS); res["reader_row"] = row
-        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}_s{a.seed_start}.json"), "w"), indent=1)
+        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}_s{a.seed_start}.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
     metrics.checklist(5, "[x] comparisons pre-specified (R30 item 8) [x] thresholds on calibration rows only [x] two-level bootstrap [x] Holm")
