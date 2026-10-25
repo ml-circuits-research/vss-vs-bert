@@ -1053,3 +1053,20 @@ Two additions, both scoring or decoder rules, no training:
 BERT-tiny on seeds 5-9 (X3 0.000, inner 0.943, UNSEEN formulations 0.986) confirms the design-set picture on fresh seeds; the LLM
 reference (level-3 answered at 0.955 in context, 2.33 USD) is the ceiling row the claim is read against: the compositional question is
 answerable from language by a large model in context, not by the 4-11 M extractive models, and by the reader as an address.
+
+## R55 (what changed in the tool repository today, for this session's record; 2026-10-25 19:20)
+
+Three changes in vss-demo (the tool repository; none of them touches this repository's rows unless declared as a row here):
+1. **Explained-tokens residual** (a1f4564): `tool/sop/infer.py residual_explained`, config `residual: "explained"`; transcribed here as
+   `common/decode.residuals_explained` (R42), measured on the design set and pending on seeds 5-9.
+2. **'Undecided' by adjacency** (f46b8d4): `infer.py undecided_adjacent`, config `undecided_adjacent: true`; an identity left in no role
+   next to the filler of a role whose kinds admit it makes that role an 'undecided' query with both candidates (`_undecided.<role>`);
+   on in the demo's shipped worlds. This is the decoder rule of R54 item 2; transcribe it as declared there and run it on the planted
+   sets (seeds 5-9 for the claim), with the scoring column of R54 item 1.
+3. **Verb-order route** (434fa40): a fourth route in the bundle, `vorder` in `reader.codes` / `--codes`: every non-verb word is drawn a
+   second time at a learned displacement keyed by (side of the nearest verb, that verb's kind, the word's kind, its ordinal among the
+   words of its kind since that verb), independent of the cue chain; `experiment/v8_gates.V8.set_vorder` + `vorder_index` (torch),
+   `Routebook.vorder_index` (numpy), `routebook.js`, export. It needs retraining, so it is NOT a row here before JP 1 (R47): it is being
+   measured in the tool repository on its small reference world (CPU, same seed, with and without the route) and, if it helps, will be
+   proposed as its own declared row with its own version, same seeds and splits, claim on seeds 5-9, after the stop.
+Nothing in this response changes the R48 / R51 set.
