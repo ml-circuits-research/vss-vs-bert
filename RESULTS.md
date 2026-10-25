@@ -1743,3 +1743,33 @@ is what the present export ships until the tool stores the used keys only (sop/,
 match 0.400 / 0.560; with the R46 decoder + one-to-one **1.000 on every seed of both ranges** (exact 1.000). So the route-b reader reads
 the double object without examples when it chooses among the sentence's words; the per-role catalog readout still needs the examples
 (the 50-example line of the growth table, which was measured on 1a, stands for the per-role rule).
+
+## Decoder provenance: the EQUAL checks through sop/ (R58 item 1, R59, R62 item 2; eval/sop_check.py; logs/2026-10-25_2155_ to _23*_sop_check_*.txt; MEASURED)
+
+The tool: sop/ in this repository (the author's directory, read only here), SOURCE 4a92afd (vss-demo). The basic world written in its
+legend format (data/basic_world/legend.json, kinds.tsv; no predicate role, no occupancy marker, level openers says / claims); every saved
+reader exported to a tool model folder (sop.train.export_routebook; catalog identity_table = the seed's identity draw, star_table = the
+NestedRoleWorld draw of R_A, R_B, R_C, R_X, R_rep, R59) and read by sop.infer.Reader with the depth given and the axis's candidate lists.
+- **Chart**: the tool's state against V8.states, max relative difference 1.7e-7 - 1.8e-7 on every reader (float32 route book).
+- **Default decoder = the per-role rows**: 1a (seeds 0-4 and 5-9), R14, R37, route a (0-4, 5-9), route b (0-4, 5-9): 8 x 5 seeds x 8
+  axes = 320 slot accuracies, **every one EXACTLY equal** to the stored row (difference 0.0). These rows are from now on labelled
+  "decoder: sop @ 4a92afd" (the transcription in common/decode.py is kept as the EQUAL check).
+- **Demo decoder (candidates "sentence", residual "explained", undecided_adjacent)**, 1a and route b, both seed ranges: slot accuracy
+  with the tool's one-to-one (a greedy rule: the role with the larger margin keeps a shared word, the other is read again) equals the
+  R46 rows (Hungarian assignment) on every axis and seed to the third decimal (no difference above 0.0005). **The accuracy rows of R46 /
+  R58 pass and are labelled "decoder: sop @ 4a92afd".**
+- **Explained residual: DIFFERENT; the tool is the reference.** (a) With the catalog as first written (verb kinds as content kinds), the
+  tool never places the event verb (no predicate role) and counts it unexplained: AUROC 0.81-0.88, false rejection 0.20-0.28 (1a) /
+  0.01-0.07 (route b). (b) With the verbs as non-content kinds (--verbs_explained, the configuration equivalent to R42's "the event
+  lemma is explained"; every in-world and reference sentence has exactly one verb): in-world false rejection now matches (1a 0.021-0.032
+  against the transcription's 0.023-0.033; route b 0.015-0.031 against 0.015-0.028), but **the reference-world sentences are not rejected:
+  0.008-0.044 (transcription 0.88-0.95), AUROC 0.71-0.74 (transcription 0.97-0.98)**; random sentences 0.85-0.91 (0.99). The cause,
+  from the code: the reference sentences have no recipient ('p0 gives o2 .'); the sentence-candidates one-to-one leaves C without a
+  candidate; the transcription follows R42's text ("1.0 when ... a role of the depth is not decoded") and gives them residual 1.0,
+  while sop's residual_explained scores only the unexplained tokens and has no such clause (in the tool a role left without a candidate
+  is 'not given', a query, not a residual). **Consequence, stated without softening:** the explained-residual rejection of the
+  reference world reported for R46 / R54 / R58 (0.88-0.95, and the design-set "criterion met" of route b) comes from the undecoded-role
+  clause of the transcription, not from unexplained tokens; through the tool, the out-of-world sentences of the reference world pass
+  the explained residual and are flagged instead as frames with a role 'not given'. These residual rows keep the label "decoder:
+  common/decode.py (transcription; differs from sop @ 4a92afd)" and the paper uses the tool's numbers. Whether the tool's
+  residual_explained should carry R42's clause is the author's question (sop/), recorded in questions.md.
