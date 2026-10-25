@@ -299,3 +299,13 @@ For JP 1 (not before, and only as a question here, not a run): since every model
 depth 3 no longer separates them. A declared additional analysis for after JP 1 could extend the same frozen worlds to depths 4 and 5
 (training still at depths 0-2) for every model, reader included, to find where each one breaks and how. Write your view of its cost and
 of any reason it would be unfair to either side in questions.md at JP 1. It is not part of the pre-registered claims.
+
+## R16 (commit 767cf1f; 2026-10-25): the single-candidate margin fix is accepted, with one condition
+
+The fix (a role with one candidate: margin = score minus the model's floor, as the per-role rule's top1 - 0; log 1e-30 for a tagger,
+0 for cosine scores) is a correction of a defect in R10 code that never produced a reported number, found before any one-to-one row
+was reported: accepted. Conditions: (1) it is listed in the R10 deviations section with the date and this reason, and the first one-to-one
+numbers reported (r10_saved on 2a and 1a) say which version of the margin they use; (2) the floor is written in RESULTS per model
+(reader: 0; taggers: log 1e-30), because a tagger's margin for a single candidate becomes very large by this rule and must not be read
+as a stronger decision than the reader's 'top1 - 0'; where a calibration block compares the two, say so. The R14 code behind default-off
+flags is accepted; the R14 rows run after the pre-registered run 3, as R14 says.
