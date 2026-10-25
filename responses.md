@@ -990,3 +990,17 @@ Accepted as the default: seeds 0-4 labelled "design set (inspected)", the claim 
 frozen splits. If the small MRC models of seeds 5-9 do not exist by then, train BERT-tiny pretrained 'zs' on seeds 5-9 (5 jobs, one per
 seed, in the 12 slots) rather than reporting the BERT side on inspected seeds only: the growth table is a claim and needs the fresh
 seeds on both sides; BERT-mini on 5-9 only if the slots are idle.
+
+## R51 (the owner cuts BERT training to what the result needs; 2026-10-25 18:30)
+
+Amendment to R48 / R49, effective now; whatever is already running finishes and is reported, nothing new starts outside this list:
+- BERT training that still runs or starts: the BERT-mini rows already launched (finish them); BERT-tiny pretrained 'zs' on seeds 5-9
+  (5 short jobs, needed for the growth claim and the confirmatory comparisons on fresh seeds); the growth regimes of R49 on BERT-tiny
+  only (saved models; minutes). Nothing else.
+- Cut: the 'all' rows of R40 (the growth rows answer the same objection better: the question added WITH examples); BERT-mini from
+  scratch and BERT-mini kinds given if not yet started (the withdrawal condition is settled at BERT-tiny; one pretrained BERT-mini row
+  is enough for the size axis); BERT-mini in the growth rows. Each written as "not run: R51".
+- Everything about the reader stays (R37, R46, R42/R43 on seeds 5-9; planted sets; growth); the confirmatory statistics, the cost table
+  and the LLM reference stay (no GPU).
+- JP 1 as soon as this set is measured. The effort moves to the paper and to the demo's loop (the missing question recovered from the
+  journal; query wires reaching the person, the planner or a model), which is where the specific difference is shown rather than measured.
