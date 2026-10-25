@@ -1,0 +1,89 @@
+# 2026-10-25T17:10:03+01:00  commit=be645c7  cmd: python3 eval/sentence_candidates.py --row r14 --seed_start 0 --seeds 5  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 106 GB; slot logs/.run.lock.6 of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+sentence_candidates (R46): main repository e531283; row r14 (reader_basic_cues); seeds [0, 1, 2, 3, 4]: DESIGN SET (inspected, R39); decoder only, no retraining
+expected (R46, before the run): T11 B and T4 B right by construction; T4 C, T7 A, T10 C right through one-to-one whenever the other role is right; in-world rows cannot fall; cost: random in-vocabulary sentences filled into frames more often
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 (trained labels 0.982, inner 0.982) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.92 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9964646464646465 (n 3960), unseen 1.0 (n 360)
+  seed 0: loaded logs/models/reader_basic_seed0.pt; original decoder vs stored row: EQUAL
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 check                              1.00 (m 0.48) | 1.00 (m 0.49) | 0.76 (m 0.23) | 0.79 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.997 (trained labels 0.997, inner 0.997) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.77 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9994949494949495 (n 3960), unseen 1.0 (n 360)
+  seed 0: loaded logs/models/reader_basic_cues_seed0.pt; original decoder vs stored row: EQUAL
+# post-launch guard (slots 22): MemAvailable 90 s after the start 94 GB
+# post-launch guard (slots 22): MemAvailable 90 s after the start 94 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.49) | 1.00 (m 0.49) | 0.93 (m 0.29) | 0.92 (m 0.18) | 1.00 (m 0.42) | 1.00 (m 0.41) | 1.00 (m 0.37) | 1.00 (m 0.24)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 (trained labels 0.982, inner 0.982) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9964646464646465 (n 3960), unseen 1.0 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 VSS reader r14 + sentence candidates (R46) 1.00 (m 0.51) | 1.00 (m 0.51) | 0.82 (m 0.27) | 0.92 (m 0.18) | 1.00 (m 0.42) | 1.00 (m 0.43) | 1.00 (m 0.37) | 1.00 (m 0.24)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.997 (trained labels 0.997, inner 0.997) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.79 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9994949494949495 (n 3960), unseen 1.0 (n 360)
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 47, in <module>
+    oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); out = {s: both(oow["test"][s]) for s in ("random", "reference")}
+                                                                                                  ^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 45, in both
+    e, q = o2o_items(items, axis); return np.array(decode.residuals(m, world, e, q)), np.array(decode.residuals_explained(m, world, e, q))
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 43, in o2o_items
+    return e, [metrics.one_to_one(pp, bwm.roles_at(it["depth"])) for pp, it in zip(p, e)]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/metrics.py", line 60, in one_to_one
+    out["frame"][r] = f; out["margins"][r] = float(sc[f] - (max(others) if others else floor))
+                                                   ~~^^^
+KeyError: 'o15'
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 47, in <module>
+    oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); out = {s: both(oow["test"][s]) for s in ("random", "reference")}
+                                                                                                  ^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 45, in both
+    e, q = o2o_items(items, axis); return np.array(decode.residuals(m, world, e, q)), np.array(decode.residuals_explained(m, world, e, q))
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/sentence_candidates.py", line 43, in o2o_items
+    return e, [metrics.one_to_one(pp, bwm.roles_at(it["depth"])) for pp, it in zip(p, e)]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/metrics.py", line 60, in one_to_one
+    out["frame"][r] = f; out["margins"][r] = float(sc[f] - (max(others) if others else floor))
+                                                   ~~^^^
+KeyError: 'o15'

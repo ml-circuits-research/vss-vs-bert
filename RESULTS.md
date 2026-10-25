@@ -944,3 +944,14 @@ questions.md note of 17:15)? Yes for T4:C (cell error 0.88-0.99 on every seed) a
 but graded (0.24-1.00); T4:B and T11:B only on seed 2, the one 1a reader with the 'from' gate open (0.84-0.86; 0.000 on the other four).
 One difference from R14: in 1a the errors of T4:C and T10 are mostly SWAPS with A (the other role's filler, gold ranked 2nd), in R14
 mostly a filler absent from the sentence. The row therefore runs on the 1a readers too.
+
+**R46 first attempt failed (logs/2026-10-25_1710_sentence_candidates_be645c7.txt, and the parallel R14 run, same commit):** KeyError in
+eval/metrics.one_to_one on out-of-world sentences that have fewer admissible words than roles (the assignment gave a role a column
+outside its candidates); no row was written. Fix (separate commit): a local copy of the rule with one guard, a role left without one of
+its own candidates is "not given" (margin 0); identical to metrics.one_to_one whenever every role receives its own candidate (every
+in-world sentence). **Caption of the R46 row (R47):** it changes the decoder's candidate set, not the addresses; the H2 cause stays
+unfixed; each role decision is reported as decided by the ADDRESS (the in-sentence winner is the catalog winner of the original
+decoder), by RESTRICTION (the catalog winner was absent from the sentence) or by ELIMINATION (one-to-one assigned the remaining
+candidate), with the accuracy in each; the margin of a decision by elimination is the single-candidate floor, not evidence.
+**Note (R47):** for the demo's worlds the cue-gate default is withdrawn until TODO_DGX 2.9 is measured (opening 'from' in training
+breaks another reading, a finding that applies to any given gate set).
