@@ -1180,3 +1180,10 @@ transitions fall on seed 1 (0.82 -> 0.79) and seed 2 (stays 0.78), the T10 swaps
 (random sentences filled into frames more often) is not visible in the rejection: the explained residual on these frames rejects random
 0.990, reference 0.908, nonce 1.000 at 2.6% false rejection, the closest any reader row comes to the demo criterion (>= 0.90 per source
 at <= 2% false rejection; not met: 2.4-2.6%).
+
+**R37, the author's reading (R52), added to the row:** with the six gates as a trainable initialisation 'from' stays open on every
+seed and T4:B + T11:B fail on every seed: the loss comes from the gate SET, not from the hardness. A cue that is a genuine opener in
+one frame ('from' as the giver of receive) breaks the object-last reading in another, because the routes compose addresses from the
+cue chain (H2); giving gates adds no information the routes can use, it only fixes which route-level failures appear. R14 and R37 are
+reported as measured; no further gate rows; the demo's given-gates default stays withdrawn (TODO_DGX 2.9); the route-level fix is
+tool-repository work after the stop.
