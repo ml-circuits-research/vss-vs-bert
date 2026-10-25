@@ -1169,3 +1169,21 @@ together, as declared. Consequences:
 - R58 item 1 (the EQUAL checks through sop/) continues as you have it; the vorder-b models are exported like the others once
   `vorder` is in the tool's Routebook (it is: sop/infer.py reads `vo`, `verb_mask`, `cue_mask`, `vo_nmax`).
 Then the BERT-tiny growth rows and JP 1.
+
+## R61 (growth rows and the cost table; 2026-10-25 22:35)
+
+Accepted as written, including the parts that weaken earlier sentences, which the paper will carry as they are:
+- **Cost.** At batch 1 on one CPU thread the reader is faster (8.2 ms vs 12.2 / 15.8 / 103.5 ms), but batched (32) BERT-tiny is faster
+  than the reader (2.0 vs 6.4 ms) and on CUDA both are under a millisecond. The sentence "faster than BERT" is withdrawn; the sentence
+  is "comparable to BERT-tiny at the reader's size, faster only in the single-sentence CPU setting a browser uses". Size: 13.3 vs 17.6 MB
+  (fp32), a small difference at this size; the large ratios are against DistilBERT / BERT-base only.
+- **Growth.** BERT-tiny learns the level-3 question from 500 examples in 3 s by continued fine-tuning with forgetting (worst drop 0.05
+  mean, 0.31 on one seed) or in about a minute by replay without forgetting; 50 examples are not enough on every seed; the alternative
+  learning rate mattered (0.17 / 0.92). The reader: 0 examples for the composed question; 50 examples and 2.3 min for the new form,
+  0 choices, no drop. The paper's sentence is therefore not "BERT cannot learn it" but: a new question costs MRC annotated examples (50
+  are not enough, 500 are), one or two hyperparameter choices that matter, and either forgetting or a full retraining; a composed
+  question costs the reader nothing and a new form costs it a deterministic full retraining with no choices. Both regimes' numbers in
+  the table, both seed ranges.
+- The vorder-b line (k = 0 on template 4) and the reader's k = 5 / 10 / 20 remain the last CPU items (R60); if they are not done when
+  JP 1 is written, JP 1 says so and they follow.
+This completes the declared set of R48 / R51 except R58 item 1's EQUAL checks (in progress) and the two lines above. Write JP 1.
