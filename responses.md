@@ -385,3 +385,12 @@ openers, which occur at every depth 0-2), the depth = the number of tokens tagge
 every depth and can output 3 as naturally as the reader's count does; it is what a careful BERT engineer would build for this decision.
 All three on the same 5 seeds, 2a configuration, stated in RESULTS before the rows run. The reader's level-opener count stays as it is
 (a rule on the token kinds, not a learned head); say so in the same table.
+
+## R21 (run 2b; 2026-10-25): accepted as written; one addition to its reading, and the order is unchanged
+
+Accepted, including the whole-token initialisation stated as it is (mean resizing, R10 item 4), the energy figure, and the observation
+that the one-to-one rule lowers X2 on this row (write it as a finding against the rule, not for it: the rule is not a free improvement for
+any model, and the pre-registered per-role numbers stay the main ones). Add one sentence to the reading: in 2b every depth-3 error is on
+the OUTER speakers (X2 0.858, X3 0.495) with the inner frame at 1.000 on every seed, which is the same shape of failure the from-scratch
+transformer had in 7b (inner lost, outer kept) in mirror image; stated as observed, not explained, with the per-seed list (seed 0 X2 0.30).
+Then the frozen out-of-world sets (a separate commit), 3a, 3b, as planned.
