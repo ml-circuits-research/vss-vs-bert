@@ -1541,3 +1541,35 @@ ordinal 0 before the verb. Variant a stays reported as rejected. R58's text, ver
    two attempts are reported together. Code: `sop/v8_gates_vorder_ref.py` (`set_vorder(verb_cats, nmax, cue_cats)`; `vorder_index`
    computes `cued` from `cue_mask[cats[:, :-1]]` shifted right by one, excludes cued words from the one-hot counts and from `valid`);
    your `vss/v8_vorder.py` subclass takes `cue_cats = ['to', 'by', 'from']`.
+
+## R58 item 2: the verb-order route, variant b (vss/run_reader_vorder.py --variant b; logs/2026-10-25_2101_run_reader_vorder_54493f9.txt (seeds 0-4), _2100_ (seeds 5-9); evaluations logs/2026-10-25_2134_ / _2133_sentence_candidates_54493f9.txt, _2136_ / _2137_residual_explained_54493f9.txt; MEASURED)
+
+Checks: the subclass without the route EQUAL to 1a on seed 0 and on seed 5. Training 266-344 s per seed (concurrent with one other
+training: not a cost number). Reported together with variant a (R56, rejected), as R58 asks.
+
+| axis (slot accuracy) | variant b per-role (0-4 / 5-9) | variant b + R46, one-to-one (0-4 / 5-9) | variant a per-role (0-4 / 5-9) | 1a per-role (0-4 / 5-9) |
+|---|---|---|---|---|
+| seen / ids / role cues / depth 1 / depth 2 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 | 1.000 |
+| new form. seen trans. | **0.989 ± 0.017 / 0.995 ± 0.005** | **1.000 / 1.000** | 0.656 / 0.664 | 0.864 / 0.831 |
+| new form. UNSEEN trans. | **0.956 ± 0.009 / 0.967 ± 0.014** | **1.000 / 1.000** | 0.912 / 0.912 | 0.868 / 0.835 |
+| depth 3 slot accuracy; exact match six | 0.996 / 0.999; 0.979 ± 0.018 / 0.993 ± 0.010 | 0.998 / 1.000; 0.994 / 0.999 | 0.999; 0.996 / 0.997 | 0.997 / 0.999; 0.982 / 0.992 |
+| coverage / confident error, depth 3 (R46 frames) | — | 0.998 / 0.002 (0-4); 0.999 / 0.000 (5-9) | — | — |
+| explained residual (R46 frames): AUROC; rejected random / ref. / nonce; false rejection | — | 0.974 / 0.980; 0.990 / 0.908 / 1.000 (0-4), 0.988 / 0.932 / 1.000 (5-9); **0.018 ± 0.003 (0-4), 0.021 ± 0.004 [0.018 0.028 0.025 0.017 0.016] (5-9)** | 0.974 / 0.979; 0.025 / 0.026 | 1a + R46: 0.975 / 0.979; 0.026 / 0.026 |
+| compiled residual (R46 frames): AUROC; false rejection | — | 0.977 / 0.983; 0.436 / 0.434 | — | 0.976 / 0.979; 0.435 / 0.440 |
+| catalog decoder: compiled / explained residual AUROC | 0.881 / 0.739 (0-4); 0.886 / 0.742 (5-9) | — | 0.873 / 0.732 | 0.876 / 0.730 |
+
+Per cell, design set, R47 categories with the R46 decoder (900 decisions each, seeds pooled): **T7:A all 900 by the address, right**;
+**T10:A 868 by the address, 32 by elimination, 0 wrong; T10:C 0 wrong** (variant a: 900 wrong each; 1a: 344 wrong each); **T4:C 370
+by the address, 73 by restriction, 457 by elimination, 0 wrong** (variant a 34 / 21 / 845; 1a 259 / 9 / 632, 198 wrong); T4:B, T11:B by
+the address 874 / 876, the rest by restriction, 0 wrong. Per-role rule, wrong decisions on new formulations per seed: 111 / 142 / 245 /
+133 / 140 (1a: 418 / 563 / 934 / 431 / 526), of which T4:C 91-123, T10 0-21, T4:B + T11:B 0-48 (seed 2, 'from' open).
+Against R58's expectations written before the run: T7:A still by the address: **yes** (900 / 900); T10 no longer broken: **yes** (0 wrong
+with the R46 decoder; 0-21 per seed with the per-role rule); T4:C unchanged (still by elimination): **partly** (elimination 457 of 900,
+by the address 370, more than 1a's 259 and variant a's 34; 0 wrong); seen-transition formulations back within one seed std of 1a: **no,
+above it** (0.989 / 0.995 against 0.864 ± 0.069 / 0.831 ± 0.055). Rejection rule (no in-world row falling by more than one seed std):
+**not triggered** (the depth-3 exact match 0.979 ± 0.018 against 1a's 0.982 ± 0.010 is within one std; every other in-world row is equal or
+higher). **Variant b is NOT rejected.** With the R46 decoder it reaches exact slot accuracy 1.000 on every new-formulation axis on both
+seed ranges, and its explained residual rejects random 0.990 / reference 0.908 / nonce 1.000 at false rejection 1.8% on the design set:
+the demo criterion (>= 0.90 per source at <= 2% false rejection) is MET on the design set; on the claim set it rejects 0.988 / 0.932 /
+1.000 at 2.1% (per seed 1.8, 2.8, 2.5, 1.7, 1.6%): **NOT met on the claim set**, by 0.1 point of false rejection on the mean (three of
+five seeds meet it). Size: the route adds 8.4 M phases (the reader with it: 11.7 M, against 3.3 M without).
