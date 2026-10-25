@@ -955,3 +955,7 @@ decoder), by RESTRICTION (the catalog winner was absent from the sentence) or by
 candidate), with the accuracy in each; the margin of a decision by elimination is the single-candidate floor, not evidence.
 **Note (R47):** for the demo's worlds the cue-gate default is withdrawn until TODO_DGX 2.9 is measured (opening 'from' in training
 breaks another reading, a finding that applies to any given gate set).
+**R46 second attempt failed (logs/2026-10-25_1713_sentence_candidates_6f40eed.txt and the R14 run a minute later):** IndexError in the
+compiled residual on the nonce-as-placeholder set: with sentence candidates the placeholder (kind O, R18) is an admissible B candidate
+and was decoded, and the world's identity table had no row for it. Fix (separate commit): inside the placeholder context the world's
+table is extended with the same vector as the model's (this process only). A frame holding the placeholder is R46's expected cost.

@@ -63,7 +63,12 @@ if __name__ == "__main__":
             e, q = o2o_items(items, axis); return np.array(decode.residuals(m, world, e, q)), np.array(decode.residuals_explained(m, world, e, q))
         cal = both(split["axes"]["calibration"]); inw = {ax: both(split["axes"][ax], ax) for ax in report.AXES if split["axes"][ax]}
         oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); out = {s: both(oow["test"][s]) for s in ("random", "reference")}
-        with decode.Placeholders(m, bw["w"], seed) as ph: out["nonce_placeholder"] = both([dict(x, tokens=ph.map(x["tokens"])) for x in oow["test"]["nonce"]])
+        with decode.Placeholders(m, bw["w"], seed) as ph:
+            # with sentence candidates the placeholder (kind O) is an admissible B candidate, so a frame may hold it; the compiled
+            # residual then needs its vector in the world's identity table too (the same vector as the model's, this process only)
+            Fw0 = world.F; world.F = np.concatenate([Fw0, m.F[-1:].detach().cpu().numpy().astype(Fw0.dtype)])
+            try: out["nonce_placeholder"] = both([dict(x, tokens=ph.map(x["tokens"])) for x in oow["test"]["nonce"]])
+            finally: world.F = Fw0
         row["oow"] = {}
         for k, nm in ((0, "compiled"), (1, "explained")):
             t = float(np.quantile(cal[k], 1 - FR)); pin = np.concatenate([v[k] for v in inw.values()]); pout = np.concatenate([out["random"][k], out["reference"][k]])
