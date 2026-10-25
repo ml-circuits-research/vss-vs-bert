@@ -11,7 +11,8 @@ fi
 # protection (2026-10-16, after the machine hung on 2026-10-15): one run at a time, enough free memory, a wall-clock cap
 # slots (responses R22 item 3, questions Q17 default, 2026-10-25): VSA_SLOTS=N (default 1, the behaviour above) allows up to N concurrent
 # runs, one lock per slot (logs/.run.lock for slot 1, logs/.run.lock.<k> for k >= 2); with more than one slot every process gets
-# VSA_MEM_FRACTION 0.25 (three at 0.5 could claim 150% of the unified memory, the condition of the 2026-10-15 hang) and a post-launch
+# VSA_MEM_FRACTION 0.9 / VSA_SLOTS (responses R23; three at 0.5 could claim 150% of the unified memory, the condition of the 2026-10-15
+# hang; the launcher sets VSA_SLOTS = min(6, rows waiting, MemAvailable / 13 GB), RUNBOOK section 1b) and a post-launch
 # guard: 90 s after the start the run is stopped if MemAvailable is below 40 GB.
 SLOTS=${VSA_SLOTS:-1}; LOCK=""
 for k in $(seq 1 "$SLOTS"); do
@@ -33,7 +34,7 @@ avail_gb=$(awk '/MemAvailable/ {printf "%d", $2/1024/1024}' /proc/meminfo)
 if [ "$avail_gb" -lt 40 ]; then echo "Only ${avail_gb} GB available; refusing to start (need 40)."; exit 1; fi
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export PYTHONHASHSEED=0   # (2026-10-25, responses R3) set and dict-from-set iteration order must not depend on the per-process string hash
-[ "$SLOTS" -gt 1 ] && export VSA_MEM_FRACTION=0.25
+[ "$SLOTS" -gt 1 ] && export VSA_MEM_FRACTION=$(awk -v n="$SLOTS" 'BEGIN {printf "%.3f", 0.9 / n}')   # R23: never a sum above 0.9 of the unified memory
 export VSA_MEM_FRACTION=${VSA_MEM_FRACTION:-0.5} VSA_MIN_AVAILABLE_GB=${VSA_MIN_AVAILABLE_GB:-16} VSA_MAX_HOURS=${VSA_MAX_HOURS:-6}
 mkdir -p logs
 echo $$ > "$LOCK"; trap 'rm -f "$LOCK"' EXIT
