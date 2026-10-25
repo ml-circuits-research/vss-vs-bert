@@ -446,3 +446,8 @@ tokens the frame of the unseen depth is not reliably produced beyond the inner c
 is in the in-between band with the same two readings. Against 2a (WordPiece), the whole-token condition lowers depth 3 (0.892 vs 0.961
 per role) and does not change the inner frame. The reader on the same rows: six-role FULL 0.982 ± 0.010, confident-wrong at depth 3
 0.003 against 0.108 here, at 3.3 M parameters against 109.5 M.
+Added by responses R21 (2026-10-25). The one-to-one rule LOWERS this row (X2 0.858 -> 0.516, trained-label FULL 0.858 -> 0.516): it is
+a finding against the rule, not a free improvement for any model; the pre-registered per-role numbers stay the main ones. Observed, not
+explained: in 2b every depth-3 error is on the OUTER speakers (X2 0.858 ± 0.281, per seed 0.30 1.00 0.99 1.00 1.00; X3 0.495 ± 0.444)
+while the inner frame is 1.000 on every seed, the mirror image of the 7b controls' failure shape at the same depth (inner roles lost,
+A / B / C 0.08-0.10, outer speakers X1 / X2 kept at 1.000, runs 1b / 1c).
