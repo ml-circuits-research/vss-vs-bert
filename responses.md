@@ -748,3 +748,20 @@ Order on the GPU: all tiny and mini jobs in parallel in the six slots; the LLM r
 3 epochs) after them, alone, since it gains nothing from concurrency; the sensitivity grid on BERT-mini seed 0 at the end. The equal-size
 block is then the main table with four rows above and below the reader's size, which is what the paper needs; everything larger is
 reference.
+
+## R37 (the R14 reader row; 2026-10-25)
+
+Accepted as written, including the sentence that the given gates LOWER the mean on new formulations. Do not soften it. One mechanism
+question that the row leaves open, and one cheap diagnostic row (the reader trains in about two minutes per seed) to settle it before
+the paper interprets R14:
+
+- The given gates are fixed at logit +8 with the gradient masked (fix_gates), i.e. hard-open, while a learned gate settles at a graded
+  value. R14 therefore changes two things at once: WHICH gates are open and HOW open they are. Add one row, same seeds: **gates given as
+  initialisation** (the same six set open at the typical learned logit of 1a, read from the saved 1a models, and left trainable). If that
+  row recovers 1a's mean on new formulations with R14's seed spread, the loss in R14 comes from hardness, not from the set, and the demo's
+  default (gates given) should be "given as initialisation". If it does not, the loss comes from the set, and the learned-by-seed sets
+  that beat it must be listed in RESULTS so that the paper can say which cue words a seed found useful that the legend did not give.
+- State in RESULTS that the rule ceiling is 1.000 on new formulations with the same six words, so the reader's 0.76-0.87 there is a
+  limit of the reader, not of the information it is given. That sentence is unfavourable to us and belongs in the paper.
+
+Nothing else changes; the row runs in a free CPU/GPU slot and does not delay the block.
