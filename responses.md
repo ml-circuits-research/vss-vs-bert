@@ -428,3 +428,32 @@ chosen slot count: samples per second of N concurrent runs against one alone; ke
 measure again. Each run keeps one CPU core; with 20 cores that is not the limit. The sidecar's power samples are per machine, so the
 energy of concurrent runs is reported for the batch, not per run (R22 item 3). Cost rows per seed still come only from runs that ran
 alone. Do this after 3b, as planned; 3a and 3b run alone.
+
+## R24 (2026-10-25): the BERT-MRC baseline, the one a reviewer from question-based extraction will ask for
+
+The tagger of runs 2 and 3 labels tokens with fixed classes (A, B, C, X1, X2, X3). The field has moved past that for exactly our kind of
+task: QA-SRL (He et al. 2015) and MRC-style extraction (Li et al. 2020, "A unified MRC framework for NER"; zero-shot slot filling as
+question answering) feed the QUESTION as text and return a span of the sentence or NULL. That model has no untrained label (the level-3
+speaker is just another question), anchors every answer in the sentence, learns refusal (NULL on [CLS]) in training, and takes new
+questions without retraining. It is the closest neural analogue of the legend's questions, so the paper must compare with it, or be told
+to. Declared now; a new row family, not a change of the pre-registered tagger rows; run after 3b, in the derived-row queue (R22 / R23),
+before JP 1.
+
+Model: bert-base-uncased (and DistilBERT) with a span head (start / end logits over the sentence tokens) and NULL = the [CLS] position,
+input "[CLS] question [SEP] sentence [SEP]"; the question text is the legend's own (basic world: write one natural question per role and
+per level exactly once, in RESULTS before training, e.g. "who gives?", "what is given?", "to whom?", "who says it?" with the level named
+as in the legend: "who says it at level 2?"); one forward pass per (sentence, question); training on the same 30k sentences with every
+question of the legend per sentence, NULL for roles absent at that depth (so refusal is trained on in-distribution absences, which is the
+standard practice; the R17 out-of-world negatives are NOT added to this row unless a second row says so). Decoding: the span restricted
+to the world's candidate tokens as for every model (the argmax start=end token among candidates, or NULL if NULL scores higher); margin =
+best candidate score minus the second best; same thresholds rule; five seeds; the fixed pretrained grid of INSTRUCTIONS section 4
+(no R10 tie-break change needed if validation separates; if every point is 1.000 again, the R10 tie-break). Depth: given at decoding as
+for every model (the questions asked are those of the depth); the depth-not-given variant asks all six questions and takes NULL as "not
+given", which is this model's natural form of R17 item 3; report both.
+
+Cost rows, which matter here more than anywhere: inference per sentence with ALL questions of the legend (six passes at depth 3 against the
+reader's one state), CPU ms and energy; training time per seed. Interpretations, written now: inner-frame FULL at depth 3 >= 0.9 means the
+question form composes as the tagger did (expected); the six-role FULL and the level-3 question are the new information (a question never
+asked in training); confident-wrong under NULL training against the reader's residual is the calibration comparison that a reviewer will
+trust most; the cost ratio with the legend's size is the argument that survives whatever the accuracy says. Write the row and the
+questions in RESULTS as deviation R24 before it runs; the questions are frozen with the pre-registration tag's successor commit.
