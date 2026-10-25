@@ -1048,3 +1048,33 @@ roles, over all decisions; the term used once, so defined) reported per set.
 **Additions to the confirmatory script before it runs (R48 item 5):** AURC of the risk-coverage curve at depth 3 (depth not given;
 margin as confidence) for the reader and every MRC model; AUROC of the reader's explained residual (R42) and of the MRC NULL gap beside
 the pre-specified scores; the pairs are the reader against each of the six small MRC rows (Holm per pair over the three comparisons).
+
+## Deviation R49 / R50: the cost of a new legend question (declared 2026-10-25 before it runs; in the R48 set between items 2 and 3)
+
+Question: what the next legend question costs each system, in annotated examples, retraining time, hyperparameters to choose and
+accuracy lost on what already worked. Examples frozen first: data/growth_seed0-9.json (data/make_growth_sets.py: per seed 500
+depth-3 training-distribution sentences, 'level3', and 500 template-4 sentences, 'template4', training identities, rng 74,000 + seed,
+disjoint from every frozen split, out-of-world and planted set; k = 50 is the first 50 of the 500), committed with sha256 before any
+model sees them.
+- **BERT-tiny and BERT-mini pretrained, 'zs'** (models/bert_mrc_growth.py), from each seed's saved block model, every condition from
+  the saved model again: 'level3' = k depth-3 sentences annotated with all six legend questions (the new question is X3); 'template4' =
+  k template-4 sentences annotated with the 'zs' questions; regimes (a) continued fine-tuning on the new examples only, the declared
+  recipe lr 1e-4, 3 epochs, and the ONE alternative lr 3e-5; (b) replay, the new examples added to the block's 30,000 training sentences,
+  1 epoch from the saved model, lr 1e-4; bert_mrc.train's optimiser (AdamW, warm-up 10%, batch 32). Hyperparameter choices counted: 2
+  per regime (lr, epochs), plus the alternative lr measured for (a).
+- **The reader**, compositional case: no run; the level-3 question is answered by the saved 1a readers with zero examples and zero
+  retraining (slot accuracy at depth 3 0.997 ± 0.002, X3 1.000; exact match 0.982 with the depth not given): that line is the row.
+  Non-compositional case (vss/reader_growth.py): the k template-4 sentences added to the reader's 30,000 training sentences at fixed
+  random positions (rng 75,000 + seed), retrained in full with the same seed (its only regime; V8.train's loop replicated so that the
+  sentences can be added; with k = 0 it must reproduce 1a EQUAL, checked on the first seed of each run); 0 hyperparameter choices.
+- **Measures**: the new question (level3: X3 slot accuracy at depth 3 and the six-question exact match, depth not given; template4: the
+  template-4 cell of the new-formulation rows, slot accuracy and exact match); every report axis before and after (forgetting = the
+  drop, per axis, with the seed std); wall-clock of the training ALONE on the GPU (these runs are scheduled with nothing else on the
+  GPU); the number of examples; the number of hyperparameter choices.
+- **Seeds (R50 / Q28)**: seeds 0-4 are the design set (inspected; template 4 is one of its inspected cells); the claim is on seeds 5-9:
+  the 1a readers of seeds 5-9 and BERT-tiny pretrained 'zs' trained on seeds 5-9 for this purpose (models/bert_mrc.py --seed_start s
+  --seeds 1 --save_all, one job per seed); BERT-mini on seeds 5-9 only if the slots are idle (otherwise its growth rows are on the
+  design set only and labelled so).
+- **Table** (as R49 gives it): rows = system x regime; columns = examples, minutes alone, hyperparameter choices, new-question accuracy,
+  worst drop on an old row. Statements limited to this world. Written now, whatever the result: **replay removes forgetting at the price
+  of full retraining** (the sentence stands whether or not forgetting appears under (a)).
