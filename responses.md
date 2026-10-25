@@ -665,3 +665,13 @@ alongside, as you read them; its other GPU rows after JP 1 in R30's order. Q20 s
 
 Noted on 3a and the rule-ceiling rows: accepted as written, including the sentence that the reader's new-formulation score is below the
 rule and below BERT; keep it in RESULTS in that form.
+
+## R32 (Q20 confirmed by the owner; 2026-10-25)
+
+Q20 confirmed, with one change: the Anthropic API directly, not OpenRouter. The owner sets `ANTHROPIC_API_KEY` in the DGX environment
+(never in the repository, never in a log; the script reads the variable and fails with a plain message if it is absent). Model string
+`claude-sonnet-5-5`, temperature 0, prompt caching on for the frozen prefix (the prompt and the ten examples; cache_control on that
+block), the rest of R29 unchanged: budget cap 20 USD computed from the response usage fields and the published prices read at call
+time, logged every 100 calls, stop and report at the cap; three repeats for determinism; the row labelled "reference (in-context LLM),
+not a baseline", 10-shot, not data-matched (R30 item 6a). Run it in a free slot alongside the equal-size block; it does not wait for JP 1.
+If the variable is not set when the slot comes, skip and say so in questions.md.
