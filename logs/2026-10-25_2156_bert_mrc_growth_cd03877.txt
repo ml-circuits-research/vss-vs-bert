@@ -1,0 +1,59 @@
+# 2026-10-25T21:56:52+01:00  commit=cd03877  cmd: python3 models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 6  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_mrc_growth (R49): main repository e531283; mrc_google_bert_uncased_L-2_H-128_A-2_zs seed 6 (CLAIM SET (fresh splits)); cases level3 / template4; k 50,500; regimes a (lr 1e-4, 3 epochs; alternative lr 3e-5) and b (replay, 1 epoch, lr 1e-4)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  before: X3 (depth 3, not given) 0.000; six-question exact match 0.000; template-4 cell slot 1.000 exact 1.000; slots {seen: 1.000, new_ids: 1.000, new_form_seen_trans: 1.000, new_form_unseen_trans: 0.993, new_form_role_cues_seen: 1.000, depth1: 1.000, depth2_seen: 1.000, depth3_unseen: 0.833}
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/models/bert_mrc.py:100: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"    [progress] epoch {ep + 1}/{epochs} done, last batch loss {float(loss):.3e}", flush=True)   # additive (run.sh's 30-min log-stall watchdog)
+    [progress] epoch 1/3 done, last batch loss 1.389e+00
+    [progress] epoch 2/3 done, last batch loss 1.785e+00
+    [progress] epoch 3/3 done, last batch loss 8.110e-01
+  level3    k  50 a        : trained    0.4s alone on 900 examples; new question 1.000; X3 1.000, six exact 0.015, T4 cell 1.000; worst drop +0.026 (new_form_seen_trans)
+    [progress] epoch 1/3 done, last batch loss 5.855e+00
+    [progress] epoch 2/3 done, last batch loss 2.628e-01
+    [progress] epoch 3/3 done, last batch loss 2.434e-01
+  level3    k  50 a_alt_lr : trained    0.3s alone on 900 examples; new question 0.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.002 (new_form_unseen_trans)
+    [progress] epoch 1/1 done, last batch loss 2.674e-06
+  level3    k  50 b_replay : trained   41.3s alone on 150300 examples; new question 1.000; X3 1.000, six exact 1.000, T4 cell 1.000; worst drop +0.022 (new_form_unseen_trans)
+    [progress] epoch 1/3 done, last batch loss 4.893e-01
+    [progress] epoch 2/3 done, last batch loss 1.507e-04
+    [progress] epoch 3/3 done, last batch loss 5.905e-03
+  level3    k 500 a        : trained    2.5s alone on 9000 examples; new question 1.000; X3 1.000, six exact 1.000, T4 cell 0.667; worst drop +0.104 (new_form_unseen_trans)
+    [progress] epoch 1/3 done, last batch loss 9.307e-01
+    [progress] epoch 2/3 done, last batch loss 2.403e-01
+    [progress] epoch 3/3 done, last batch loss 2.695e-01
+  level3    k 500 a_alt_lr : trained    2.5s alone on 9000 examples; new question 1.000; X3 1.000, six exact 1.000, T4 cell 0.998; worst drop +0.028 (new_form_unseen_trans)
+# post-launch guard (slots 16): MemAvailable 90 s after the start 113 GB
+    [progress] epoch 1/1 done, last batch loss 5.015e-05
+  level3    k 500 b_replay : trained   60.0s alone on 153000 examples; new question 1.000; X3 1.000, six exact 1.000, T4 cell 1.000; worst drop +0.082 (new_form_unseen_trans)
+    [progress] epoch 1/3 done, last batch loss 4.019e-01
+    [progress] epoch 2/3 done, last batch loss 2.167e-01
+    [progress] epoch 3/3 done, last batch loss 8.860e-02
+  template4 k  50 a        : trained    0.3s alone on 750 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.162 (new_form_seen_trans)
+    [progress] epoch 1/3 done, last batch loss 7.561e-01
+    [progress] epoch 2/3 done, last batch loss 1.115e+00
+    [progress] epoch 3/3 done, last batch loss 9.101e-01
+  template4 k  50 a_alt_lr : trained    0.3s alone on 750 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.000 (seen)
+    [progress] epoch 1/1 done, last batch loss 5.960e-08
+  template4 k  50 b_replay : trained   68.7s alone on 150250 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.001 (new_form_unseen_trans)
+    [progress] epoch 1/3 done, last batch loss 1.192e-07
+    [progress] epoch 2/3 done, last batch loss 8.941e-07
+    [progress] epoch 3/3 done, last batch loss 1.788e-07
+  template4 k 500 a        : trained    3.2s alone on 7500 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.307 (new_form_role_cues_seen)
+    [progress] epoch 1/3 done, last batch loss 2.980e-08
+    [progress] epoch 2/3 done, last batch loss 2.089e-05
+    [progress] epoch 3/3 done, last batch loss 1.401e-06
+  template4 k 500 a_alt_lr : trained    3.1s alone on 7500 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.129 (new_form_seen_trans)
+    [progress] epoch 1/1 done, last batch loss 1.461e-05
+  template4 k 500 b_replay : trained   70.0s alone on 152500 examples; new question 1.000; X3 0.000, six exact 0.000, T4 cell 1.000; worst drop +0.019 (new_form_unseen_trans)
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] k examples frozen before any model [x] one declared recipe per regime plus one alternative lr [x] wall-clock alone [x] CLAIM SET (fresh splits)

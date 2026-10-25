@@ -1573,3 +1573,59 @@ seed ranges, and its explained residual rejects random 0.990 / reference 0.908 /
 the demo criterion (>= 0.90 per source at <= 2% false rejection) is MET on the design set; on the claim set it rejects 0.988 / 0.932 /
 1.000 at 2.1% (per seed 1.8, 2.8, 2.5, 1.7, 1.6%): **NOT met on the claim set**, by 0.1 point of false rejection on the mean (three of
 five seeds meet it). Size: the route adds 8.4 M phases (the reader with it: 11.7 M, against 3.3 M without).
+
+## R49 legend growth, BERT-tiny pretrained 'zs' (models/bert_mrc_growth.py; logs/2026-10-25_20*_ / _21*_ / _22*_bert_mrc_growth_*.txt, one per seed; MEASURED)
+
+Every run ALONE on the GPU (the queue held every other job). Each condition starts from the saved block model of its seed. Training
+wall-clock in seconds alone; "worst drop" = the largest fall of slot accuracy on any old report axis (mean [per seed]); 2 hyperparameter
+choices per regime (lr, epochs). Before: X3 0.000 on every seed; the template-4 cell 0.877 (seeds 0-4, one seed at 0.387) / 0.923 (5-9).
+
+| case, k | regime | new question, seeds 0-4 (design) [per seed] | 5-9 (CLAIM) [per seed] | worst drop 0-4 / 5-9 | s alone |
+|---|---|---|---|---|---|
+| level 3, 50 | (a) lr 1e-4, 3 ep | 0.512 ± 0.380 [0.186 0.000 1.000 0.854 0.521] | 0.891 ± 0.071 [0.811 1.000 0.840 0.857 0.946] | 0.035 / 0.015 | 0.4 |
+| level 3, 50 | (a) alternative lr 3e-5 | 0.076 | 0.169 | 0.028 / 0.000 | 0.3 |
+| level 3, 50 | (b) replay, 1 ep | 0.854 ± 0.291 [1.000 1.000 1.000 1.000 0.272] | 0.936 ± 0.128 | 0.008 / 0.006 | 46-49 |
+| level 3, 500 | (a) | **1.000** on every seed | **1.000** | 0.012 / **0.051** (up to 0.104) | 3.2-3.5 |
+| level 3, 500 | (a) alternative lr | 0.991 | 0.920 (one seed 0.600) | 0.030 / 0.009 | 3.0-3.4 |
+| level 3, 500 | (b) replay | **1.000** | **1.000** | 0.001 / 0.016 | 63-66 |
+| template 4, 50 | (a) / alt. lr / (b) | 1.000 / 1.000 / 1.000 | 1.000 / 0.966 / 1.000 | 0.061 / 0.005 / 0.046 ; 0.033 / 0.000 / 0.002 | 0.3 / 0.3 / 64 |
+| template 4, 500 | (a) / alt. lr / (b) | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 | 0.070 / 0.045 / 0.026 ; **0.086** (up to 0.307) / 0.027 / 0.004 | 3.0 / 2.9 / 62-69 |
+
+Six-question exact match at depth 3 after level 3 / 500: 1.000 (a) and (b) on both seed ranges; after level 3 / 50: 0.001 / 0.011 under (a),
+0.842 / 0.893 under (b). The template-4 cell of BERT-tiny was mostly right before (0.877 / 0.923) and is 1.000 after every condition.
+
+The legend-growth table (R49), seeds 5-9 (claim) for BERT-tiny and the reader:
+
+| system x regime | examples | minutes alone | hyperparameter choices | new-question accuracy | worst drop on an old row |
+|---|---|---|---|---|---|
+| reader, level-3 question (composed) | 0 | 0 | 0 | X3 1.000 (exact 0.992) | 0.000 |
+| reader, template 4 (full retraining) | 50 / 500 | 2.25 / 2.28 | 0 | cell 0.999 / 1.000 | 0.002 / 0.006 |
+| BERT-tiny, level 3, (a) continued fine-tuning | 50 / 500 | 0.01 / 0.05 | 2 (+ the alternative lr measured: it mattered, 0.17 / 0.92) | 0.891 / 1.000 | 0.015 / 0.051 |
+| BERT-tiny, level 3, (b) replay | 50 / 500 | 0.77 / 1.06 | 2 | 0.936 / 1.000 | 0.006 / 0.016 |
+| BERT-tiny, template 4, (a) | 50 / 500 | 0.005 / 0.05 | 2 | 1.000 / 1.000 | 0.033 / 0.086 |
+| BERT-tiny, template 4, (b) replay | 50 / 500 | 1.06 / 1.16 | 2 | 1.000 / 1.000 | 0.002 / 0.004 |
+
+Statements limited to this world, as R49 requires. **Replay removes forgetting at the price of full retraining** (written before the
+run; here: worst drops 0.002-0.016 under replay against up to 0.086 mean / 0.307 on one seed under continued fine-tuning on the new
+examples only). The reader answers the new compositional question with 0 examples and 0 s; BERT-tiny needs annotated examples (50 are
+not enough on every seed under either regime; 500 are) and the choice of a learning rate (the alternative lr loses up to 0.83 at k = 50).
+For a form that is new to both, the reader needs a full retraining of about 2.3 minutes alone and no hyperparameter; BERT-tiny learns it in
+seconds by continued fine-tuning with some forgetting, or in about a minute by replay without it.
+
+## Cost at equal precision (R27 item 4, R30 item 10; eval/cost_symmetric.py; logs/2026-10-25_2218_ / _2220_ / _2222_ / _2224_cost_symmetric_cd03877.txt; MEASURED, alone)
+
+The same 500 sentences (seed 0, depth 3), fp32, this machine (GB10); median ms per sentence [p95]; each model alone on the machine (the
+queue held every other job). The MRC models answer the six questions as one batch of six passes per sentence ('all six'; with the
+questions of the depth given: the same within 3%).
+
+| model (seed 0) | parameters / fp32 size | CPU 1 thread, batch 1 | CPU 1 thread, batch 32 | CPU 20 threads, batch 1 | CPU 20 threads, batch 32 | CUDA batch 32 |
+|---|---|---|---|---|---|---|
+| reader 1a (numpy readout + torch chart) | 3.3 M / 13.3 MB | **8.2 [9.7]** | 6.4 [7.3] | 18.6 [22.4] | 2.6 [3.1] | 0.36 [0.41] |
+| BERT-tiny MRC, all six questions | 4.4 M / 17.6 MB | 12.2 [14.7] | 2.0 [2.7] | 10.4 [20.2] | 1.7 [2.0] | 0.53 [0.59] |
+| BERT-mini MRC, all six questions | 11.2 M / 44.7 MB | 15.8 [18.0] | 11.5 [12.4] | 12.6 [20.6] | 3.5 [3.9] | 0.68 [0.74] |
+| BERT-base tagger (2a), one pass | 110 M / 438 MB | 103.5 [110.4] | 13.2 [13.9] | 34.4 [55.4] | 11.7 [12.2] | 0.65 [0.70] |
+
+The product number (R30 item 10: batch 1, one thread): reader 8.2 ms, BERT-tiny 12.2, BERT-mini 15.8, BERT-base 103.5. Batched, the
+small MRC models are faster than the reader on the CPU (20 threads, batch 32: 1.7 against 2.6 ms). The reader with the verb-order route
+(R58) is 11.7 M parameters and was not timed (not in the declared set). The 1 Hz GPU power log of the runs is
+logs/power_queue_2026-10-25_1956.csv (coarse; no per-sentence energy is claimed).

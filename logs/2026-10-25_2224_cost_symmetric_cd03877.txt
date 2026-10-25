@@ -1,0 +1,48 @@
+# 2026-10-25T22:24:08+01:00  commit=cd03877  cmd: python3 eval/cost_symmetric.py --mrc logs/models/mrc_google_bert_uncased_L-4_H-256_A-4_zs_seed0  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+cost_symmetric: main repository e531283; 500 sentences (seed 0, depth3_unseen), fp32; CPU threads 1 / 20, batch 1 / 32; CUDA batch 32
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]Loading weights: 100%|██████████| 71/71 [00:00<00:00, 64513.77it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-4_H-256_A-4
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/71 [00:00<?, ?it/s]Loading weights: 100%|██████████| 71/71 [00:00<00:00, 43851.51it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-4_H-256_A-4
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  mrc_google_bert_uncased_L-4_H-256_A-4_zs_seed0_depth_given: cpu_1t_b1 median 15.58 ms p95 17.49 ms; cpu_1t_b32 median 11.36 ms p95 11.98 ms; cpu_20t_b1 median 12.93 ms p95 20.24 ms; cpu_20t_b32 median 3.42 ms p95 3.60 ms; cuda_b32 median 0.66 ms p95 0.69 ms
+  mrc_google_bert_uncased_L-4_H-256_A-4_zs_seed0_all_six: cpu_1t_b1 median 15.83 ms p95 18.03 ms; cpu_1t_b32 median 11.46 ms p95 12.35 ms; cpu_20t_b1 median 12.60 ms p95 20.63 ms; cpu_20t_b32 median 3.55 ms p95 3.88 ms; cuda_b32 median 0.68 ms p95 0.74 ms
+checklist: [x] the same 500 sentences for every model [x] fp32 [x] four CPU cells and CUDA batch 32 [x] energy from the sidecar over the run (this machine, GB10)
+# post-launch guard (slots 16): MemAvailable 90 s after the start 115 GB
