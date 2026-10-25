@@ -74,3 +74,45 @@ class Placeholders:
     def __exit__(self, *exc):
         self.m.F = self.F0; del self.w.idx[self.TOKEN]; del self.w.cat[self.TOKEN]
         if self.Fr0 is not None: self.m.Freal = self.Fr0
+
+# R42 / R43 (2026-10-25): the EXPLAINED-TOKENS residual, a second rejection score beside `residuals` (which is unchanged and stays in
+# every table). Reference definition: the tool repository vss-demo, commit a1f4564 (tool/sop/infer.py residual_explained; that
+# repository is not a submodule here, so the definition below is transcribed from responses R42, not imported). explained = {tokens of a
+# non-content kind (not P / O / an event verb) and not unknown} U {fillers of the decoded roles, speakers included} U {the event lemma};
+# rec' = the reader's OWN state of the same token sequence restricted to the explained tokens (every token keeps its address from the
+# full sentence; the identities of unexplained tokens are zeroed: in v8_gates.states the identity table enters only through the final
+# F[ids], so rec' is states() with those ids pointed at an appended zero row); residual' = ||S/|S| - a rec'/|rec'||, a = max(0, Re <rec',
+# S>) on the unit vectors; 1.0 when no token is explained or a role of the depth is not decoded. The nonce placeholder (R18) is never
+# explained. Adaptation stated: the basic-world decoder emits no event lemma, so the event lemma is the FIRST token of an event-verb kind
+# (one per in-world sentence).
+CONTENT_FIXED = {"P", "O"}
+NONCONTENT = {"COP", "from", ",", "what", "it", "to", "who", "by", "says", "claims", ".", "that"}
+
+def explained_mask(tokens, cat, frame):
+    vals = {v for v in frame.values() if v is not None}; out = []; lemma_done = False
+    for t in tokens:
+        c = cat.get(t)
+        if t == Placeholders.TOKEN or c is None: out.append(False)
+        elif c in NONCONTENT: out.append(True)
+        elif c in CONTENT_FIXED: out.append(t in vals)
+        else: out.append(not lemma_done); lemma_done = True          # an event-verb kind: the first one is the event lemma
+    return out
+
+def residuals_explained(m, world, items, preds, batch=256):
+    out = []; cat = world.w.cat
+    for i in range(0, len(items), batch):
+        chunk = items[i:i + batch]; P = preds[i:i + batch]; cats, ids, mask = m.encode([it["tokens"] for it in chunk])
+        ex = torch.zeros_like(mask)
+        for k, (it, p) in enumerate(zip(chunk, P)): ex[k, :len(it["tokens"])] = torch.tensor(explained_mask(it["tokens"], cat, p["frame"]), dtype=mask.dtype)
+        F0 = m.F; m.F = torch.cat([F0, torch.zeros_like(F0[:1])]); zero = F0.shape[0]
+        try:
+            with torch.no_grad():
+                S = m.states(cats, ids, mask).cpu().numpy(); ids2 = torch.where(ex > 0, ids, torch.full_like(ids, zero)); Rc = m.states(cats, ids2, mask).cpu().numpy()
+        finally: m.F = F0
+        for k, (it, p) in enumerate(zip(chunk, P)):
+            roles = bwm.roles_at(it["depth"])
+            if any(p["frame"].get(r) is None for r in roles) or float(ex[k].sum()) == 0: out.append(1.0); continue
+            s, rec = S[k], Rc[k]; ns, nr = np.linalg.norm(s), np.linalg.norm(rec)
+            if ns < 1e-9 or nr < 1e-9: out.append(1.0); continue
+            sn, rn = s / ns, rec / nr; a = max(0.0, float(np.real(np.vdot(rn, sn)))); out.append(float(np.linalg.norm(sn - a * rn)))
+    return out

@@ -6,9 +6,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import reference_world as rw, mainrepo
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--D", type=int, default=1024)
+    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--D", type=int, default=1024)
     a = ap.parse_args(); print(f"make_reference_splits: main repository at {mainrepo.check_pinned()}; seeds {a.seeds}; D {a.D}")
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):   # --seed_start: R39 / R43, seeds 5-9 without rewriting 0-4
         sp = rw.make_splits(seed, a.D); n = n_ok = 0
         for axis, items in sp["axes"].items():
             for it in items:

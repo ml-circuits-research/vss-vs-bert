@@ -59,9 +59,9 @@ def make_part(split, ref, F, rng, n, exclude):
     return out, seen
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--n", type=int, default=500); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--n", type=int, default=500); a = ap.parse_args()
     print(f"make_oow_sets: main repository {mainrepo.check_pinned()}; seeds {a.seeds}; {a.n} items per source and part")
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):   # --seed_start: R39 / R43, seeds 5-9 without rewriting 0-4
         split = bwm.load(seed); bw = bwm.build(seed, split["D"]); ref = json.load(open(os.path.join(mainrepo.ROOT, "data", f"reference_seed{seed}.json")))
         F = in_world_forms(bw, split, np.random.default_rng(70_000 + seed))
         n_ref_ok = sum(form(it["tokens"], split["cat"]) not in F for items in ref["axes"].values() for it in items)

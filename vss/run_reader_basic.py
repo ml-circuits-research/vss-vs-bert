@@ -39,9 +39,11 @@ if __name__ == "__main__":
     ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 route book to logs/models/ for eval/determinism.py")
     ap.add_argument("--gates_given", default="none", choices=["none", "cues", "init_cues"], help="R14: 'cues' gives the GIVEN_OPEN gates open (row 'gates given'); R37: 'init_cues' opens them as a trainable initialisation")
     ap.add_argument("--save_all", action="store_true", help="save every seed's route book (R38 dumps)")
+    ap.add_argument("--seed_start", type=int, default=0, help="R39 / R13: seeds seed_start.. on the fresh frozen splits; from 5 on the row is named and tagged apart ('_fresh') so that it is never pooled with seeds 0-4")
     a = ap.parse_args(); D = a.D
     name, tag = {"none": ("VSS reader (reference)", "reader_basic"), "cues": ("VSS reader, gates given (R14)", "reader_basic_cues"),
                  "init_cues": ("VSS reader, gates given as initialisation (R37)", "reader_basic_cuesinit")}[a.gates_given]
+    if a.seed_start >= 5: name, tag = name + " [fresh splits, seeds 5-9]", tag + "_fresh"
     if a.gates_given == "init_cues":
         l1a = torch.load(os.path.join(mainrepo.ROOT, "logs", "models", "reader_basic_seed0.pt"))["logits"].float()
         INIT_LOGIT = float(torch.median(l1a[torch.sigmoid(l1a) > 0.5]))
@@ -50,7 +52,7 @@ if __name__ == "__main__":
     print("regime (rule 24): English basic world, prefixed reporting forms, training depths 0-2 (templates TRAIN_T, 12 persons / 12 objects), tested at depth 3 UNSEEN, 6 held-out persons / objects; frozen splits")
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167")
     rows = []
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):
         split = bwm.load(seed); assert split["D"] == D, f"splits were made with D={split['D']}; rerun data/make_splits.py --D {D}"
         bw = bwm.build(seed, D); w, world, F = bw["w"], bw["world"], bw["F"]
         m = v8_gates.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F)

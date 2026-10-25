@@ -11,7 +11,7 @@ import v8_gates
 from common import basic_world as bwm, decode, report
 from vss.run_reader_basic import GIVEN_OPEN
 
-ROWS = {"1a": "reader_basic", "r14": "reader_basic_cues", "r37": "reader_basic_cuesinit"}
+ROWS = {"1a": "reader_basic", "r14": "reader_basic_cues", "r37": "reader_basic_cuesinit", "1a_fresh": "reader_basic_fresh"}   # 1a_fresh: 1a on seeds 5-9 (R39)
 
 def get_reader(row, seed, device="cuda", D=1024, N=30000, batch=8, lr=0.02):
     tag = ROWS[row]; bw = bwm.build(seed, D); path = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed{seed}.pt")
