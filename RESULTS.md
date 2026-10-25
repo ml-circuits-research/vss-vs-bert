@@ -1252,3 +1252,32 @@ number). Learned open gates: seeds 5, 7, 9 {by from that to}; seed 6 {. by that 
 
 The fresh seeds reproduce 1a's picture: depth 3 at ceiling, new formulations 0.83-0.84, lower by 0.03 in the mean, with three of the
 five readers opening 'from' (1a: one of five).
+
+## LLM reference, in-context (R27 item 2, R29, R32, R33; eval/llm_reference.py --call; logs/2026-10-25_1608_llm_reference_79fff34.txt): reference (in-context LLM), not a baseline
+
+The restarted run (the first one stopped at 1,300 calls, above). Model claude-sonnet-5-5 through the Anthropic API (every response
+reports that model; no fallback), 2026-10-25 16:08-18:51, thinking {type: between_tools} at effort low (the lowest setting; no
+temperature control exists for this model), the frozen 10-shot prompt (eval/llm_reference_prompt.txt; ten training sentences of seed
+0; not data-matched) as a cached system block, 200 report items per axis of seed 0 (1,600 items), three repeats, 4,800 calls, every
+call end_turn, no refusal. Prices read on the pricing page at call time (USD per M tokens: input 2, output 10, 5-minute cache write 2.5,
+cache read 0.10). Tokens per call: 29.2 input, 34.3-34.6 output, 819 cache read (the cache DID engage on every call after the first,
+against R33's expectation; the cache-write field is 0.5 tokens per call on average in repeat 1). Spend 2.3275 USD (0.00048 per call);
+with the stopped first run (0.62-0.65 USD) about 2.95 USD of the 20 USD cap. About 2.0 s per call (API-bound, beside the GPU runs).
+Label: MEASURED.
+
+| axis (seed 0, n 200 each) | slot accuracy, repeats 1 / 2 / 3 | exact match six roles | wrong values; false fills |
+|---|---|---|---|
+| seen | 0.997 / 0.997 / 0.997 | 0.995 | 2 / 2 / 2; 0 |
+| new ids | 0.995 / 0.993 / 0.995 | 0.990 | 2 / 3 / 1; 0 |
+| new form. seen trans. | 0.950 / 0.963 / 0.950 | 0.925 / 0.945 / 0.925 | 30 / 22 / 29; 0 |
+| new form. UNSEEN trans. | 1.000 | 1.000 | 0; 0 |
+| new form. role cues | 1.000 | 1.000 | 0; 0 |
+| depth 1 | 0.978 / 0.980 / 0.975 | 0.955 / 0.960 / 0.950 | 17 / 14 / 18; 0 |
+| depth 2 | 0.982 / 0.990 / 0.988 | 0.955 / 0.975 / 0.970 | 16 / 10 / 12; 0 |
+| depth 3 (all six questions asked, depth not given) | 0.985 | 0.955 | 18 / 18 / 17; 0 |
+
+Determinism: frames identical across the three repeats on 0.978 of the 1,600 items. Reading: the in-context reference answers the
+level-3 question it was never shown in the ten examples (depth 3 exact match 0.955 with all six questions asked), never fills an absent
+role (0 false fills), and is at 0.95-1.00 on every new-formulation axis; it is the accuracy ceiling of this row family, on one seed's
+subset, at about 0.5 thousandths of a dollar and 2 s per sentence through an API, against a reader of 13 MB. It is not compared
+statistically with the trained models (one seed, a 200-item subset, 10-shot).
