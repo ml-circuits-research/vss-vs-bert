@@ -1629,3 +1629,96 @@ The product number (R30 item 10: batch 1, one thread): reader 8.2 ms, BERT-tiny 
 small MRC models are faster than the reader on the CPU (20 threads, batch 32: 1.7 against 2.6 ms). The reader with the verb-order route
 (R58) is 11.7 M parameters and was not timed (not in the declared set). The 1 Hz GPU power log of the runs is
 logs/power_queue_2026-10-25_1958.csv (coarse; no per-sentence energy is claimed).
+
+# JP 1: synthesis (stopping rule R48, amended by R49-R58; written 2026-10-25 22:35, when the declared set was measured)
+
+Every number below is from a section above (its log named there); nothing here is new. Seeds 0-4 are the pre-specified seeds of the
+pre-registered rows and, since R39, the inspected design set of the reader's changes; seeds 5-9 (frozen 16:06, never inspected) are the
+claim set of every reader change and of the fresh-seed BERT-tiny rows.
+
+## Table A. Pre-registered rows (tag prereg-2026-10-25 on 7c2035a; prereg-2026-10-25b for the MRC questions), basic world, seeds 0-4
+
+| row | model | seen | new ids | new form. seen / UNSEEN trans. | depth 3 slot acc. | exact match depth 3 (six / trained labels / inner) | log |
+|---|---|---|---|---|---|---|---|
+| 0 | frozen splits | tag->frame 1.000 | | | | | logs/2026-10-25_0748_make_splits_1617108.txt |
+| 1a | VSS reader (3.3 M) | 1.000 | 1.000 | 0.864 / 0.868 | 0.997 | 0.982 / 0.982 / 0.982 | logs/2026-10-25_0750_run_reader_basic_fade9d5.txt |
+| 1b | transformer 7b-bis (categories) | | 0.251 | | 0.390 | | logs/2026-10-25_0809_transformer_7b_c8e4e96.txt |
+| 1c | transformer 7b (plain) | | 0.215 | | 0.392 | | logs/2026-10-25_0817_transformer_7b_b4f0739.txt |
+| 2a | BERT-base tagger, WordPiece (110 M) | 1.000 | 1.000 | 0.999 / 1.000 | 0.961 | 0.765 / 1.000 / 1.000 | logs/2026-10-25_0830_bert_basic_4429ea4.txt |
+| 2b | BERT-base tagger, whole words | 1.000 | 1.000 | 0.993 / 0.977 | 0.892 | 0.495 / 0.858 / 1.000 | logs/2026-10-25_1207_bert_basic_f2afe4e.txt |
+| 3a | DistilBERT tagger (66 M) | 1.000 | 1.000 | 1.000 / 0.985 | 0.938 | 0.631 / 1.000 / 1.000 | logs/2026-10-25_1336_bert_basic_7a1500a.txt |
+| 3b | DistilBERT from scratch | not run (R28) | | | | | |
+
+## Table B. Declared rows (R number, all declared 2026-10-25 before they ran), the main comparison at the reader's size, MRC form
+
+Depth NOT given (the reader: its level-opener count; MRC: all six questions, NULL = not given); slot accuracy unless stated; mean over 5
+seeds (per-seed lists in the sections). Claim set = seeds 5-9.
+
+| row (R) | params | new form. seen / UNSEEN | depth-3 exact match six (inner) | X3 | confident error d3 | OOW: score, AUROC; rejected rnd / ref / nonce at 2% cal. FR; FR |
+|---|---|---|---|---|---|---|
+| rule ceiling (R30.1) | — | 1.000 / 1.000 | 1.000 (1.000) | 1.000 | — | — |
+| reader 1a (0-4) | 3.3 M | 0.864 / 0.868 | 0.982 (0.982) | 1.000 | 0.003 | compiled residual 0.876; 1.000 / 0.989 / 1.000; 0.435 |
+| reader 1a (5-9) | 3.3 M | 0.831 / 0.835 | 0.992 (0.992) | 1.000 | 0.001 | 0.883; 1.000 / 1.000 / 1.000; 0.440 |
+| reader 1a + R46 decoder (5-9) | 3.3 M | 0.867 / 0.973 | 0.998 | 1.000 | 0.000 | explained residual 0.979; 0.988 / 0.930 / 1.000; 0.026 |
+| **reader + verb-order route b + R46 (R58; 5-9)** | 11.7 M | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained 0.980; 0.988 / 0.932 / 1.000; **0.021** (design set 0.018: criterion met there) |
+| reader + route a (R56; 0-4, 5-9) | 11.7 M | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
+| BERT-tiny MRC pretrained (R28, R36; 0-4) | 4.4 M | 0.884 / 0.968 | 0.000 (0.972) | 0.000 | 0.171 | Mahalanobis 0.822, MSP 0.915; NULL threshold 0.992 / 0.943 / 0.954; FR 0.280 |
+| BERT-tiny pretrained (5-9) | 4.4 M | 0.834 / 0.986 | 0.000 (0.943) | 0.000 | 0.176 | Mahalanobis 0.837, MSP 0.898 |
+| BERT-tiny from scratch (0-4) | 4.4 M | 0.628 / 0.806 | 0.000 (0.173) | 0.000 | 0.358 | 0.751 / 0.689 |
+| BERT-tiny kinds given (0-4) | 4.4 M | 0.931 / 0.970 | 0.000 (0.722) | 0.000 | 0.214 | 0.806 / 0.907 |
+| BERT-mini pretrained (0-4) | 11.2 M | 1.000 / 0.982 | 0.000 (1.000) | 0.000 | 0.167 | 0.850 / 0.895 |
+| BERT-mini from scratch (0-4) | 11.2 M | 0.729 / 0.891 | 0.000 (0.142) | 0.000 | 0.365 | 0.821 / 0.661 |
+| BERT-mini kinds given (seeds 0-2, R51) | 11.2 M | 1.000 / 0.953 | 0.000 (0.963) | 0.000 | 0.173 | — |
+| LLM, 10-shot (reference, not a baseline; seed 0, 200 items per axis) | — | 0.950-0.963 / 1.000 | 0.955 (all six asked) | — | — | — |
+
+Query emission (R26 / R54, planted sets, seeds 0-4 and 5-9): the reader reports the appended unsupported identity in 0.98 of the
+sentences (criterion >= 0.90 met; MRC 0.66-0.84) and, with R54's adjacency rule, the undecided role in 0.997 / 0.999 (without it 0.51;
+MRC pretrained 0.99-1.00, with 0.29-0.43 needless queries on the other roles against the reader's 0.15-0.27). Legend growth (R49, claim
+set): the reader answers the level-3 question with 0 examples and 0 s; BERT-tiny needs 500 annotated examples (3 s of continued
+fine-tuning, worst drop 0.051, or 63 s of replay, 0.016) and a learning-rate choice that matters; a new form costs the reader a 2.3-min
+full retraining from 50 examples, BERT-tiny seconds to a minute. Cost (batch 1, one CPU thread, fp32): reader 8.2 ms per sentence,
+BERT-tiny 12.2, BERT-mini 15.8, BERT-base 103.5; batched the small MRC models are faster than the reader.
+
+## Confirmatory comparisons (R30 item 8; two-level bootstrap, Holm per pair at 0.05)
+
+Reader 1a against BERT-tiny pretrained / from scratch / kinds given and BERT-mini pretrained / from scratch (seeds 0-4) and BERT-tiny
+pretrained on the claim set (5-9): (i) six-question exact match at depth 3, depth not given, +0.98 to +0.99, rejected for every pair;
+(ii) confident error at matched coverage, -0.16 to -0.36, rejected for every pair; (iii) out-of-world AUROC (reader's compiled residual
+vs the encoder's Mahalanobis score), +0.046 to +0.125 and rejected for every pair EXCEPT BERT-mini pretrained (+0.026, 95% [-0.024,
++0.069], p 0.31: not rejected). As written in those sections: (i) and (ii) are decided by the zero-shot level-3 question of the 'zs'
+training (no MRC row was ever asked it; with 500 examples BERT-tiny answers it at 1.000, R49), so they measure the composition of a
+question never trained, not skill on a shared task; on (iii), the pretrained models' MSP (0.895-0.915) is above the reader's compiled
+residual with the catalog decoder (0.876-0.883); the reader's residuals reach 0.976-0.983 only with the R46 decoder, which is not the
+pre-specified comparison. Withdrawal condition (R30 item 3): the from-scratch encoders of the reader's size reach an inner-frame exact
+match of 0.173 (BERT-tiny) and 0.142 (BERT-mini) at depth 3 with the depth not given, below 0.99: the claim "same-size models trained
+from scratch do not compose this world" stands at 4.4 M and 11.2 M parameters.
+
+## Regime statements
+
+Basic world only (the reference world, WikiSQL, the real-data and multilingual rounds are not run: R48, a later paper). The kinds are
+given to the reader (and to the 'kinds given' rows); the depth is given at decoding in the given-depth rows and estimated in the
+headline rows; candidates are restricted to the world's vocabulary for every model (and, for the R46 rows, to the sentence's words, the
+assumption the extractive models carry by construction). Grids: none for the block (R35 / R36, fixed configuration); the pre-registered
+BERT rows had a grid, the reader none (in BERT's favour); validation saturates on this world (R34). Cost on this machine (GB10), fp32,
+the reader's readout in numpy. The reader's changes after the pre-registration (R37, R42, R46, R54, R56, R58) were designed on seeds 0-4
+after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-order route enlarges the reader to 11.7 M parameters.
+
+## Limitations
+
+- **The basic world is rule-solvable**: a 15-line rule over the given kinds and six function words reaches exact match 1.000 on every
+  axis (R30 item 1); these axes measure whether a model learned the world's rule, not composition in general. The reader is below the
+  rule on new formulations without the verb-order route (0.83-0.87) and reaches it only with the route and the R46 decoder (1.000).
+- **The claim is at 4-11 M parameters**: the main comparison is BERT-tiny (4.4 M) and BERT-mini (11.2 M) in the MRC form; BERT-small,
+  BERT-base MRC and DistilBERT-MRC were not run (R36, R48, R51); BERT-base and DistilBERT appear only as taggers (Table A).
+- **Refusal at a calibration threshold is met by no model on the claim set**: at 2% false rejection on the training distribution the
+  compiled residual and every MRC score reject the in-world generalisation rows wholesale (false rejection 0.28-0.51); the best row, the
+  reader with route b and the R46 decoder, rejects 0.988 / 0.932 / 1.000 of the out-of-world sources at 2.1% false rejection on the
+  claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set).
+- The comparisons (i) and (ii) are decided by a question never trained for the MRC models (above); the out-of-world comparison is the
+  one with content, and BERT-mini pretrained ties the reader there.
+- The reader's improvements (R46, R54, R58) were designed after reading the design-set dumps; they are held out only over identities,
+  draws and transitions, not over templates (R39).
+- BERT-mini kinds given has 3 seeds (R51); the 'all six questions' rows, the trained coverage head of R26, BERT-mini growth rows, the
+  sensitivity grid and every row listed under R48 / R51 are not run.
+- Decoder provenance: every reader row above was decoded by common/decode.py and eval/sentence_candidates.py (transcriptions); the
+  EQUAL checks against sop/ (the tool, R58 item 1) are reported in their own section.
