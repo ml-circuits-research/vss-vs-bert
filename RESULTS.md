@@ -1029,3 +1029,22 @@ every score the saved models allow, the cost table at equal precision (R30 item 
 - The deferred BERT-base tagger rows (R10 rows of 2b, 3a, 3b; R14 cue feature; R17 (ii); R20 depth heads), seeds 5-9 for the controls.
 - The real-data round and the multilingual round (runs 4-12 of RUNBOOK): a later paper with its own pre-registration.
 - The address-level fix of H2 (R47): tool-repository work after the stop.
+
+## The planted-sets row (R26 / Q19, R48 item 4), declared 2026-10-25 before it runs (code eval/planted.py)
+
+On the frozen planted sets data/planted_seed0-4.json (committed at e6c6f68, before any model saw them; seeds 0-4, the only planted
+sets; they were never part of the design-set inspection), for the reader 1a (original decoder, and R46's sentence candidates + one-to-one)
+and the saved small MRC models (BERT-tiny / BERT-mini x pretrained / from scratch / kinds given). Rules fixed now, the same for every
+model: depth from the level openers (not given); **'undecided'** is emitted for the planted role when its margin is below the model's
+threshold t = the 2% quantile of its role margins on the calibration rows (the R17 cap: at most 2% of in-distribution decisions
+queried; rule 18's tau is 0.000 for every model on this world and would query nothing), otherwise its value counts as INVENTED;
+**'unsupported'** is emitted for every identity token (kind P or O) placed in no role: the planted token is rightly queried if no role
+took it and invented if one did; an original identity left unplaced is a needless query. Deviation from R26 as written, stated: **no
+coverage head is trained for MRC** (the declared set of R48 contains no new training); every model uses the same untrained coverage
+test. The 'unknown' source (the out-of-world sets) is scored by the AUROC rows of R30 item 8, not here. Criterion (R26, the demo's):
+planted unsupported reported as queries >= 0.90; the hallucination rate (invented planted decisions + confident errors on the other
+roles, over all decisions; the term used once, so defined) reported per set.
+
+**Additions to the confirmatory script before it runs (R48 item 5):** AURC of the risk-coverage curve at depth 3 (depth not given;
+margin as confidence) for the reader and every MRC model; AUROC of the reader's explained residual (R42) and of the MRC NULL gap beside
+the pre-specified scores; the pairs are the reader against each of the six small MRC rows (Holm per pair over the three comparisons).

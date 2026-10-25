@@ -13,7 +13,9 @@ pre-specified comparisons of the reader against an MRC model, on the five shared
 Test: difference reader - model per seed; p-value from the two-level bootstrap (1,000 resamples: seeds with replacement, then items with
 replacement within each seed, the same indices for both models), two-sided; Holm over the three comparisons of the pair at 0.05; beside
 it mean ± std, the 4-df paired t, seeds ahead and a sign test (reported, not relied on). Also prints R30 item 3's withdrawal condition
-(an encoder FROM SCRATCH with inner-frame exact match >= 0.99 at depth 3, depth not given). Writes logs/results_confirmatory_<mrc tag>.json.
+(an encoder FROM SCRATCH with inner-frame exact match >= 0.99 at depth 3, depth not given). Secondary (R48 item 5): AURC of the
+risk-coverage curve on depth 3 (depth not given; margin as confidence) for both models; AUROC of the reader's explained residual (R42)
+and of the MRC NULL gap (minus the smallest best-candidate-minus-NULL score over the six questions). Writes logs/results_confirmatory_<mrc tag>.json.
 Run: ./run.sh eval/confirmatory.py --mrc <tag>[,<tag>...] (tags as logs/models/<tag>_seed<s>/, e.g. mrc_google_bert_uncased_L-2_H-128_A-2_zs)"""
 import argparse, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -35,6 +37,12 @@ def auroc(inw, out):
     x = np.concatenate([inw, out]); r = rankdata(x); n1, n2 = len(inw), len(out)
     return float((r[n1:].sum() - n2 * (n2 + 1) / 2) / (n1 * n2))
 
+def aurc(correct, conf):
+    """area under the risk-coverage curve: decisions sorted by confidence (descending), risk = error rate among the answered, averaged
+    over every coverage level 1/n .. 1 (lower is better)"""
+    o = np.argsort(-np.asarray(conf), kind="stable"); err = 1.0 - np.asarray(correct, float)[o]
+    return float(np.mean(np.cumsum(err) / np.arange(1, len(err) + 1)))
+
 def est(items): return [dict(it, depth=decode.depth_from_openers(it["tokens"])) for it in items]
 
 # ---------- reader ----------
@@ -50,16 +58,17 @@ def reader_seed(seed, device):
     dec = [[(p["frame"].get(r) == it["frame"][r], p["margins"].get(r, -np.inf)) for r in bwm.ROLES] for p, it in zip(p3, g3)]
     cov = float(np.mean([mg >= tau for d in dec for _, mg in d]))
     cw = np.array([np.mean([(not c) and mg >= tau for c, mg in d]) for d in dec])
-    sc_in, mg_in = [], []
+    au = aurc([c for d in dec for c, _ in d], [mg for d in dec for _, mg in d])
+    sc_in, mg_in, ex_in, ex_out = [], [], [], []
     for ax in report.AXES:
         if not split["axes"][ax]: continue
-        e, p = run(split["axes"][ax], ax); sc_in += decode.residuals(m, world, e, p); mg_in += [min(pp["margins"].values()) for pp in p]
+        e, p = run(split["axes"][ax], ax); sc_in += decode.residuals(m, world, e, p); mg_in += [min(pp["margins"].values()) for pp in p]; ex_in += decode.residuals_explained(m, world, e, p)
     oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); sc_out, mg_out = [], []
     for src in OOW_POOL:
-        e, p = run(oow["test"][src]); sc_out += decode.residuals(m, world, e, p); mg_out += [min(pp["margins"].values()) for pp in p]
+        e, p = run(oow["test"][src]); sc_out += decode.residuals(m, world, e, p); mg_out += [min(pp["margins"].values()) for pp in p]; ex_out += decode.residuals_explained(m, world, e, p)
     print(f"  reader seed {seed}: {how}; {chk}; tau {tau:.4f}, coverage depth 3 (not given) {cov:.3f}", flush=True)
     return {"em": em, "inner": inner, "cov": cov, "tau": tau, "cw": cw, "in": np.array(sc_in), "out": np.array(sc_out),
-            "in_margin": -np.array(mg_in), "out_margin": -np.array(mg_out)}
+            "in_margin": -np.array(mg_in), "out_margin": -np.array(mg_out), "in_expl": np.array(ex_in), "out_expl": np.array(ex_out), "aurc": au}
 
 # ---------- MRC ----------
 def mrc_load(tag, seed, device):
@@ -74,7 +83,7 @@ def mrc_pass(model, tok, split, axis, items, device, batch=256):
     """all six questions per item -> per item: frame, margins, min max-prob, mean [CLS] feature"""
     meta = [(bm.QUESTIONS[r], it["tokens"], set(bwm.candidates_for(split, axis, r)), n, r) for n, it in enumerate(items) for r in bwm.ROLES]
     cap = {}; h = model.enc.register_forward_hook(lambda mod, i, o: cap.__setitem__("h", o.last_hidden_state))
-    out = [{"frame": {}, "margins": {}, "maxp": [], "cls": []} for _ in items]
+    out = [{"frame": {}, "margins": {}, "maxp": [], "cls": [], "gap": []} for _ in items]
     for i in range(0, len(meta), batch):
         chunk = meta[i:i + batch]; pairs = [(q, s) for q, s, _, _, _ in chunk]; ids, att, tt, spans = bm.encode(tok, pairs, device)
         s, e = bm.fwd(model, ids, att, tt, spans, pairs); s, e = s.float().cpu().numpy(), e.float().cpu().numpy(); cls = cap["h"][:, 0].float().cpu().numpy()
@@ -82,9 +91,9 @@ def mrc_pass(model, tok, split, axis, items, device, batch=256):
             null = s[b, 0] + e[b, 0]; sc = [(s[b, spans[b][k][0]] + e[b, spans[b][k][1]], k) for k, t in enumerate(toks) if t in cands and spans[b][k] is not None]
             allv = np.array(sorted([v for v, _ in sc] + [null], reverse=True)); best = max(sc) if sc else (-np.inf, None)
             out[n]["frame"][r] = toks[best[1]] if best[0] > null else None; out[n]["margins"][r] = float(allv[0] - allv[1]) if len(allv) > 1 else float(allv[0])
-            pz = np.exp(allv - allv[0]); out[n]["maxp"].append(float(1 / pz.sum())); out[n]["cls"].append(cls[b])
+            pz = np.exp(allv - allv[0]); out[n]["maxp"].append(float(1 / pz.sum())); out[n]["cls"].append(cls[b]); out[n]["gap"].append(float(best[0] - null))
     h.remove()
-    for o in out: o["cls"] = np.mean(o["cls"], 0); o["minmaxp"] = min(o["maxp"])
+    for o in out: o["cls"] = np.mean(o["cls"], 0); o["minmaxp"] = min(o["maxp"]); o["mingap"] = min(o["gap"])
     return out
 
 def mrc_seed(tag, seed, cov_target, device):
@@ -97,6 +106,7 @@ def mrc_seed(tag, seed, cov_target, device):
     inner = float(np.mean([all(o["frame"][r] == it["frame"][r] for r in ("A", "B", "C")) for o, it in zip(o3, g3)]))
     cw = np.array([np.mean([(o["frame"][r] != it["frame"][r]) and o["margins"][r] >= thr for r in bwm.ROLES]) for o, it in zip(o3, g3)])
     cov = float(np.mean([o["margins"][r] >= thr for o in o3 for r in bwm.ROLES]))
+    au = aurc([o["frame"][r] == it["frame"][r] for o, it in zip(o3, g3) for r in bwm.ROLES], [o["margins"][r] for o in o3 for r in bwm.ROLES])
     X = np.stack([o["cls"] for o in cal]); mu = X.mean(0); C = np.cov(X, rowvar=False) + 1e-3 * np.eye(X.shape[1]); P = np.linalg.inv(C)
     maha = lambda os_: np.array([float(np.sqrt(max(0.0, (o["cls"] - mu) @ P @ (o["cls"] - mu)))) for o in os_])
     ins = [o for ax in report.AXES if split["axes"][ax] for o in mrc_pass(model, tok, split, ax, split["axes"][ax], device)]
@@ -104,7 +114,8 @@ def mrc_seed(tag, seed, cov_target, device):
     outs = [o for src in OOW_POOL for o in mrc_pass(model, tok, split, "x", oow["test"][src], device)]
     print(f"  {tag} seed {seed}: threshold {thr:.4f} for coverage {cov_target:.3f} (achieved {cov:.3f}); exact match six {em.mean():.3f}, inner {inner:.3f}", flush=True)
     return {"em": em, "inner": inner, "cov": cov, "thr": thr, "cw": cw, "in": maha(ins), "out": maha(outs),
-            "in_msp": 1 - np.array([o["minmaxp"] for o in ins]), "out_msp": 1 - np.array([o["minmaxp"] for o in outs]), "scratch": cfg.get("scratch", False)}
+            "in_msp": 1 - np.array([o["minmaxp"] for o in ins]), "out_msp": 1 - np.array([o["minmaxp"] for o in outs]), "scratch": cfg.get("scratch", False),
+            "in_gap": -np.array([o["mingap"] for o in ins]), "out_gap": -np.array([o["mingap"] for o in outs]), "aurc": au}
 
 # ---------- statistics ----------
 def boot(R, M, stat, rng):
@@ -162,6 +173,10 @@ if __name__ == "__main__":
         print(f"  Holm (alpha 0.05, three comparisons): " + "; ".join(f"{n} {'REJECT H0' if res['comparisons'][n]['holm_reject'] else 'not rejected'}" for n, _, _ in comps))
         inner = np.mean([m["inner"] for m in M]); res["inner_mean"] = float(inner)
         if any(m["scratch"] for m in M): print(f"  withdrawal condition (R30 item 3): from-scratch inner-frame exact match at depth 3, depth not given {inner:.3f} {'>= 0.99: the claim is WITHDRAWN' if inner >= 0.99 else '< 0.99: the claim stands'}")
-        res["secondary"] = {"auroc_reader_margin": [auroc(r["in_margin"], r["out_margin"]) for r in R], "auroc_mrc_msp": [auroc(m["in_msp"], m["out_msp"]) for m in M], "coverage_reader": [r["cov"] for r in R], "coverage_mrc": [m["cov"] for m in M]}
+        res["secondary"] = {"auroc_reader_residual": [auroc(r["in"], r["out"]) for r in R], "auroc_reader_margin": [auroc(r["in_margin"], r["out_margin"]) for r in R],
+                            "auroc_reader_explained_residual": [auroc(r["in_expl"], r["out_expl"]) for r in R], "auroc_mrc_mahalanobis": [auroc(m["in"], m["out"]) for m in M],
+                            "auroc_mrc_msp": [auroc(m["in_msp"], m["out_msp"]) for m in M], "auroc_mrc_null_gap": [auroc(m["in_gap"], m["out_gap"]) for m in M],
+                            "aurc_reader": [r["aurc"] for r in R], "aurc_mrc": [m["aurc"] for m in M], "coverage_reader": [r["cov"] for r in R], "coverage_mrc": [m["cov"] for m in M]}
+        for k, v in res["secondary"].items(): print(f"  {k}: {ms(v)}")
         json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}.json"), "w"), indent=1)
     metrics.checklist(5, "[x] comparisons pre-specified (R30 item 8) [x] thresholds on calibration rows only [x] two-level bootstrap [x] Holm")
