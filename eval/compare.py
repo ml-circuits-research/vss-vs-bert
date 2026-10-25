@@ -40,6 +40,18 @@ def basic_tables(out):
         for m, rs in rows.items():
             if m == ref: continue
             lines.append(f"| {m} | " + " | ".join(ci_diff([r["axes"][a]["mean_role"] for r in rs], [r["axes"][a]["mean_role"] for r in rr]) for a in ("new_ids", "depth3_unseen", "new_form_unseen_trans")) + " |")
+    lines += ["", "## Second decoding rule: one-to-one assignment (R10 item 1; rows without per-candidate scores: not available)", "", "| model | " + " | ".join(COLS) + " | FULL depth 3 | FULL trained labels | FULL inner |", "|---|" + "---|" * (len(COLS) + 3)]
+    for m, rs in rows.items():
+        R = [r["one_to_one"] for r in rs if "one_to_one" in r]
+        if len(R) != len(rs): lines.append(f"| {m} | " + " | ".join(["not available"] * (len(COLS) + 3)) + " |"); continue
+        lines.append(f"| {m} | " + " | ".join(ms([x["axes"][a]["mean_role"] for x in R]) if all(x["axes"][a] for x in R) else "nan" for a in AXES) + " | " + " | ".join(ms([x["axes"]["depth3_unseen"][k] for x in R]) for k in ("full", "full_trained", "full_inner")) + " |")
+    lines += ["", "## Depth 3 by filler position seen in training / never reached (R10 item 2a; the model's own position unit)", "", "| model | unit | rule | all roles, seen | all roles, unseen | inner, seen | inner, unseen |", "|---|---|---|---|---|---|---|"]
+    for m, rs in rows.items():
+        for rule in ("per-role", "one_to_one"):
+            R = [r["axes"] if rule == "per-role" else r.get("one_to_one", {}).get("axes") for r in rs]
+            if not all(x and "position_split" in x["depth3_unseen"] for x in R): continue
+            g = lambda k, h: ms([x["depth3_unseen"]["position_split"][k][h]["accuracy"] for x in R if x["depth3_unseen"]["position_split"][k][h]["accuracy"] is not None])
+            lines.append(f"| {m} | {rs[0]['axes']['depth3_unseen'].get('position_unit', 'word')} | {rule} | {g('all_roles', 'seen_position')} | {g('all_roles', 'unseen_position')} | {g('inner', 'seen_position')} | {g('inner', 'unseen_position')} |")
     lines += ["", "## Depth 3 (UNSEEN), per role", "", "| model | " + " | ".join(bwm.ROLES) + " |", "|---|" + "---|" * 6]
     for m, rs in rows.items(): lines.append(f"| {m} | " + " | ".join(f"{np.mean([r['per_role_depth3'][k] for r in rs]):.3f}" for k in bwm.ROLES) + " |")
     lines += ["", "## Calibration (tau on calibration rows; coverage / confident-wrong / accuracy among answered; ECE rank-mapped)", "", "| model | axis | tau | coverage | confident-wrong | acc. answered | ECE |", "|---|---|---|---|---|---|---|"]

@@ -26,6 +26,7 @@ def decode_frozen(m, world, split, axis, batch=256):
                 top = np.argsort(-sc, axis=1)
                 for k, j in enumerate(rows):
                     out[j]["frame"][r] = cands[top[k, 0]]; out[j]["margins"][r] = float(sc[k, top[k, 0]] - sc[k, top[k, 1]])
+                    out[j].setdefault("cand_scores", {})[r] = (list(cands), sc[k].tolist())   # R10 item 1: for the one-to-one rule
             for j in rows:
                 for r in bwm.ROLES:
                     if r not in out[j]["frame"]: out[j]["frame"][r] = None

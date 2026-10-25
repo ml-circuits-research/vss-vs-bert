@@ -33,6 +33,42 @@ def full_over(items, preds, roles):
     training (A, B, C, X1, X2) and for the inner frame (A, B, C), beside the six-role FULL, because a tagger cannot output X3 (never trained)"""
     return float(np.mean([all(p["frame"].get(r) == it["frame"].get(r) for r in roles) for it, p in zip(items, preds)]))
 
+def one_to_one(pred, roles):
+    """R10 item 1 (2026-10-25): the SECOND decoding rule, for every model. In the world the fillers of one sentence are always distinct,
+    a property equally available to all models; the rule assigns the roles to distinct candidates maximising the summed score (the
+    model's own per-candidate score: cosine for the reader and the 7b transformers, log-probability for a tagger), exactly (Hungarian).
+    pred["cand_scores"][r] = (fillers, scores). Margin of a role = score of the assigned filler minus the best score of any OTHER candidate
+    for that role (negative when the assignment overrides the role's top-1); the sentence's assignment margin = best total score minus the
+    second-best assignment's total (R11). Returns a prediction in the scorer's format."""
+    from scipy.optimize import linear_sum_assignment
+    cs = pred["cand_scores"]; rs = [r for r in roles if r in cs and len(cs[r][0])]
+    out = {"frame": {r: None for r in pred["frame"]}, "margins": {r: 0.0 for r in roles}}
+    if not rs: return out
+    U = sorted({f for r in rs for f in cs[r][0]}); col = {f: j for j, f in enumerate(U)}
+    M = np.full((len(rs), len(U)), -1e9)
+    for i, r in enumerate(rs):
+        for f, v in zip(*cs[r]): M[i, col[f]] = v
+    ri, ci = linear_sum_assignment(-M); total = float(M[ri, ci].sum()); second = -np.inf
+    for i, j in zip(ri, ci):                      # the second-best assignment differs from the best in at least one (role, filler) pair
+        M2 = M.copy(); M2[i, j] = -1e9; r2, c2 = linear_sum_assignment(-M2); v = float(M2[r2, c2].sum())
+        if v > -1e8: second = max(second, v)
+    out["assignment_margin"] = float(total - second) if np.isfinite(second) else 0.0
+    for i, j in zip(ri, ci):
+        r = rs[i]; f = U[j]; sc = dict(zip(*cs[r])); others = [v for g, v in sc.items() if g != f]
+        out["frame"][r] = f; out["margins"][r] = float(sc[f] - (max(others) if others else 0.0))
+    return out
+
+def position_split(items, preds, positions, train_max, roles):
+    """R10 item 2a: accuracy of the role decisions split by whether the gold filler's position (in the model's own unit: word index for
+    the reader and the 7b transformers, first-sub-token index for a tagger) was reached by some training sentence (position < train_max)"""
+    seen, unseen = [], []
+    for it, p, pos in zip(items, preds, positions):
+        for r in roles:
+            if it["frame"].get(r) is None or pos.get(r) is None: continue
+            (seen if pos[r] < train_max else unseen).append(p["frame"].get(r) == it["frame"][r])
+    f = lambda v: {"n": len(v), "accuracy": (float(np.mean(v)) if v else None)}
+    return {"train_max": int(train_max), "seen_position": f(seen), "unseen_position": f(unseen)}
+
 def set_tau(cal_dec, max_confident_wrong=0.02, grid=None):
     """the threshold rule (written before the runs): the SMALLEST tau at which the confident-wrong rate on the calibration rows is below
     max_confident_wrong (as the paper's verifier threshold, RESULTS 11-octies); tau = +inf when no threshold reaches it"""

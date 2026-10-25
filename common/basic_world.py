@@ -87,6 +87,22 @@ def candidates_for(split, axis, role):
     if role == "B": return c["objects_test"] if new else c["objects_train"]
     return c["persons_test"] if new else c["persons_train"]
 
+def train_max_words(w):
+    """R10 item 2a: the length in words of the longest sentence the training distribution can produce (training templates, depths 0-2,
+    every combination of outer reporting forms); word lengths do not depend on the identities, so this is exact for every model's training
+    draws. A word position >= this value is never reached in training."""
+    v5, v7 = mainrepo.import_experiment(); import itertools
+    ev = ("GIVE" if "GIVE" in w.frames else next(iter(w.frames)), w.persons[0], w.objects[0], w.persons[1]); best = 0
+    for d in range(DEPTH_TRAIN + 1):
+        e = ev + tuple(w.persons[2:2 + d]) + (None,) * (3 - d)
+        for t in v5.TRAIN_T:
+            for outer in itertools.product(range(len(v5.OUTER)), repeat=d): best = max(best, len(w.render(e, t, outer=list(outer))))
+    return best
+
+def word_positions(item):
+    """the word index of each role's gold filler (fillers are distinct and occur once)"""
+    return {r: (item["tokens"].index(f) if f is not None and f in item["tokens"] else None) for r, f in item["frame"].items()}
+
 def roles_at(depth): return ["A", "B", "C"] + [f"X{k+1}" for k in range(depth)]
 
 def path(seed): return os.path.join(mainrepo.ROOT, "data", f"basic_seed{seed}.json")
