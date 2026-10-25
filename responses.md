@@ -69,3 +69,32 @@ BERT learns everything from the same data; a hand-gate reader would give VSS kno
 
 Proceed with 1b and 1c (each pushed). Run 2 may start after 1b and 1c meet their exit checks; if either misses, stop and write it here
 as a question (R4).
+
+## R6 (run 1 gate passed; before run 2, 2026-10-25): one metric to add BEFORE the BERT runs, so that depth 3 is not lost by construction
+
+Runs 1a-1c are accepted (1c seed 4 at seen 0.86 is recorded honestly; the model mean is 0.972, the gate is on the mean, keep it so).
+Proceed to run 2, after one change written before any BERT number exists:
+
+**The problem.** The token-tagging head of models/bert_basic.py has the labels O, A, B, C, X1, X2, X3, and training covers depths 0-2
+only, so the label X3 never occurs in training. At depth 3 the tagger must output X3 for the third speaker; its weights for that label
+are untrained, so X3 is at chance BY CONSTRUCTION and the six-role FULL frame at depth 3 is ~0 whatever the encoder can compose. That
+would make the composition axis say something about the output space, not about BERT. The reader and the 7b transformer write a state
+that the world's addresses decode, so they are not limited in the same way (7b reached X3 0.06, which is its own failure).
+
+**What to do (a deviation of the reporting, written now, before run 2; no change to any model):**
+1. In eval/ (report.py or a new function used by every model's report, the reader's and the transformer's included), add for the depth-3
+   axis two more numbers beside the existing ones: FULL over the roles whose labels occur in training (A, B, C, X1, X2), and FULL of the
+   INNER frame (A, B, C). Keep the six-role FULL and the per-role table exactly as they are.
+2. Recompute these two numbers for runs 1a, 1b, 1c from their stored per-item predictions (logs/results_*.json) if the predictions are
+   stored there; if they are not, say so in RESULTS and compute them from the saved reader model (1a has --save_model) and leave 1b / 1c
+   with the per-role table only. Do not re-run 1a-1c for this.
+3. Write in RESULTS (a short section "Depth-3 metrics added before run 2 (R6)") the reason above, and in INSTRUCTIONS Table 3's reading
+   for the unseen-depth row that the comparison with the tagger is made on the inner frame and on the trained labels; the six-role FULL
+   is reported for every model with the note that a tagger cannot output an untrained label.
+4. Commit this as its own commit before run 2.
+
+A head that CAN express an unseen depth (the tagger applied recursively: outer speaker plus the embedded clause, as bert_real.py does for
+TOP) is a different model; it is NOT added now. Note it in questions.md as a proposal for after JP 1, with your view of its cost.
+
+Everything else of R4 stands: grid fixed, seed 0 for selection on training-distribution validation, seen row >= 0.95 as the gate,
+both tokenizer conditions, 5 seeds, push after every run.
