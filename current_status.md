@@ -1,39 +1,29 @@
 # current status (rewritten at every judgment point)
 
-- 2026-10-24: repository created; no run yet. Next: run 0 (`./run.sh data/make_splits.py --seeds 5`), then run 1 (reader and 7b / 7b-bis on the
-  frozen splits; exit check: within seed variance of the main repository). Open decisions: the small pretrained encoder; the timing of round 2.
-- 2026-10-24 (later): the real-data round prepared (INSTRUCTIONS_REAL_2026-10-24.md, RUNBOOK section 4): SNIPS, MASSIVE and TOPv2 as
-  real user commands annotated with frames; loaders, conversion (round trips tested on gold), frozen split conditions (base with
-  sizes, new slot values and unseen templates; held-out templates; out-of-domain intents; TOPv2 depth), the reader through the sop tool,
-  the encoders with BIO + intent + nested heads, the shared scorer and the tables. SNIPS splits committed (ids only); MASSIVE and TOPv2 are
-  downloaded and split on the DGX. Runs 8 onward after judgment point 2 unless the reviewing session decides otherwise. No result yet.
-- 2026-10-25 (DGX, between judgment points; rewritten at JP 1): runs 0, 1a, 1b, 1c done and reproduce the main repository (RESULTS 0-1c);
-  R6 depth-3 metrics in place (commit 3ab0ef9); pre-registration tag prereg-2026-10-25 on 7c2035a (R9.1); run 2a (BERT-base, WordPiece)
-  done (RESULTS 2a); 2b running (13:00-); R10 rules on the saved seed-0 models done. Open items:
-  - JP 1: the recursive tagger that can express an unseen depth (questions Q5, accepted as a proposal by R7): decided at JP 1; if run,
-    reported beside the flat tagger, never instead of it.
-  - JP 1 onward: the wider BERT-base grid on seed 0 (R9.5: lr {1e-5, 2e-5, 3e-5, 5e-5, 1e-4} x epochs {3, 5, 10, 20}, warm-up 10%) on the
-    unseen-depth and new-identity axes, as a stated additional analysis beside the pre-registered rows.
-  - before run 6: blind error analysis in eval/error_analysis.py (R9.3: model names removed, rows of all models shuffled together with a
-    fixed seed, the key in a separate file committed after the classification), its own commit.
-  - real-data round (after JP 2): run 8.0 first, the reproduction of published BERT numbers on SNIPS and MASSIVE en-US with standard
-    splits and metrics (R8), written into INSTRUCTIONS_REAL in its own commit when the round starts.
-  - the independent review of the BERT code (R9.6) arrived as R10: deviations declared in RESULTS, R10 rows beside the pre-registered ones.
-  - JP 1: seeds 5-9 (R13) for every model of runs 1-3, same selected configuration, splits data/basic_seed5-9.json committed before any
-    model sees them; never seed selection.
-  - write-up, threats to validity (R12, Q10): "selection cost of the reader in this repository: 0; its configuration was developed in the
-    main repository on the same worlds (cited rounds), so the reader's design is not blind to these worlds, while BERT's architecture is".
-  - cost rows (R12, Q8): training and selection wall-clock from the logs for every row, GPU energy from 2b on, thread count and batch.
-  - after JP 1: BERT-tiny / BERT-mini at the reader's size (R19; RESULTS 'Deviation R19'): both load with transformers 5.20.2 and are
-    cached; grid lr {5e-5, 1e-4, 3e-4} x epochs {5, 10, 20}; interpretations (a)/(b)/(c) written in RESULTS before the run.
-  - JP 1 question (R15): extending the frozen worlds to depths 4 and 5 for every model (training still at 0-2); its cost and any
-    unfairness to either side are written in questions.md at JP 1, not before.
-  - before JP 1, in order (R15-R18): 2b, 3a, 3b (pre-registered); the R10 rows of runs 2-3 with the R11 1b / 1c re-runs; the R14 rows;
-    the R17 rows (out-of-world sets committed after 2b, before any model sees them; Q16 open).
+## 2026-10-25 22:40 — JP 1 (the experiment stops here by the owner's rule R48)
 
-- Threats to validity for the write-up (R12, R27, R28), each stated as an asymmetry that stays: pretraining (the question itself); the
-  worlds were built by us and the reader's configuration was developed on them (R12: selection cost 0 here, not blind to these worlds);
-  the depth is given at decoding to every model (equal; plus the depth-not-given rows); the candidates are restricted to the world's
-  vocabulary for every model (equal); a grid for BERT and none for the reader (in BERT's favour); the kinds are given to the reader (and
-  to the 'kinds given' rows of BERT-MRC, R27 item 1); on real data the reader's kinds are learned (R27 item 5); WikiSQL in a regime below
-  the table-conditioned state of the art (R27 item 5); 3b not run (R28).
+What was measured (RESULTS 'JP 1: synthesis' holds both tables, the confirmatory results, the regime statements and the limitations):
+- Pre-registered rows (tag prereg-2026-10-25): 0, 1a, 1b, 1c, 2a, 2b, 3a; 3b not run (R28).
+- The main comparison at the reader's size, MRC form: BERT-tiny (4.4 M) and BERT-mini (11.2 M), pretrained / from scratch / kinds given.
+  No MRC row answers the level-3 question it was never asked (X3 0.000); pretrained inner frame 0.97-1.00; from scratch 0.14-0.17 (the
+  withdrawal condition is not met: the from-scratch claim stands).
+- The reader 1a (3.3 M): depth-3 exact match 0.98-0.99, new formulations 0.83-0.87 (below the rule and BERT). With the R46 decoder and the
+  verb-order route variant b (R58, 11.7 M): new formulations 1.000 on the claim set (seeds 5-9); variant a (R56) rejected by its own rule.
+- Refusal: no model meets the demo criterion on the claim set; the best row (route b + R46, explained residual) rejects 0.99 / 0.93 / 1.00
+  at 2.1% false rejection (design set 1.8%).
+- Query emission: the reader reports unsupported identities 0.98 (MRC 0.66-0.84) and, with R54's rule, undecided roles 0.997-0.999.
+- Confirmatory: all pairs Holm-rejected except out-of-world AUROC vs BERT-mini pretrained; (i)-(ii) decided by the untrained question.
+- Legend growth: the composed question costs the reader 0 examples; BERT-tiny needs 500 examples and an lr choice; a new form costs the
+  reader a 2.3-min retraining. Cost at batch 1 / 1 thread: reader 8.2 ms, BERT-tiny 12.2, BERT-mini 15.8, BERT-base 103.5.
+- LLM reference (claude-sonnet-5-5, 10-shot): 0.95-1.00 per axis, depth-3 exact match 0.955, 2.95 USD in total.
+
+Not run by R48 / R51 (each in RESULTS): BERT-base MRC, BERT-small, the sensitivity grid, the 'all' rows, BERT-mini kinds seeds 3-4 and
+growth, R30 items 2 / 4 / 6c, the deferred tagger rows, the real-data and multilingual rounds, the trained coverage head of R26.
+
+Open: sop/ EQUAL checks (R58 item 1, unblocked by R59) are running and are reported in RESULTS when done; questions.md has no open
+blocking question. Threats to validity: RESULTS 'Limitations' (rule-solvable world; claim at 4-11 M; refusal not met; reader changes
+designed on the inspected seeds; decoder provenance).
+
+## Earlier entries
+
+- 2026-10-24: repository created; runs 0-1 planned. 2026-10-25 (morning): runs 0, 1a-1c, 2a, 2b, 3a; the R10 rules; the derived-row queue.

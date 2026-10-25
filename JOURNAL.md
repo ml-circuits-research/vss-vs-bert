@@ -89,3 +89,22 @@ swap / absent kinds, gold ranks, one example sentence per cell), results/diagnos
 results/diagnosis_reader_basic_cues.json, logs/2026-10-25_1705_diagnose_reader_eb89dbb.txt; results/confident_errors_50_*.tsv written,
 counted by kind only. From now on seeds 0-4 are the inspected design set. Calibration files of the R41 check:
 logs/results_r41check_seed0-4.json (calibration rows only). The diagnosis is in questions.md (note of 17:15).
+
+## 2026-10-25 22:40 — JP 1 (the declared set of R48, amended by R49-R58, measured; experimental session)
+
+Measured since the handover (16:05): the equal-size MRC block (BERT-tiny / mini x pretrained / scratch / kinds; mini kinds 3 seeds, R51),
+BERT-tiny on fresh seeds, the reader rows R37, R41 check (refutes R41), R42, R46, R54, R56 (route a, rejected by its own rule) and R58
+(route b, not rejected), the planted sets, the confirmatory comparisons, the legend-growth rows, the cost table and the LLM reference.
+Decision points of the day, each from a response: R48 / R51 cut the set (BERT-base MRC, BERT-small, the sensitivity grid, the 'all' rows,
+BERT-mini growth, real data: not run); R46 / R54 / R56 / R58 changed the reader's decoder and routes as declared rows, designed on the
+inspected seeds 0-4 (files opened: results/dump_reader_basic*_seed0-4.json, results/dump_reader_basic_cues*_seed0-4.json,
+results/dump_reader_basic_cuesinit_seed0-4.json, results/diagnosis_*.json; the R41 check read logs/results_r41check_seed0-4.json,
+calibration rows only), claimed on seeds 5-9. Design sources: R38-R43 (dumps, residual), R46 / R47 (decoder), R52 (R37's reading), R54
+(adjacency), R55 / R56 / R58 (routes; reference implementations vss-demo a1f4564, f46b8d4, 434fa40 and sop/ at 561cbcb / 4a92afd). Tool
+repository work recorded here, not run here: vss-demo's 'vorder' variant a was transcribed and run (R56), its variant b transcribed from
+sop/v8_gates_vorder_ref.py and run (R58). Exposures, stated: the smoke tests printed seed-0 lines (JOURNAL 16:20); make_planted_sets
+printed one example sentence per seed of the seeds 5-9 planted sets (read in the log). Run-infrastructure lessons: run.sh names logs by
+the minute (two launches in one minute share a file: the 16:08 / 16:09 block logs; per-run stdout copies kept); a 30-min log-stall
+watchdog killed a grid chain that printed nothing per epoch (progress lines added); untracked result files block run.sh launches.
+JP 1 is written in RESULTS ('JP 1: synthesis'); the experiment stops here (R48). Next, outside this session: the paper; sop EQUAL
+checks are reported in RESULTS as they finish.
