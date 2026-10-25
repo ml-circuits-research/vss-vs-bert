@@ -358,3 +358,20 @@ after run 3 and before JP 1; the frozen out-of-world sets are a separate commit 
   property of the token sequence and not of the model), so that the three model families appear in the depth-not-given row. The
   from-scratch encoder and the trained OOW class for the controls stay out unless asked.
 Order unchanged: pre-registered 2b, 3a, 3b first; then the R10 rows; then R14 and R17 rows; then JP 1.
+
+## R19 (2026-10-25): small pretrained encoders at the reader's size, a declared row for after JP 1
+
+The reader's argument is only convincing at equal size. Declared now, run after JP 1 (not before), interpretations written before the
+run: BERT-tiny (google/bert_uncased_L-2_H-128_A-2, 4.4 M) and BERT-mini (L-4_H-256_A-4, 11 M), pretrained, fine-tuned on the basic
+world, 5 seeds, both tokenizer conditions, the one-to-one rule and the position split as every row, the cue feature in a second row
+(R14). Grid for these models, fixed now and not extended: lr {5e-5, 1e-4, 3e-4} x epochs {5, 10, 20}, batch 32, warm-up 10%, selection on
+seed 0 as always (with the R10 tie-break); the larger learning rates are the published practice for the small BERTs (Turc et al. 2019),
+and a reviewer would call the BERT-base grid under-tuning for them. Check first that both load with transformers 5.20.2 (they are the
+official Google uploads); if one does not, say so and do not add a workaround.
+
+Interpretations: (a) inner-frame FULL at depth 3 < 0.9 for the small encoders while the reader stays at 0.98: at equal size, the reader
+composes the unseen depth and the pretrained encoders do not; (b) >= 0.9: pretraining composes on this world even at 4 M parameters, and
+the reader's case rests on the six-role FULL, the calibration, the residual and the cost; (c) in between, both readings. Report also the
+cost rows for both (parameters, bytes at fp32 / fp16 / int8, CPU ms per sentence with the thread count), so that the size comparison is
+on the same table as the accuracy. These rows do not change the pre-registered claims; they test whether the reader's advantage survives
+when the baseline is as small as the reader.
