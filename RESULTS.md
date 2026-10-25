@@ -433,7 +433,7 @@ coverage 1.000, confident-wrong 0.108 (per seed 0.284 0.000 0.091 0.000 0.164), 
 0.000). Occupancy: no false filler on any axis; at depth 3 'missed_present' 0.167 (X3), 0.000 over the trained labels.
 Cost (this machine, GB10, fp32): 109.5 M parameters (embedding table 30,560 rows), 438 MB at fp32, 219 MB at fp16, 182 MB int8 dynamic;
 CPU 28.3-30.5 ms per sentence (int8 16.5-18.8 ms), 20 threads, batch 32; training 228-231 s per seed, selection 4,104 s (the 9 grid
-points), 5-seed row 4,104 + 4 x 229 = 5,019 s; GPU energy of the whole run 77.9 Wh (5,179 s sampled, mean 54.1 W, peak 90.3 W, idle
+points), 5-seed row 4,104 + 4 x 229 = 5,019 s; GPU energy of the whole run 78.0 Wh (5,223 s sampled, mean 53.7 W, peak 90.3 W, idle
 draw at start 4.3 W; eval/power_energy.py on logs/power_run2b.csv). Label: MEASURED.
 
 Gate (R4): seen 1.000 >= 0.95, MET.
