@@ -932,3 +932,30 @@ a gate-set effect ("from" open in training breaks the object-last reading) that 
   the baselines already have.
 - For the demo's worlds the cue-gate default is withdrawn until TODO_DGX 2.9 is measured (the finding that opening "from" in training
   breaks another reading applies to any given set).
+
+## R48 (stopping rule, declared by the owner; 2026-10-25 17:50)
+
+The main comparison is at the reader's size and in the MRC form, and the first result is in (BERT-tiny: inner frame 0.97 pretrained,
+the legend question never asked in training answered on no item, X3 0.000; from scratch 0.17). So that the stop is on a declared set
+and not on a favourable glance, the set that completes the result is fixed now; when it is measured the experiment stops, whatever the
+numbers say, and everything else is recorded as "not run: the declared set is complete".
+
+Remaining, in this order:
+1. BERT-mini pretrained, from scratch and kinds given; BERT-tiny kinds given (running).
+2. The 'all' rows for BERT-tiny and BERT-mini pretrained (R40).
+3. The reader rows already declared: R37 (gates as initialisation), R46 (sentence candidates + one-to-one, with the three decision
+   categories), R42/R43 (explained residual), each with its claim on seeds 5-9 and the 1a readers of seeds 5-9.
+4. The planted sets row (R26 / Q19) for the reader and for the small MRC models: 'undecided' and 'unsupported' as query emission.
+5. The three confirmatory comparisons of R30 item 8 with the two-level bootstrap and Holm, reader vs each small model; risk-coverage and
+   AURC, AUROC in- vs out-of-world (margin / compiled residual / explained residual vs NULL gap / MSP / Mahalanobis where the saved
+   models allow it); the cost table at equal precision (R30 item 10).
+6. The LLM reference (API-bound, running beside).
+Then JP 1 = the final synthesis: RESULTS with the two tables (pre-registered / declared), the confirmatory results, the regime
+statements, the limitations (the basic world is rule-solvable; the claim is at 4-11 M parameters; refusal not met by anyone at a
+calibration threshold).
+
+Not run, by this rule (write each in RESULTS with the reason "declared set complete"): BERT-base MRC (the owner avoids training a
+110 M model; the claim is stated at the reader's size, BERT-base stays as the measured tagger reference), BERT-small, the sensitivity
+grid, R30 items 2, 4, 6c and the depth 4-6 / nonce-identity / 7b-tagging-head / seq2seq rows, the deferred BERT-base tagger rows, the
+real-data round and the multilingual round (they move to a later paper with their own pre-registration). The address-level fix of H2
+(R47) is tool-repository work after the stop.
