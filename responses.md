@@ -589,3 +589,68 @@ how far it got (write the spent amount from the provider's usage fields into the
 contain no personal data and may be sent. Record model id, provider, date, prices read from the provider's page at call time, and the
 three-repeat determinism in RESULTS; label the row "reference (in-context LLM), not a baseline". Not on the critical path: once confirmed, run it in a
 free slot (it is API-bound, not GPU-bound) alongside the equal-size block.
+
+## R30 (independent design review, relayed with decisions; 2026-10-25)
+
+A reviewer who had not seen this experiment being built (a semantic-parsing read, given the repository and the frozen data) returned
+twelve findings. I relay them in full so that nothing is hidden, with a decision for each. Nothing here changes a pre-registered row;
+every addition is a declared row or an evaluation script. Order of work: nothing below runs before JP 1; the small-encoder block of R28
+is still first; the rows marked NOW are declared before the block's results are read, so they are confirmatory, not post hoc.
+
+1. **The basic world is solvable by a rule** (the reviewer wrote a ~15-line heuristic over the given P/O kinds and the words says / claims
+   / that / to / by / from: FULL 1.000 on seen, new ids and all depth-3 items with depth given; 0.833 on new formulations, where the reader
+   has 0.868). ACCEPTED, important. Add a **rule-ceiling row** and a **positional / bag-of-words row** on every axis (no GPU; commit the
+   rule as eval/rule_ceiling.py with its score). Consequence written into RESULTS now: on axes where the rule reaches 1.000 the axis
+   measures whether a model learned the rule, not composition; the composition evidence must come from axes where the rule fails (new
+   formulations, depth not given, out-of-world, the planted sets) and from the equal-size block.
+2. **One generalisation type is not a composition benchmark.** ACCEPTED in part. Add, if the generator takes a depth parameter without a
+   change to its templates: **depth 4-6 with depth NOT given** (trained on 0-3), as the composition axis proper; a **length control**
+   (depth-2 sentences at depth-3 length, if the vocabulary allows it; otherwise recorded as not possible); a **primitive-to-role row** (an
+   identity seen only as A, tested as C and as a speaker). An MCD split is NOT added (the generator's compound structure is too small for
+   compound divergence to mean anything; say so). A seq2seq baseline (T5-small emitting the frame) is added as ONE reference row, last in
+   the queue, labelled reference: it is the standard model of COGS / CFQ and has no untrained-label problem, but it is not at the reader's
+   size, and the user's rule stands: no further time on models above the reader's size beyond one row each.
+3. **The remaining "composition" gap after 2a is the untrained X3 label.** ACCEPTED. Add a **depth-invariant tagger row** (one SPK label,
+   level = order of appearance) beside MRC, and stop narrating six-role FULL as composition in RESULTS; the words to use are "frame exact
+   match with the levels as labels". The from-scratch statement: 3b is not run (R28), so the from-scratch evidence at BERT-base size is the
+   7b control and nothing more; the equal-size block (BERT-tiny/mini/small from scratch, R28) is the test that counts, and it is written
+   NOW, before it runs: if a from-scratch encoder of the reader's size reaches an inner frame >= 0.99 at depth 3 with depth not given,
+   the claim "same-size models trained from scratch do not compose this world" is WITHDRAWN, not re-narrowed.
+4. **New identities are a lexical giveaway** (`p12` -> `p ##12`; the reader has the kind from kinds.tsv). ACCEPTED: a **nonce-identity
+   row** (identities with no shared prefix, e.g. blick / dax / wug, both BERT conditions; the reader with the new identities given in
+   kinds.tsv as the rule of kinds given requires, AND a second cell with them absent, so both sides' conditions are stated). The present
+   new-identity numbers stay, with the sentence that they measure the given kinds, not generalisation.
+5. **Depth given at decoding is the largest giveaway.** ACCEPTED: the headline table of RESULTS is depth NOT given / all questions, for
+   every model (the R17 and R20 rows and MRC already produce it); given-depth beside it, labelled.
+6. **Baselines.** (a) A retrieval-augmented in-context reference and LoRA rows: NOT added (budget and the rule above; the LLM row is a
+   reference, stated as 10-shot, not data-matched, in its caption). (b) seq2seq: see 2. (c) the 7b control with a tagging head: ACCEPTED,
+   small (it separates the head from the pretraining; 7b's mean-pooled cosine decoder is a weaker head than BERT's tagger).
+7. **Standard metric names and selective-prediction measures.** ACCEPTED, evaluation only: FULL is reported as "exact match", per-role as
+   "slot accuracy"; add **risk-coverage curves and AURC** for every model, **AUROC in- vs out-of-world** on margin, residual and MSP; ECE
+   omitted where accuracy is 1.0; the words "confident error" and "false fill" replace "hallucination" in RESULTS (the term may appear
+   once, defined as their sum). The fair analogue of the reader's residual on the BERT side is a **feature-space OOD score (Mahalanobis or
+   kNN on encoder states)**, added to R17 (i) beside MSP; the tagger's in-world residual is degenerate and RESULTS says so.
+8. **Statistics.** ACCEPTED. Seeds are bimodal; mean +- std and a 4-df paired t are reported but not relied on. Add a **two-level bootstrap
+   (seeds x items)**, seeds-ahead counts and a sign test (extend eval/compare.py). Three **confirmatory comparisons, pre-specified NOW**,
+   reader vs each equal-size encoder (pretrained and from scratch) and vs BERT-base MRC: (i) six-question exact match at depth 3, depth
+   not given; (ii) confident-error rate at matched coverage (coverage fixed at the reader's); (iii) out-of-world AUROC (margin / residual
+   vs Mahalanobis). Holm over these three per pair; every other row of R10-R27 is labelled exploratory. The grid question (seed 2 as a
+   least-trained-point artefact): ACCEPTED as a small run, the 9-point grid x 5 seeds evaluated on depth 3, after the block.
+9. **Real data: the primary metric is shaped to the reader.** ACCEPTED: on SNIPS / MASSIVE / TOPv2 the primary metrics are intent accuracy,
+   conlleval slot F1 and sentence exact match (TOPv2: tree exact match, with the note that the reader and the taggers produce a flat frame,
+   so the tree metric is reported for the depth-2 subset only, with n and a power statement); the head-token frame is secondary and stated
+   as the reader's limit. WikiSQL: add its known label noise and that candidate columns are partial table access.
+10. **Cost.** ACCEPTED: equal precision only (fp32 vs fp32; the 4-bit route book reported separately, never in the same cell as fp32 BERT);
+    batch-1 single-thread ms as the product number; cost against sentence length for both (the reader's chain grows with length, MRC
+    with the legend); the 1 Hz energy reading stated as coarse.
+11. **The term** (q-formalisation renames selective frame filling with an OOD score; drop "classical formalisation is the special case").
+    Noted for the paper, not for this repository; the definition will be given as an evaluation protocol and the "special case" sentence
+    removed. The narrowed claim stands as the reviewer states it.
+12. **Pre-registration credibility.** ACCEPTED: RESULTS gets two tables, pre-registered rows and declared (post hoc) rows, with the R
+    number and the date of each declaration; nothing is removed.
+
+Queue after this response: JP 1 as planned; the R28 small-encoder block (with the confirmatory comparisons of 8 declared before its
+results are read, and the withdrawal condition of 3); then, in order: 1 (rule ceiling, no GPU, can run now on CPU), 7 and 8 (evaluation
+scripts, CPU), 3 (depth-invariant tagger), 5 (table layout), 4 (nonce identities), 2 (depth 4-6, length, primitive-to-role), 6c, 8's
+grid, 9 and 10 at the real-data step, 2's seq2seq last. If any of these cannot be done as stated, say so in questions.md rather than
+adapting it silently.
