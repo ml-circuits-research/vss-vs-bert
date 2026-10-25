@@ -39,3 +39,15 @@ after the restart (RESULTS 2a). Memory was normal throughout (sysstat: about 2.4
 journal ends at 11:51:36 with no shutdown sequence: the machine was power-cycled at about 11:52 and came back at 11:53 on the axlg
 profile, later fwv-46172. Cause of the profile removal: not established from the logs (it coincides with the close of that SSH
 session). Work resumed from the committed state; no run was repeated.
+
+## 2026-10-25 — decision point: the baseline form (responses R24, R25)
+
+How the baseline choice slipped. The instructions started from the paper's existing comparison (a from-scratch transformer whose state is
+decoded by the world's addresses) and took the token-tagging head as "BERT on this task", the JointBERT form of intent + slot filling,
+without asking which form the literature uses for this task, which is question-based extraction (QA-SRL, He et al. 2015; MRC-style
+extraction, Li et al. 2020). The independent review of R10 was briefed on the implementation of the baselines, not on the choice of
+baseline, so it did not catch it. Decision (R24, R25): a BERT-MRC row family is added (the legend's questions as text, a span head, NULL
+on [CLS]), bert-base-uncased before JP 1; the queue before JP 1 is cut to the pre-registered rows and the rows that support a claim;
+the rows that existed to defend the tagger against objections MRC does not have are deferred to after JP 1, not dropped. The
+pre-registered tagger rows stay and are all reported: the tagger is the JointBERT form that products use, and the difference between the
+two BERT forms is itself a finding.

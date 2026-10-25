@@ -100,6 +100,18 @@ torch.cuda.max_memory_reserved per seed (an additive line), and the peak above i
 | D14 (no training) | `./run.sh eval/r17_reader.py --seeds 5`; `--gates_given cues`; `--load transformer7b_cat_rerun`; `--load transformer7b_plain_rerun` | the retrained / loaded per-role rule equals the stored row |
 | D15 (no training) | `./run.sh eval/r17_tagger.py --tag <row>` for D3-D6, D12, D13 | prints for every seed |
 
+**Queue before JP 1, as replaced by responses R25 (2026-10-25)**, superseding the D-rows above where they differ. Before JP 1 only:
+3a, 3b (pre-registered, alone, with the grid); then concurrently (R23 slots): the R10 row of 2a (D7 for BERT-base WordPiece) and the
+reader's R10 rules for five seeds; the reader 'gates given' row (D11, R14); R17 (i) and the residual on every saved model (D14 for the
+reader; D3 re-run of 2a with every seed saved, then D15 on it; questions Q18 (5)); R24 BERT-MRC on bert-base-uncased, 5 seeds, both
+depth variants, NULL, the cost with all questions (models/bert_mrc.py, deviation R24 in RESULTS). Then stop and report; JP 1 is
+handled by the reviewing session.
+**Deferred to after JP 1 (not dropped; the committed code stays, default off):** R20's three tagger depth heads and R17 (ii)'s trained
+out-of-world class for the tagger (D12, D13), R14's cue feature for the tagger, the R10 rows of 2b (D8), R14.3 (the cue feature for the
+7b controls), seeds 5-9 for the controls; after JP 1 also R19 in both forms (tagger and MRC, BERT-tiny / BERT-mini, and DistilBERT-MRC,
+Q18 (4)), R13 (seeds 5-9) for the reader and the two main BERT rows. The R10 rows of 3a / 3b (D9, D10), the 2b / 3a / 3b re-runs for
+R17 (i) (D4-D6) and the R11 re-runs of 1b / 1c (D1, D2) wait for the answer to Q18 (5).
+
 ## 2. After every run
 
 - **RESULTS.md**: a numbered section (`## <run>. <title> (<script>; logs/<log name>)`) with the exact command, the commit, the table the
