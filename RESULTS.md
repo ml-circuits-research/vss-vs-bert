@@ -868,3 +868,24 @@ the out-of-world sets) and data/oow_seed5-9.json (`data/make_oow_sets.py --seed_
 sees them (sha256 in the commit message), and the reader 1a trained on the fresh splits (`vss/run_reader_basic.py --seed_start 5 --seeds 5
 --save_all`, named "VSS reader (reference) [fresh splits, seeds 5-9]", tag reader_basic_fresh, never pooled with seeds 0-4; R13's seeds
 5-9 for the reader). Nobody opens their items.
+
+## R17 (i), the residual and the R10 rules on the R14 reader (gates given), five seeds (eval/r17_reader.py --gates_given cues; logs/2026-10-25_1552_r17_reader_8ae6eeb.txt; exploratory)
+
+Command: `VSA_SLOTS=6 ./run.sh eval/r17_reader.py --seeds 5 --gates_given cues`, commit 8ae6eeb, concurrent. Each seed retrained as R14
+(236-472 s, concurrent) and EQUAL to the stored R14 row on all five seeds. Depth from the level openers: accuracy 1.000 on every axis;
+exact match at depth 3 with the estimated depth 0.999 ± 0.001 [0.997 1.000 1.000 1.000 0.999], identical to the given depth.
+Thresholds (i) = (ii) 0.540-0.574 (2% false rejection on the calibration rows). Label: MEASURED.
+
+| quantity | R14 (gates given) | 1a (learned gates, section above) |
+|---|---|---|
+| rejected random / reference / nonce (placeholder) | 1.000 / 0.989 ± 0.009 [0.982 0.986 1.000 0.978 1.000] / 1.000 | 1.000 / 0.989 ± 0.009 (the same per-seed list) / 1.000 |
+| false rejection, pooled in-world report axes | 0.437 ± 0.002 [0.436 0.436 0.436 0.440 0.438] | 0.435 ± 0.015 |
+| false rejection: seen / new ids / depth 1 / depth 2 | 0.000 / 0.004 ± 0.005 / 0.066 ± 0.012 / 0.002 | 0.021 / 0.083 / 0.032 / 0.001 |
+| false rejection: new form. seen trans. / UNSEEN / role cues / depth 3 | 0.998 / 1.000 / 0.998 / 1.000 | 0.881 / 1.000 / 0.883 / 1.000 |
+| residual means: calibration / seen / new form. UNSEEN / depth 3 / random / reference / nonce | 0.422 / 0.391 / 0.910 / 0.725 / 0.989 / 0.833 / 0.850 | 0.432 / 0.408 / 0.900 / 0.723 / 0.987 / 0.774 / 0.852 |
+| one-to-one rule: slot accuracy new form. seen / UNSEEN; exact match depth 3 | 0.768 [0.77 0.76 0.76 0.82 0.73] / 0.796 [0.80 0.78 0.82 0.79 0.79]; 1.000 on every seed | 0.870 / 0.894; 0.995 |
+
+Reading. Giving the gates changes nothing in out-of-world rejection (the same rejection lists, per seed, as 1a: the 1.1-2.2% of reference
+sentences that pass are passed by both readers) and leaves the training-distribution threshold rejecting every depth-3 and every
+new-formulation sentence (pooled false rejection 0.437, with a smaller seed spread than 1a). The demo criterion is not met. The
+one-to-one rule gives exact match 1.000 at depth 3 on every seed and adds 0.00-0.01 on new formulations.
