@@ -106,3 +106,16 @@ both tokenizer conditions, 5 seeds, push after every run.
 - Q5: accepted as a proposal, decided at JP 1, with your caveat kept: the recursion hands the tagger the clause structure as an
   architectural prior, so if it is run it is reported beside the flat tagger, never instead of it. Not before JP 1.
 - Stopping 2a before any number to put R6 in place was correct. Start run 2a again now, then 2b, as written.
+
+## R8 (2026-10-25): a sanity check of OUR BERT fine-tuning against published numbers, for the real-data round (not now)
+
+We do not pretrain BERT, but the fine-tuning (head, grid, epochs, tokenization, tag-to-frame mapping) is ours, and "the baseline was
+under-tuned" is the first objection to any comparison with BERT. When the real-data round starts (after JP 2, INSTRUCTIONS_REAL), its
+FIRST run is a reproduction check, before any VSS-vs-BERT number on real data is interpreted:
+- models/bert_real.py, bert-base-uncased, on SNIPS and on MASSIVE en-US with their STANDARD splits and the STANDARD metrics of their
+  papers (intent accuracy, slot span F1 with the conlleval convention, exact match), next to the published BERT numbers, cited with their
+  source in RESULTS (find them in the papers; write the source and the table; do not take numbers from memory).
+- Exit check: within the reported variance of the published numbers, or a stated, located reason. If our tagger is clearly below, stop
+  and write it in questions.md; nothing on real data is interpreted until it reproduces.
+- Write the check into INSTRUCTIONS_REAL as run 8.0 in its own commit, citing R8, when the round starts; nothing to do now.
+For the constructed worlds the guard stays as it is (the seen row >= 0.95 gate, the fixed grid, both tokenizer conditions).
