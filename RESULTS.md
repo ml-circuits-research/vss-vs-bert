@@ -91,3 +91,31 @@ accuracy among answered 0.963. Label: MEASURED.
 Exit check against the main repository's RESULTS 7b-bis (new ids 0.253 ± 0.034, depth 3 0.393 ± 0.023): 0.251 ± 0.048 and 0.390 ±
 0.021, MET. Reading: as in 7b-bis, the control fits the seen rows and fails on new identities (0.25, chance 0.167) and on the unseen
 depth (0.39; it keeps the two outer speakers X1 X2 and loses the inner frame and X3, FULL 0.000).
+
+## 1c. Transformer control 7b, plain input (models/transformer_7b.py --variant plain; logs/2026-10-25_0817_transformer_7b_b4f0739.txt)
+
+Command: `./run.sh models/transformer_7b.py --variant plain --seeds 5`, commit b4f0739 (code identical to c8e4e96; PYTHONHASHSEED=0),
+device cuda. Model: the main repository's v9 TModel (0.79 M parameters). Grid on seed 0 by validation cos (lr 1e-3 / 3e-4, dropout
+0 / 0.1: 0.963 / 0.867 / 0.962 / 0.916): chosen lr 1e-3, dropout 0; validation cos per seed 0.963 0.917 0.920 0.903 0.877.
+
+| axis (mean role accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 0.972 ± 0.056 | 1.00 1.00 1.00 1.00 0.86 |
+| new ids | 0.215 ± 0.015 | 0.23 0.19 0.23 0.20 0.23 |
+| new form., seen trans. | 0.769 ± 0.122 | 1.00 0.67 0.66 0.74 0.77 |
+| new form., UNSEEN trans. | 0.780 ± 0.062 | 0.82 0.88 0.73 0.74 0.73 |
+| new form., ROLE CUES seen | 0.968 ± 0.048 | 1.00 1.00 0.96 1.00 0.88 |
+| depth 1 | 0.837 ± 0.094 | 1.00 0.75 0.79 0.88 0.76 |
+| depth 2 (seen) | 0.803 ± 0.003 | 0.80 0.81 0.80 0.80 0.80 |
+| depth 3 (UNSEEN) | 0.392 ± 0.025 | 0.44 0.38 0.38 0.37 0.40 |
+| FULL frame at depth 3 (UNSEEN) | 0.000 ± 0.000 | 0.000 0.000 0.000 0.000 0.000 |
+
+Depth 3 per role: A 0.083 ± 0.027, B 0.104 ± 0.071, C 0.103 ± 0.043, X1 1.000, X2 1.000, X3 0.065 ± 0.012.
+Calibration (rule 18; tau on calibration rows, mean 0.047): new ids coverage 0.017, confident-wrong 0.010 (per seed 0.037 0.005 0.001
+0.008 0.000), accuracy among answered 0.387; depth 3 coverage 0.340, confident-wrong 0.005 (per seed 0.016 0.001 0.005 0.003 0.002),
+accuracy among answered 0.984. Label: MEASURED.
+
+Exit check against the main repository's RESULTS 7b (new ids 0.215 ± 0.012, depth 3 0.390 ± 0.024): 0.215 ± 0.015 and 0.392 ±
+0.025, MET. Seed 4 fits the seen row at 0.86 only (validation cos 0.877, the lowest), with the grid fixed on seed 0 as written. Reading:
+the same picture as 1b and the main repository: new identities near chance and the unseen depth at 0.39 with FULL 0.000; the category
+input of 1b changes neither axis (0.251 vs 0.215 new ids, 0.390 vs 0.392 depth 3). Run 1 gate (R4): 1a, 1b and 1c all reproduce.
