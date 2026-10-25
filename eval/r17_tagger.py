@@ -30,7 +30,7 @@ def forward(model, tok, items, device, batch=128):
         chunk = items[i:i + batch]; ids, att, firsts = bb.encode_batch(tok, [it["tokens"] for it in chunk], device)
         prob = torch.softmax(model(ids, att), -1).cpu().numpy(); cls = model.last_cls
         poow = torch.softmax(model.oow_head(cls), -1)[:, 1].cpu().numpy() if model.oow_head is not None else None
-        dep = model.depth_of(cls).cpu().numpy() if model.depth_head is not None else None
+        dep = model.depth_of(cls, firsts).cpu().numpy() if model.depth_head is not None else None
         for b, it in enumerate(chunk):
             p = np.stack([prob[b][j] if j is not None else np.zeros(len(bb.LABELS)) for j in firsts[b]])
             out.append({"p": p, "oow": None if poow is None else float(poow[b]), "depth": None if dep is None else int(dep[b])})

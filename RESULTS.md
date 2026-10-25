@@ -451,3 +451,12 @@ a finding against the rule, not a free improvement for any model; the pre-regist
 explained: in 2b every depth-3 error is on the OUTER speakers (X2 0.858 ± 0.281, per seed 0.30 1.00 0.99 1.00 1.00; X3 0.495 ± 0.444)
 while the inner frame is 1.000 on every seed, the mirror image of the 7b controls' failure shape at the same depth (inner roles lost,
 A / B / C 0.08-0.10, outer speakers X1 / X2 kept at 0.999-1.000, X3 0.06-0.07, runs 1b / 1c).
+R17 item 3 for BERT, as settled by responses R20 (2026-10-25; Q16), stated before the rows run. Three depth variants on the same 5 seeds,
+the 2a configuration (lr 2e-5, 3 epochs, no grid), each its own row: (a) `--depth_head cls`: a classifier on [CLS] over 0-3, class 3
+never in training (an untrained class, as X3 in R6), reported as such; (b) `--depth_head reg`: one regression output on [CLS], squared
+error, rounded and clipped to 0-3; (c) `--depth_head count`: a token-level binary head "this word opens a level", trained on the gold
+level openers (the 'that' opening a reported clause, which occurs at every training depth 1-2 and is absent at depth 0), depth = the
+number of words it tags, so it can output 3 as naturally as a count. On this world the gold openers are exactly the 'that' right after
+a reporting verb ('says', 'claims'): the opener count equals the gold depth on every in-world axis. In the same table the reader's (and
+7b-bis's) depth is that count as a RULE on the token kinds, not a learned head; the rows report the depth accuracy and FULL at depth 3
+(six roles, trained labels, inner) with the decided depth beside the given-depth rows.

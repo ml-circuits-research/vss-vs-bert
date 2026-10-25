@@ -18,7 +18,9 @@ R14 (responses R14, 2026-10-25): --cues given adds ONE learned 'cue' embedding (
 every token that is a whole cue word of CUE_WORDS (the same set the reader's gates are given for); default 'none' = the tagged code.
 R17 (responses R17 / R18, 2026-10-25), default off: --save_all saves every seed's model (for eval/r17_tagger.py); --oow_class trains a
 [CLS] out-of-world head on the 'neg' part of data/oow_seed<s>.json (their tokens tagged O); --depth_head cls|reg trains a [CLS] depth
-head (classes 0-3, class 3 never in training; or one regression output, rounded and clipped to 0-3 at decoding)."""
+head (classes 0-3, class 3 never in training; or one regression output, rounded and clipped to 0-3 at decoding); R20: --depth_head count
+is a token-level binary head "this word opens a level" trained on the gold level openers (the 'that' of a reported clause, present at
+every depth 0-2), the depth = the number of words it tags."""
 import argparse, os, sys, time, json, io
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -45,7 +47,7 @@ class Tagger(nn.Module):
                     for new_id, pieces in piece_init.items(): E[new_id] = E[pieces].mean(0)
         self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1); self.cue = None; self.last_cls = None
         self.oow_head = nn.Linear(cfg.hidden_size, 2) if oow else None                     # R17 item 1 (ii)
-        self.depth_kind = depth_head; self.depth_head = {"cls": lambda: nn.Linear(cfg.hidden_size, 4), "reg": lambda: nn.Linear(cfg.hidden_size, 1)}.get(depth_head, lambda: None)()
+        self.depth_kind = depth_head; self.depth_head = {"cls": lambda: nn.Linear(cfg.hidden_size, 4), "reg": lambda: nn.Linear(cfg.hidden_size, 1), "count": lambda: nn.Linear(cfg.hidden_size, 2)}.get(depth_head, lambda: None)()
         if cue_tok is not None:                        # R14: a token is a cue iff it is a cue word's own (single) token and the next token does not continue it
             vocab = cue_tok.get_vocab(); cont = torch.zeros(max(n_tokens, len(vocab)), dtype=torch.bool)
             for t, i in vocab.items():
@@ -61,10 +63,14 @@ class Tagger(nn.Module):
             m = torch.isin(ids, self.cue_ids) & ~self.cont[nxt] & att.bool()
             emb = self.enc.get_input_embeddings()(ids) + m.unsqueeze(-1).to(self.cue.dtype) * self.cue
             h = self.enc(inputs_embeds=emb, attention_mask=att, **kw).last_hidden_state
-        self.last_cls = h[:, 0]
+        self.last_cls = h[:, 0]; self.last_h = h
         return self.head(self.drop(h))
-    def depth_of(self, cls):
-        """R17 item 3: the depth decided by the [CLS] head (argmax of 0-3, or the regression rounded and clipped)"""
+    def depth_of(self, cls, firsts=None):
+        """R17 item 3: the depth decided by the head (argmax of 0-3, or the regression rounded and clipped; R20 count: the number of words
+        whose first sub-token is tagged as a level opener, clipped to 0-3)"""
+        if self.depth_kind == "count":
+            o = self.depth_head(self.last_h).argmax(-1).cpu()
+            return torch.tensor([min(3, sum(int(o[b, j]) for j in f if j is not None)) for b, f in enumerate(firsts)])
         o = self.depth_head(cls)
         return o.argmax(-1) if self.depth_kind == "cls" else o.squeeze(-1).round().clamp(0, 3).long()
 
@@ -81,6 +87,10 @@ def encode_batch(tok, sents, device, max_len=96, trunc_none=False):
             f.append(j if j < len(offs) else (None if trunc_none else 0))   # R10 item 15: None (no label, no prediction) for a truncated word
         firsts.append(f)
     return enc["input_ids"].to(device), enc["attention_mask"].to(device), firsts
+
+def opener_flags(tokens):
+    """R20: the gold level openers of a basic-world sentence: the 'that' that opens a reported clause (right after a reporting verb)"""
+    return [t == "that" and k > 0 and tokens[k - 1] in ("says", "claims") for k, t in enumerate(tokens)]
 
 def make_train(bw, seed, N):
     """the 30k training sentences, as make_data of v9 / v22 draws them (rng 200+seed): (tokens, tags)"""
@@ -119,7 +129,13 @@ def train(model, tok, data, lr, epochs, batch, device, seed, wd_groups=False, po
             logits = model(ids, att, pid); loss = ce(logits.view(-1, len(LABELS)), lab.view(-1).to(device))
             if model.oow_head is not None:
                 y = torch.tensor([int(j >= n_in) for j in perm[i:i + batch]], device=device); loss = loss + ce(model.oow_head(model.drop(model.last_cls)), y)
-            if model.depth_head is not None:
+            if model.depth_head is not None and model.depth_kind == "count":    # R20: gold level openers, one label per word
+                lo = torch.full(ids.shape, -100, dtype=torch.long)
+                for b, (toks, tags) in enumerate(chunk):
+                    for k, op in enumerate(opener_flags(toks)):
+                        if firsts[b][k] is not None and perm[i + b] < n_in: lo[b, firsts[b][k]] = int(op)
+                loss = loss + ce(model.depth_head(model.drop(model.last_h)).view(-1, 2), lo.view(-1).to(device))
+            elif model.depth_head is not None:
                 keep = torch.tensor([j < n_in for j in perm[i:i + batch]], device=device)
                 d = torch.tensor([sum(x.startswith("X") for x in c[1]) for c in chunk], device=device)
                 if keep.any():
@@ -207,7 +223,7 @@ if __name__ == "__main__":
     ap.add_argument("--tag_suffix", default="", help="appended to the results / model names (R17: a re-run of a row with its selected configuration and saved models)")
     ap.add_argument("--save_all", action="store_true", help="R17: save every seed's model to logs/models/<tag>_seed<s>")
     ap.add_argument("--oow_class", action="store_true", help="R17 item 1 (ii): a [CLS] out-of-world head trained on the 'neg' part of data/oow_seed<s>.json")
-    ap.add_argument("--depth_head", default="none", choices=["none", "cls", "reg"], help="R17 item 3: a [CLS] depth head")
+    ap.add_argument("--depth_head", default="none", choices=["none", "cls", "reg", "count"], help="R17 item 3 / R20: a depth head")
     ap.add_argument("--cues", default="none", choices=["none", "given"], help="R14: 'given' adds the learned cue embedding on the CUE_WORDS tokens (row 'cues given')")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 model and tokenizer to logs/models/ for eval/determinism.py")
     a = ap.parse_args()
