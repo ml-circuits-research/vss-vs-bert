@@ -1628,4 +1628,4 @@ questions of the depth given: the same within 3%).
 The product number (R30 item 10: batch 1, one thread): reader 8.2 ms, BERT-tiny 12.2, BERT-mini 15.8, BERT-base 103.5. Batched, the
 small MRC models are faster than the reader on the CPU (20 threads, batch 32: 1.7 against 2.6 ms). The reader with the verb-order route
 (R58) is 11.7 M parameters and was not timed (not in the declared set). The 1 Hz GPU power log of the runs is
-logs/power_queue_2026-10-25_1956.csv (coarse; no per-sentence energy is claimed).
+logs/power_queue_2026-10-25_1958.csv (coarse; no per-sentence energy is claimed).

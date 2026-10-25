@@ -1,0 +1,41 @@
+job	start	end	status	cmd
+growth_reader_fresh	19:58:02	20:00:32	ok	vss/reader_growth.py --seed_start 5 --seeds 5 --check
+planted2_reader	20:05:33	20:07:18	ok	eval/planted.py --model reader
+planted2_mrc_google_bert_uncased_L-2_H-128_A-2_zs	20:09:18	20:11:03	ok	eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs
+planted2_mrc_google_bert_uncased_L-2_H-128_A-2_zs_scratch	20:10:33	20:12:18	ok	eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs_scratch
+planted2_mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds	20:11:48	20:13:33	ok	eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds
+planted2_mrc_google_bert_uncased_L-4_H-256_A-4_zs	20:13:03	20:14:48	ok	eval/planted.py --model mrc_google_bert_uncased_L-4_H-256_A-4_zs
+conf_tiny_fresh2	20:04:18	20:15:48	ok	eval/confirmatory.py --seed_start 5 --mrc mrc_google_bert_uncased_L-2_H-128_A-2_zs
+planted2_mrc_google_bert_uncased_L-4_H-256_A-4_zs_scratch	20:14:18	20:16:03	ok	eval/planted.py --model mrc_google_bert_uncased_L-4_H-256_A-4_zs_scratch
+conf_mini2	20:03:02	20:16:33	ok	eval/confirmatory.py --mrc mrc_google_bert_uncased_L-4_H-256_A-4_zs,mrc_google_bert_uncased_L-4_H-256_A-4_zs_scratch
+planted2_reader_r46	20:06:48	20:18:18	ok	eval/planted.py --model reader_r46
+planted2_reader_r54	20:08:03	20:19:33	ok	eval/planted.py --model reader_r54
+planted2_tiny_fresh	20:18:03	20:19:48	ok	eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed_start 5
+planted2_reader_r54_fresh	20:15:33	20:26:03	ok	eval/planted.py --model reader_r54 --seed_start 5
+planted2_reader_r46_fresh	20:16:48	20:26:18	ok	eval/planted.py --model reader_r46 --seed_start 5
+vorder_design	20:00:32	20:38:04	ok	vss/run_reader_vorder.py --seed_start 0 --seeds 5 --check
+vorder_fresh	20:01:47	20:39:19	ok	vss/run_reader_vorder.py --seed_start 5 --seeds 5 --check
+vorder_r46	20:38:04	20:40:49	ok	eval/sentence_candidates.py --row vorder --seed_start 0 --seeds 5
+vorder_r42	20:40:34	20:43:19	ok	eval/residual_explained.py --row vorder --seed_start 0 --seeds 5
+vorder_r46_fresh	20:39:19	20:43:49	ok	eval/sentence_candidates.py --row vorder_fresh --seed_start 5 --seeds 5
+vorder_r42_fresh	20:41:49	20:44:34	ok	eval/residual_explained.py --row vorder_fresh --seed_start 5 --seeds 5
+growth_tiny_s0	20:44:34	20:49:04	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 0
+growth_tiny_s1	20:49:04	20:54:35	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 1
+growth_tiny_s2	20:54:35	21:00:05	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 2
+vorderb_fresh	21:00:05	21:33:36	ok	vss/run_reader_vorder.py --variant b --seed_start 5 --seeds 5 --check
+vorderb_design	21:01:20	21:34:51	ok	vss/run_reader_vorder.py --variant b --seed_start 0 --seeds 5 --check
+vorderb_r46_fresh	21:33:36	21:37:22	ok	eval/sentence_candidates.py --row vorderb_fresh --seed_start 5 --seeds 5
+vorderb_r42	21:36:06	21:38:52	ok	eval/residual_explained.py --row vorderb --seed_start 0 --seeds 5
+vorderb_r42_fresh	21:37:22	21:40:07	ok	eval/residual_explained.py --row vorderb_fresh --seed_start 5 --seeds 5
+vorderb_r46	21:34:51	21:40:22	ok	eval/sentence_candidates.py --row vorderb --seed_start 0 --seeds 5
+growth_tiny_s3	21:40:22	21:45:52	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 3
+growth_tiny_s4	21:45:52	21:51:22	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 4
+growth_tiny_s5	21:51:22	21:56:52	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 5
+growth_tiny_s6	21:56:52	22:02:22	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 6
+growth_tiny_s7	22:02:22	22:07:52	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 7
+growth_tiny_s8	22:07:52	22:13:23	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 8
+growth_tiny_s9	22:13:23	22:18:53	ok	models/bert_mrc_growth.py --tag mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed 9
+cost_reader	22:18:53	22:20:38	ok	eval/cost_symmetric.py --reader logs/models/reader_basic_seed0.pt
+cost_tagger	22:20:38	22:22:23	ok	eval/cost_symmetric.py --tagger logs/models/bert_bert-base-uncased_pre_wordpiece_seed0
+cost_tiny	22:22:23	22:24:08	ok	eval/cost_symmetric.py --mrc logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed0
+cost_mini	22:24:08	22:25:53	ok	eval/cost_symmetric.py --mrc logs/models/mrc_google_bert_uncased_L-4_H-256_A-4_zs_seed0
