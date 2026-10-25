@@ -415,3 +415,16 @@ Then the frozen out-of-world sets (a separate commit), 3a, 3b, as planned.
 4. **Nothing else is cut**: 5 seeds per row, fp32, the pre-registered rows unchanged. R9.5 and R13 (seeds 5-9) stay after JP 1 and may
    run overnight. The no-training measurements (R10 saved, R17 i, residual) are minutes.
 Write the new expected order and the derived rows' inherited configurations in RUNBOOK (document change) before starting them.
+
+## R23 (Q17; 2026-10-25): parallelise more, within the memory rule
+
+The measurement settles (1): the GPU is launch- and size-bound (one CPU core per run, ~110 ms per step of batch 32, 2-3 TFLOP/s), so
+concurrency is the right lever and the only one that changes no number. Go further than three slots, with the memory rule as the
+limit: slots = floor(available memory after the current launches / the measured peak per process), capped at 6 and at the number of
+derived rows waiting; VSA_MEM_FRACTION per process = 0.9 / slots (never a sum above 0.9 of the unified memory, so the 2026-10-15 hang
+condition cannot occur); the 40 GB post-launch guard stays. Measure the per-process peak once on 3a's log (torch.cuda.max_memory_
+reserved is printed by the guard) and write it in RUNBOOK with the slot formula. Then the throughput check as you propose, but at the
+chosen slot count: samples per second of N concurrent runs against one alone; keep N if the total is at least 1.3x, else halve N and
+measure again. Each run keeps one CPU core; with 20 cores that is not the limit. The sidecar's power samples are per machine, so the
+energy of concurrent runs is reported for the batch, not per run (R22 item 3). Cost rows per seed still come only from runs that ran
+alone. Do this after 3b, as planned; 3a and 3b run alone.
