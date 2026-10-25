@@ -30,3 +30,16 @@ of 1a, checks them EQUAL, and the common report computes the one-to-one rule and
 re-run with every seed saved, exit check: reproduces 2a) and BERT-MRC (its NULL refusal and the same out-of-world sets); 2b / 3a / 3b
 and the 7b controls (whose R11 re-runs are not in R25's list) after JP 1. Say if the R11 1b / 1c re-runs (one-to-one for every model)
 should stay before JP 1; default: they run before JP 1 in a free slot, since they are small and R11 required them.
+
+## Q19. R26: building 'unsupported' and 'undecided' in the basic world (default followed for the frozen planted sets)
+
+The basic world's vocabulary has no word for "an extra piece of information" (no adverb, no 'with', no 'and'), and a word outside the
+vocabulary is already the out-of-world source (c), i.e. 'unplaced' / 'unknown', not 'unsupported'. Default, built only from in-vocabulary
+tokens and committed frozen (data/make_planted_sets.py, data/planted_seed<s>.json): **unsupported** = a basic-world sentence (depths 0-3,
+training templates and identities) with ", <id> ." appended in place of the final "." (one person or object of the training identities
+not already in the sentence): no question of the legend asks for it, the gold frame is unchanged, gold for that token = `unsupported`;
+**undecided** = a basic-world sentence where a second identity of the same class is inserted right after the filler of one role (A, B or
+C, chosen at random): two candidates in the same position class, equally supported by the form; gold for that role = `undecided`, the
+other roles keep their values. 300 of each per seed, from their own generator (rng 73_000 + seed), disjoint from every frozen split.
+If you prefer another construction (for example new words for the extra information, accepting that the reader cannot encode them),
+say so before the R26 row runs (after JP 1); the frozen files would then be regenerated in a stated commit before any model sees them.

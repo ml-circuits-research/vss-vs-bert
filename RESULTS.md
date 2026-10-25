@@ -505,3 +505,21 @@ Interpretations, written before the run (R24, verbatim in substance): inner-fram
 as the tagger did (expected); the six-role FULL and the level-3 question are the new information (a question never asked in training, row
 'zs'); confident-wrong under NULL training against the reader's residual is the calibration comparison a reviewer will trust most; the cost
 ratio with the legend's size is the argument that survives whatever the accuracy says.
+
+## Deviation R26: the query-emission row, for every model (declared 2026-10-25; runs after JP 1 and after the format gains query wires)
+
+Declared by responses R26 now, so that the planted worlds are built and frozen before any model is tuned with them in view; run only after
+JP 1 and after the reader's format emits queries (demo plan 2.8). Scored on the OUTPUT, not on the mechanism.
+- **Data**: a planted-questions world (data/planted_seed<s>.json, data/make_planted_sets.py, questions Q19 default): 300 'unsupported'
+  sentences per seed (an extra in-vocabulary identity appended as ', <id> .', which no question of the legend asks for; gold = that slot
+  is `unsupported`) and 300 'undecided' (a second identity of the same class right after one role's filler; gold = that role is
+  `undecided`); the out-of-world sets (data/oow_seed<s>.json), gold = `unknown`; the normal frozen splits, gold = values.
+- **Scoring of every decision**: correct value, rightly queried, needlessly queried, or INVENTED (a value emitted where the gold is a
+  query, or a wrong value emitted confidently); the invented share is the hallucination rate.
+- **Query sources**: the reader: margins (undecided), unplaced words, the residual (unknown) and a coverage test on the state
+  (unsupported: a content token whose identity is not recovered by any decoded slot), a quantity of the state. BERT-MRC: NULL for not
+  given, the margin for undecided, and, so that it is not disadvantaged, a COVERAGE head (a token-level "covered by some answer" tagger)
+  trained on the same planted negatives the reader's residual threshold is calibrated on, for unsupported and unknown, a trained head.
+  Both are reported as what they are.
+- **Criteria, written now (the demo's)**: values emitted under the threshold = 0 for every model by construction of the row; planted
+  unsupported slots reported as queries >= 0.90; the hallucination rate reported per axis.

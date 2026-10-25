@@ -109,7 +109,8 @@ handled by the reviewing session.
 **Deferred to after JP 1 (not dropped; the committed code stays, default off):** R20's three tagger depth heads and R17 (ii)'s trained
 out-of-world class for the tagger (D12, D13), R14's cue feature for the tagger, the R10 rows of 2b (D8), R14.3 (the cue feature for the
 7b controls), seeds 5-9 for the controls; after JP 1 also R19 in both forms (tagger and MRC, BERT-tiny / BERT-mini, and DistilBERT-MRC,
-Q18 (4)), R13 (seeds 5-9) for the reader and the two main BERT rows. The R10 rows of 3a / 3b (D9, D10), the 2b / 3a / 3b re-runs for
+Q18 (4)), R13 (seeds 5-9) for the reader and the two main BERT rows. After JP 1 and after the reader's format emits queries: R26, the query-emission row for every
+model on the frozen planted sets (data/planted_seed<s>.json) and the out-of-world sets (RESULTS 'Deviation R26'). The R10 rows of 3a / 3b (D9, D10), the 2b / 3a / 3b re-runs for
 R17 (i) (D4-D6) and the R11 re-runs of 1b / 1c (D1, D2) wait for the answer to Q18 (5).
 
 ## 2. After every run
