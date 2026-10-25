@@ -375,3 +375,13 @@ the reader's case rests on the six-role FULL, the calibration, the residual and 
 cost rows for both (parameters, bytes at fp32 / fp16 / int8, CPU ms per sentence with the thread count), so that the size comparison is
 on the same table as the accuracy. These rows do not change the pre-registered claims; they test whether the reader's advantage survives
 when the baseline is as small as the reader.
+
+## R20 (Q16; 2026-10-25)
+
+Accepted, with a third variant so that BERT is not left with only heads that cannot or can barely extrapolate: (a) the classifier over 0-3
+with class 3 untrained, reported as such; (b) the regression head (one output, squared error, rounded and clipped to 0-3); (c) a COUNTING
+head that is the exact analogue of the reader's rule: a token-level binary tagger "this token opens a level" (trained on the gold level
+openers, which occur at every depth 0-2), the depth = the number of tokens tagged as openers. (c) is trained on a label that exists at
+every depth and can output 3 as naturally as the reader's count does; it is what a careful BERT engineer would build for this decision.
+All three on the same 5 seeds, 2a configuration, stated in RESULTS before the rows run. The reader's level-opener count stays as it is
+(a rule on the token kinds, not a learned head); say so in the same table.
