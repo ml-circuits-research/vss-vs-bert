@@ -15,6 +15,8 @@ Grid (INSTRUCTIONS section 4, the pretrained grid): lr {2e-5, 3e-5, 5e-5} x epoc
 ties to the lowest validation span loss (R24: the R10 tie-break if every point is 1.000). Because the seed-0 grid exceeds run.sh's 6 h
 cap, it runs as one run per learning rate (`--grid_only --lrs <lr>`, writing logs/mrc_grid_<tag>_lr<lr>.json); `--select` reads them and
 prints the chosen configuration; the 5-seed run then uses it (`--lrs <lr> --epochs <ep>`).
+R27 item 1: --kinds given adds one learned embedding per word kind (the world's categories, as the reader and 7b-bis receive them;
+init N(0, 0.02); kind 0 = question and special tokens, zero vector) to the input embedding of every sentence sub-token (row 'kinds given').
 Run: ./run.sh models/bert_mrc.py --model bert-base-uncased [--train_questions zs|all] [--grid_only --lrs 2e-5] | --select | --lrs L --epochs E --seeds 5"""
 import argparse, glob, json, os, sys, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -32,12 +34,31 @@ QUESTIONS = {"A": "who gives?", "B": "what is given?", "C": "to whom is it given
 FR_MAX = 0.02; VERBS = ("gives", "sells", "lends", "sends", "offers", "shows", "buys", "gets", "receives", "borrows", "accepts", "sees")
 
 class MRC(nn.Module):
-    def __init__(self, name):
-        super().__init__(); self.enc = AutoModel.from_pretrained(name); self.span = nn.Linear(AutoConfig.from_pretrained(name).hidden_size, 2); self.drop = nn.Dropout(0.1)
-    def forward(self, ids, att, tt=None):
-        h = self.enc(input_ids=ids, attention_mask=att, **({"token_type_ids": tt} if tt is not None else {})).last_hidden_state
+    def __init__(self, name, kinds=None):
+        super().__init__(); self.enc = AutoModel.from_pretrained(name); hs = AutoConfig.from_pretrained(name).hidden_size
+        self.span = nn.Linear(hs, 2); self.drop = nn.Dropout(0.1); self.kinds = kinds          # kinds: sorted list of the world's categories
+        if kinds is not None:
+            self.kind_emb = nn.Embedding(len(kinds) + 1, hs, padding_idx=0)
+            with torch.no_grad(): self.kind_emb.weight[1:].normal_(0, 0.02)
+    def forward(self, ids, att, tt=None, kid=None):
+        kw = {"token_type_ids": tt} if tt is not None else {}
+        if self.kinds is None: h = self.enc(input_ids=ids, attention_mask=att, **kw).last_hidden_state
+        else: h = self.enc(inputs_embeds=self.enc.get_input_embeddings()(ids) + self.kind_emb(kid), attention_mask=att, **kw).last_hidden_state
         s, e = self.span(self.drop(h)).unbind(-1); m = att == 0
         return s.masked_fill(m, -1e4), e.masked_fill(m, -1e4)
+
+KIND_OF = None   # R27: word -> kind id (1..K), set in __main__ when --kinds given
+
+def kind_ids(spans, pairs, shape):
+    k = torch.zeros(shape, dtype=torch.long)
+    for b, (_, s) in enumerate(pairs):
+        for w_, sp in zip(s, spans[b]):
+            if sp is not None: k[b, sp[0]:sp[1] + 1] = KIND_OF.get(w_, 0)
+    return k
+
+def fwd(model, ids, att, tt, spans, pairs):
+    kid = kind_ids(spans, pairs, ids.shape).to(ids.device) if model.kinds is not None else None
+    return model(ids, att, tt, kid)
 
 def encode(tok, pairs, device, max_len=128):
     """pairs: (question, sentence tokens) -> ids, attention, token types, and per pair the (first, last) sub-token of every sentence word"""
@@ -68,10 +89,10 @@ def train(model, tok, ex, lr, epochs, batch, device, seed):
     for ep in range(epochs):
         model.train(); perm = torch.randperm(len(ex), generator=g).tolist()
         for i in range(0, len(ex), batch):
-            chunk = [ex[j] for j in perm[i:i + batch]]; ids, att, tt, spans = encode(tok, [(q, s) for q, s, _ in chunk], device)
+            chunk = [ex[j] for j in perm[i:i + batch]]; pairs = [(q, s) for q, s, _ in chunk]; ids, att, tt, spans = encode(tok, pairs, device)
             ys = torch.tensor([0 if k is None else spans[b][k][0] for b, (_, _, k) in enumerate(chunk)], device=device)
             ye = torch.tensor([0 if k is None else spans[b][k][1] for b, (_, _, k) in enumerate(chunk)], device=device)
-            s, e = model(ids, att, tt); loss = ce(s, ys) + ce(e, ye)
+            s, e = fwd(model, ids, att, tt, spans, pairs); loss = ce(s, ys) + ce(e, ye)
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
 
 @torch.no_grad()
@@ -79,8 +100,8 @@ def answer(model, tok, pairs_meta, device, batch=256):
     """pairs_meta: (question, tokens, candidate set) -> (word index or None, margin, null gap = best candidate - NULL)"""
     model.eval(); out = []
     for i in range(0, len(pairs_meta), batch):
-        chunk = pairs_meta[i:i + batch]; ids, att, tt, spans = encode(tok, [(q, s) for q, s, _ in chunk], device)
-        s, e = model(ids, att, tt); s, e = s.float().cpu().numpy(), e.float().cpu().numpy()
+        chunk = pairs_meta[i:i + batch]; pairs = [(q, s) for q, s, _ in chunk]; ids, att, tt, spans = encode(tok, pairs, device)
+        s, e = fwd(model, ids, att, tt, spans, pairs); s, e = s.float().cpu().numpy(), e.float().cpu().numpy()
         for b, (_, toks, cands) in enumerate(chunk):
             null = s[b, 0] + e[b, 0]; sc = [(s[b, spans[b][k][0]] + e[b, spans[b][k][1]], k) for k, t in enumerate(toks) if t in cands and spans[b][k] is not None]
             allsc = sorted([v for v, _ in sc] + [null], reverse=True); best = max(sc) if sc else (-np.inf, None)
@@ -127,8 +148,9 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lrs", default="2e-5,3e-5,5e-5"); ap.add_argument("--epochs", default="3,5,10"); ap.add_argument("--grid_only", action="store_true"); ap.add_argument("--select", action="store_true")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--n_val", type=int, default=2000); ap.add_argument("--save_model", action="store_true")
+    ap.add_argument("--kinds", default="none", choices=["none", "given"], help="R27 item 1: a learned embedding per word kind on the sentence tokens")
     a = ap.parse_args()
-    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}"; name = f"{a.model} MRC [train questions {a.train_questions}]"
+    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}" + ("_kinds" if a.kinds == "given" else ""); name = f"{a.model} MRC [train questions {a.train_questions}]" + (" kinds given (R27)" if a.kinds == "given" else "")
     if a.select:
         pts = [p for f in sorted(glob.glob(os.path.join(mainrepo.ROOT, "logs", f"mrc_grid_{tag}_lr*.json"))) for p in json.load(open(f))]
         best = max(pts, key=lambda p: (p["val_full"], -p["val_loss"])); print(f"bert_mrc --select ({tag}): {len(pts)} grid points: " + "; ".join(f"lr {p['lr']:g} ep {p['epochs']} FULL {p['val_full']:.3f} loss {p['val_loss']:.5f}" for p in pts))
@@ -140,18 +162,20 @@ if __name__ == "__main__":
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167"); rows = []; grid = []
     for seed in (range(1) if a.grid_only else range(a.seeds)):
         split = bwm.load(seed); bw = bwm.build(seed, a.D); tok = AutoTokenizer.from_pretrained(a.model)
+        KINDS = sorted(set(split["cat"].values())) if a.kinds == "given" else None
+        if KINDS: KIND_OF = {w_: KINDS.index(c) + 1 for w_, c in split["cat"].items()}
         data = make_train(bw, seed, a.N); ex = examples(data, tq)
         val = make_train(bw, 900 + seed, a.n_val); vitems = [{"tokens": t, "frame": bwm.frame_from_tags(t, g), "depth": sum(x.startswith("X") for x in g)} for t, g in val]
         vex = examples(val, tq); best = None
         for lr in lrs:
             for ep in eps:
-                torch.manual_seed(seed); model = MRC(a.model).to(a.device); t0 = time.time(); train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
+                torch.manual_seed(seed); model = MRC(a.model, KINDS).to(a.device); t0 = time.time(); train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
                 vp = read(model, tok, {"axes": {"val": vitems}, "candidates": split["candidates"]}, "val", vitems, a.device)
                 vfull = float(np.mean([all(p["frame"][r] == it["frame"][r] for r in bwm.roles_at(it["depth"])) for it, p in zip(vitems, vp)]))
                 with torch.no_grad():
                     model.eval(); ce = nn.CrossEntropyLoss(reduction="sum"); L = 0.0
                     for i in range(0, len(vex), 256):
-                        chunk = vex[i:i + 256]; ids, att, ttk, spans = encode(tok, [(q, s) for q, s, _ in chunk], a.device); s, e = model(ids, att, ttk)
+                        chunk = vex[i:i + 256]; pairs = [(q, s) for q, s, _ in chunk]; ids, att, ttk, spans = encode(tok, pairs, a.device); s, e = fwd(model, ids, att, ttk, spans, pairs)
                         ys = torch.tensor([0 if k is None else spans[b][k][0] for b, (_, _, k) in enumerate(chunk)], device=a.device); ye = torch.tensor([0 if k is None else spans[b][k][1] for b, (_, _, k) in enumerate(chunk)], device=a.device)
                         L += float(ce(s, ys) + ce(e, ye))
                 vloss = L / len(vex)
