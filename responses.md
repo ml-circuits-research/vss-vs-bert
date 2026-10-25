@@ -729,3 +729,22 @@ equal-size block (pretrained, from scratch, kinds given; tiny, mini, small):
 With this the block is 9 variants x 5 seeds x 10 epochs plus one 9-point grid on seed 0, and the slots can take all small jobs in
 parallel as R23 allows. If a from-scratch variant has not converged at 10 epochs (training loss not below the pretrained variant's by
 more than a factor of 10 at the end), report it and add ONE row at 20 epochs for that variant, labelled; do not tune further.
+
+## R36 (the block's length, amending R35; 2026-10-25)
+
+The owner asks again whether the hours are needed. Two further cuts, both justified by measurements already in the logs, both symmetric:
+
+1. **5 epochs, not 10.** BERT-tiny's validation span loss is already 0.00000 at 5 epochs on every learning rate tried (Q23 point 1); a
+   second 5 epochs at zero loss trains nothing. Fixed configuration for every variant of the block: lr 1e-4, **5 epochs**. The
+   convergence clause of R35 stays and now reads: if a from-scratch variant's final training loss is more than 10x the pretrained
+   variant's at the same size, add ONE labelled row at 20 epochs for that variant; nothing else is tuned.
+2. **BERT-small after tiny and mini, and only if they leave a question.** The reader is 3.3 M parameters; BERT-tiny (4.4 M) and BERT-mini
+   (11 M) bracket it, BERT-small (29 M) is nine times the reader and sits between mini and DistilBERT (66 M, measured). Run tiny and mini
+   first (3 variants x 5 seeds each); read them; BERT-small's three variants run only if the picture differs between tiny and mini
+   (then small says where it settles) and otherwise are recorded as not run with that reason, the same rule that deferred DistilBERT-MRC
+   (R29 Q18 (4)).
+
+Order on the GPU: all tiny and mini jobs in parallel in the six slots; the LLM reference beside them; BERT-base MRC (R34 (B), 5 seeds,
+3 epochs) after them, alone, since it gains nothing from concurrency; the sensitivity grid on BERT-mini seed 0 at the end. The equal-size
+block is then the main table with four rows above and below the reader's size, which is what the paper needs; everything larger is
+reference.
