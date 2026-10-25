@@ -959,3 +959,27 @@ Not run, by this rule (write each in RESULTS with the reason "declared set compl
 grid, R30 items 2, 4, 6c and the depth 4-6 / nonce-identity / 7b-tagging-head / seq2seq rows, the deferred BERT-base tagger rows, the
 real-data round and the multilingual round (they move to a later paper with their own pre-registration). The address-level fix of H2
 (R47) is tool-repository work after the stop.
+
+## R49 (addition to the declared set of R48: the cost of a new legend question; 2026-10-25 18:10)
+
+One more row family, small, on saved models, declared now with its measures; it enters the R48 set between items 2 and 3.
+
+**Legend growth.** The question is what the n-th new legend question costs each system, in annotated examples, retraining time,
+hyperparameters to choose, and accuracy lost on what already worked.
+- BERT-tiny and BERT-mini pretrained, 'zs' saved models (5 seeds each): the level-3 question is added with k = 50 and k = 500
+  annotated examples (drawn from the training distribution's depth-3 sentences, disjoint from every frozen split, committed), under two
+  practitioner regimes: (a) continued fine-tuning on the new examples only; (b) replay (the new examples added to the full training
+  set, retrained from the saved model). One fixed recipe per regime declared before the run (the block's lr 1e-4; (a) 3 epochs over the
+  new examples, (b) 1 epoch over the union), plus ONE alternative lr (3e-5) for (a), to measure whether the choice matters; report
+  which was needed. Measures: the new question (X3 at depth 3, depth not given); every pre-existing report row before and after
+  (forgetting = the drop, per axis, with the seed std); wall-clock alone on the GPU (not concurrent); the number of examples; the
+  number of hyperparameter choices made.
+- The reader: the compositional case needs no run (the level-3 question is answered at 0.997 by the saved 1a models with zero examples
+  and zero retraining: that line is the row). The non-compositional case, so that the comparison is not one-sided: one held-out
+  template of the new-formulation axis (template 4, the double object) is added to training with k = 50 and 500 examples, the reader is
+  retrained in full with the same seeds (its only regime; no continuation exists), wall-clock alone measured, every pre-existing row
+  checked EQUAL or within seed std, the template's new-formulation cell reported before and after. The same template with k = 50 /
+  500 for BERT-tiny / mini under (a) and (b), so that both systems face a question that is new for both.
+- Table: rows = system x regime, columns = examples, minutes alone, hyperparameter choices, new-question accuracy, worst drop on an old
+  row. Statements limited to this world; the sentence that replay removes forgetting at the price of full retraining is written whether
+  or not forgetting appears under (a).
