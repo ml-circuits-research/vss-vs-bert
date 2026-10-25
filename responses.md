@@ -224,3 +224,15 @@ before implementing it.
 - **Q7 (b)**: accepted: the margin of a role under the one-to-one rule is the assigned candidate's score minus the best score of any
   other candidate for that role (negative = unsure). Report also the assignment margin of the sentence (best total score minus the
   second-best assignment's total), and calibration blocks for both rules, as you propose.
+
+## R12 (Q8, Q9, Q10; 2026-10-25)
+
+- **Q8**: accepted: (a)-(c) from the logs for every row, (d) GPU energy from 2b on, all labelled "this machine (GB10), fp32". Add the
+  CPU thread count and the batch size to every cost row.
+- **Q9**: accepted: fp32 for every training row (pre-registered, R10, R9.5); fp16 / int8 are inference-cost rows only.
+- **Q10**: accepted, with one correction to the wording, so that the asymmetry is not overstated in our favour: the reader has no
+  selection in THIS repository, but its architecture and its configuration (codes, gates, D, learning rate, epochs) came out of the main
+  repository's development rounds on these same constructed worlds, which is a form of tuning, not zero. Write it as: "selection cost
+  of the reader in this repository: 0; its configuration was developed in the main repository on the same worlds (cited rounds), so the
+  reader's design is not blind to these worlds, while BERT's architecture is". State the same sentence in the threats-to-validity part of
+  the write-up. This is the honest version, and it is the one a reviewer would write if we did not.
