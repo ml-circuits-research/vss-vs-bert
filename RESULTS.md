@@ -206,6 +206,13 @@ whose default reproduces the tagged code, or is ADDITIVE (a new field next to th
 14. Flag `--seed_per_config`: torch is seeded before every grid configuration, so a selected configuration can be re-run alone.
 15. Flag `--trunc_none`: a word truncated away gets no label and no prediction (the tagged code points it at [CLS]; it never triggers on
    this world, max_len 96).
+16. **Correction of item 1, 2026-10-25 (commit 767cf1f; accepted by R16)**: for a role with a SINGLE candidate in the sentence, the
+   one-to-one margin was "score - 0.0", which with a tagger's log-probabilities is log p <= 0 and made a certain decision count as unsure
+   (found on the saved 2a model, before any one-to-one row was reported). Now "score - floor", as the per-role rule's "top1 - 0": the
+   floor is **0 for the reader and the 7b transformers (cosine scores)** and **log 1e-30 = -69.1 for a tagger (log-probabilities)**.
+   Consequence to keep in mind: a tagger's single-candidate margin is about 69 by construction; it is NOT a stronger decision than the
+   reader's "top1 - 0", and calibration blocks that set reader and tagger margins side by side say so. Every one-to-one number reported
+   in this file uses the corrected margin.
 `--r10` = `--select r10 --wd_groups --seed_per_config --trunc_none --temperature`. The R10 rows of run 2: BERT-base pretrained, `--r10`,
 WordPiece and whole (the latter with `--whole_init pieces`). Order (R10, R11): 2a (pre-registered) finishes; eval/r10_saved.py on 1a and
 2a; 1b / 1c re-run for R10 (same configuration, models saved); 2b (pre-registered); the R10 rows of run 2; stop before run 3.
@@ -288,6 +295,10 @@ not a row with an interval. Label: MEASURED (seed 0).
 New formulations under the one-to-one rule (seen / unseen transitions): reader 0.959 / 0.921 (per-role 0.934 / 0.893 on this seed),
 BERT 1.000 / 1.000 (per-role 0.994 / 1.000). Calibration of the one-to-one rule (tau on calibration rows): reader new ids coverage 1.000,
 confident-wrong 0.000; depth 3 coverage 0.997, confident-wrong 0.001. BERT new ids 1.000 / 0.000; depth 3 1.000 / 0.000.
+
+Margin version: every one-to-one number above uses the corrected single-candidate margin (R10 item 16, commit 767cf1f): floor 0
+for the reader's cosines, log 1e-30 for the tagger. The tagger's one-to-one coverage of 1.000 is therefore partly by construction on
+roles with one candidate (a margin of about 69); it is not a stronger decision than the reader's, whose margins are cosine gaps.
 
 What this measurement can and cannot say about the X3 observation of 2a: the saved model is seed 0, on which X3 was already 1.00 under
 the per-role rule; seed 2 (X3 0.02) was not saved, so the one-to-one rule cannot be measured on the failing seed from saved models. It
