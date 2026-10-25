@@ -337,3 +337,46 @@ Notes:
     [progress] epoch 2/5 done, last batch loss 1.408e-06
     [progress] epoch 3/5 done, last batch loss 1.438e-06
     [progress] epoch 4/5 done, last batch loss 3.353e-07
+    [progress] epoch 5/5 done, last batch loss 1.267e-07
+  seed 4 lr=0.0001 epochs=5 (641s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.0, final training loss 9.253147864301504e-06; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] kinds given (R27) (depth given) 1.00 (m 48.20) | 1.00 (m 48.18) | 1.00 (m 35.18) | 1.00 (m 40.04) | 1.00 (m 47.54) | 1.00 (m 48.46) | 1.00 (m 48.33) | 0.83 (m 39.29)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.167
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.8181818181818182 (n 3960), unseen 1.0 (n 360)
+  seed 4 depth not given: {'full_six': 0.0, 'full_trained': 1.0, 'full_inner': 1.0, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 4 R17 (i): {'threshold': 47.25536712646485, 'rejected_null': {'random': 0.314, 'reference': 0.0, 'nonce': 0.304}, 'rejected_threshold': {'random': 0.948, 'reference': 0.974, 'nonce': 0.96}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.6027777777777777, 'new_form_unseen_trans': 0.6157407407407407, 'new_form_role_cues_seen': 0.08611111111111111, 'depth1': 0.0, 'depth2_seen': 0.018055555555555554, 'depth3_unseen': 0.41805555555555557}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.2086734693877551}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 4 cost: 4.4M params, 18 MB, 29.1 ms per sentence on CPU with all six questions (6 passes), 20 threads
+
+== google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] kinds given (R27) (depth given): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.931±0.080 [0.83 0.99 0.83 1.00 1.00] | 0.970±0.041 [1.00 1.00 0.89 0.96 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.786±0.048 [0.79 0.77 0.70 0.83 0.83]
+  FULL frame at depth 3 (UNSEEN): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.722±0.278 [0.736 0.625 0.250 1.000 1.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 0.722±0.278 [0.736 0.625 0.250 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.741±0.247 | 1.000±0.000 | 0.975±0.050 | 1.000±0.000 | 1.000±0.000 | 0.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.773±0.045 [0.78 0.75 0.70 0.82 0.82] / 0.924±0.100 [0.87 1.00 0.75 1.00 1.00]; inner A B C 0.902±0.099 [0.92 0.85 0.74 1.00 1.00] / 0.924±0.100 [0.87 1.00 0.75 1.00 1.00]
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.214 / acc. answered 0.786  (per seed cw: 0.211 0.229 0.297 0.167 0.167)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.057 / acc. answered 0.943  (per seed cw: 0.053 0.075 0.156 0.000 0.000)
+  depth NOT given, depth 3: full_six 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  depth NOT given, depth 3: full_trained 0.722 ± 0.278 [0.736 0.625 0.250 1.000 1.000]
+  depth NOT given, depth 3: full_inner 0.722 ± 0.278 [0.736 0.625 0.250 1.000 1.000]
+  depth NOT given, depth 3: depth_accuracy_depth3 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  R17 (i) rejected (null) random     0.285 ± 0.021 [0.300 0.266 0.256 0.290 0.314]
+  R17 (i) rejected (null) reference  0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  R17 (i) rejected (null) nonce      0.243 ± 0.037 [0.252 0.200 0.210 0.248 0.304]
+  R17 (i) false rejection (null) pooled 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  R17 (i) rejected (threshold) random     0.926 ± 0.108 [0.994 0.712 0.982 0.992 0.948]
+  R17 (i) rejected (threshold) reference  0.950 ± 0.018 [0.950 0.964 0.930 0.930 0.974]
+  R17 (i) rejected (threshold) nonce      0.925 ± 0.052 [0.938 0.954 0.822 0.952 0.960]
+  R17 (i) false rejection (threshold) pooled 0.259 ± 0.060 [0.308 0.353 0.224 0.203 0.209]
+written interpretation (R24): inner-frame FULL at depth 3 >= 0.9 => the question form composes as the tagger did; the six-role FULL and the level-3 question are the new information; confident-wrong under NULL training against the reader's residual is the calibration comparison; the cost ratio is the argument that survives
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] questions frozen before training (R24) [x] grid fixed in advance [x] candidates restricted as every model

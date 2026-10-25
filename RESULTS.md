@@ -1187,3 +1187,39 @@ one frame ('from' as the giver of receive) breaks the object-last reading in ano
 cue chain (H2); giving gates adds no information the routes can use, it only fixes which route-level failures appear. R14 and R37 are
 reported as measured; no further gate rows; the demo's given-gates default stays withdrawn (TODO_DGX 2.9); the route-level fix is
 tool-repository work after the stop.
+
+## Equal-size block, the remaining rows: BERT-tiny kinds given; BERT-mini pretrained, from scratch, kinds given (models/bert_mrc.py; MEASURED)
+
+Commands as the block (lr 1e-4, 5 epochs, batch 32, 'zs', --save_all): BERT-tiny kinds given one run of 5 seeds (commit 79fff34,
+launched 16:09:02; its output is interleaved in logs/2026-10-25_1609_bert_mrc_79fff34.txt, its own stdout in
+logs/2026-10-25_1609_bert_mrc_79fff34__tiny_kinds_stdout.txt); BERT-mini pretrained seeds 0-2 in one run (the _1609_ log and its
+stdout copy) and seeds 3, 4 as one job each, BERT-mini from scratch and kinds given one job per seed (R45; logs
+logs/2026-10-25_1735_ to _1749_bert_mrc_*.txt, one per job); kinds given seeds 3-4 not run (R51). All concurrent (up to 12): training
+times are not cost numbers. Table from eval/mrc_table.py (mean ± std [per seed]).
+
+| axis | BERT-tiny kinds (4.4 M) | BERT-mini pretrained (11.2 M) | BERT-mini from scratch (11.2 M) | BERT-mini kinds, seeds 0-2 |
+|---|---|---|---|---|
+| seen / new ids / depth 1 / depth 2 | 1.000 | 1.000 | 1.000 | 1.000 |
+| new form. seen trans. | 0.931 ± 0.080 [0.833 0.990 0.833 1.000 1.000] | 1.000 | 0.729 ± 0.101 [0.667 0.561 0.816 0.819 0.785] | 1.000 |
+| new form. UNSEEN trans. | 0.970 ± 0.041 | 0.982 ± 0.020 [1.000 0.944 0.980 1.000 0.985] | 0.891 ± 0.053 | 0.953 ± 0.035 |
+| new form. role cues | 1.000 | 1.000 | 0.860 ± 0.063 | 1.000 |
+| depth 3 slot accuracy (X3) | 0.786 ± 0.048 (0.000) | 0.833 ± 0.001 (0.000) | 0.635 ± 0.034 (0.000) | 0.827 (0.000) |
+| exact match depth 3, depth NOT given: six / inner | 0.000 / 0.722 ± 0.278 [0.736 0.625 0.250 1.000 1.000] | 0.000 / 1.000 | 0.000 / 0.142 ± 0.121 [0.306 0.021 0.135 0.000 0.250] | 0.000 / 0.963 |
+| confident error depth 3 (tau 0.000) | 0.214 (trained labels 0.057) | 0.167 (0.000) | 0.365 (0.238) | 0.173 (0.007) |
+| R17 (i) NULL refusal random / reference / nonce | 0.285 / 0.000 / 0.243 | 0.288 / 0.038 / 0.272 | 0.286 / 0.000 / 0.301 | 0.275 / 0.000 / 0.253 |
+| R17 (i) 2% threshold: random / reference / nonce; false rejection | 0.926 / 0.950 / 0.925; 0.259 | 0.991 / 0.922 / 0.908; 0.148 | 0.970 / 0.948 / 0.955; 0.484 | 0.987 / 0.889 / 0.899; 0.135 |
+| last-epoch training loss (mean) | 3.5e-5 | 5.4e-6 | 3.3e-5 | 1.9e-6 |
+| size fp32 | 17.6 MB | 44.7 MB | 44.7 MB | 44.7 MB |
+
+Convergence clause (R36): BERT-mini from scratch / pretrained last-epoch loss 6.0x (row means), not more than 10x: no 20-epoch row.
+**Withdrawal condition (R30 item 3), written before the block: an encoder of the reader's size trained FROM SCRATCH reaching an inner
+frame >= 0.99 at depth 3 with the depth not given would withdraw the claim. Measured: BERT-tiny 0.173, BERT-mini 0.142: the claim
+"same-size models trained from scratch do not compose this world" stands at 4.4 M and 11.2 M parameters.** BERT-small is not run
+(R36: tiny and mini do not disagree; and R48).
+Reading (BERT first). Pretrained BERT-mini is at ceiling on every new-formulation axis except UNSEEN transitions (0.982), above the reader
+there (0.868; the R46 decoder 0.975), and reaches inner frame 1.000 at depth 3 with the depth not given, as BERT-base's tagger did; no MRC
+row answers the level-3 question that was never asked in training (X3 0.000 on every seed of every row), so the six-question exact
+match at depth 3 is 0.000 for every BERT row against the reader's 0.982 (one-to-one 0.995). Kinds given do not change the pretrained
+picture (tiny: inner 0.722 against 0.972 without, with a large seed spread; mini seeds 0-2: 0.963 against 1.000). Pretraining is what
+separates the rows at equal size: from scratch the inner frame falls to 0.14-0.17 and new formulations to 0.63-0.89. The confirmatory
+comparisons follow in their own section.
