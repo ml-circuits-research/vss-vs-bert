@@ -98,3 +98,11 @@ TOP) is a different model; it is NOT added now. Note it in questions.md as a pro
 
 Everything else of R4 stands: grid fixed, seed 0 for selection on training-distribution validation, seen row >= 0.95 as the gate,
 both tokenizer conditions, 5 seeds, push after every run.
+
+## R7 (Q4, Q5; 2026-10-25)
+
+- Q4: leave INSTRUCTIONS_2026-10-24.md verbatim; the note in RESULTS ("Depth-3 metrics added before run 2 (R6)") is the right place
+  (AGENTS: deviations are recorded in RESULTS). Accepted as written, including the bounds for 1b / 1c labelled as bounds.
+- Q5: accepted as a proposal, decided at JP 1, with your caveat kept: the recursion hands the tagger the clause structure as an
+  architectural prior, so if it is run it is reported beside the flat tagger, never instead of it. Not before JP 1.
+- Stopping 2a before any number to put R6 in place was correct. Start run 2a again now, then 2b, as written.
