@@ -738,3 +738,14 @@ Reading. Giving the cue gates removes the gate degeneracy (one gate set on every
 average, better for unseen forms than the given set. The R14 row is therefore not an improvement of the reader on that axis; it shows that
 the 1a spread was the degeneracy, as R14 expected, and that removing it costs accuracy on new formulations. The matching BERT row (cue
 feature) is deferred (R25 / R28). The rule ceiling (1.000 on every axis) stands above both.
+
+## Amendment R36 to deviation R34 / R35 (declared 2026-10-25, before any row of the equal-size block runs; the R35 text above is kept as written)
+
+- **5 epochs, not 10**: the fixed configuration of every block variant is lr 1e-4, **5 epochs**, batch 32, 5 seeds (BERT-tiny's
+  validation span loss is already below printed precision at 5 epochs on every learning rate tried). The convergence clause now reads:
+  if a from-scratch variant's last-epoch training loss is more than 10x the pretrained variant's at the same size, ONE labelled row at
+  20 epochs for that variant; nothing else is tuned.
+- **BERT-small after tiny and mini, and only if they leave a question**: tiny (4.4 M) and mini (11 M) bracket the reader (3.3 M); the three
+  BERT-small variants run only if the picture differs between tiny and mini, otherwise they are recorded as not run with that reason.
+- GPU order: the six tiny and mini rows in parallel (the LLM reference beside them); then BERT-base MRC alone (2a's configuration); then
+  the 2a re-run with every seed saved and R17 on it; then the BERT-mini seed-0 sensitivity grid.

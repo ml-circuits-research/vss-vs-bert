@@ -128,6 +128,9 @@ configuration (`--lrs 2e-5 --epochs 3 --seeds 5 --save_model`, alone); the nine 
 _sens_<L>_<E>`), after the fixed rows; the convergence rule's 20-epoch rows only where it triggers. Still in the queue: the reader's R14 and
 R17 rows, the 2a R10 row and the 2a re-run with every seed saved, R17 on it. The 'all questions' MRC rows wait for a response.
 
+**Amended by responses R36 (2026-10-25)**: the block variants run at `--lrs 1e-4 --epochs 5`; BERT-small only if tiny and mini
+differ; order: tiny + mini (six rows, parallel) -> BERT-base MRC alone -> 2a re-run saved + R17 -> BERT-mini sensitivity grid (seed 0).
+
 ## 2. After every run
 
 - **RESULTS.md**: a numbered section (`## <run>. <title> (<script>; logs/<log name>)`) with the exact command, the commit, the table the
