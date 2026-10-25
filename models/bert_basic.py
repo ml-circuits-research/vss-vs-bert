@@ -15,7 +15,10 @@ offsets 0..K in training), --whole_init pieces. Always on and additive (no pre-r
 one-to-one rule, the validation cross-entropy of every grid point, the depth-3 split by filler position (first-sub-token index), the
 occupancy over the trained labels, the cost at fp16 and int8 dynamic quantization and the CPU thread count.
 R14 (responses R14, 2026-10-25): --cues given adds ONE learned 'cue' embedding (hidden size, init N(0, 0.02)) to the input embedding of
-every token that is a whole cue word of CUE_WORDS (the same set the reader's gates are given for); default 'none' = the tagged code."""
+every token that is a whole cue word of CUE_WORDS (the same set the reader's gates are given for); default 'none' = the tagged code.
+R17 (responses R17 / R18, 2026-10-25), default off: --save_all saves every seed's model (for eval/r17_tagger.py); --oow_class trains a
+[CLS] out-of-world head on the 'neg' part of data/oow_seed<s>.json (their tokens tagged O); --depth_head cls|reg trains a [CLS] depth
+head (classes 0-3, class 3 never in training; or one regression output, rounded and clipped to 0-3 at decoding)."""
 import argparse, os, sys, time, json, io
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -30,7 +33,7 @@ LABELS = ["O"] + bwm.ROLES; LAB = {l: i for i, l in enumerate(LABELS)}
 CUE_WORDS = ["to", "by", "from", ".", "says", "that"]   # R14: the role-cue and level-opener words, given from the legend (rule 20)
 
 class Tagger(nn.Module):
-    def __init__(self, name, scratch, n_tokens, piece_init=None, cue_tok=None):
+    def __init__(self, name, scratch, n_tokens, piece_init=None, cue_tok=None, oow=False, depth_head="none"):
         super().__init__()
         cfg = AutoConfig.from_pretrained(name)
         self.enc = AutoModel.from_config(cfg) if scratch else AutoModel.from_pretrained(name)
@@ -40,7 +43,9 @@ class Tagger(nn.Module):
                 E = self.enc.get_input_embeddings().weight
                 with torch.no_grad():
                     for new_id, pieces in piece_init.items(): E[new_id] = E[pieces].mean(0)
-        self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1); self.cue = None
+        self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1); self.cue = None; self.last_cls = None
+        self.oow_head = nn.Linear(cfg.hidden_size, 2) if oow else None                     # R17 item 1 (ii)
+        self.depth_kind = depth_head; self.depth_head = {"cls": lambda: nn.Linear(cfg.hidden_size, 4), "reg": lambda: nn.Linear(cfg.hidden_size, 1)}.get(depth_head, lambda: None)()
         if cue_tok is not None:                        # R14: a token is a cue iff it is a cue word's own (single) token and the next token does not continue it
             vocab = cue_tok.get_vocab(); cont = torch.zeros(max(n_tokens, len(vocab)), dtype=torch.bool)
             for t, i in vocab.items():
@@ -56,7 +61,12 @@ class Tagger(nn.Module):
             m = torch.isin(ids, self.cue_ids) & ~self.cont[nxt] & att.bool()
             emb = self.enc.get_input_embeddings()(ids) + m.unsqueeze(-1).to(self.cue.dtype) * self.cue
             h = self.enc(inputs_embeds=emb, attention_mask=att, **kw).last_hidden_state
+        self.last_cls = h[:, 0]
         return self.head(self.drop(h))
+    def depth_of(self, cls):
+        """R17 item 3: the depth decided by the [CLS] head (argmax of 0-3, or the regression rounded and clipped)"""
+        o = self.depth_head(cls)
+        return o.argmax(-1) if self.depth_kind == "cls" else o.squeeze(-1).round().clamp(0, 3).long()
 
 def encode_batch(tok, sents, device, max_len=96, trunc_none=False):
     """word-level inputs: first sub-token of every word carries the label; returns ids, attention, first-subtoken positions per word"""
@@ -88,7 +98,11 @@ def param_groups(model, wd):
     for n, p in model.named_parameters(): (nodec if n.endswith("bias") or "norm" in n.lower() else dec).append(p)
     return [{"params": dec, "weight_decay": wd}, {"params": nodec, "weight_decay": 0.0}]
 
-def train(model, tok, data, lr, epochs, batch, device, seed, wd_groups=False, pos_offset=0, trunc_none=False):
+def train(model, tok, data, lr, epochs, batch, device, seed, wd_groups=False, pos_offset=0, trunc_none=False, neg=None):
+    """data: (tokens, tags); R17: neg = out-of-world sentences (tagged O, out-of-world label 1) mixed into the epochs when the model
+    has an out-of-world head; the depth head is trained on the in-world sentences (depth = the number of X tags)"""
+    n_in = len(data)
+    if neg: data = list(data) + [(t, ["O"] * len(t)) for t in neg]
     opt = torch.optim.AdamW(param_groups(model, 0.01) if wd_groups else model.parameters(), lr=lr, weight_decay=0.01); steps = epochs * ((len(data) + batch - 1) // batch)
     sched = get_linear_schedule_with_warmup(opt, int(0.1 * steps), steps); g = torch.Generator().manual_seed(seed); ce = nn.CrossEntropyLoss(ignore_index=-100)
     for ep in range(epochs):
@@ -103,6 +117,14 @@ def train(model, tok, data, lr, epochs, batch, device, seed, wd_groups=False, po
             if pos_offset:                                  # R10 item 2b: a random position offset 0..K per sentence in training only
                 off = torch.randint(0, pos_offset + 1, (ids.shape[0], 1), generator=g); pid = (torch.arange(ids.shape[1]).unsqueeze(0) + off).to(device)
             logits = model(ids, att, pid); loss = ce(logits.view(-1, len(LABELS)), lab.view(-1).to(device))
+            if model.oow_head is not None:
+                y = torch.tensor([int(j >= n_in) for j in perm[i:i + batch]], device=device); loss = loss + ce(model.oow_head(model.drop(model.last_cls)), y)
+            if model.depth_head is not None:
+                keep = torch.tensor([j < n_in for j in perm[i:i + batch]], device=device)
+                d = torch.tensor([sum(x.startswith("X") for x in c[1]) for c in chunk], device=device)
+                if keep.any():
+                    o = model.depth_head(model.drop(model.last_cls[keep]))
+                    loss = loss + (ce(o, d[keep]) if model.depth_kind == "cls" else nn.functional.mse_loss(o.squeeze(-1), d[keep].float()))
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
 
 @torch.no_grad()
@@ -182,6 +204,10 @@ if __name__ == "__main__":
     ap.add_argument("--select", default="prereg", choices=["prereg", "r10"], help="r10: ties of validation FULL go to the lowest validation cross-entropy (R10 item 3)")
     ap.add_argument("--wd_groups", action="store_true"); ap.add_argument("--seed_per_config", action="store_true"); ap.add_argument("--trunc_none", action="store_true")
     ap.add_argument("--temperature", action="store_true"); ap.add_argument("--pos_offset", type=int, default=0); ap.add_argument("--whole_init", default="resize", choices=["resize", "pieces"])
+    ap.add_argument("--tag_suffix", default="", help="appended to the results / model names (R17: a re-run of a row with its selected configuration and saved models)")
+    ap.add_argument("--save_all", action="store_true", help="R17: save every seed's model to logs/models/<tag>_seed<s>")
+    ap.add_argument("--oow_class", action="store_true", help="R17 item 1 (ii): a [CLS] out-of-world head trained on the 'neg' part of data/oow_seed<s>.json")
+    ap.add_argument("--depth_head", default="none", choices=["none", "cls", "reg"], help="R17 item 3: a [CLS] depth head")
     ap.add_argument("--cues", default="none", choices=["none", "given"], help="R14: 'given' adds the learned cue embedding on the CUE_WORDS tokens (row 'cues given')")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 model and tokenizer to logs/models/ for eval/determinism.py")
     a = ap.parse_args()
@@ -196,6 +222,10 @@ if __name__ == "__main__":
         print(f"R10 flags: select {a.select}, wd groups {a.wd_groups}, seed per config {a.seed_per_config}, truncated word -> None {a.trunc_none}, temperature {a.temperature}, position offsets 0-{a.pos_offset}, whole init {a.whole_init}")
     if a.cues == "given":
         name += " cues given (R14)"; tag += "_cues"; print(f"R14: cue embedding added on the tokens of {CUE_WORDS}")
+    if a.oow_class or a.depth_head != "none":
+        name += " R17 (" + ", ".join(x for x in (("out-of-world class" if a.oow_class else ""), (f"depth head {a.depth_head}" if a.depth_head != "none" else "")) if x) + ")"
+        tag += "_r17" + ("_oow" if a.oow_class else "") + (f"_depth{a.depth_head}" if a.depth_head != "none" else "")
+    if a.tag_suffix: name += f" [{a.tag_suffix.strip('_')}]"; tag += a.tag_suffix
     print(f"bert_basic: {name}; main repository {mainrepo.check_pinned()}; device {a.device}; N {a.N}; seeds {a.seeds}; grid lr {lrs} x epochs {eps}; batch {a.batch}")
     print("regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; token-tagging head; decoding restricted to the world's candidates; frozen splits")
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167"); chosen = None; rows = []
@@ -206,13 +236,14 @@ if __name__ == "__main__":
             base = AutoTokenizer.from_pretrained(a.model); n0 = len(tok); tok.add_tokens(list(split["vocab"]))
             if a.whole_init == "pieces": piece_init = {tok.convert_tokens_to_ids(w_): base.convert_tokens_to_ids(base.tokenize(w_)) for w_ in split["vocab"] if tok.convert_tokens_to_ids(w_) >= n0}
         pieces = np.mean([len(tok.tokenize(w_)) for w_ in split["vocab"]]); print(f"  seed {seed}: tokenizer '{a.tokenizer}', pieces per world word {pieces:.2f}")
+        neg = [x["tokens"] for src in ("random", "reference", "nonce") for x in json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json")))["neg"][src]] if a.oow_class else None
         data = make_train(bw, seed, a.N); val = [(t, g) for t, g in make_train(bw, 900 + seed, 2000)]
         val_items = [{"tokens": t, "frame": bwm.frame_from_tags(t, g), "depth": sum(x.startswith("X") for x in g)} for t, g in val]
         val_split = {"axes": {"val": val_items}, "candidates": split["candidates"]}; best = None
         for lr in (lrs if seed == 0 else [chosen[0]]):
             for ep in (eps if seed == 0 else [chosen[1]]):
                 if a.seed_per_config: torch.manual_seed(seed)   # R10 item 14: a selected configuration can be re-run alone
-                model = Tagger(a.model, a.scratch, len(tok), piece_init, tok if a.cues == "given" else None).to(a.device); t0 = time.time(); train(model, tok, data, lr, ep, a.batch, a.device, seed, a.wd_groups, a.pos_offset, a.trunc_none)
+                model = Tagger(a.model, a.scratch, len(tok), piece_init, tok if a.cues == "given" else None, a.oow_class, a.depth_head).to(a.device); t0 = time.time(); train(model, tok, data, lr, ep, a.batch, a.device, seed, a.wd_groups, a.pos_offset, a.trunc_none, neg)
                 vp = predict(model, tok, val_split, "val", a.device, trunc_none=a.trunc_none); vfull = np.mean([all(p["frame"][r] == it["frame"][r] for r in bwm.roles_at(it["depth"])) for it, p in zip(val_items, vp)])
                 L_, Y_ = logits_and_labels(model, tok, val_items, a.device, trunc_none=a.trunc_none); vce = float(nn.CrossEntropyLoss()(L_, Y_))
                 print(f"  seed {seed} lr={lr:g} epochs={ep} ({time.time() - t0:.0f}s, {sum(p.numel() for p in model.parameters())/1e6:.1f}M params) validation FULL {vfull:.3f}, token cross-entropy {vce:.5f}", flush=True)
@@ -244,10 +275,10 @@ if __name__ == "__main__":
                             "cpu_threads": torch.get_num_threads(), "embedding_rows": int(emb.shape[0]), "embedding_params": int(emb.numel())}); del q
         print(f"  seed {seed} occupancy (free tags) {row['occupancy']}; cost {row['cost']['params']/1e6:.1f}M params, {row['cost']['bytes']/1e6:.0f} MB, {ms:.1f} ms/sentence on CPU")
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_seed{seed}.json"), "w") as f: json.dump(row, f)
-        if a.save_model and seed == 0:
-            md = os.path.join(mainrepo.ROOT, "logs", "models", tag + "_seed0"); os.makedirs(md, exist_ok=True)
+        if (a.save_model and seed == 0) or a.save_all:
+            md = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed{seed}"); os.makedirs(md, exist_ok=True)
             torch.save(model.state_dict(), os.path.join(md, "tagger.pt")); tok.save_pretrained(md)
-            json.dump({"model": a.model, "scratch": a.scratch, "n_tokens": len(tok), "cues": a.cues}, open(os.path.join(md, "config.json"), "w"))
+            json.dump({"model": a.model, "scratch": a.scratch, "n_tokens": len(tok), "cues": a.cues, "oow_class": a.oow_class, "depth_head": a.depth_head, "seed": seed}, open(os.path.join(md, "config.json"), "w"))
         rows.append(row); model.to(a.device); del model
     report.summarize(rows, name)
     print("written interpretation (INSTRUCTIONS table 3): new ids > 0.9 => the pieces carry the role; < 0.5 => the vocabulary gap is structural; depth 3 > 0.9 would contradict the paper's same-input claim, < 0.5 confirms it; in between reported with both readings")
