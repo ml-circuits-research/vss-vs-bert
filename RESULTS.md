@@ -369,3 +369,20 @@ distribution, the residual). Open points with their defaults: questions.md Q12-Q
 Reading, written now: if BERT with the trained out-of-world class (ii) rejects at >= 0.90 with <= 2% false rejections on a source, BERT
 meets the criterion there, whatever the reader does; the same for the reader. Results are reported per source, so that a source on which
 a model rejects by construction (the reader's lexicon on (c), Q14) is not mixed with a learned rejection.
+R17 as settled by responses R18 (2026-10-25; Q12-Q15):
+- The reader has no status on the basic world (no event classifier, no unknown-event): for the reader, "rejected" means "residual above
+  its threshold" and nothing else. Residual = the sop tool's (tool/sop/infer.py): ||S - a rec|| / ||S||, rec = the world's state of the
+  decoded frame at the given (or, in item 3, estimated) depth, a = the best real scale; computed in common/decode.py. Thresholds:
+  (i) the 2% false-rejection point of the in-world calibration rows; (ii) the best separating threshold with the 'neg' negatives under
+  <= 2% false rejection on the calibration rows.
+- Source (b) is the weakest of the three: a person reads most of its sentences as basic-world sentences with C "not given". It is kept,
+  reported per source and never pooled. Its 'neg' part is 320 items on seed 0 because the pool of reference sentences of a non-basic form
+  is exhausted.
+- Source (c), two reader rows: primary "by construction" (a word outside the legend cannot be encoded; rejected, reported as such, NOT
+  counted as a learned rejection), and "nonce as placeholder" (one fixed random vector of category 'O' per seed for every nonce word, so
+  that the reader decides from its state; the only version of (c) on which its learned rejection can be compared with BERT's). For BERT
+  (c) is a real test in both rows.
+- Scope: item 1 (i) and item 2 for the reader, 7b-bis / 7b and every BERT / DistilBERT row; item 1 (ii) and item 3 as new 5-seed rows for
+  BERT-base WordPiece (2a configuration) and DistilBERT pretrained (3a configuration) with the matching reader rows; item 3 also for 7b-bis
+  from its saved R11 re-run models, with the same level-opener count as the reader (a property of the token sequence, not of the model).
+  The from-scratch encoder and the controls' trained OOW class are out unless asked.
