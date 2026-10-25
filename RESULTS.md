@@ -1234,3 +1234,21 @@ only the route fix can. Correction of fact to R53's wording, from the same files
 A and C pooled, where both addresses hold A's filler and the elimination assigns it to C, leaving A wrong); every other cell has at most
 13 wrong decisions of 900. Decision provenance stays in the table: T7:A is right by restriction (411) and elimination (440), not by
 the address (43).
+
+## 1a on the fresh splits, seeds 5-9 (R13 / R39; vss/run_reader_basic.py --seed_start 5; logs/2026-10-25_1721_run_reader_basic_01a4715.txt; CLAIM SET)
+
+Command `./run.sh vss/run_reader_basic.py --seed_start 5 --seeds 5 --save_all`, commit 01a4715 (1a's code; row "VSS reader (reference)
+[fresh splits, seeds 5-9]", tag reader_basic_fresh, never pooled with seeds 0-4), concurrent (training 533-1,000 s: not a cost
+number). Learned open gates: seeds 5, 7, 9 {by from that to}; seed 6 {. by that to}; seed 8 {. that to}. MEASURED.
+
+| axis (slot accuracy) | seeds 5-9 | seeds 0-4 (1a, design set) |
+|---|---|---|
+| seen / new ids / role cues / depth 1 / depth 2 | 1.000 | 1.000 |
+| new form. seen trans. | 0.831 ± 0.055 [0.80 0.93 0.78 0.84 0.81] | 0.864 ± 0.069 |
+| new form. UNSEEN trans. | 0.835 ± 0.051 [0.78 0.89 0.82 0.90 0.79] | 0.868 ± 0.040 |
+| depth 3 slot accuracy; exact match six (levels as labels) | 0.999 ± 0.002; 0.992 ± 0.010 [1.000 0.975 1.000 0.986 0.999] | 0.997; 0.982 |
+| one-to-one: new form. seen / UNSEEN; depth-3 exact match | 0.840 / 0.856; 0.998 ± 0.002 | 0.870 / 0.894; 0.995 |
+| confident error at depth 3 (tau 0.000, coverage 1.000) | 0.001 | 0.003 |
+
+The fresh seeds reproduce 1a's picture: depth 3 at ceiling, new formulations 0.83-0.84, lower by 0.03 in the mean, with three of the
+five readers opening 'from' (1a: one of five).
