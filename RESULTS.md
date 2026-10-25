@@ -5,6 +5,12 @@ Table 3 is reported with both readings. Reference numbers from the main reposito
 new ids 1.000, depth 3 1.000; 7b transformer new ids 0.215 ± 0.012, depth 3 0.390 ± 0.024; 7b-bis 0.253 ± 0.034, 0.393 ± 0.023;
 8c WikiSQL reader sel 0.816 / 0.760 / 0.632 at 56k / 5k / 1k, transformer 0.543 / 0.510 / 0.415, BoW+LR 0.499 / 0.502 / 0.475.
 
+**Decision before run 3 (responses R1, 2026-10-25): the small pretrained encoder is `distilbert-base-uncased`.** Reasons: it has the
+same WordPiece vocabulary and tokenizer as BERT-base, so both tokenizer conditions stay comparable; it is the standard small checkpoint a
+reviewer expects. Measured on the DGX: `prajjwal1/bert-small` does not load with the pinned transformers 5.20.2 (the checkpoint has no
+fast-tokenizer file and the slow-to-fast conversion fails); no workaround is added, the pin is not changed, and bert-small is not run.
+The from-scratch twin of run 3b is DistilBERT's architecture (6 layers, same width), randomly initialised, with the same tokenizer.
+
 ## 0. Frozen splits of the basic world (data/make_splits.py; logs/2026-10-25_0748_make_splits_1617108.txt)
 
 Command: `./run.sh data/make_splits.py --seeds 5`, commit 1617108, on the DGX (NVIDIA GB10, Python 3.12.3, torch 2.14.1+cu130).
