@@ -6,7 +6,8 @@ fixed rule) and the fixed item list (200 report items per axis of seed 0, the fi
 (cache_control ephemeral; below the model's 512-token cacheable minimum it silently does not cache, and the usage fields say so), one
 user message per sentence, three repeats, a budget cap in USD from the usage fields and the prices passed on the command line (read on
 the provider's pricing page at call time and logged), the spend logged every 100 calls, stop at the cap. No sampling parameter is sent
-(questions Q22: the API rejects temperature since 2026-10-21); no server-side fallback (a refusal is recorded as such, so that every answer
+(questions Q22: the API rejects temperature since 2026-10-21); thinking {"type": "between_tools"} at effort low, the lowest setting
+claude-sonnet-5-5 accepts (R33); no server-side fallback (a refusal is recorded as such, so that every answer
 comes from the named model). The key is read from ANTHROPIC_API_KEY only; the script never prints, logs or stores it, the request
 headers or the environment. Writes logs/results_llm_reference_repeat<k>.json and prints the scores.
 Run: python3 eval/llm_reference.py --write_prompt | ./run.sh eval/llm_reference.py --call --price_in P --price_out P --price_cache_write P --price_cache_read P [--cap 20] [--effort low]"""
@@ -41,14 +42,14 @@ def call(a, prompt, split, items):
     if not os.environ.get("ANTHROPIC_API_KEY"): sys.exit("ANTHROPIC_API_KEY is not set: source the key file in the launching shell (see R32); nothing was called")
     client = anthropic.Anthropic(); spent = 0.0; n = 0; out = {}
     price = lambda u: (u.input_tokens * a.price_in + u.output_tokens * a.price_out + (u.cache_creation_input_tokens or 0) * a.price_cache_write + (u.cache_read_input_tokens or 0) * a.price_cache_read) / 1e6
-    print(f"llm_reference --call: model {a.model}, effort {a.effort}, prices per M tokens in {a.price_in} out {a.price_out} cache write {a.price_cache_write} cache read {a.price_cache_read} (read on the provider's page at call time), cap {a.cap} USD, {a.repeats} repeats", flush=True)
+    print(f"llm_reference --call: model {a.model}, thinking between_tools, effort {a.effort}, no sampling parameter, prices per M tokens in {a.price_in} out {a.price_out} cache write {a.price_cache_write} cache read {a.price_cache_read} (read on the provider's page at call time), cap {a.cap} USD, {a.repeats} repeats", flush=True)
     for k in range(1, a.repeats + 1):
         res = {}
         for ax, idx in items.items():
             for i in idx:
                 it = split["axes"][ax][i]
                 try:
-                    r = client.messages.create(model=a.model, max_tokens=a.max_tokens, output_config={"effort": a.effort},
+                    r = client.messages.create(model=a.model, max_tokens=a.max_tokens, output_config={"effort": a.effort}, thinking={"type": "between_tools"},
                                                system=[{"type": "text", "text": prompt, "cache_control": {"type": "ephemeral"}}],
                                                messages=[{"role": "user", "content": "Sentence: " + " ".join(it["tokens"])}])
                 except anthropic.APIStatusError as e:
