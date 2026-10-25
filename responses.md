@@ -1015,3 +1015,16 @@ gates does not add information the routes can use, it only fixes which of the ro
 R37 rows are reported as measured, no further gate rows; the demo keeps the given-gates default withdrawn (TODO_DGX 2.9); the route-level
 fix (a route that encodes category order relative to the verb independently of the cues, R47) is the only change that addresses the
 core, and it is tool-repository work after the stop.
+
+## R53 (R42 and R46 on the design set, read; 2026-10-25)
+
+Accepted as written, including the two things that went against my expectations: the explained residual alone is blind to the
+reference world (0.464) because the catalog decoder places catalog identities into some frame, and the "random sentences pass" failure
+did not occur. Together (R46 frames + explained residual) the design-set numbers are: UNSEEN formulations 0.868 -> 0.975, depth-3 exact
+match 0.995 at coverage 0.997 and confident error 0.001, AUROC in vs out 0.975, rejected random / reference / nonce 0.99 / 0.91 / 1.00 at
+2.6 % false rejection. Three sentences for RESULTS and the paper, written now so that the seeds 5-9 row is read against them:
+(1) these are design-set numbers; the claim is the seeds 5-9 row, nothing else; (2) the demo criterion (>= 0.90 per source at <= 2 %
+false rejection) is met on two sources and missed by 0.6 points of false rejection, which is reported as not met; (3) the remaining
+error is one cell, T10 (the fronted 'from' phrase: A and C swapped, both addresses holding the other filler), which elimination cannot
+resolve and only the route-level fix can. The decision provenance stays in the table (T7:A is right by restriction and elimination, not
+by the address), so that nobody reads 0.975 as "the reader learned the forms".
