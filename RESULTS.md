@@ -1432,3 +1432,22 @@ table (T4:C, T7:A, T10:A+C, T4:B+T11:B) with the three decision categories, so t
 (decided by the address) rather than elimination. Expected, written before the run: T4:C and T7:A decided by the address on most items;
 T10 improved; nothing else moves outside the seed std; if the in-world rows fall by more than one seed std, the route is rejected and
 the row says so.
+
+## R49 legend growth, the reader (vss/reader_growth.py; logs/2026-10-25_1908_reader_growth_7324df2.txt (seeds 0-4), _1934_reader_growth_c7f1d5e.txt (seeds 5-9); MEASURED)
+
+Both runs ALONE on the GPU (the queue held every other job). Check: with k = 0 the replicated training reproduces the saved reader
+EQUAL (seed 0 and seed 5; drop 0.000 on every axis). Full retraining, the reader's only regime, 0 hyperparameter choices.
+Compositional case (the level-3 question): no run; 0 examples, 0 s, X3 1.000 at depth 3 on every seed of both ranges (exact match
+0.982 / 0.992). Non-compositional case (template 4 added with k sentences):
+
+| seeds | k | training s alone | template-4 cell slot: before -> after | exact after | worst drop on an old row (mean [per seed]) | UNSEEN new form. after |
+|---|---|---|---|---|---|---|
+| 0-4 (design) | 50 | 135.2 ± 0.2 | 0.632 -> 1.000 | 0.999 | 0.008 [0.027 0.000 0.004 0.008 0.000] | 0.939 |
+| 0-4 (design) | 500 | 136.8 ± 0.2 | 0.632 -> 1.000 | 1.000 | 0.017 [0.005 0.002 0.002 0.042 0.034] | 0.930 |
+| 5-9 (claim) | 50 | 134.9 ± 0.3 | 0.541 -> 0.999 | 0.998 | 0.002 [0.003 0.006 0.000 0.000 0.000] | 0.939 |
+| 5-9 (claim) | 500 | 136.6 ± 0.2 | 0.541 -> 1.000 | 1.000 | 0.006 [0.001 0.000 0.006 0.021 0.003] | 0.939 |
+
+The worst drops fall on new formulations with seen transitions or depth 3 and are within those rows' seed std (0.05-0.07 and 0.002-
+0.010); seen, new ids, role cues and depths 1-2 move by 0.000. (The UNSEEN-formulation axis rises because template 4 is one of its
+templates and is no longer unseen.) For the reader a new form costs a full retraining of 135-137 s alone and k = 50 examples, with no
+hyperparameter to choose; a new question composed from known parts costs nothing.
