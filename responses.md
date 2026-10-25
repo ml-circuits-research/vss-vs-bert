@@ -877,3 +877,39 @@ No objection; proceed.
 Both accepted: (a) one job per seed, and (b) up to 12 slots for BERT-tiny / BERT-mini after the one measurement R23 prescribes (keep 12
 if the throughput gain is at least 1.3x, else 6), memory rule and guard unchanged, BERT-base alone. Per-seed numbers are unaffected;
 the concurrency count stays in every log line as now, and no concurrent time is a cost number.
+
+## R46 (first reading of the design-set dumps; a decoder-only improvement proposed; 2026-10-25)
+
+Files opened: results/dump_reader_basic_cues_seed0-3.json (the R14 row; the 1a dumps are not written yet). JOURNAL: seeds 0-4 are the
+inspected design set from now on, as R39 says.
+
+**What the errors are.** They are not seed noise and not swaps. On every seed the same cells fail, nearly completely: template 10
+("from p11 , p8 receives o6 .": C, the subject after a fronted "from" phrase, 176-180/180), template 4 ("p10 gives p4 o3 .", the double
+object without "to": B 165-180/180 and C 102-164/180), template 7 ("it is o1 that p9 gives to p6 .", the cleft: A 155-171/180),
+template 11 ("p9 receives from p8 o0 .": B 83-140/180), template 5 partly. In 72-77 % of the wrong decisions the predicted word is NOT in
+the sentence (pred_pos −1) and the median margin is 0.010 (under tau: the demo would abstain, which is why confident error stays low
+while coverage falls); the gold filler's rank is spread from 2 to 12, i.e. the role's address holds no signal at all, not a near miss.
+Template 7 is the clearest mechanism: "that" opens a level gate, so the cleft's "that p9 gives" is deposited as a reported clause and
+A is read at the wrong level. Templates 4, 10, 11 are fillers placed after a cue (or in a slot) that in training preceded a DIFFERENT
+role, so they sit at an address the role's readout never visits. This is H2 (the address a filler receives follows the cue chain, and a
+new order puts it in another role's address), with H1 as the trigger in template 7. H3 (close candidates) is NOT the pattern.
+
+**Why the rule and BERT do not fail here.** In this world the category decides most of the role (every O is B; among the P's the verb's
+side and the cue decide A vs C), and both the rule and an extractive tagger choose among the words OF THE SENTENCE. The reader's cleanup
+chooses among all catalog words of the role's kinds, so when the address is empty it returns a random catalog word.
+
+**Proposed row, decoder only, no retraining** (R38 protocol; declared now; claim on seeds 5-9): **sentence candidates + one-to-one**:
+the cleanup of each role is restricted to the words of the sentence whose kind the role admits (the tool already has this mode,
+training/parity `--sentence-candidates`, introduced for words outside the catalog), and the one-to-one assignment of R10 is applied
+over those candidates; margin = the gap between the best and the second in-sentence candidate, with R10's single-candidate floor. This
+is the same assumption the taggers and MRC carry by construction (the answer is a span of the sentence), so it equalises the decoders;
+it does not touch the chart or the routes. Expected effect on the design cells, written before the run: template 11 B (one O in the
+sentence) and template 4 B become right by construction; template 4 C, template 7 A and template 10 C become right through one-to-one
+(the other P is taken by the role whose address does hold it) whenever that other role is right, which the dumps show it is; the
+in-world rows cannot fall (the gold is always in the sentence). Expected cost, also written now: the out-of-world "random in-vocabulary"
+set will be filled into frames more often (the explained residual of R42 is what has to catch it, and the planted 'undecided' sets
+measure the margin between two in-sentence candidates, which is the right test). Report coverage, confident error and the AUROC beside
+exact match, as for every row.
+
+If the 1a dumps (learned gates) show the same cells, the row runs on the 1a readers too; the R37 row (gates as initialisation) stays as
+a separate question (template 7 may move with it).
