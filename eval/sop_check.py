@@ -106,12 +106,14 @@ if __name__ == "__main__":
                 out = []
                 for it in est(items):
                     fr, f, S, kept, addr = tool_frame(rd, it["tokens"], it["depth"], set(it["tokens"]))
-                    out.append(rd.residual_explained(S, addr, kept, it["tokens"], rd.placed_words(f)) if kept else 1.0)
+                    # as sop.infer.Reader.formalize computes it (from SOURCE 0b4878b: 1.0 when the frame is incomplete, R64 / Q30)
+                    inc = rd.frame_incomplete(f) if hasattr(rd, "frame_incomplete") else False
+                    out.append((1.0 if inc else rd.residual_explained(S, addr, kept, it["tokens"], rd.placed_words(f))) if kept and f["shape"] == "ok" else 1.0)
                 return np.array(out)
             c = resid(split["axes"]["calibration"]); t = float(np.quantile(c, 0.98)); inw = np.concatenate([resid(split["axes"][ax]) for ax in report.AXES if split["axes"][ax]])
             oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); o = {s: resid(oow["test"][s]) for s in ("random", "reference")}
             res["explained"] = {"auroc_pooled": auroc(inw, np.concatenate([o["random"], o["reference"]])), "rejected": {s: float(np.mean(v > t)) for s, v in o.items()}, "false_rejection_pooled": float(np.mean(inw > t)), "threshold": t}
             refx = (r46 or {}).get("oow", {}).get("explained", {})
             print(f"  seed {seed} explained residual (tool): AUROC {res['explained']['auroc_pooled']:.4f} (R46 row {refx.get('auroc_pooled_random_reference', float('nan')):.4f}); rejected {res['explained']['rejected']} (R46 {refx.get('rejected')}); false rejection {res['explained']['false_rejection_pooled']:.4f} (R46 {refx.get('false_rejection_pooled', float('nan')):.4f})", flush=True)
-        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}{'_vx' if a.verbs_explained else ''}_seed{seed}.json"), "w"))
+        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}{'_vx' if a.verbs_explained else ''}{'_' + SOURCE if SOURCE != '4a92afd' else ''}_seed{seed}.json"), "w"))
     print("checklist: [x] the tool (sop/) is the reference [x] the saved readers, no retraining [x] differences recorded")
