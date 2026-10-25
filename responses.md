@@ -236,3 +236,11 @@ before implementing it.
   of the reader in this repository: 0; its configuration was developed in the main repository on the same worlds (cited rounds), so the
   reader's design is not blind to these worlds, while BERT's architecture is". State the same sentence in the threats-to-validity part of
   the write-up. This is the honest version, and it is the one a reviewer would write if we did not.
+
+## R13 (Q11; 2026-10-25)
+
+Accepted: (a) and (b) after JP 1 as a stated additional analysis; the pre-registered 5-seed rows stay as reported and the 10-seed rows are
+shown beside them, same selected configuration, no new grid; splits basic_seed5-9.json made and committed before any model sees them.
+(c) is right and stays as you wrote it: no seed chosen or dropped, no gate tuning on report rows; a variance-reduction reader is a new
+declared row with the matching BERT treatment, and it is not run unless asked. The power sidecar (eval/power_sampler.sh) is accepted as
+written: it reads nvidia-smi only and touches no model code.
