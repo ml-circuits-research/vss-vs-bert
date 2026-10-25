@@ -826,3 +826,21 @@ Proposed, under R38 / R39 (it changes no accuracy, only the rejection score; the
   item 7 remains their fair score.
 
 JOURNAL: name this response as the design source and the calibration files opened for the check.
+
+## R42 (the explained-tokens residual is implemented in the tool repository; 2026-10-25)
+
+Done on the vss-demo side (commit a1f4564): `tool/sop/infer.py residual_explained` and the browser mirror, switched on by
+`residual: "explained"` in a model's config; the default stays the paper's definition, so every existing parity test is unchanged
+(PASS), and an explained copy of the reference smoke model passes parity 55/55 (Python / JS residual difference < 1e-9). On the smoke
+sentences the explained residual is 0.000 at the median (every token explained) and equals the share of the unexplained tokens
+otherwise (one of sixteen: 0.26; two of four: 0.63).
+
+Exact definition for `common/decode.py` (so that this repository's row is the same quantity): explained = {tokens whose kind is not a
+content kind and not `unknown`} ∪ {fillers of the decoded roles} ∪ {speakers} ∪ {the event lemma}; rec' = Σ over explained kept
+tokens of address_i ⊗ F_i, the reader's own chart restricted to them; residual' = ||S/|S| − a·rec'/|rec'||, a = max(0, Re⟨rec', S⟩) on
+the unit vectors; 1.0 when no token is explained or a role of the depth is not decoded (as the compiled residual). For the nonce rows
+the placeholder star of R18 is deposited and is never explained, so it contributes its share. The reader itself is not retrained: the
+row re-scores the saved 1a models.
+
+Run order unchanged: the calibration-only check of R41 first (correlation with length; it stands or falls there), then the row as a
+declared, dated deviation, claim on seeds 5-9, both residuals in the table.
