@@ -2,7 +2,7 @@
 
 | axis | model | label | log | number | interpretation (INSTRUCTIONS table 3) |
 |---|---|---|---|---|---|
-| run 0: frozen splits, tag -> frame mapping | — | PLANNED | | | exit check: 1.000 on every seed |
+| run 0: frozen splits, tag -> frame mapping | — | MEASURED | logs/2026-10-25_0748_make_splits_1617108.txt | 1.000 on seeds 0-4 (content identical to the committed splits) | exit check: 1.000 on every seed |
 | seen / new ids / unseen depth (basic world) | VSS reader (reference) | PLANNED | | | must reproduce RESULTS 6c / 7b within seed variance |
 | seen / new ids / unseen depth (basic world) | transformer 7b-bis, 7b | PLANNED | | | must reproduce RESULTS 7b-bis (0.253 / 0.393) and 7b (0.215 / 0.390) |
 | seen / new ids / unseen depth (basic world) | BERT-base pretrained, wordpiece and whole | PLANNED | | | new ids > 0.9 / < 0.5; depth 3 > 0.9 / < 0.5; in between both readings |
