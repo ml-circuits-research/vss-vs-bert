@@ -1409,3 +1409,26 @@ catalog decoder; with the R46 decoder the reader's residuals reach 0.976-0.979 (
 undecided_adjacent); vss-demo is not a submodule here, so eval/planted.r54_adjacent transcribes R54's definition. The explained
 residual's reference is vss-demo a1f4564 (R42). The verb-order route of vss-demo 434fa40 ('vorder') needs retraining and is NOT a row
 here (R55; after the stop).
+
+
+## Deviation R56: the reader 1a + the verb-order route 'vorder' (declared 2026-10-25 before it runs; code vss/v8_vorder.py, vss/run_reader_vorder.py)
+
+The address-level fix of H2 as a declared row (R38 protocol). Reference implementation: vss-demo commit 434fa40 (experiment/v8_gates.py,
+the 41-line diff reproduced in responses R56); it is transcribed here as a SUBCLASS of v8_gates.V8 (vss/v8_vorder.py) because
+third_party/vsa-semantic-space is pinned at e531283 and read-only. set_vorder / vorder_index / the extra term exactly as R56 lists them;
+V8.train replicated with vo added to the optimiser; verb categories: every verb kind and participle of the basic world plus says /
+claims (accepts borrows buys claims gets given gives lends lent offered offers receives says sees sells sends sent shown shows sold).
+Everything else is 1a: the same seeds, generators, N 30,000, batch 8, lr 0.02, gates learned from the closed start, no selection. Size:
+vo adds 2 x 32 x 32 x 4 x 1,024 = 8.4 M phases to the reader's 3.3 M (stated; the route is not small). Check before the row: the subclass
+WITHOUT set_vorder trained as 1a must reproduce the stored 1a row EQUAL on the first seed of each run (--check; the run stops otherwise);
+set_vorder draws once from the model's rng as the reference does, so the vorder row's training sentences are not 1a's. Design on seeds 0-4
+(inspected), CLAIM on seeds 5-9 (tags reader_vorder / reader_vorder_fresh). Evaluated with eval/sentence_candidates.py and
+eval/residual_explained.py on the saved models (rows 'vorder', 'vorder_fresh').
+
+R56's evaluation and expectations, verbatim:
+
+Evaluate exactly as the R46 claim rows: per-role rule and one-to-one, with and without the R46 decoder, the explained residual, the per-cell
+table (T4:C, T7:A, T10:A+C, T4:B+T11:B) with the three decision categories, so that the row says whether the ADDRESS now holds the filler
+(decided by the address) rather than elimination. Expected, written before the run: T4:C and T7:A decided by the address on most items;
+T10 improved; nothing else moves outside the seed std; if the in-world rows fall by more than one seed std, the route is rejected and
+the row says so.
