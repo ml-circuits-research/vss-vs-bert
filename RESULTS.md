@@ -889,3 +889,24 @@ Reading. Giving the gates changes nothing in out-of-world rejection (the same re
 sentences that pass are passed by both readers) and leaves the training-distribution threshold rejecting every depth-3 and every
 new-formulation sentence (pooled false rejection 0.437, with a smaller seed spread than 1a). The demo criterion is not met. The
 one-to-one rule gives exact match 1.000 at depth 3 on every seed and adds 0.00-0.01 on new formulations.
+
+## R10 row of 2a: BERT-base WordPiece with the reviewed code paths (models/bert_basic.py --r10; logs/2026-10-25_1508_bert_basic_699a9ec.txt; exploratory)
+
+Command: `VSA_SLOTS=6 ./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --r10 --lrs 2e-5 --epochs 3 --seeds 5`,
+commit 699a9ec, the inherited configuration of 2a (no grid, R22 item 1), concurrent with the six-slot batch (times are not cost numbers).
+R10 flags in force: weight-decay groups, a seed per configuration, a truncated word read as None, the temperature rule. Label: MEASURED.
+
+| axis | R10 row | 2a (pre-registered) |
+|---|---|---|
+| seen / new ids / new form. seen / UNSEEN / role cues / depth 1 / depth 2 | 1.000 / 1.000 / 0.999 ± 0.002 / 1.000 / 1.000 / 1.000 / 1.000 | the same |
+| depth 3 slot accuracy | 0.961 ± 0.063 [1.00 1.00 0.84 0.98 0.99] | 0.961 ± 0.063 (the same list) |
+| exact match depth 3, six roles (levels as labels) | 0.764 ± 0.376 [1.000 0.978 0.017 0.886 0.940] | 0.765 ± 0.376 [1.000 0.978 0.017 0.886 0.943] |
+| exact match depth 3, trained labels / inner frame | 1.000 / 1.000 | 1.000 / 1.000 |
+| one-to-one rule: depth-3 slot accuracy; exact match six | 0.930; 0.789 ± 0.387 [1.000 1.000 0.017 0.988 0.942] | (R10 rules on the saved seed 0: section above) |
+| temperature rule: depth-3 X3; exact match six | 0.000 on every seed; 0.000 | — |
+| confident error at depth 3 (tau 0.000, coverage 1.000) | 0.039 [0.000 0.004 0.164 0.019 0.010] | 0.039 [0.000 0.004 0.164 0.019 0.009] |
+
+Reading. The reviewed code paths of R10 reproduce 2a to the third decimal (the only differences are one sentence on seed 4); the
+review's implementation items do not change BERT-base's picture on this world. The one-to-one rule lifts seed 1 and seed 3 to exact
+match 1.000 / 0.988 and leaves seed 2's level-3 failure (0.017) untouched; the temperature rule turns X3 off on every seed (the
+temperature fitted on the calibration rows, where X3 never occurs, makes the untrained label lose everywhere).
