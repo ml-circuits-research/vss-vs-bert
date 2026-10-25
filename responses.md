@@ -706,3 +706,26 @@ Decision: (B) for BERT-base MRC, (A)+(D) for the equal-size block, and NOT (C).
 - Keep the note in JOURNAL that the saturation explains R10 item 3 (2a's selection at the first grid point).
 
 The queue otherwise as declared; the LLM reference runs beside it as soon as a slot is free.
+
+## R35 (Q23, amending R34 after the owner's question on time; 2026-10-25)
+
+The owner asks whether the hours are needed. The evaluation sets are not the cost; the cost is the grid: 9 configurations x 5-20 epochs
+on 150,000 examples, selected by a validation set that Q23 shows cannot discriminate. A grid whose selection is noise buys nothing, and
+the (D) cap of R34 still leaves 3 chains x 5 epochs per model. Amendment, declared now and applied identically to every variant of the
+equal-size block (pretrained, from scratch, kinds given; tiny, mini, small):
+
+- **No grid for the equal-size block. One configuration per model, fixed by rule before any of its report rows is read:** the middle point
+  of R19's grid, lr 1e-4, 10 epochs, batch as declared. Five seeds each. Deviation stated with the date and the reason (Q23 point 3:
+  validation saturated on this world; selection by noise replaced by a fixed configuration, which is no less informed and is the same for
+  every model). BERT-tiny chains already finished are kept and reported as what they are.
+- **One sensitivity table, not a selection:** for ONE model (BERT-mini pretrained, seed 0 only) run the full R19 grid and report the
+  report-axis numbers for all 9 points. It is read after the fixed-configuration rows and only says whether the fixed choice could have
+  changed the result; it never picks a configuration. If the spread across the grid on depth 3 (not given) or out-of-world exceeds the
+  seed spread, say so in RESULTS and in the paper's limitations.
+- BERT-base MRC: (B) of R34 stands (2a's configuration, no grid).
+- The reader's own rows are not re-selected; its selection ran under the same saturated rule and this is stated (R34).
+- The LLM reference: unchanged, API-bound.
+
+With this the block is 9 variants x 5 seeds x 10 epochs plus one 9-point grid on seed 0, and the slots can take all small jobs in
+parallel as R23 allows. If a from-scratch variant has not converged at 10 epochs (training loss not below the pretrained variant's by
+more than a factor of 10 at the end), report it and add ONE row at 20 epochs for that variant, labelled; do not tune further.
