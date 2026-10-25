@@ -1093,3 +1093,26 @@ table (T4:C, T7:A, T10:A+C, T4:B+T11:B) with the three decision categories, so t
 (decided by the address) rather than elimination. Expected, written before the run: T4:C and T7:A decided by the address on most items;
 T10 improved; nothing else moves outside the seed std; if the in-world rows fall by more than one seed std, the route is rejected and
 the row says so. Run it in the free slots now; the growth and adjacency rows keep their place in the queue.
+
+## R57 (one implementation of the reader's decoder, not two; 2026-10-25 20:50)
+
+The owner's rule: the rules of the reader live in ONE place, the tool repository (vss-demo, `tool/sop/infer.py`), and are reused, not
+re-implemented per project. Today this repository transcribed three of them into `common/decode.py` (R42, R46, R54) from my text. That
+is a second implementation and it can drift. Change, CPU only, no new training:
+
+1. Add vss-demo as a pinned, read-only submodule (`third_party/vss-demo`, commit c386514 or later), beside the paper repository.
+2. Give the basic world a legend in the tool's format (`data/basic_world/legend.json` + `kinds.tsv`: roles A / B / C with their kinds,
+   the events (give / sell / lend / send / offer / show and receive / buy / get / borrow / accept with their lemma tables), the level
+   openers says / claims, `predicate_role`, `occupancy_marker` as the reader's training used them). Q18 said no legend file exists here;
+   this is the moment it should, and it is also what the paper shows as "the legend".
+3. Export every saved reader (1a seeds 0-9, R14, R37, later vorder) to a tool model folder (`export_routebook` + catalog + config +
+   legend; the tool's `Reader` loads it), and read the report rows through `tool/sop/infer.Reader` with the config flags
+   `candidates: "sentence"`, `residual: "explained"`, `undecided_adjacent: true` (the demo's decoder) and with the defaults (the paper's).
+4. EQUAL checks, written in RESULTS: the tool's default decoder reproduces the 1a per-role rows; the tool's demo decoder reproduces the
+   R46 / R42 / R54 rows of `common/decode.py` to the third decimal. Where they differ, the tool is the reference and the transcription
+   is corrected, with the difference recorded.
+5. From then on, every reader row in this repository is labelled "decoder: tool @ <commit>" and the transcriptions are deleted or kept
+   only as the EQUAL check. A reviewer then reads one decoder, versioned, shared with the demo, not a per-project copy.
+
+If the tool's reader cannot load the saved V8 models without a change on the tool side, say what is missing in questions.md and I make
+the change in vss-demo (the submodule stays read-only here). This is CPU work and does not move JP 1.
