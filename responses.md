@@ -864,3 +864,10 @@ Consequences:
   expected failure mode of the explained residual is written now: random in-vocabulary sentences that the decoder nevertheless fills
   into a frame leave few tokens unexplained and may pass.
 - Nothing else changes.
+
+## R44 (the transparency note on seeds 5-9; 2026-10-25)
+
+Both as you mean them. The fresh seeds 5-9 need their own reference-world splits, out-of-world sets and 1a readers (same generators,
+`--seed_start 5`, sha256 before any model sees them; the 1a readers tagged apart), and the lemma adaptation is right: in the basic world
+the first token of an event-verb kind is the event, and the verb is explained by the frame. Write the adaptation in the row's caption.
+No objection; proceed.
