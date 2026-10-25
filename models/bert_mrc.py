@@ -34,8 +34,9 @@ QUESTIONS = {"A": "who gives?", "B": "what is given?", "C": "to whom is it given
 FR_MAX = 0.02; VERBS = ("gives", "sells", "lends", "sends", "offers", "shows", "buys", "gets", "receives", "borrows", "accepts", "sees")
 
 class MRC(nn.Module):
-    def __init__(self, name, kinds=None):
-        super().__init__(); self.enc = AutoModel.from_pretrained(name); hs = AutoConfig.from_pretrained(name).hidden_size
+    def __init__(self, name, kinds=None, scratch=False):
+        super().__init__(); cfg = AutoConfig.from_pretrained(name); hs = cfg.hidden_size
+        self.enc = AutoModel.from_config(cfg) if scratch else AutoModel.from_pretrained(name)   # R28 (b): the same architecture from scratch
         self.span = nn.Linear(hs, 2); self.drop = nn.Dropout(0.1); self.kinds = kinds          # kinds: sorted list of the world's categories
         if kinds is not None:
             self.kind_emb = nn.Embedding(len(kinds) + 1, hs, padding_idx=0)
@@ -148,9 +149,10 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lrs", default="2e-5,3e-5,5e-5"); ap.add_argument("--epochs", default="3,5,10"); ap.add_argument("--grid_only", action="store_true"); ap.add_argument("--select", action="store_true")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--n_val", type=int, default=2000); ap.add_argument("--save_model", action="store_true")
+    ap.add_argument("--scratch", action="store_true", help="R28 (b): the same architecture, randomly initialised")
     ap.add_argument("--kinds", default="none", choices=["none", "given"], help="R27 item 1: a learned embedding per word kind on the sentence tokens")
     a = ap.parse_args()
-    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}" + ("_kinds" if a.kinds == "given" else ""); name = f"{a.model} MRC [train questions {a.train_questions}]" + (" kinds given (R27)" if a.kinds == "given" else "")
+    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}" + ("_scratch" if a.scratch else "") + ("_kinds" if a.kinds == "given" else ""); name = f"{a.model} MRC [train questions {a.train_questions}]" + (" from scratch" if a.scratch else "") + (" kinds given (R27)" if a.kinds == "given" else "")
     if a.select:
         pts = [p for f in sorted(glob.glob(os.path.join(mainrepo.ROOT, "logs", f"mrc_grid_{tag}_lr*.json"))) for p in json.load(open(f))]
         best = max(pts, key=lambda p: (p["val_full"], -p["val_loss"])); print(f"bert_mrc --select ({tag}): {len(pts)} grid points: " + "; ".join(f"lr {p['lr']:g} ep {p['epochs']} FULL {p['val_full']:.3f} loss {p['val_loss']:.5f}" for p in pts))
@@ -169,7 +171,7 @@ if __name__ == "__main__":
         vex = examples(val, tq); best = None
         for lr in lrs:
             for ep in eps:
-                torch.manual_seed(seed); model = MRC(a.model, KINDS).to(a.device); t0 = time.time(); train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
+                torch.manual_seed(seed); model = MRC(a.model, KINDS, a.scratch).to(a.device); t0 = time.time(); train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
                 vp = read(model, tok, {"axes": {"val": vitems}, "candidates": split["candidates"]}, "val", vitems, a.device)
                 vfull = float(np.mean([all(p["frame"][r] == it["frame"][r] for r in bwm.roles_at(it["depth"])) for it, p in zip(vitems, vp)]))
                 with torch.no_grad():
