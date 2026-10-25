@@ -264,8 +264,8 @@ Stated as observed, not explained.
 
 Reading (Table 3 bands; R9.4: BERT's results first). BERT-base fine-tuned on the basic world is at ceiling on every axis whose labels
 it was trained on: new identities 1.000 (> 0.9: the WordPiece pieces carry the role), new formulations 0.999 / 1.000 (the reader 0.864 /
-0.868, run 1a: BERT is better on this axis by 0.13, at 109.5 M parameters against the reader's 3.3 M and 33x the per-seed training
-time), and the unseen depth 3 over the trained labels and over the inner frame at 1.000 (> 0.9: by the reading written in Table 3 for
+0.868, run 1a: BERT is better on this axis by 0.13, at 109.5 M parameters against the reader's 3.3 M, 1.8x the per-seed training
+time (246 s vs 134-136 s) and 8x the 5-seed row with selection (5,400 s vs about 680 s), this machine, fp32), and the unseen depth 3 over the trained labels and over the inner frame at 1.000 (> 0.9: by the reading written in Table 3 for
 depth 3, this contradicts, for a pretrained encoder, the paper's same-input claim made against the from-scratch transformer 7b,
 whose inner frame is <= 0.074 on the same splits, runs 1b / 1c). The six-role FULL at depth 3 (0.765 ± 0.376) is in the in-between
 band; both readings: (i) the frame of the unseen depth is composed except for the one label never trained, which comes out right on 4
