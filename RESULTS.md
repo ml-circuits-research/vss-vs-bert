@@ -1349,3 +1349,58 @@ or after; the role's margin = the absolute gap between the two candidates' in-se
 counts as queried). Design set seeds 0-4 (inspected) and the CLAIM on seeds 5-9, which needs frozen planted sets for seeds 5-9:
 data/planted_seed5-9.json (data/make_planted_sets.py --seed_start 5, the same generator, additionally disjoint from the growth sets),
 committed with sha256 before any model sees them, and the 1a readers of seeds 5-9.
+
+## The reader rows on the CLAIM SET, seeds 5-9 (R39; R37, R42 / R43, R46; MEASURED)
+
+**R37 on seeds 5-9** (vss/run_reader_basic.py --gates_given init_cues --seed_start 5; logs/2026-10-25_1844_run_reader_basic_fda2a9a.txt):
+the same gate trajectory on every seed (to / from / . / that 10.1-11.6, by 5.6-5.9, says -8.1 to -8.6); new formulations 0.782 ± 0.021
+[0.80 0.79 0.76 0.76 0.81] / 0.787 ± 0.013 [0.78 0.79 0.80 0.80 0.77] against 1a on the same seeds 0.831 / 0.835; depth-3 exact match
+0.998. The design-set conclusion holds on fresh seeds: the given set lowers new formulations; it is the set, not the hardness.
+
+**R42 / R43 on seeds 5-9** (eval/residual_explained.py --row 1a_fresh --seed_start 5; logs/2026-10-25_1845_residual_explained_fda2a9a.txt),
+the catalog decoder: compiled residual AUROC in vs out 0.883 ± 0.005 (random 0.979, reference 0.787, nonce ph. 0.840), rejected 1.000 /
+1.000 / 1.000 at false rejection 0.440; explained residual AUROC 0.724 ± 0.004 (random 0.996, **reference 0.451**, nonce ph. 0.942),
+rejected 0.998 / **0.024** / 1.000. The design-set reading is confirmed: with the catalog decoder the explained residual does not see
+the reference world (the decoded frame places its identities).
+
+**R46 on seeds 5-9** (eval/sentence_candidates.py --row 1a_fresh --seed_start 5; logs/2026-10-25_1847_sentence_candidates_fda2a9a.txt;
+reported against 1a on the same seeds):
+
+| quantity | 1a + R46 (one-to-one), seeds 5-9 | 1a original decoder, seeds 5-9 | design set (seeds 0-4), 1a + R46 |
+|---|---|---|---|
+| new form. seen trans. | 0.867 [per-role in-sentence 0.855 ± 0.043] | 0.831 ± 0.055 | 0.873 |
+| new form. UNSEEN trans. | **0.973** [per-role 0.920 ± 0.011] | 0.835 ± 0.051 | 0.975 |
+| seen / ids / role cues / depth 1-2 | 1.000 | 1.000 | 1.000 |
+| depth-3 exact match; coverage / confident error | 0.998; 0.999 / 0.000 | 0.992; 1.000 / 0.001 | 0.995; 0.997 / 0.001 |
+| compiled residual: AUROC; rejected random / ref. / nonce; false rejection | 0.979 ± 0.003; 1.000 / 1.000 / 0.854; 0.440 | 0.883; 1.000 / 1.000 / 1.000; 0.440 | 0.976; 1.000 / 0.989 / 0.855; 0.435 |
+| explained residual: AUROC; rejected random / ref. / nonce; false rejection | **0.979 ± 0.003; 0.988 / 0.930 / 1.000; 0.026 ± 0.003** [0.028 0.020 0.029 0.029 0.026] | 0.724; 0.998 / 0.024 / 1.000; (R42 row) | 0.975; 0.990 / 0.908 / 1.000; 0.026 |
+
+R47's categories on seeds 5-9 (new formulations, UNSEEN trans., per seed): by the address 2,510-2,917 (accuracy 0.977-0.990), by
+restriction 65-465 (0.938-1.000), by elimination 212-297 (0.768-0.891); depth 3 0-18 eliminations. **Claim, as measured on fresh seeds:**
+the decoder-only change (candidates restricted to the sentence's admissible words + one-to-one) lifts UNSEEN-transition formulations
+from 0.835 to 0.973 and, with it, the explained residual separates in- from out-of-world at AUROC 0.979 and rejects 0.99 / 0.93 / 1.00
+of the random / reference / nonce sentences at 2.6% false rejection on the in-world report rows. **The demo criterion (>= 0.90 per
+source at <= 2% false rejection) is NOT met** (false rejection 2.0-2.9% per seed, mean 2.6%). Seen-transition formulations stay at 0.867
+(the T10 cell; the route fix is tool work after the stop).
+
+## Confirmatory comparisons (R30 item 8), reader 1a vs BERT-tiny, seeds 0-4 (eval/confirmatory.py; logs/2026-10-25_1905_confirmatory_a5047ce.txt; MEASURED)
+
+Pre-specified: (i) six-question exact match at depth 3, depth not given; (ii) confident-error rate at depth 3 at the reader's coverage
+(here 1.000 for both: tau 0.000); (iii) out-of-world AUROC, reader's compiled residual vs the encoder's Mahalanobis score. Two-level
+bootstrap (1,000), Holm per pair at 0.05; the 4-df t and the sign test beside (not relied on; with 5 seeds the smallest two-sided sign
+p is 0.0625).
+
+| pair: reader - model | (i) exact match six, diff [95%], p | (ii) confident error, diff [95%], p | (iii) AUROC, diff [95%], p | Holm |
+|---|---|---|---|---|
+| BERT-tiny pretrained | +0.982 [+0.972, +0.991], p < 0.001 | -0.168 [-0.172, -0.164], p < 0.001 | +0.054 [+0.017, +0.087], p 0.002 (seeds ahead 4 / 1) | all three rejected |
+| BERT-tiny from scratch | +0.982, p < 0.001 | -0.355 [-0.376, -0.331], p < 0.001 | +0.125 [+0.104, +0.150], p < 0.001 | all three rejected |
+| BERT-tiny kinds given | +0.982, p < 0.001 | -0.211 [-0.255, -0.172], p < 0.001 | +0.070 [+0.060, +0.081], p < 0.001 | all three rejected |
+
+Secondary scores (mean over seeds): reader compiled residual AUROC 0.876, margin 0.887, explained residual 0.730 (catalog decoder);
+BERT-tiny pretrained Mahalanobis 0.822, **MSP 0.915**, NULL gap 0.591; from scratch 0.751 / 0.689 / 0.613; kinds 0.806 / 0.907 / 0.607.
+AURC at depth 3 (margin as confidence): reader 0.000 (errors 0.3%), BERT-tiny 0.157 / 0.233 / 0.157. Reading, stated plainly:
+comparison (i) is decided by construction of the 'zs' training (no MRC row is ever asked the level-3 question; X3 0.000): it measures
+that the reader answers a question it was never trained on and the extractive models do not, not a margin of skill on a shared task;
+(ii) follows from (i) (the X3 errors are confident); (iii) is the comparison with content, and it favours the reader against the
+pre-specified Mahalanobis score, but BERT-tiny pretrained's MSP (0.915) is above the reader's compiled residual (0.876) with the
+catalog decoder; with the R46 decoder the reader's residuals reach 0.976-0.979 (design / claim set; not a pre-specified comparison).

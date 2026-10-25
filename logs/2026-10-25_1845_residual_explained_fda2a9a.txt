@@ -1,0 +1,151 @@
+# 2026-10-25T18:45:47+01:00  commit=fda2a9a  cmd: python3 eval/residual_explained.py --row 1a_fresh --seed_start 5 --seeds 5  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 104 GB; slot logs/.run.lock.7 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+residual_explained (R42 / R43): main repository e531283; row 1a_fresh; seeds [5, 6, 7, 8, 9]: CLAIM SET (fresh splits, R39); thresholds at 2% false rejection on the calibration rows
+expected failure mode, written before the run (R43): random in-vocabulary sentences that the decoder still fills into a frame leave few tokens unexplained and may pass the explained residual
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 5 check                              1.00 (m 0.48) | 1.00 (m 0.49) | 0.80 (m 0.23) | 0.78 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 5   rule 'one_to_one': 1.00 | 1.00 | 0.80 | 0.78 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 5   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+# post-launch guard (slots 16): MemAvailable 90 s after the start 93 GB
+  seed 5 compiled : loaded logs/models/reader_basic_fresh_seed5.pt; EQUAL; threshold 0.5376; AUROC pooled 0.888 (random 0.972, reference 0.804, nonce ph. 0.837); rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 1.0}; false rejection pooled 0.439 {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 0.08611111111111111, 'depth2_seen': 0.0, 'depth3_unseen': 1.0}
+  seed 5 compiled : means {calibration: 0.409, seen: 0.384, new_ids: 0.413, new_form_seen_trans: 0.784, new_form_unseen_trans: 0.908, new_form_role_cues_seen: 0.680, depth1: 0.437, depth2_seen: 0.412, depth3_unseen: 0.717, oow_random: 0.986, oow_reference: 0.829, oow_nonce_placeholder: 0.850}; share exactly 0 {'calibration': 0.0, 'oow_random': 0.0, 'oow_reference': 0.0, 'oow_nonce_placeholder': 0.0}
+  seed 5 explained: loaded logs/models/reader_basic_fresh_seed5.pt; EQUAL; threshold 0.0000; AUROC pooled 0.719 (random 0.993, reference 0.445, nonce ph. 0.924); rejected {'random': 0.998, 'reference': 0.022, 'nonce_placeholder': 1.0}; false rejection pooled 0.149 {'seen': 0.028125, 'new_ids': 0.022916666666666665, 'new_form_seen_trans': 0.5166666666666667, 'new_form_unseen_trans': 0.5370370370370371, 'new_form_role_cues_seen': 0.03333333333333333, 'depth1': 0.0125, 'depth2_seen': 0.02638888888888889, 'depth3_unseen': 0.03333333333333333}
+  seed 5 explained: means {calibration: 0.000, seen: 0.000, new_ids: 0.000, new_form_seen_trans: 0.212, new_form_unseen_trans: 0.246, new_form_role_cues_seen: 0.000, depth1: 0.000, depth2_seen: 0.000, depth3_unseen: 0.000, oow_random: 0.756, oow_reference: 0.000, oow_nonce_placeholder: 0.426}; share exactly 0 {'calibration': 1.0, 'oow_random': 0.002, 'oow_reference': 1.0, 'oow_nonce_placeholder': 0.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 6 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.27) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.38) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.975 (trained labels 0.975, inner 0.975) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.004
+  seed 6   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.91 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 6   depth-3 role accuracy by filler position (words; train max 15): seen 0.9954545454545455 (n 3960), unseen 1.0 (n 360)
+  seed 6 compiled : loaded logs/models/reader_basic_fresh_seed6.pt; EQUAL; threshold 0.5736; AUROC pooled 0.879 (random 0.987, reference 0.771, nonce ph. 0.845); rejected {'random': 1.0, 'reference': 0.998, 'nonce_placeholder': 1.0}; false rejection pooled 0.443 {'seen': 0.0020833333333333333, 'new_ids': 0.023958333333333335, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 0.08611111111111111, 'depth2_seen': 0.0, 'depth3_unseen': 1.0}
+  seed 6 compiled : means {calibration: 0.431, seen: 0.403, new_ids: 0.427, new_form_seen_trans: 0.761, new_form_unseen_trans: 0.893, new_form_role_cues_seen: 0.665, depth1: 0.464, depth2_seen: 0.427, depth3_unseen: 0.724, oow_random: 0.987, oow_reference: 0.765, oow_nonce_placeholder: 0.851}; share exactly 0 {'calibration': 0.0, 'oow_random': 0.0, 'oow_reference': 0.0, 'oow_nonce_placeholder': 0.0}
+  seed 6 explained: loaded logs/models/reader_basic_fresh_seed6.pt; EQUAL; threshold 0.0000; AUROC pooled 0.730 (random 0.999, reference 0.460, nonce ph. 0.962); rejected {'random': 1.0, 'reference': 0.03, 'nonce_placeholder': 1.0}; false rejection pooled 0.094 {'seen': 0.023958333333333335, 'new_ids': 0.01875, 'new_form_seen_trans': 0.21388888888888888, 'new_form_unseen_trans': 0.3472222222222222, 'new_form_role_cues_seen': 0.005555555555555556, 'depth1': 0.0125, 'depth2_seen': 0.018055555555555554, 'depth3_unseen': 0.05277777777777778}
+  seed 6 explained: means {calibration: 0.000, seen: 0.000, new_ids: 0.000, new_form_seen_trans: 0.075, new_form_unseen_trans: 0.141, new_form_role_cues_seen: 0.000, depth1: 0.000, depth2_seen: 0.000, depth3_unseen: 0.009, oow_random: 0.765, oow_reference: 0.000, oow_nonce_placeholder: 0.431}; share exactly 0 {'calibration': 1.0, 'oow_random': 0.0, 'oow_reference': 1.0, 'oow_nonce_placeholder': 0.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 7 check                              1.00 (m 0.47) | 1.00 (m 0.48) | 0.78 (m 0.23) | 0.82 (m 0.17) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 7   rule 'one_to_one': 1.00 | 1.00 | 0.78 | 0.84 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 7   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 7 compiled : loaded logs/models/reader_basic_fresh_seed7.pt; EQUAL; threshold 0.5433; AUROC pooled 0.887 (random 0.973, reference 0.801, nonce ph. 0.838); rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 1.0}; false rejection pooled 0.438 {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 0.08055555555555556, 'depth2_seen': 0.0, 'depth3_unseen': 1.0}
+  seed 7 compiled : means {calibration: 0.415, seen: 0.389, new_ids: 0.416, new_form_seen_trans: 0.782, new_form_unseen_trans: 0.906, new_form_role_cues_seen: 0.678, depth1: 0.441, depth2_seen: 0.417, depth3_unseen: 0.718, oow_random: 0.986, oow_reference: 0.819, oow_nonce_placeholder: 0.850}; share exactly 0 {'calibration': 0.0, 'oow_random': 0.0, 'oow_reference': 0.0, 'oow_nonce_placeholder': 0.0}
+  seed 7 explained: loaded logs/models/reader_basic_fresh_seed7.pt; EQUAL; threshold 0.0000; AUROC pooled 0.719 (random 0.996, reference 0.441, nonce ph. 0.932); rejected {'random': 1.0, 'reference': 0.022, 'nonce_placeholder': 1.0}; false rejection pooled 0.141 {'seen': 0.027083333333333334, 'new_ids': 0.03229166666666667, 'new_form_seen_trans': 0.49444444444444446, 'new_form_unseen_trans': 0.4981481481481482, 'new_form_role_cues_seen': 0.016666666666666666, 'depth1': 0.022222222222222223, 'depth2_seen': 0.022222222222222223, 'depth3_unseen': 0.022222222222222223}
+  seed 7 explained: means {calibration: 0.000, seen: 0.000, new_ids: 0.000, new_form_seen_trans: 0.209, new_form_unseen_trans: 0.215, new_form_role_cues_seen: 0.000, depth1: 0.000, depth2_seen: 0.000, depth3_unseen: 0.000, oow_random: 0.753, oow_reference: 0.000, oow_nonce_placeholder: 0.427}; share exactly 0 {'calibration': 1.0, 'oow_random': 0.002, 'oow_reference': 1.0, 'oow_nonce_placeholder': 0.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 8 check                              1.00 (m 0.44) | 1.00 (m 0.45) | 0.84 (m 0.26) | 0.90 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.37) | 1.00 (m 0.34) | 1.00 (m 0.21)  || depth 3 per role: A 0.99 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 (trained labels 0.986, inner 0.986) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.002
+  seed 8   rule 'one_to_one': 1.00 | 1.00 | 0.85 | 0.93 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 8   depth-3 role accuracy by filler position (words; train max 15): seen 0.9977272727272727 (n 3960), unseen 0.9972222222222222 (n 360)
+  seed 8 compiled : loaded logs/models/reader_basic_fresh_seed8.pt; EQUAL; threshold 0.5982; AUROC pooled 0.876 (random 0.990, reference 0.762, nonce ph. 0.843); rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 1.0}; false rejection pooled 0.443 {'seen': 0.030208333333333334, 'new_ids': 0.11979166666666667, 'new_form_seen_trans': 0.9222222222222223, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 0.9083333333333333, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 1.0}
+  seed 8 compiled : means {calibration: 0.456, seen: 0.438, new_ids: 0.466, new_form_seen_trans: 0.768, new_form_unseen_trans: 0.896, new_form_role_cues_seen: 0.672, depth1: 0.479, depth2_seen: 0.446, depth3_unseen: 0.727, oow_random: 0.988, oow_reference: 0.766, oow_nonce_placeholder: 0.853}; share exactly 0 {'calibration': 0.0, 'oow_random': 0.0, 'oow_reference': 0.0, 'oow_nonce_placeholder': 0.0}
+  seed 8 explained: loaded logs/models/reader_basic_fresh_seed8.pt; EQUAL; threshold 0.0000; AUROC pooled 0.727 (random 0.996, reference 0.459, nonce ph. 0.964); rejected {'random': 0.994, 'reference': 0.03, 'nonce_placeholder': 1.0}; false rejection pooled 0.098 {'seen': 0.030208333333333334, 'new_ids': 0.026041666666666668, 'new_form_seen_trans': 0.26944444444444443, 'new_form_unseen_trans': 0.32592592592592595, 'new_form_role_cues_seen': 0.044444444444444446, 'depth1': 0.020833333333333332, 'depth2_seen': 0.016666666666666666, 'depth3_unseen': 0.04027777777777778}
+  seed 8 explained: means {calibration: 0.000, seen: 0.000, new_ids: 0.000, new_form_seen_trans: 0.088, new_form_unseen_trans: 0.127, new_form_role_cues_seen: 0.000, depth1: 0.000, depth2_seen: 0.000, depth3_unseen: 0.005, oow_random: 0.760, oow_reference: 0.000, oow_nonce_placeholder: 0.427}; share exactly 0 {'calibration': 1.0, 'oow_random': 0.006, 'oow_reference': 1.0, 'oow_nonce_placeholder': 0.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 9 check                              1.00 (m 0.48) | 1.00 (m 0.49) | 0.81 (m 0.23) | 0.79 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 9   rule 'one_to_one': 1.00 | 1.00 | 0.81 | 0.82 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 9   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 9 compiled : loaded logs/models/reader_basic_fresh_seed9.pt; EQUAL; threshold 0.5678; AUROC pooled 0.885 (random 0.973, reference 0.797, nonce ph. 0.835); rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 1.0}; false rejection pooled 0.438 {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 0.08055555555555556, 'depth2_seen': 0.0, 'depth3_unseen': 1.0}
+  seed 9 compiled : means {calibration: 0.417, seen: 0.393, new_ids: 0.422, new_form_seen_trans: 0.782, new_form_unseen_trans: 0.911, new_form_role_cues_seen: 0.679, depth1: 0.450, depth2_seen: 0.412, depth3_unseen: 0.732, oow_random: 0.986, oow_reference: 0.824, oow_nonce_placeholder: 0.852}; share exactly 0 {'calibration': 0.0, 'oow_random': 0.0, 'oow_reference': 0.0, 'oow_nonce_placeholder': 0.0}
+  seed 9 explained: loaded logs/models/reader_basic_fresh_seed9.pt; EQUAL; threshold 0.0000; AUROC pooled 0.723 (random 0.994, reference 0.452, nonce ph. 0.927); rejected {'random': 0.996, 'reference': 0.016, 'nonce_placeholder': 1.0}; false rejection pooled 0.146 {'seen': 0.034375, 'new_ids': 0.022916666666666665, 'new_form_seen_trans': 0.5027777777777778, 'new_form_unseen_trans': 0.5175925925925926, 'new_form_role_cues_seen': 0.019444444444444445, 'depth1': 0.018055555555555554, 'depth2_seen': 0.013888888888888888, 'depth3_unseen': 0.04861111111111111}
+  seed 9 explained: means {calibration: 0.000, seen: 0.000, new_ids: 0.000, new_form_seen_trans: 0.213, new_form_unseen_trans: 0.233, new_form_role_cues_seen: 0.000, depth1: 0.000, depth2_seen: 0.000, depth3_unseen: 0.001, oow_random: 0.754, oow_reference: 0.000, oow_nonce_placeholder: 0.420}; share exactly 0 {'calibration': 1.0, 'oow_random': 0.004, 'oow_reference': 1.0, 'oow_nonce_placeholder': 0.0}
+
+== R42 / R43, row 1a_fresh, CLAIM SET (fresh splits, R39): MEANS over 5 seeds (per-seed list) ==
+  compiled: AUROC in-world vs out-of-world (random + reference) 0.883 ± 0.005 [0.888 0.879 0.887 0.876 0.885]
+  compiled: AUROC vs random             0.979 ± 0.008 [0.972 0.987 0.973 0.990 0.973]; rejected at 2% calibration FR 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  compiled: AUROC vs reference          0.787 ± 0.017 [0.804 0.771 0.801 0.762 0.797]; rejected at 2% calibration FR 1.000 ± 0.001 [1.000 0.998 1.000 1.000 1.000]
+  compiled: AUROC vs nonce_placeholder  0.840 ± 0.004 [0.837 0.845 0.838 0.843 0.835]; rejected at 2% calibration FR 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  compiled: false rejection pooled in-world report axes 0.440 ± 0.002 [0.439 0.443 0.438 0.443 0.438]
+  compiled: false rejection seen                     0.006 ± 0.012 [0.000 0.002 0.000 0.030 0.000]
+  compiled: false rejection new_ids                  0.029 ± 0.046 [0.000 0.024 0.000 0.120 0.000]
+  compiled: false rejection new_form_seen_trans      0.984 ± 0.031 [1.000 1.000 1.000 0.922 1.000]
+  compiled: false rejection new_form_unseen_trans    1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  compiled: false rejection new_form_role_cues_seen  0.982 ± 0.037 [1.000 1.000 1.000 0.908 1.000]
+  compiled: false rejection depth1                   0.067 ± 0.033 [0.086 0.086 0.081 0.000 0.081]
+  compiled: false rejection depth2_seen              0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  compiled: false rejection depth3_unseen            1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  explained: AUROC in-world vs out-of-world (random + reference) 0.724 ± 0.004 [0.719 0.730 0.719 0.727 0.723]
+  explained: AUROC vs random             0.996 ± 0.002 [0.993 0.999 0.996 0.996 0.994]; rejected at 2% calibration FR 0.998 ± 0.002 [0.998 1.000 1.000 0.994 0.996]
+  explained: AUROC vs reference          0.451 ± 0.007 [0.445 0.460 0.441 0.459 0.452]; rejected at 2% calibration FR 0.024 ± 0.005 [0.022 0.030 0.022 0.030 0.016]
+  explained: AUROC vs nonce_placeholder  0.942 ± 0.018 [0.924 0.962 0.932 0.964 0.927]; rejected at 2% calibration FR 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  explained: false rejection pooled in-world report axes 0.126 ± 0.024 [0.149 0.094 0.141 0.098 0.146]
+  explained: false rejection seen                     0.029 ± 0.003 [0.028 0.024 0.027 0.030 0.034]
+  explained: false rejection new_ids                  0.025 ± 0.004 [0.023 0.019 0.032 0.026 0.023]
+  explained: false rejection new_form_seen_trans      0.399 ± 0.130 [0.517 0.214 0.494 0.269 0.503]
+  explained: false rejection new_form_unseen_trans    0.445 ± 0.090 [0.537 0.347 0.498 0.326 0.518]
+  explained: false rejection new_form_role_cues_seen  0.024 ± 0.014 [0.033 0.006 0.017 0.044 0.019]
+  explained: false rejection depth1                   0.017 ± 0.004 [0.013 0.013 0.022 0.021 0.018]
+  explained: false rejection depth2_seen              0.019 ± 0.004 [0.026 0.018 0.022 0.017 0.014]
+  explained: false rejection depth3_unseen            0.039 ± 0.011 [0.033 0.053 0.022 0.040 0.049]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] thresholds on calibration rows only (25) [x] the reported model (EQUAL check) [x] expected failure mode written before the run [x] sources reported apart
