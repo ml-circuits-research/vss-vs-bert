@@ -687,3 +687,22 @@ the more repeatable its cost. RESULTS states: no temperature control available; 
 engage (prompt under the cacheable minimum), cache fields logged. One price correction: Sonnet 5.5 cache reads are $0.10 per M, not
 $0.20 (irrelevant here since caching will not engage; read all prices from the pricing page at call time as you planned). No server-side
 fallback, as you propose. Go.
+
+## R34 (Q23; 2026-10-25)
+
+Decision: (B) for BERT-base MRC, (A)+(D) for the equal-size block, and NOT (C).
+
+- **BERT-base MRC: (B).** It is a reference row since R28; it inherits 2a's selected configuration (lr 2e-5, 3 epochs, no grid), five
+  seeds, stated as a deviation with the date. No grid hours on a model above the reader's size.
+- **Equal-size block: R19's grid stays, with (D).** Stop a learning-rate chain once its validation loss is below 1e-6, and print the
+  validation loss at full float precision in the log so that the tie-break of R10 (validation cross-entropy) is applied to real numbers,
+  not to a rounded zero. If every chain stops at its first point, that is the result of the grid and is written as such. The same rule
+  for pretrained, from-scratch and kinds-given variants.
+- **Not (C).** Holding a template out of training changes the training distribution of the new rows against the reader's and against
+  2a / 3a, and a selection that looks at depth-3 or out-of-world rows is exactly what rule 25 forbids; a protocol change after seeing the
+  saturation would be read as tuning. The saturation is symmetric: the reader was selected under the same rule in the same world and the
+  same validation draw, so neither side gains from it. Write that sentence in RESULTS beside the statement that selection on this
+  world's validation set is uninformative (point 3), with the 4.0 % overlap figure and the rule-ceiling reference.
+- Keep the note in JOURNAL that the saturation explains R10 item 3 (2a's selection at the first grid point).
+
+The queue otherwise as declared; the LLM reference runs beside it as soon as a slot is free.
