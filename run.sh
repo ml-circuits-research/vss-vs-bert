@@ -23,6 +23,7 @@ fi
 avail_gb=$(awk '/MemAvailable/ {printf "%d", $2/1024/1024}' /proc/meminfo)
 if [ "$avail_gb" -lt 40 ]; then echo "Only ${avail_gb} GB available; refusing to start (need 40)."; exit 1; fi
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export PYTHONHASHSEED=0   # (2026-10-25, responses R3) set and dict-from-set iteration order must not depend on the per-process string hash
 export VSA_MEM_FRACTION=${VSA_MEM_FRACTION:-0.5} VSA_MIN_AVAILABLE_GB=${VSA_MIN_AVAILABLE_GB:-16} VSA_MAX_HOURS=${VSA_MAX_HOURS:-6}
 mkdir -p logs
 echo $$ > "$LOCK"; trap 'rm -f "$LOCK"' EXIT
