@@ -959,3 +959,45 @@ breaks another reading, a finding that applies to any given gate set).
 compiled residual on the nonce-as-placeholder set: with sentence candidates the placeholder (kind O, R18) is an admissible B candidate
 and was decoded, and the world's identity table had no row for it. Fix (separate commit): inside the placeholder context the world's
 table is extended with the same vector as the model's (this process only). A frame holding the placeholder is R46's expected cost.
+
+## Equal-size block (R28 / R35 / R36), BERT-tiny MRC pretrained and from scratch, 'zs' (models/bert_mrc.py; logs below; MEASURED)
+
+Commands: `./run.sh models/bert_mrc.py --model google/bert_uncased_L-2_H-128_A-2 --train_questions zs [--scratch] --lrs 1e-4 --epochs 5
+--save_all --seeds 5`, commit 79fff34, launched 16:08:22 (pretrained) and 16:08:42 (scratch), concurrent (6-7 runs). **Log note:** the
+two runs started in the same minute, so run.sh gave them the same log name: logs/2026-10-25_1608_bert_mrc_79fff34.txt holds both outputs
+interleaved under the second run's header (and _1609_ holds BERT-tiny kinds-given and BERT-mini pretrained seeds 0-2 the same way).
+Each run's complete stdout is kept separately: logs/2026-10-25_1608_bert_mrc_79fff34__tiny_pre_stdout.txt, __tiny_scratch_stdout.txt,
+logs/2026-10-25_1609_bert_mrc_79fff34__mini_pre_s0-2_stdout.txt (kinds given when it ends). From queue3 on, launches are 61 s apart.
+Table: eval/mrc_table.py over the per-seed JSONs (mean ± std [seeds 0-4]).
+
+| axis | BERT-tiny pretrained (4.4 M) | BERT-tiny from scratch (4.4 M) | reader 1a (3.3 M) |
+|---|---|---|---|
+| seen / new ids | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 |
+| new form. seen trans. | 0.884 ± 0.099 [0.753 0.836 0.833 1.000 1.000] | 0.628 ± 0.145 [0.500 0.833 0.667 0.707 0.431] | 0.864 ± 0.069 |
+| new form. UNSEEN trans. | 0.968 ± 0.041 [1.000 0.898 1.000 0.944 1.000] | 0.806 ± 0.041 [0.819 0.804 0.804 0.737 0.865] | 0.868 ± 0.040 |
+| new form. role cues | 1.000 | 0.715 ± 0.080 [0.667 0.806 0.694 0.806 0.602] | 1.000 |
+| depth 1 / depth 2 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 |
+| depth 3 slot accuracy | 0.829 ± 0.004 (X3 0.000 on every seed) | 0.642 ± 0.025 (A 0.256, C 0.593, X3 0.000) | 0.997 ± 0.002 |
+| exact match depth 3, depth NOT given: six / trained / inner | 0.000 / 0.972 ± 0.027 / 0.972 ± 0.027 [0.969 0.928 0.965 1.000 1.000] | 0.000 / 0.173 ± 0.150 / 0.173 ± 0.150 [0.000 0.174 0.450 0.115 0.125] | 0.982 ± 0.010 (opener depth) |
+| confident error depth 3 (tau 0.000, coverage 1.000) | 0.171 ± 0.004 (trained labels 0.005) | 0.358 ± 0.025 (trained labels 0.230) | 0.003 |
+| occupancy, depth not given (false fill / missed) | 0.000 / 0.000 on seen, new ids, depth 3 | 0.000 / 0.000 | — |
+| R17 (i) NULL refusal: random / reference / nonce | 0.285 / 0.000 / 0.227 (false rejection 0.000) | 0.289 / 0.005 / 0.268 (0.007) | — |
+| R17 (i) threshold (2% cal.): random / reference / nonce | 0.992 / 0.943 / 0.954, false rejection pooled 0.280 ± 0.072 | 0.915 / 0.928 / 0.956, false rejection 0.506 ± 0.057 | residual: 1.000 / 0.989 / 1.000, false rejection 0.435 |
+| last-epoch training loss | 5.2e-5 1.3e-4 2.9e-5 9.5e-5 3.3e-4 (mean 1.27e-4) | 1.2e-3 1.0e-3 1.0e-3 2.9e-4 1.4e-3 (mean 9.97e-4) | — |
+| size, fp32 | 4.39 M parameters, 17.6 MB | the same | 3.32 M, 13.3 MB |
+
+Concurrent runs: training 355-1,174 s per seed and CPU 28-30 ms per sentence with six passes are not cost numbers (R22 / R45).
+Convergence clause (R36): the from-scratch row's last-epoch training loss is 7.8x the pretrained row's (row means; per seed 24x, 7.6x,
+35x, 3.1x, 4.3x), not more than 10x: no 20-epoch row (the clause read on the row means, as the rows are compared; two seeds exceed 10x,
+stated). Withdrawal condition (R30 item 3): BERT-tiny from scratch, inner-frame exact match at depth 3 with the depth not given 0.173 <
+0.99: the claim stands for BERT-tiny (BERT-mini from scratch pending).
+
+Reading (BERT's results first; no interpretation beyond the declared ones). The level-3 question, never asked in training ('zs'), is
+answered on no item by either BERT-tiny row (X3 0.000 on every seed; the six-question exact match at depth 3 is 0.000), while it never
+fills an absent role (occupancy 0.000) and the questions of levels 1-2 and the inner frame stay at 0.97 for the pretrained row
+(R24's reading: the question form composes the inner frame, >= 0.9, pretrained only). From scratch at the same size the inner frame at
+depth 3 falls to 0.173 and new formulations to 0.63-0.81. Pretrained BERT-tiny is ABOVE the reader on UNSEEN-transition formulations
+(0.968 vs 0.868) and on role cues (1.000 vs 1.000, equal), at the reader's level on seen-transition formulations (0.884 vs 0.864). NULL
+refusal rejects 0.00-0.29 of the out-of-world sentences; a calibration threshold on the NULL gap rejects 0.92-0.99 but with 0.28-0.51 false
+rejection (the reader's residual: 0.99-1.00 at 0.435). The confirmatory comparisons (R30 item 8) are computed on the saved models when the
+block finishes (eval/confirmatory.py).

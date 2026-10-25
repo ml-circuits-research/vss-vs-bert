@@ -1,0 +1,242 @@
+[guard] cuda allocator capped at 13% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_mrc: google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs]; main repository e531283; device cuda; N 30000; seeds 5; lr [0.0001] x epochs [5]; batch 32; questions {'A': 'who gives?', 'B': 'what is given?', 'C': 'to whom is it given?', 'X1': 'who says it?', 'X2': 'who says it at level 2?', 'X3': 'who says it at level 3?'}
+regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; span head over the sentence, NULL on [CLS]; decoding restricted to the world's candidates; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 6227.27it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+# post-launch guard (slots 7): MemAvailable 90 s after the start 99 GB
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/models/bert_mrc.py:100: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"    [progress] epoch {ep + 1}/{epochs} done, last batch loss {float(loss):.3e}", flush=True)   # additive (run.sh's 30-min log-stall watchdog)
+    [progress] epoch 1/5 done, last batch loss 1.810e-05
+    [progress] epoch 2/5 done, last batch loss 4.038e-06
+    [progress] epoch 3/5 done, last batch loss 1.100e-01
+    [progress] epoch 4/5 done, last batch loss 1.118e-07
+    [progress] epoch 5/5 done, last batch loss 1.095e-06
+  seed 0 lr=0.0001 epochs=5 (1122s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.0, final training loss 5.1625195997668766e-05; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given) 1.00 (m 51.11) | 1.00 (m 51.15) | 0.75 (m 39.67) | 1.00 (m 36.42) | 1.00 (m 50.95) | 1.00 (m 51.74) | 1.00 (m 51.22) | 0.83 (m 32.65)  || depth 3 per role: A 0.97 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 0.969, inner 0.969) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.172
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.8126262626262626 (n 3960), unseen 1.0 (n 360)
+  seed 0 depth not given: {'full_six': 0.0, 'full_trained': 0.9694444444444444, 'full_inner': 0.9694444444444444, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 0 R17 (i): {'threshold': 50.00554901123047, 'rejected_null': {'random': 0.298, 'reference': 0.0, 'nonce': 0.252}, 'rejected_threshold': {'random': 0.998, 'reference': 0.95, 'nonce': 0.984}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.09583333333333334, 'new_ids': 0.046875, 'new_form_seen_trans': 0.5833333333333334, 'new_form_unseen_trans': 0.9342592592592592, 'new_form_role_cues_seen': 0.3611111111111111, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.49027777777777776}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.3127551020408163}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 0 cost: 4.4M params, 18 MB, 28.8 ms per sentence on CPU with all six questions (6 passes), 20 threads
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 9852.90it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    [progress] epoch 1/5 done, last batch loss 3.817e-05
+    [progress] epoch 2/5 done, last batch loss 4.895e-06
+    [progress] epoch 3/5 done, last batch loss 3.949e-07
+    [progress] epoch 4/5 done, last batch loss 7.451e-09
+    [progress] epoch 5/5 done, last batch loss 2.980e-08
+  seed 1 lr=0.0001 epochs=5 (908s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.0, final training loss 0.00013372775865100247; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given) 1.00 (m 53.17) | 1.00 (m 53.33) | 0.84 (m 39.14) | 0.90 (m 41.44) | 1.00 (m 54.24) | 1.00 (m 52.72) | 1.00 (m 52.65) | 0.82 (m 33.64)  || depth 3 per role: A 0.93 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 0.928, inner 0.928) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.179
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.805050505050505 (n 3960), unseen 1.0 (n 360)
+  seed 1 depth not given: {'full_six': 0.0, 'full_trained': 0.9277777777777778, 'full_inner': 0.9277777777777778, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 1 R17 (i): {'threshold': 48.68173042297364, 'rejected_null': {'random': 0.266, 'reference': 0.0, 'nonce': 0.192}, 'rejected_threshold': {'random': 0.98, 'reference': 0.916, 'nonce': 0.85}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.5, 'new_form_unseen_trans': 0.4722222222222222, 'new_form_role_cues_seen': 0.0, 'depth1': 0.1, 'depth2_seen': 0.0, 'depth3_unseen': 0.25}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.16020408163265307}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 1 cost: 4.4M params, 18 MB, 29.2 ms per sentence on CPU with all six questions (6 passes), 20 threads
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 7596.97it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    [progress] epoch 1/5 done, last batch loss 2.382e-04
+    [progress] epoch 2/5 done, last batch loss 6.514e-04
+    [progress] epoch 3/5 done, last batch loss 2.357e-04
+    [progress] epoch 4/5 done, last batch loss 6.035e-07
+    [progress] epoch 5/5 done, last batch loss 1.118e-07
+  seed 2 lr=0.0001 epochs=5 (1174s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 1.192092824453539e-10, final training loss 2.9196391478960465e-05; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given) 1.00 (m 53.43) | 1.00 (m 53.34) | 0.83 (m 43.47) | 1.00 (m 41.06) | 1.00 (m 50.67) | 1.00 (m 53.22) | 1.00 (m 52.33) | 0.83 (m 35.99)  || depth 3 per role: A 1.00 B 1.00 C 0.97 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 0.965, inner 0.965) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.172
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.8118686868686869 (n 3960), unseen 1.0 (n 360)
+  seed 2 depth not given: {'full_six': 0.0, 'full_trained': 0.9652777777777778, 'full_inner': 0.9652777777777778, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 2 R17 (i): {'threshold': 49.04827514648437, 'rejected_null': {'random': 0.256, 'reference': 0.0, 'nonce': 0.226}, 'rejected_threshold': {'random': 0.994, 'reference': 0.978, 'nonce': 0.98}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.0, 'new_ids': 0.015625, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 0.9037037037037037, 'new_form_role_cues_seen': 1.0, 'depth1': 0.002777777777777778, 'depth2_seen': 0.034722222222222224, 'depth3_unseen': 0.6319444444444444}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.37295918367346936}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 2 cost: 4.4M params, 18 MB, 30.0 ms per sentence on CPU with all six questions (6 passes), 20 threads
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 3665.04it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    [progress] epoch 1/5 done, last batch loss 5.742e-04
+    [progress] epoch 2/5 done, last batch loss 9.984e-07
+    [progress] epoch 3/5 done, last batch loss 3.204e-07
+    [progress] epoch 4/5 done, last batch loss 1.162e-06
+    [progress] epoch 5/5 done, last batch loss 2.906e-07
+  seed 3 lr=0.0001 epochs=5 (531s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.0, final training loss 9.534978395492371e-05; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given) 1.00 (m 52.58) | 1.00 (m 52.57) | 1.00 (m 35.84) | 0.94 (m 38.20) | 1.00 (m 51.89) | 1.00 (m 52.71) | 1.00 (m 52.86) | 0.83 (m 40.31)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.167
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.8181818181818182 (n 3960), unseen 1.0 (n 360)
+  seed 3 depth not given: {'full_six': 0.0, 'full_trained': 1.0, 'full_inner': 1.0, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 3 R17 (i): {'threshold': 49.16354774475098, 'rejected_null': {'random': 0.29, 'reference': 0.0, 'nonce': 0.248}, 'rejected_threshold': {'random': 1.0, 'reference': 0.922, 'nonce': 0.97}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.020833333333333332, 'new_ids': 0.021875, 'new_form_seen_trans': 0.5444444444444444, 'new_form_unseen_trans': 0.8333333333333334, 'new_form_role_cues_seen': 0.03888888888888889, 'depth1': 0.07361111111111111, 'depth2_seen': 0.0, 'depth3_unseen': 0.37222222222222223}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.2503401360544218}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 3 cost: 4.4M params, 18 MB, 28.8 ms per sentence on CPU with all six questions (6 passes), 20 threads
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 11130.77it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    [progress] epoch 1/5 done, last batch loss 1.257e-04
+    [progress] epoch 2/5 done, last batch loss 4.172e-06
+    [progress] epoch 3/5 done, last batch loss 1.101e-04
+    [progress] epoch 4/5 done, last batch loss 1.427e-03
+    [progress] epoch 5/5 done, last batch loss 5.215e-08
+  seed 4 lr=0.0001 epochs=5 (355s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.0, final training loss 0.00032974638328223186; peak cuda reserved 0.2 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given) 1.00 (m 52.61) | 1.00 (m 52.36) | 1.00 (m 39.88) | 1.00 (m 40.45) | 1.00 (m 50.38) | 1.00 (m 53.17) | 1.00 (m 52.33) | 0.83 (m 40.56)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.00  || FULL depth3 0.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.167
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.8181818181818182 (n 3960), unseen 1.0 (n 360)
+  seed 4 depth not given: {'full_six': 0.0, 'full_trained': 1.0, 'full_inner': 1.0, 'depth_accuracy_depth3': 1.0}; occupancy (not given) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0}}
+  seed 4 R17 (i): {'threshold': 47.21792068481445, 'rejected_null': {'random': 0.314, 'reference': 0.0, 'nonce': 0.218}, 'rejected_threshold': {'random': 0.986, 'reference': 0.948, 'nonce': 0.986}, 'false_rejection_null': {'seen': 0.0, 'new_ids': 0.0, 'new_form_seen_trans': 0.0, 'new_form_unseen_trans': 0.0, 'new_form_role_cues_seen': 0.0, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.0}, 'false_rejection_threshold': {'seen': 0.05416666666666667, 'new_ids': 0.13125, 'new_form_seen_trans': 0.9, 'new_form_unseen_trans': 0.8333333333333334, 'new_form_role_cues_seen': 0.3888888888888889, 'depth1': 0.0, 'depth2_seen': 0.0, 'depth3_unseen': 0.35138888888888886}, 'false_rejection_pooled': {'null': 0.0, 'threshold': 0.3052721088435374}}; residual analogue {'seen': 0.1875, 'new_ids': 0.1875, 'depth3_unseen': 0.2559523809523809}
+  seed 4 cost: 4.4M params, 18 MB, 28.3 ms per sentence on CPU with all six questions (6 passes), 20 threads
+
+== google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs] (depth given): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.884±0.099 [0.75 0.84 0.83 1.00 1.00] | 0.968±0.041 [1.00 0.90 1.00 0.94 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.829±0.004 [0.83 0.82 0.83 0.83 0.83]
+  FULL frame at depth 3 (UNSEEN): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.972±0.027 [0.969 0.928 0.965 1.000 1.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 0.972±0.027 [0.969 0.928 0.965 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.979±0.028 | 1.000±0.000 | 0.993±0.014 | 1.000±0.000 | 1.000±0.000 | 0.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.813±0.005 [0.81 0.81 0.81 0.82 0.82] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 0.989±0.011 [0.99 0.97 0.99 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.171 / acc. answered 0.829  (per seed cw: 0.172 0.179 0.172 0.167 0.167)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.005 / acc. answered 0.995  (per seed cw: 0.006 0.014 0.007 0.000 0.000)
+  depth NOT given, depth 3: full_six 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  depth NOT given, depth 3: full_trained 0.972 ± 0.027 [0.969 0.928 0.965 1.000 1.000]
+  depth NOT given, depth 3: full_inner 0.972 ± 0.027 [0.969 0.928 0.965 1.000 1.000]
+  depth NOT given, depth 3: depth_accuracy_depth3 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  R17 (i) rejected (null) random     0.285 ± 0.021 [0.298 0.266 0.256 0.290 0.314]
+  R17 (i) rejected (null) reference  0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  R17 (i) rejected (null) nonce      0.227 ± 0.022 [0.252 0.192 0.226 0.248 0.218]
+  R17 (i) false rejection (null) pooled 0.000 ± 0.000 [0.000 0.000 0.000 0.000 0.000]
+  R17 (i) rejected (threshold) random     0.992 ± 0.008 [0.998 0.980 0.994 1.000 0.986]
+  R17 (i) rejected (threshold) reference  0.943 ± 0.022 [0.950 0.916 0.978 0.922 0.948]
+  R17 (i) rejected (threshold) nonce      0.954 ± 0.052 [0.984 0.850 0.980 0.970 0.986]
+  R17 (i) false rejection (threshold) pooled 0.280 ± 0.072 [0.313 0.160 0.373 0.250 0.305]
+written interpretation (R24): inner-frame FULL at depth 3 >= 0.9 => the question form composes as the tagger did; the six-role FULL and the level-3 question are the new information; confident-wrong under NULL training against the reader's residual is the calibration comparison; the cost ratio is the argument that survives
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] questions frozen before training (R24) [x] grid fixed in advance [x] candidates restricted as every model
+log saved: logs/2026-10-25_1608_bert_mrc_79fff34.txt
