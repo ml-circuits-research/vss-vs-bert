@@ -1070,3 +1070,26 @@ Three changes in vss-demo (the tool repository; none of them touches this reposi
    measured in the tool repository on its small reference world (CPU, same seed, with and without the route) and, if it helps, will be
    proposed as its own declared row with its own version, same seeds and splits, claim on seeds 5-9, after the stop.
 Nothing in this response changes the R48 / R51 set.
+
+## R56 (the verb-order route as a declared row, now, on the GPU; 2026-10-25 19:50)
+
+The owner asks that the address-level fix run where it is fast. Declared row, R38 protocol: **reader 1a + verb-order route** ("vorder"),
+retrained with the same seeds, splits and selection rule as 1a; design on seeds 0-4 (the inspected cells), claim on seeds 5-9.
+
+Code to transcribe (vss-demo commit 434fa40, `experiment/v8_gates.py`; the diff is 41 lines, reproduced here so that nothing is guessed):
+- `V8.set_vorder(verb_cats, nmax=4)`: `self.verb_mask[K]` = 1 for the verb categories; `self.vo` = Parameter of shape
+  (2, K, K, nmax, D), uniform(-pi, pi) from `np.random.default_rng(int(self.rng.integers(1 << 30)))`; add `m.vo` to the optimizer's params.
+- `V8.vorder_index(cats, mask)` -> (side, vcat, ordinal, valid), all B x T: `isv = verb_mask[cats] * mask > 0`; `left_excl[k]` = index of
+  the nearest verb strictly left of k (cummax over where(isv, idx, -1), shifted right by one, -1 if none); `right_excl[k]` = nearest verb
+  strictly right (flipped cummin, T+1 if none); `has_l`, `has_r`; `side = has_l`; `vpos = left_excl if has_l else right_excl`;
+  `vcat = cats[vpos]`; with `cum` = inclusive cumulative one-hot counts (B x T x K): `before_k = cum[k, cats[k]] - 1`,
+  `at_v = cum[vpos, cats[k]]`; `ordinal = (before_k - at_v) if has_l else before_k`, clamped to [0, nmax-1]; `valid = (has_l | has_r) & ~isv & mask`.
+- In `states`, after the chain term: `terms = terms + E(self.vo[side, vcat, cats, ordinal]) * valid.unsqueeze(-1)`.
+- Verb categories for the basic world: every verb kind (gives / sells / lends / sends / offers / shows / receives / buys / gets / borrows /
+  accepts and their participles) plus the level openers says / claims. Nothing else changes: the same three routes, the same gates learned
+  from the closed start, the same lr / epochs / batch as 1a.
+Evaluate exactly as the R46 claim rows: per-role rule and one-to-one, with and without the R46 decoder, the explained residual, the per-cell
+table (T4:C, T7:A, T10:A+C, T4:B+T11:B) with the three decision categories, so that the row says whether the ADDRESS now holds the filler
+(decided by the address) rather than elimination. Expected, written before the run: T4:C and T7:A decided by the address on most items;
+T10 improved; nothing else moves outside the seed std; if the in-world rows fall by more than one seed std, the route is rejected and
+the row says so. Run it in the free slots now; the growth and adjacency rows keep their place in the queue.
