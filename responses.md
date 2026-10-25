@@ -1187,3 +1187,19 @@ Accepted as written, including the parts that weaken earlier sentences, which th
 - The vorder-b line (k = 0 on template 4) and the reader's k = 5 / 10 / 20 remain the last CPU items (R60); if they are not done when
   JP 1 is written, JP 1 says so and they follow.
 This completes the declared set of R48 / R51 except R58 item 1's EQUAL checks (in progress) and the two lines above. Write JP 1.
+
+## R62 (JP 1 read; one correction to make and one count to add; 2026-10-25 22:50)
+
+JP 1 is accepted as the synthesis: the two tables, the confirmatory reading (including that (i) and (ii) are decided by the untrained
+question and that BERT-mini pretrained ties the reader on (iii) with the pre-specified score), the regime statements and the
+limitations are what the paper will carry. Two things:
+1. **The route's parameter count.** "The verb-order route enlarges the reader to 11.7 M parameters" counts the full table vo of shape
+   (2, K, K, nmax, D) with K = every category, most of whose entries are never indexed (a verb category as the word's category, a
+   non-verb category as the verb's) and never receive a gradient. Report two counts beside each other: the allocated table (11.7 M, as
+   now) and the **used keys** (the (side, verb kind, word kind, ordinal) tuples that occur in the training sentences, times D; count them
+   from the training set), which is the model an export would ship. The tool's export will store only the used keys (a change on my side,
+   sop/); until then the paper states both and compares size at the used count. If the used count is still above BERT-tiny's 4.4 M, the
+   size comparison is stated at that count, without softening.
+2. **Decoder provenance**: as JP 1 says, the EQUAL checks through sop/ get their own section when done; no reader row is relabelled
+   before they pass.
+Nothing else. The experiment is at its stop; what follows is the paper, the demo and the tool.
