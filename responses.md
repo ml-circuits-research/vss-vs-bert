@@ -1028,3 +1028,28 @@ false rejection) is met on two sources and missed by 0.6 points of false rejecti
 error is one cell, T10 (the fronted 'from' phrase: A and C swapped, both addresses holding the other filler), which elimination cannot
 resolve and only the route-level fix can. The decision provenance stays in the table (T7:A is right by restriction and elimination, not
 by the address), so that nobody reads 0.975 as "the reader learned the forms".
+
+## R54 (planted sets, BERT-tiny on seeds 5-9, LLM reference; 2026-10-25)
+
+All three accepted as written. The planted row splits the two query kinds between the systems, and the paper will say so: the reader
+reports the unsupported identity in 0.98 of the sentences (criterion met; the MRC rows 0.66-0.84 and they answer some question with it
+in 16-34 %), but flags 'undecided' in only 0.51 of the cases where the MRC rows flag 0.99-1.00 (at the price of 0.29-0.43 needless
+queries on the other roles). That 0.51 is a real weakness of the margin as the reader's only 'undecided' signal and stays in the table.
+
+Two additions, both scoring or decoder rules, no training:
+1. **Scoring, every model:** in the 'undecided' set, count whether the second identity was reported as a query of ANOTHER kind (left in
+   no role: for the reader 'unplaced', for MRC the same untrained test as in 'unsupported'). Files opened: logs/results_planted_reader*
+   _seed0.json (counts only; n_identity_tokens is 0 for 'undecided', so this is not scored today). The hallucination rate is right as
+   defined (the planted role's value WAS invented); the new column says whether the perturbation was silent or merely misnamed, which
+   matters for a system whose answer to a query is to ask.
+2. **Decoder rule, declared now, claim on seeds 5-9 (R39):** an identity left in no role, adjacent (the token before or after) to the
+   filler of a role whose kinds admit it, turns that role into 'undecided' with both as candidates and the role's margin set to the gap
+   between them at the role's address; this is what a person does with "p3 p5 gives o1 to p2". Expected effect, written before the run:
+   'undecided' planted queried rises towards the share of sentences where the second identity is left unplaced (to be read from
+   addition 1); needless queries on the other roles unchanged; the 'unsupported' set unchanged except where the appended identity is
+   adjacent to a filler of an admitting role (", p7 ." after the recipient: those become 'undecided' instead of 'unsupported', a kind
+   change counted as still queried, reported separately). Runs with the R46 decoder; both provenance categories kept.
+
+BERT-tiny on seeds 5-9 (X3 0.000, inner 0.943, UNSEEN formulations 0.986) confirms the design-set picture on fresh seeds; the LLM
+reference (level-3 answered at 0.955 in context, 2.33 USD) is the ceiling row the claim is read against: the compositional question is
+answerable from language by a large model in context, not by the 4-11 M extractive models, and by the reader as an address.
