@@ -529,3 +529,36 @@ Asymmetries that stay, each stated in the threats-to-validity section: pretraini
 developed on them (R12), depth given at decoding to every model (equal; plus the all-questions variant), candidates restricted to the
 world's vocabulary for every model (equal), a grid for BERT and none for the reader (in BERT's favour). A second independent review of
 the DESIGN (not the code) is being made from the reviewing side, briefed as a semantic-parsing reviewer; its findings follow as a response.
+
+## R28 (2026-10-25): the paper is about q-formalisation, and the main comparison moves to equal size
+
+Decision of the author. The paper's question is q-formalisation: answering the legend's questions, "not given" when a role is absent, a
+margin per decision, a residual, a query where the model does not know, in one pass, in a model that fits a browser. A model that
+answers well but cannot refuse, cannot say what it did not read, or does not fit in a few megabytes does not solve the problem the paper
+poses. Therefore:
+
+1. **The main comparison is at the reader's size, in the MRC form (R24).** Models: the reader (3.3 M; 13 MB, 1.7 MB at 4 bits); BERT-tiny
+   (google/bert_uncased_L-2_H-128_A-2, 4.4 M); BERT-mini (L-4_H-256_A-4, 11 M); BERT-small (L-4_H-512_A-8, 29 M) if its official Google
+   upload loads with transformers 5.20.2 (do not use prajjwal1; no workaround). Each in three variants, same grid (R19's grid, fixed), 5
+   seeds, both pre-registered splits and every declared axis: (a) pretrained; (b) the same architecture from scratch; (c) pretrained with
+   the kinds given as an input embedding (R27.1). This separates pretraining, form and the given categories at equal size. All axes:
+   seen, new ids, new formulations, depth 3 (per-role, six-role FULL, trained labels, inner), depth not given (all questions, NULL),
+   out-of-world rejection (R17: NULL as trained, and the max-probability threshold), residual analogue, symmetric cost (R27.4).
+   R19 moves from "after JP 1" into the main queue, in this form, and is run first after 3a.
+2. **BERT-base and DistilBERT become reference rows**, kept exactly as measured (0, 1a-1c, 2a, 2b, 3a) and reported; no further GPU hour
+   is spent on them: the R10 / R14 / R17 / R20 rows of the tagger on BERT-base are deferred without date. The reader's R10 and R14 rows
+   stay (they are the reader). The one BERT-base row still worth running is R24 MRC on bert-base-uncased, as the LARGE reference of the
+   MRC form (one row, 5 seeds, both depth variants), so that the size axis has its top point in the same form as the small models.
+3. **Run 3b is not executed.** It was pre-registered; its purpose ("pretraining or form?") is answered better by variant (b) at every
+   small size, and by (b) on DistilBERT it would cost an hour for one point. Record in RESULTS, before its scheduled time, a section "3b:
+   not run (deviation from the pre-registration, R28)" with this reason, and in JOURNAL as a decision point; a pre-registered row that is
+   not run is reported as such, never silently dropped. If 3b has already started when this is read, let it finish and report it.
+4. **The LLM in-context reference (R27.2)** stays as a reference on a small subset, with cost; it is the ceiling, not a baseline.
+5. **Real data (after JP 2)**: the same small models in the MRC form, plus BERT-base as the reference row; R8's reproduction check
+   applies to the small models too (published small-BERT numbers where they exist, otherwise BERT-base's).
+6. **Statistics and cost** as R27 (paired differences over seeds, item bootstrap, four cost cells per model).
+
+Queue now: 3a finishes (pre-registered, alone); then concurrently (R23 slots): the reader's R14 row; R17 (i) and the residual on saved
+models; R24 MRC on bert-base (the large reference); then the equal-size block of item 1 (tiny, mini, small x a, b, c), concurrently.
+JP 1 after the equal-size block, with STATUS, RESULTS, JOURNAL, current_status and the paper outline written around q-formalisation
+at equal size. Write the new queue in RUNBOOK before starting it.
