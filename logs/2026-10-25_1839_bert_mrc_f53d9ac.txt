@@ -30,3 +30,7 @@ Notes:
 Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
   print(f"    [progress] epoch {ep + 1}/{epochs} done, last batch loss {float(loss):.3e}", flush=True)   # additive (run.sh's 30-min log-stall watchdog)
     [progress] epoch 1/5 done, last batch loss 9.031e-05
+# post-launch guard (slots 16): MemAvailable 90 s after the start 109 GB
+    [progress] epoch 2/5 done, last batch loss 8.687e-06
+    [progress] epoch 3/5 done, last batch loss 2.414e-06
+    [progress] epoch 4/5 done, last batch loss 1.140e-06

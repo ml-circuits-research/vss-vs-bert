@@ -1307,3 +1307,18 @@ which the reader's margin does in only half the cases (0.51; the inserted identi
 little interference). Every MRC row pays for its undecided queries with 0.29-0.43 needless queries on the other roles (the 2%
 calibration threshold sits on margins that fall on any perturbed sentence); the reader 0.15-0.22. The trained coverage head of R26 was
 not built (no new training in the declared set), so the MRC 'unsupported' numbers are those of the untrained test, as for the reader.
+
+## BERT-tiny pretrained 'zs' on the fresh splits, seeds 5-9 (R50 / R51; models/bert_mrc.py --seed_start s --seeds 1; logs/2026-10-25_1838_ to _1843_bert_mrc_*.txt; CLAIM SET)
+
+One job per seed, the block's configuration, concurrent (training 297-664 s: not a cost number). For the growth claim and the
+confirmatory comparisons on fresh seeds; never pooled with seeds 0-4. MEASURED.
+
+| axis | BERT-tiny pretrained, seeds 5-9 | seeds 0-4 | reader 1a, seeds 5-9 |
+|---|---|---|---|
+| seen / new ids / role cues / depth 1 / depth 2 | 1.000 | 1.000 | 1.000 |
+| new form. seen trans. | 0.834 ± 0.105 [0.667 1.000 0.833 0.833 0.838] | 0.884 | 0.831 |
+| new form. UNSEEN trans. | 0.986 ± 0.021 | 0.968 | 0.835 |
+| depth 3 slot accuracy (X3) | 0.824 ± 0.017 (0.000) | 0.829 (0.000) | 0.999 (1.000) |
+| exact match depth 3, depth NOT given: six / inner | 0.000 / 0.943 ± 0.104 [0.736 1.000 0.979 1.000 1.000] | 0.000 / 0.972 | 0.992 / 0.992 |
+| confident error depth 3 | 0.176 | 0.171 | 0.001 |
+| R17 (i) 2% threshold: random / reference / nonce; false rejection | 0.970 / 0.965 / 0.954; 0.318 | 0.992 / 0.943 / 0.954; 0.280 | (R42 fresh row) |
