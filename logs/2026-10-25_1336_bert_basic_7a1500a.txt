@@ -1,0 +1,275 @@
+# 2026-10-25T13:36:04+01:00  commit=7a1500a  cmd: python3 models/bert_basic.py --model distilbert-base-uncased --tokenizer wordpiece --seeds 5  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_basic: distilbert-base-uncased pretrained [wordpiece]; main repository e531283; device cuda; N 30000; seeds 5; grid lr [2e-05, 3e-05, 5e-05] x epochs [3, 5, 10]; batch 32
+regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; token-tagging head; decoding restricted to the world's candidates; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0: tokenizer 'wordpiece', pieces per world word 1.58
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 13068.81it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=2e-05 epochs=3 (141s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00012
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 11000.59it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=2e-05 epochs=5 (236s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00007
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 13140.87it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=2e-05 epochs=10 (472s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00002
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 9974.56it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=3 (143s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00009
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 13983.81it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=5 (237s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00005
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 7691.74it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=10 (473s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00001
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 10085.86it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=3 (142s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00006
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 6556.26it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=5 (235s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00003
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 8769.19it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=10 (470s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00001
+  => chosen config: lr=2e-05, epochs=3 (by validation FULL frame, seed 0)
+  seed 0 distilbert-base-uncased pretrained [wordpiece] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.70) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.85 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.11  || FULL depth3 0.113 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.148
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 0.70  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.11 X3 0.11  || FULL depth3 0.113 (trained 0.113, inner 1.000); depth3 cw 0.148
+  seed 0   depth-3 role accuracy by filler position (sub-tokens; train max 23): seen 0.8515679442508711 (n 4305), unseen 1.0 (n 15)
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/models/bert_basic.py:271: DeprecationWarning: torch.ao.quantization is deprecated and will be removed in 2.10. 
+For migrations of users: 
+1. Eager mode quantization (torch.ao.quantization.quantize, torch.ao.quantization.quantize_dynamic), please migrate to use torchao eager mode quantize_ API instead 
+2. FX graph mode quantization (torch.ao.quantization.quantize_fx.prepare_fx,torch.ao.quantization.quantize_fx.convert_fx, please migrate to use torchao pt2e quantization API instead (prepare_pt2e, convert_pt2e) 
+3. pt2e quantization has been migrated to torchao (https://github.com/pytorch/ao/tree/main/torchao/quantization/pt2e) 
+see https://github.com/pytorch/ao/issues/2259 for more details
+  q = torch.ao.quantization.quantize_dynamic(cpu, {nn.Linear}, dtype=torch.qint8); t0 = time.time()
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/torch/ao/nn/quantized/modules/utils.py:72: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/quantized/Quantizer.cpp:111.)
+  qweight = torch.quantize_per_tensor(
+  seed 0 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 66.4M params, 266 MB, 17.6 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1: tokenizer 'wordpiece', pieces per world word 1.58
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 10567.13it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 1 lr=2e-05 epochs=3 (143s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00011
+  seed 1 distilbert-base-uncased pretrained [wordpiece] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.81) | 0.93 (m 0.89) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.97 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.80  || FULL depth3 0.797 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.034
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.93 | 1.00 | 1.00 | 1.00 | 0.94  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.81 X3 0.81  || FULL depth3 0.806 (trained 0.806, inner 1.000); depth3 cw 0.032
+  seed 1   depth-3 role accuracy by filler position (sub-tokens; train max 23): seen 0.9660859465737515 (n 4305), unseen 1.0 (n 15)
+  seed 1 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 66.4M params, 266 MB, 50.5 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2: tokenizer 'wordpiece', pieces per world word 1.58
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 8323.68it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 2 lr=2e-05 epochs=3 (142s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00010
+  seed 2 distilbert-base-uncased pretrained [wordpiece] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.94) | 1.00 (m 0.96) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (sub-tokens; train max 23): seen 1.0 (n 4305), unseen 1.0 (n 15)
+  seed 2 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 66.4M params, 266 MB, 18.7 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3: tokenizer 'wordpiece', pieces per world word 1.58
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 11683.62it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 3 lr=2e-05 epochs=3 (142s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00011
+  seed 3 distilbert-base-uncased pretrained [wordpiece] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.68) | 1.00 (m 0.93) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.87 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.24  || FULL depth3 0.244 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.126
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 0.75  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.25 X3 0.25  || FULL depth3 0.246 (trained 0.246, inner 1.000); depth3 cw 0.126
+  seed 3   depth-3 role accuracy by filler position (sub-tokens; train max 23): seen 0.8736353077816492 (n 4305), unseen 1.0 (n 15)
+  seed 3 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 66.4M params, 266 MB, 17.7 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4: tokenizer 'wordpiece', pieces per world word 1.58
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 9538.15it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 4 lr=2e-05 epochs=3 (142s, 66.4M params) validation FULL 1.000, token cross-entropy 0.00012
+  seed 4 distilbert-base-uncased pretrained [wordpiece] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 4   depth-3 role accuracy by filler position (sub-tokens; train max 23): seen 1.0 (n 4305), unseen 1.0 (n 15)
+  seed 4 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 66.4M params, 266 MB, 17.8 ms/sentence on CPU
+
+== distilbert-base-uncased pretrained [wordpiece]: MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.985±0.030 [1.00 0.93 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.938±0.063 [0.85 0.97 1.00 0.87 1.00]
+  FULL frame at depth 3 (UNSEEN): 0.631±0.379 [0.113 0.797 1.000 0.244 1.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.631±0.379
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.938±0.063 [0.85 0.97 1.00 0.87 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== second rule 'one_to_one' (R10): 1.000 | 1.000 | 1.000 | 0.985 | 1.000 | 1.000 | 1.000 | 0.878
+  'one_to_one' depth 3 full: 0.633±0.379 [0.113 0.806 1.000 0.246 1.000]
+  'one_to_one' depth 3 full_trained: 0.633±0.379 [0.113 0.806 1.000 0.246 1.000]
+  'one_to_one' depth 3 full_inner: 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  'one_to_one' depth 3 per role: 1.000 | 1.000 | 1.000 | 1.000 | 0.633 | 0.633
+  'one_to_one' depth 3 by filler position: all roles 0.877±0.127 [0.70 0.93 1.00 0.75 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  'one_to_one' calibration new_ids                tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  'one_to_one' calibration depth3_unseen          tau 0.000: coverage 0.938 / confident-wrong 0.061 (per seed cw: 0.148 0.032 0.000 0.126 0.000)
+  'one_to_one' calibration depth3_unseen_trained  tau 0.000: coverage 0.927 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.062 / acc. answered 0.938  (per seed cw: 0.148 0.034 0.000 0.126 0.000)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+written interpretation (INSTRUCTIONS table 3): new ids > 0.9 => the pieces carry the role; < 0.5 => the vocabulary gap is structural; depth 3 > 0.9 would contradict the paper's same-input claim, < 0.5 confirms it; in between reported with both readings
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] tokenizer condition stated [x] grid fixed in advance

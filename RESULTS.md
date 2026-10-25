@@ -610,3 +610,43 @@ axis except depth 3 (inner frame 1.000 there too). These axes therefore measure 
 reader's 0.86-0.87 on new formulations is BELOW the rule (and below BERT-base, 0.98-1.00). The composition evidence must come from axes
 where the rule fails or does not apply (depth not given beyond the training depths, out-of-world sets, the planted sets) and from the
 equal-size block; the depth-3 rows of the taggers measure the frame exact match with the levels as labels.
+
+## 3a. DistilBERT pretrained, WordPiece, pre-registered (models/bert_basic.py; logs/2026-10-25_1336_bert_basic_7a1500a.txt)
+
+Command: `./run.sh models/bert_basic.py --model distilbert-base-uncased --tokenizer wordpiece --seeds 5`, commit 7a1500a (code
+differing from the tag prereg-2026-10-25 only by default-off flags and additive outputs, as 2b), device cuda, fp32, batch 32, N 30,000,
+66.4 M parameters, 1.58 pieces per world word. The small encoder of R1. Grid on seed 0: all 9 points validation FULL 1.000 (token
+cross-entropy 0.00012 at lr 2e-5 / 3 epochs down to 0.00001); the pre-registered rule kept lr 2e-5, 3 epochs (R10's tie-break would
+have chosen lr 3e-5 or 5e-5 at 10 epochs, cross-entropy 0.00001).
+
+| axis (slot accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new ids | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., seen trans. | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., UNSEEN trans. | 0.985 ± 0.030 | 1.00 0.93 1.00 1.00 1.00 |
+| new form., ROLE CUES seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 1 | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 2 (seen) | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 3 (UNSEEN) | 0.938 ± 0.063 | 0.85 0.97 1.00 0.87 1.00 |
+| exact match depth 3, six roles (levels as labels) | 0.631 ± 0.379 | 0.113 0.797 1.000 0.244 1.000 |
+| exact match depth 3, trained labels A B C X1 X2 | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+| exact match depth 3, inner frame A B C | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+
+Depth 3 per role: A, B, C, X1, X2 1.000; X3 0.631 ± 0.379. Position split: every depth-3 error at a sub-token position seen in
+training. One-to-one rule: exact match six 0.633 ± 0.379, inner 1.000. Calibration: new ids coverage 1.000 / confident error 0.000;
+depth 3 coverage 1.000 / confident error 0.062 (per seed 0.148 0.034 0.000 0.126 0.000), over the trained labels 0.000. Occupancy: no
+false fill; at depth 3 'missed_present' 0.167 (X3), 0.000 over the trained labels. Cost (this machine, GB10, fp32): 66.4 M parameters,
+266 MB at fp32, 138 MB int8 dynamic; CPU 17.6-18.7 ms per sentence at 20 threads, batch 1 (int8 10.5-16.3 ms; seed 1's 50.5 ms
+coincided with other CPU processes on the machine, the smoke tests and the planted-set generation, and is not a cost number);
+training 142-143 s per seed, selection 2,549 s, 5-seed row 2,549 + 4 x 142 = 3,117 s; GPU energy of the run 49.1 Wh (3,242 s sampled,
+mean 54.5 W, peak 82.0 W). The GPU part ran alone; CPU jobs ran beside it from 14:24 to 14:32. Label: MEASURED.
+
+Gate (R4): seen 1.000 >= 0.95, MET.
+
+Reading (Table 3 bands; BERT's results first; R30 terminology). DistilBERT at 66 M is at ceiling on new identities (1.000) and new
+formulations (1.000 / 0.985, above the reader's 0.864 / 0.868), and at exact match 1.000 on the inner frame and on the trained labels at
+depth 3 on every seed (> 0.9: as 2a). The six-role frame exact match with the levels as labels (0.631 ± 0.379) is in the in-between band:
+(i) the unseen level-3 label comes out right on two seeds (1.000) and partly on two (0.797, 0.244); (ii) the frame with the untrained
+level label is not reliably produced. By the rule ceiling (above), these axes measure whether a model learned the world's rule; DistilBERT
+did, as BERT-base did. The reader on the same rows: six-role exact match 0.982 ± 0.010, confident error at depth 3 0.003 against 0.062.
