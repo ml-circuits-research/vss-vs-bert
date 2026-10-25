@@ -1,0 +1,16 @@
+# 2026-10-25T08:28:45+01:00  commit=3ab0ef9  cmd: python3 eval/depth3_saved_reader.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+saved reader seed 0, D 1024, 720 depth-3 sentences
+  FULL six roles 0.9819 (run 1a stored 0.9819): EQUAL
+  FULL trained labels (A B C X1 X2) 0.9819
+  FULL inner frame (A B C) 0.9819
+checklist: [x] same frozen split [x] no training [x] scorer of eval/metrics [x] seed 0 only (the only saved model)

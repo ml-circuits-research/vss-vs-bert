@@ -3,7 +3,7 @@
 | axis | model | label | log | number | interpretation (INSTRUCTIONS table 3) |
 |---|---|---|---|---|---|
 | run 0: frozen splits, tag -> frame mapping | — | MEASURED | logs/2026-10-25_0748_make_splits_1617108.txt | 1.000 on seeds 0-4 (content identical to the committed splits) | exit check: 1.000 on every seed |
-| seen / new ids / unseen depth (basic world) | VSS reader (reference) | MEASURED | logs/2026-10-25_0750_run_reader_basic_fade9d5.txt | seen 1.000, new ids 1.000, depth 3 0.997 ± 0.002 (FULL 0.982 ± 0.010); reproduces 7c learned-closed (gate MET, R5) | must reproduce RESULTS 6c / 7b within seed variance |
+| seen / new ids / unseen depth (basic world) | VSS reader (reference) | MEASURED | logs/2026-10-25_0750_run_reader_basic_fade9d5.txt | seen 1.000, new ids 1.000, depth 3 0.997 ± 0.002 (FULL 0.982 ± 0.010); reproduces 7c learned-closed (gate MET, R5); R6 seed 0: FULL trained labels 0.982, inner 0.982 | must reproduce RESULTS 6c / 7b within seed variance |
 | seen / new ids / unseen depth (basic world) | transformer 7b-bis, 7b | MEASURED | logs/2026-10-25_0809_transformer_7b_c8e4e96.txt; logs/2026-10-25_0817_transformer_7b_b4f0739.txt | 7b-bis: new ids 0.251 ± 0.048, depth 3 0.390 ± 0.021; 7b: 0.215 ± 0.015, 0.392 ± 0.025 (both MET) | must reproduce RESULTS 7b-bis (0.253 / 0.393) and 7b (0.215 / 0.390) |
 | seen / new ids / unseen depth (basic world) | BERT-base pretrained, wordpiece and whole | PLANNED | | | new ids > 0.9 / < 0.5; depth 3 > 0.9 / < 0.5; in between both readings |
 | seen / new ids / unseen depth (basic world) | small pretrained encoder; same architecture from scratch | PLANNED | | | the pretraining difference |

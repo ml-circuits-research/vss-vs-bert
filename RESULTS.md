@@ -119,3 +119,34 @@ Exit check against the main repository's RESULTS 7b (new ids 0.215 ± 0.012, dep
 0.025, MET. Seed 4 fits the seen row at 0.86 only (validation cos 0.877, the lowest), with the grid fixed on seed 0 as written. Reading:
 the same picture as 1b and the main repository: new identities near chance and the unseen depth at 0.39 with FULL 0.000; the category
 input of 1b changes neither axis (0.251 vs 0.215 new ids, 0.390 vs 0.392 depth 3). Run 1 gate (R4): 1a, 1b and 1c all reproduce.
+
+## 2a (stopped). BERT-base, WordPiece: started and stopped before any number (logs/2026-10-25_0825_bert_basic_9140ce8.txt)
+
+`./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --seeds 5 --save_model` started at 08:25 (commit 9140ce8)
+and was stopped with SIGTERM by the main session within minutes, before the first grid point finished, because responses R6 (the
+depth-3 metrics below) arrived and must be in place before any BERT number exists. The log is kept and committed; it holds no result.
+The run is started again after the R6 commit, as run 2a.
+
+## Depth-3 metrics added before run 2 (R6, 2026-10-25; commit 3ab0ef9; logs/2026-10-25_0828_depth3_saved_reader_3ab0ef9.txt)
+
+Reason. The token-tagging head of models/bert_basic.py has the labels O, A, B, C, X1, X2, X3, and training covers depths 0-2 only, so
+the label X3 never occurs in training. At depth 3 the tagger must output X3 for the third speaker with untrained weights for that
+label: X3 is at chance by construction, and the six-role FULL frame at depth 3 is near 0 whatever the encoder composes. The reader and
+the 7b transformer write a state that the world's addresses decode, so they are not limited in the same way. A deviation of the
+REPORTING only (no model changes), written before any BERT number: for the depth-3 axis, every model's report (reader, transformer,
+taggers, through common/report.py) now also gives FULL over the roles whose labels occur in training (A, B, C, X1, X2) and FULL of the
+inner frame (A, B, C). The six-role FULL and the per-role table are unchanged.
+
+Runs 1a-1c. Their JSONs (logs/results_*.json) store scores, not per-item predictions, so the two numbers cannot be recomputed from them.
+Run 1a saved its seed-0 route book (--save_model): eval/depth3_saved_reader.py decodes the frozen seed-0 depth-3 split with it (no
+training) and reproduces the stored six-role FULL exactly (0.9819, EQUAL), with FULL over the trained labels 0.982 and FULL of the inner
+frame 0.982 (seed 0 only; the reader's depth-3 errors are all on A or C, so the three FULL measures coincide). Seeds 1-4 of 1a and all
+seeds of 1b / 1c have the per-role table only; they are not re-run. For 1b and 1c, the per-role accuracies bound the inner FULL from
+above (FULL <= the lowest of A, B, C per seed): 1b <= 0.133 0.064 0.071 0.028 0.075 (mean 0.074), 1c <= 0.133 0.054 0.069 0.026 0.085
+(mean 0.074). The trained-label FULL is bounded by the same numbers. These are bounds, not measurements.
+
+Reading of the unseen-depth row of INSTRUCTIONS Table 3 (as R6 asks; INSTRUCTIONS_2026-10-24.md itself is not edited, see questions.md
+Q4): the comparison with a tagger at depth 3 is made on the inner frame (A B C) and on the trained labels (A B C X1 X2), with the
+thresholds of Table 3 (> 0.9 contradicts, < 0.5 confirms, in between both readings) applied to these two FULL numbers and to the mean
+role accuracy over the same roles. The six-role FULL is reported for every model, with the note that a tagger cannot output a label it
+was never trained on.
