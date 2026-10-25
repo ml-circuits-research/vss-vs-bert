@@ -910,3 +910,37 @@ Reading. The reviewed code paths of R10 reproduce 2a to the third decimal (the o
 review's implementation items do not change BERT-base's picture on this world. The one-to-one rule lifts seed 1 and seed 3 to exact
 match 1.000 / 0.988 and leaves seed 2's level-3 failure (0.017) untouched; the temperature rule turns X3 off on every seed (the
 temperature fitted on the calibration rows, where X3 never occurs, makes the untrained label lose everywhere).
+
+
+## Deviation R46: the reader with "sentence candidates + one-to-one", decoder only (declared 2026-10-25 before it runs)
+
+R46's text, verbatim:
+
+**Proposed row, decoder only, no retraining** (R38 protocol; declared now; claim on seeds 5-9): **sentence candidates + one-to-one**:
+the cleanup of each role is restricted to the words of the sentence whose kind the role admits (the tool already has this mode,
+training/parity `--sentence-candidates`, introduced for words outside the catalog), and the one-to-one assignment of R10 is applied
+over those candidates; margin = the gap between the best and the second in-sentence candidate, with R10's single-candidate floor. This
+is the same assumption the taggers and MRC carry by construction (the answer is a span of the sentence), so it equalises the decoders;
+it does not touch the chart or the routes. Expected effect on the design cells, written before the run: template 11 B (one O in the
+sentence) and template 4 B become right by construction; template 4 C, template 7 A and template 10 C become right through one-to-one
+(the other P is taken by the role whose address does hold it) whenever that other role is right, which the dumps show it is; the
+in-world rows cannot fall (the gold is always in the sentence). Expected cost, also written now: the out-of-world "random in-vocabulary"
+set will be filled into frames more often (the explained residual of R42 is what has to catch it, and the planted 'undecided' sets
+measure the margin between two in-sentence candidates, which is the right test). Report coverage, confident error and the AUROC beside
+exact match, as for every row.
+
+Implementation: common/decode.decode_frozen(..., sentence_candidates=True) (default off; every reported row keeps the original
+decoder), the one-to-one rule of R10 (eval/metrics.one_to_one) over those candidates; eval/sentence_candidates.py. The margin is
+metrics.one_to_one's: the assigned candidate's score minus the best OTHER in-sentence candidate of the role (equal to best minus second
+when the assignment keeps the role's top-1; negative when one-to-one overrides it), a single candidate against R10's floor 0. Rows: 1a
+on seeds 0-4 (design set, inspected), R14 on seeds 0-4 (inspected), and the CLAIM on seeds 5-9 with the 1a readers trained on the fresh
+splits (row 'VSS reader (reference) [fresh splits, seeds 5-9]'). Reported beside exact match: coverage and confident error (tau on the
+calibration rows, rule 18), the out-of-world AUROC and the 2% threshold table for both residuals on the one-to-one frames. Per (template,
+role) cell of the new-formulation rows on the design set (questions Q27): decided by the address vs decided by elimination vs wrong.
+**The H2 cause (the address a filler receives follows the cue chain) stays unfixed by this row: it changes the decoder, not the chart.**
+
+Does 1a show the same cells (R46's condition for running the row on 1a; eval/diagnose_reader.py on results/dump_reader_basic_seed0-4.json,
+questions.md note of 17:15)? Yes for T4:C (cell error 0.88-0.99 on every seed) and T7:A (0.93-0.98 on every seed); T10:C on every seed
+but graded (0.24-1.00); T4:B and T11:B only on seed 2, the one 1a reader with the 'from' gate open (0.84-0.86; 0.000 on the other four).
+One difference from R14: in 1a the errors of T4:C and T10 are mostly SWAPS with A (the other role's filler, gold ranked 2nd), in R14
+mostly a filler absent from the sentence. The row therefore runs on the 1a readers too.

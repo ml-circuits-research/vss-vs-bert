@@ -6,7 +6,11 @@ the same restricted candidate lists, returning one prediction per sentence in th
 import numpy as np, torch
 from . import basic_world as bwm
 
-def decode_frozen(m, world, split, axis, batch=256):
+def decode_frozen(m, world, split, axis, batch=256, sentence_candidates=False):
+    """sentence_candidates (R46, 2026-10-25; default off = the decoder of every reported row): the cleanup of each role is restricted to
+    the words OF THE SENTENCE whose kind the role admits (P for A, C and the speakers; O for B), as the taggers and MRC answer by
+    construction; cand_scores then hold those candidates only, so the one-to-one rule of R10 (metrics.one_to_one) runs over them. A
+    role with no admissible word in the sentence is decoded None with margin 0."""
     items = split["axes"][axis]; preds = []
     if not items: return preds
     R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}
@@ -21,6 +25,15 @@ def decode_frozen(m, world, split, axis, batch=256):
             for r in bwm.roles_at(d):
                 level = int(r[1:]) - 1 if r.startswith("X") else d
                 key = R["X"] if r.startswith("X") else R[r]; unbind = torch.conj(key) * conj_rep ** level
+                if sentence_candidates:
+                    adm = "O" if r == "B" else "P"; U = (Sn[rows] * unbind)
+                    for k, j in enumerate(rows):
+                        cs = sorted({t for t in chunk[j]["tokens"] if w.cat.get(t) == adm})
+                        if not cs: out[j]["frame"][r] = None; out[j]["margins"][r] = 0.0; out[j].setdefault("cand_scores", {})[r] = ([], []); continue
+                        v = torch.real(U[k] @ torch.conj(Fn[torch.tensor([w.idx[x] for x in cs], device=m.device)]).T).cpu().numpy(); o = np.argsort(-v)
+                        out[j]["frame"][r] = cs[o[0]]; out[j]["margins"][r] = float(v[o[0]] - (v[o[1]] if len(cs) > 1 else 0.0))
+                        out[j].setdefault("cand_scores", {})[r] = (list(cs), v.tolist())
+                    continue
                 cands = bwm.candidates_for(split, axis, r); cid = torch.tensor([w.idx[x] for x in cands], device=m.device)
                 sc = torch.real((Sn[rows] * unbind) @ torch.conj(Fn[cid]).T).cpu().numpy()
                 top = np.argsort(-sc, axis=1)
