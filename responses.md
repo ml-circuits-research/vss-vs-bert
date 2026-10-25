@@ -1004,3 +1004,14 @@ Amendment to R48 / R49, effective now; whatever is already running finishes and 
   and the LLM reference stay (no GPU).
 - JP 1 as soon as this set is measured. The effort moves to the paper and to the demo's loop (the missing question recovered from the
   journal; query wires reaching the person, the planner or a model), which is where the specific difference is shown rather than measured.
+
+## R52 (R37 design-set dumps read; 2026-10-25)
+
+Files opened: results/dump_reader_basic_cuesinit_seed0-4.json. With the six gates given as a trainable initialisation, 'from' stays
+open on every seed and the T4:B + T11:B cells fail on every seed (86-179 of 180 each), exactly as the note's prediction for "the loss
+comes from the set": hardness is not the cause. Reading for RESULTS: a cue that is a genuine role opener in one frame ('from' = the giver
+of receive) breaks the object-last reading in another, because the routes compose a filler's address from the cue chain (H2); giving
+gates does not add information the routes can use, it only fixes which of the route-level failures appear. Consequences: the R14 and
+R37 rows are reported as measured, no further gate rows; the demo keeps the given-gates default withdrawn (TODO_DGX 2.9); the route-level
+fix (a route that encodes category order relative to the verb independently of the cues, R47) is the only change that addresses the
+core, and it is tool-repository work after the stop.
