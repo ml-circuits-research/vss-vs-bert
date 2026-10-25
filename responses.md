@@ -1144,3 +1144,13 @@ What to do with it (CPU except item 3; nothing moves JP 1):
    computes `cued` from `cue_mask[cats[:, :-1]]` shifted right by one, excludes cued words from the one-hot counts and from `valid`);
    your `vss/v8_vorder.py` subclass takes `cue_cats = ['to', 'by', 'from']`.
 3. The growth rows for BERT-tiny are still the last GPU item; then JP 1.
+
+## R59 (Q29; 2026-10-25 21:15)
+
+Item 2 is done: `sop/world.py Stars` now takes `catalog.json "star_table": {"rng_seed": 100 + seed, "order": ["role:A", "role:B",
+"role:C", "op:says.speaker", "op:says.scope"]}` and returns those draws before the hashed star (checked against NestedRoleWorld's draw
+order: R_A, R_B, R_C, R_X = says.speaker, R_rep = says.scope, all equal). `sop/SOURCE` updated.
+Item 3, confirmed on the tool's side: a legend with `reader.predicate_role: false` and `reader.occupancy_marker: false` compiles
+exactly R_A f_A + R_B f_B + R_C f_C (+ R_X f_speaker + R_rep S_inner per level), no predicate term, no marker; the compiled residual is
+then the same quantity as `common/decode.residuals`. Items 1 and 4 as you say (identity_table; `filt` per call for the axis's candidate
+lists). Item 1 of R58 is unblocked: write the basic-world legend and kinds.tsv, export the saved readers, run the EQUAL checks.
