@@ -5,7 +5,11 @@ decoded on the FROZEN splits of data/basic_seed<s>.json. Exit check of run 1: wi
 Run: python3 vss/run_reader_basic.py [--seeds 5] [--N 30000] [--D 1024] [--device cuda]
 R14 (responses R14, 2026-10-25): --gates_given cues fixes the gates of the role-cue categories {to, by, from, '.'} and the level openers
 {says, that} OPEN (rule 20, v8_gates.fix_gates: logit +8, gradient masked, as v16's --rel_gates open); every other gate is learned from
-the closed start as before. Default 'none' = the tagged code. Row 'gates given', results reader_basic_cues_seed<s>.json."""
+the closed start as before. Default 'none' = the tagged code. Row 'gates given', results reader_basic_cues_seed<s>.json.
+R37 (responses R37, 2026-10-25): --gates_given init_cues sets the same six gates OPEN as an INITIALISATION, trainable (no gradient mask),
+at the typical learned logit of 1a: the median (torch.median, the lower middle value for an even count) of the learned logits of the gates open (sigmoid > 0.5) in the saved 1a model
+(logs/models/reader_basic_seed0.pt, the only saved 1a model; printed); every other gate starts closed as in 1a. Row 'gates given as
+initialisation', results reader_basic_cuesinit_seed<s>.json. --save_all saves every seed's route book (the per-item dumps, R38)."""
 import argparse, json, os, sys, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -33,9 +37,15 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda")
     ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 route book to logs/models/ for eval/determinism.py")
-    ap.add_argument("--gates_given", default="none", choices=["none", "cues"], help="R14: 'cues' gives the GIVEN_OPEN gates open (row 'gates given')")
+    ap.add_argument("--gates_given", default="none", choices=["none", "cues", "init_cues"], help="R14: 'cues' gives the GIVEN_OPEN gates open (row 'gates given'); R37: 'init_cues' opens them as a trainable initialisation")
+    ap.add_argument("--save_all", action="store_true", help="save every seed's route book (R38 dumps)")
     a = ap.parse_args(); D = a.D
-    name, tag = ("VSS reader (reference)", "reader_basic") if a.gates_given == "none" else ("VSS reader, gates given (R14)", "reader_basic_cues")
+    name, tag = {"none": ("VSS reader (reference)", "reader_basic"), "cues": ("VSS reader, gates given (R14)", "reader_basic_cues"),
+                 "init_cues": ("VSS reader, gates given as initialisation (R37)", "reader_basic_cuesinit")}[a.gates_given]
+    if a.gates_given == "init_cues":
+        l1a = torch.load(os.path.join(mainrepo.ROOT, "logs", "models", "reader_basic_seed0.pt"))["logits"].float()
+        INIT_LOGIT = float(torch.median(l1a[torch.sigmoid(l1a) > 0.5]))
+        print(f"R37: initial logit of the six given gates = {INIT_LOGIT:.4f} (median of the {int((torch.sigmoid(l1a) > 0.5).sum())} open learned logits of logs/models/reader_basic_seed0.pt: {sorted(round(float(x), 4) for x in l1a[torch.sigmoid(l1a) > 0.5])}); trainable")
     print(f"run_reader_basic: main repository {mainrepo.check_pinned()}; device {a.device}; D {D}; N {a.N}; batch {a.batch}; lr {a.lr}; seeds {a.seeds}")
     print("regime (rule 24): English basic world, prefixed reporting forms, training depths 0-2 (templates TRAIN_T, 12 persons / 12 objects), tested at depth 3 UNSEEN, 6 held-out persons / objects; frozen splits")
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167")
@@ -46,17 +56,22 @@ if __name__ == "__main__":
         m = v8_gates.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F)
         assert m.F_np is world.F
         if a.gates_given == "cues": print(f"  seed {seed}: gates GIVEN open (rule 20, R14): {m.fix_gates(GIVEN_OPEN, True)}")
+        if a.gates_given == "init_cues":
+            idx = [m.cats.index(c) for c in GIVEN_OPEN if c in m.cats]
+            with torch.no_grad(): m.logits[idx] = INIT_LOGIT
+            print(f"  seed {seed}: gates INITIALISED open at logit {INIT_LOGIT:.4f}, trainable (R37): {[m.cats[i] for i in idx]}")
         t0 = time.time(); m.train(world, a.N, templates=v5.TRAIN_T, persons=bw["trP"], objects=bw["trO"], batch=a.batch, lr=a.lr, depth_train=bwm.DEPTH_TRAIN)
         if a.device == "cuda": torch.cuda.synchronize()
         print(f"  seed {seed}: trained in {time.time() - t0:.0f}s; gates OPEN {sorted(c for c, v in m.gates().items() if v > 0.5)}")
+        if a.gates_given != "none": print(f"  seed {seed}: final logits of the six given gates {{{', '.join(f'{c}: {float(m.logits[m.cats.index(c)]):.3f}' for c in GIVEN_OPEN if c in m.cats)}}}")
         preds = {axis: decode.decode_frozen(m, world, split, axis) for axis in report.AXES + ["calibration"]}
         row = report.evaluate(name, seed, preds, split, tag)
         row["cost"] = reader_cost(m, bw, split, a, D, seed); c = row["cost"]
         print(f"  seed {seed} cost: {c['params']/1e6:.2f}M parameters (phases), route book {c['bytes_float32']/1e6:.1f} MB at 32 bits ({c['bytes_4bit']/1e6:.1f} MB at 4 bits), {c['cpu_ms_per_sentence']:.2f} ms/sentence on CPU")
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_seed{seed}.json"), "w") as f: json.dump(row, f)
-        if a.save_model and seed == 0:
+        if (a.save_model and seed == 0) or a.save_all:
             os.makedirs(os.path.join(mainrepo.ROOT, "logs", "models"), exist_ok=True)
-            torch.save({"theta": m.theta.detach().cpu(), "logits": m.logits.detach().cpu(), "D": D, "seed": seed}, os.path.join(mainrepo.ROOT, "logs", "models", "{tag}_seed0.pt"))
+            torch.save({"theta": m.theta.detach().cpu(), "logits": m.logits.detach().cpu(), "D": D, "seed": seed}, os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed{seed}.pt"))   # f-string fixed 2026-10-25 (R14's seed-0 model was saved as '{tag}_seed0.pt')
         rows.append(row)
     report.summarize(rows, name)
     print("reference (main repository, RESULTS 6c / 7b, fresh test draws): new ids 1.000, depth 3 1.000 on all six roles")
