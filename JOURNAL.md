@@ -51,3 +51,12 @@ on [CLS]), bert-base-uncased before JP 1; the queue before JP 1 is cut to the pr
 the rows that existed to defend the tagger against objections MRC does not have are deferred to after JP 1, not dropped. The
 pre-registered tagger rows stay and are all reported: the tagger is the JointBERT form that products use, and the difference between the
 two BERT forms is itself a finding.
+
+## 2026-10-25 — decision point: q-formalisation at equal size (responses R28)
+
+The author decided that the paper is about q-formalisation (answers, "not given", margins, a residual, queries, in one pass, in a
+model that fits a browser), so the main comparison moves to the reader's size in the MRC form: BERT-tiny / BERT-mini / BERT-small, each
+pretrained, from scratch and with the kinds given. BERT-base and DistilBERT are kept as measured as reference rows; the only further
+BERT-base row is MRC as the large reference. Run 3b, pre-registered, is not run (RESULTS '3b: not run'), because its question
+(pretraining or form) is answered by the from-scratch variant at every small size. Tagger add-on rows on BERT-base (R10 / R14 / R17 /
+R20) are deferred without date.

@@ -6,7 +6,7 @@ this session follows until an answer arrives, and the run before which the answe
 
 (Q1-Q17 were answered by R1, R2, R5, R7, R11, R12, R13, R18, R20 and R23 of responses.md, 2026-10-25, and accepted.)
 
-## Q18. R24 / R25: five points to settle before the MRC row trains (defaults below are followed until answered)
+## Q18. R24 / R25: five points to settle before the MRC row trains (defaults below are followed until answered; after R28 points (1)-(3) apply to every MRC row, small and large)
 
 (1) **The level-3 question in training.** R24 says "training ... with every question of the legend per sentence, NULL for roles absent at
 that depth" and also "the level-3 question ... a question never asked in training". Both cannot hold: with all six questions per
@@ -21,9 +21,10 @@ X1 "who says it?", X2 "who says it at level 2?", X3 "who says it at level 3?" (X
 the levels).
 (3) **The tag.** "Frozen with the pre-registration tag's successor commit": default, an annotated tag prereg-2026-10-25b on the commit that
 writes deviation R24 with the questions and the decoding rule, before the MRC code runs on any real data; prereg-2026-10-25 stays.
-(4) **DistilBERT-MRC.** R24 says bert-base-uncased "(and DistilBERT)"; R25 lists only bert-base-uncased before JP 1. Default: DistilBERT-MRC
+(4) [WITHDRAWN 2026-10-25, moot after R28: DistilBERT is a reference row as measured; no DistilBERT-MRC.] **DistilBERT-MRC.** R24 says bert-base-uncased "(and DistilBERT)"; R25 lists only bert-base-uncased before JP 1. Default: DistilBERT-MRC
 after JP 1, with R19's small encoders.
-(5) **R25's queue, two readings.** "R10 rows of 2a and of the reader (reader 'gates given' R14, 5 seeds)": default, the R10 row of 2a
+(5) [WITHDRAWN 2026-10-25, moot after R28: no R10 row of 2a, no 2a / 2b / 3a / 3b re-runs and no R11 1b / 1c re-runs; R17 (i) on
+the saved 2a seed-0 tagger only, without training; the reader's R10 rules for five seeds come from eval/r17_reader.py.] **R25's queue, two readings.** "R10 rows of 2a and of the reader (reader 'gates given' R14, 5 seeds)": default, the R10 row of 2a
 (`--r10`, 2a's configuration, 5 seeds) and the reader's R10 rules for all five seeds from the R17 reader run (it retrains the five seeds
 of 1a, checks them EQUAL, and the common report computes the one-to-one rule and the position split), plus the reader 'gates given' row.
 "R17 (i) and the residual on every saved model": default, the reader (five seeds, retrained), BERT-base WordPiece (2a's configuration

@@ -523,3 +523,27 @@ JP 1 and after the reader's format emits queries (demo plan 2.8). Scored on the 
   Both are reported as what they are.
 - **Criteria, written now (the demo's)**: values emitted under the threshold = 0 for every model by construction of the row; planted
   unsupported slots reported as queries >= 0.90; the hallucination rate reported per axis.
+
+## 3b: not run (deviation from the pre-registration, responses R28, 2026-10-25)
+
+Run 3b (DistilBERT's architecture from scratch, pre-registered at tag prereg-2026-10-25) is NOT executed; recorded here before its
+scheduled time (it was to start after 3a). Reason (R28, the author's decision): its purpose, "is it pretraining or the form that composes
+the unseen depth?", is answered better by variant (b) (the same architecture from scratch) at every small size of the equal-size block
+(BERT-tiny, BERT-mini, BERT-small; R28 item 1), while 3b on DistilBERT would cost about an hour for one point at a size the paper no
+longer compares at. The two readings written for 3b (section 'Interpretation of run 3b') are applied to the (b) rows instead, per size.
+A pre-registered row that is not run is reported as such here and in STATUS, never silently dropped.
+
+## Deviation R28: the main comparison at the reader's size, in the MRC form (declared 2026-10-25)
+
+The paper's question is q-formalisation (R28): the legend's answers, "not given", a margin per decision, a residual, a query where the
+model does not know, in one pass, in a model that fits a browser. Main comparison: the reader (3.3 M parameters; 13 MB, 1.7 MB at 4 bits)
+against BERT-MRC (deviation R24's form) at small sizes: BERT-tiny (google/bert_uncased_L-2_H-128_A-2, 4.39 M), BERT-mini
+(L-4_H-256_A-4, 11.17 M), BERT-small (L-4_H-512_A-8, 28.76 M; the official Google upload loads with transformers 5.20.2, checked
+2026-10-25, fast BertTokenizer), each in three variants: (a) pretrained, (b) the same architecture from scratch, (c) pretrained with the
+kinds given (R27 item 1). R19's grid (lr {5e-5, 1e-4, 3e-4} x epochs {5, 10, 20}, batch 32, warm-up 10%, selection on seed 0, ties to
+the lowest validation loss) for every variant; 5 seeds; every declared axis: seen, new ids, new formulations, depth 3 (per role, six-role
+FULL, trained labels, inner), depth not given (all questions, NULL), out-of-world rejection (R17: NULL as trained, and the threshold),
+the residual analogue, the symmetric cost (R27 item 4). BERT-base and DistilBERT become reference rows, kept as measured (0, 1a-1c, 2a,
+2b, 3a); the R10 / R14 / R17 / R20 tagger rows on them are deferred without date; the one BERT-base row still run is R24 MRC on
+bert-base-uncased, the large reference of the MRC form (5 seeds, both depth variants). The reader's R10 and R14 rows stay. The
+interpretations of R19 (a)/(b)/(c) apply to each size; R15's two readings of 3b apply to each (b) row.

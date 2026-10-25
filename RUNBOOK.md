@@ -113,6 +113,15 @@ Q18 (4)), R13 (seeds 5-9) for the reader and the two main BERT rows. After JP 1 
 model on the frozen planted sets (data/planted_seed<s>.json) and the out-of-world sets (RESULTS 'Deviation R26'). The R10 rows of 3a / 3b (D9, D10), the 2b / 3a / 3b re-runs for
 R17 (i) (D4-D6) and the R11 re-runs of 1b / 1c (D1, D2) wait for the answer to Q18 (5).
 
+**Queue before JP 1, as replaced by responses R28 (2026-10-25)**, superseding the R25 queue above: 3a finishes (pre-registered,
+alone); 3b is NOT run (RESULTS '3b: not run'). Then concurrently (R23 slots): the reader's R14 row (`vss/run_reader_basic.py
+--gates_given cues --seeds 5 --save_model`) and the reader's R10 rules for five seeds with R17 (i) and the residual (`eval/r17_reader.py`,
+`--gates_given cues` after the R14 row); R17 (i) on the saved 2a seed-0 tagger (`eval/r17_tagger.py`; no training); R24 MRC on
+bert-base-uncased, the large reference (grid split by learning rate, `--select`, then 5 seeds). Then the equal-size block (R28 item 1),
+concurrently, every model with R19's grid `--lrs 5e-5,1e-4,3e-4 --epochs 5,10,20`: `models/bert_mrc.py --model google/bert_uncased_L-2_H-128_A-2`,
+`L-4_H-256_A-4`, `L-4_H-512_A-8`, each (a) pretrained, (b) `--scratch`, (c) `--kinds given`; then the symmetric cost (R27 item 4) for
+every model. Then stop and report; JP 1 follows.
+
 ## 2. After every run
 
 - **RESULTS.md**: a numbered section (`## <run>. <title> (<script>; logs/<log name>)`) with the exact command, the commit, the table the
