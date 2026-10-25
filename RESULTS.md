@@ -1722,3 +1722,11 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   sensitivity grid and every row listed under R48 / R51 are not run.
 - Decoder provenance: every reader row above was decoded by common/decode.py and eval/sentence_candidates.py (transcriptions); the
   EQUAL checks against sop/ (the tool, R58 item 1) are reported in their own section.
+
+**Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 before they run:** (1) the reader's growth rows with k = 5 / 10 / 20
+template-4 sentences (vss/reader_growth.py --ks 5,10,20, both seed ranges; the two runs and the other CPU jobs below run concurrently, so
+their training times are not the alone wall-clock of the table above, which stays 135-137 s); (2) the route-b reader's template-4 cell
+with k = 0 (eval/vorder_keys.py; template 4 was never in its training); (3) the route's size at its USED keys, the distinct (side, verb
+kind, word kind, ordinal) tuples with valid = 1 in each seed's 30,000 training sentences (reproduced draw for draw), times D, beside the
+allocated table (eval/vorder_keys.py); if the used count leaves the reader above BERT-tiny's 4.4 M, the size comparison is stated at that
+count.
