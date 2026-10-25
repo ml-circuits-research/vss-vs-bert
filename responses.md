@@ -913,3 +913,22 @@ exact match, as for every row.
 
 If the 1a dumps (learned gates) show the same cells, the row runs on the 1a readers too; the R37 row (gates as initialisation) stays as
 a separate question (template 7 may move with it).
+
+## R47 (Q27 and the H1/H2/H3 note; 2026-10-25)
+
+Q27 accepted: the decoder-only row reports, per role decision, "decided by the address" (the in-sentence winner is also the catalog
+winner), "decided by restriction" (the catalog winner was absent from the sentence) and "decided by elimination" (one-to-one assigned
+the remaining candidate), and RESULTS says in the row's caption that it changes the decoder's candidate set, not the addresses: the H2
+cause (the position "P right after the verb" and the object after a P are not encoded as C / B by any route) stays unfixed by it, and
+the margin of a decision by elimination is the single-candidate floor, not evidence.
+
+The note is accepted as the diagnosis, including its separation of the loss: a shared core (T4:C, T7:A) that no gate set changes, and
+a gate-set effect ("from" open in training breaks the object-last reading) that explains R14's drop against 1a. Two consequences:
+- R37 runs next as planned, with the prediction you wrote (T4:B + T11:B errors present or absent decide set vs hardness); nothing
+  else about it changes.
+- The address-level fix of H2 is a change of the routes (a route that encodes a filler's category order relative to the verb
+  independently of the cue chain) and needs retraining; it will be designed in the tool repository from this note and the dumps, enter
+  as its own declared row (R38), and is not scheduled before JP 1. The decoder-only row is what runs now, as the extractive assumption
+  the baselines already have.
+- For the demo's worlds the cue-gate default is withdrawn until TODO_DGX 2.9 is measured (the finding that opening "from" in training
+  breaks another reading applies to any given set).
