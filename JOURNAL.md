@@ -90,7 +90,7 @@ results/diagnosis_reader_basic_cues.json, logs/2026-10-25_1705_diagnose_reader_e
 counted by kind only. From now on seeds 0-4 are the inspected design set. Calibration files of the R41 check:
 logs/results_r41check_seed0-4.json (calibration rows only). The diagnosis is in questions.md (note of 17:15).
 
-## 2026-10-25 22:40 — JP 1 (the declared set of R48, amended by R49-R58, measured; experimental session)
+## 2026-10-25 22:30 — JP 1 (the declared set of R48, amended by R49-R58, measured; experimental session)
 
 Measured since the handover (16:05): the equal-size MRC block (BERT-tiny / mini x pretrained / scratch / kinds; mini kinds 3 seeds, R51),
 BERT-tiny on fresh seeds, the reader rows R37, R41 check (refutes R41), R42, R46, R54, R56 (route a, rejected by its own rule) and R58

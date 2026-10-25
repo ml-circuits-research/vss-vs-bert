@@ -1572,7 +1572,7 @@ higher). **Variant b is NOT rejected.** With the R46 decoder it reaches exact sl
 seed ranges, and its explained residual rejects random 0.990 / reference 0.908 / nonce 1.000 at false rejection 1.8% on the design set:
 the demo criterion (>= 0.90 per source at <= 2% false rejection) is MET on the design set; on the claim set it rejects 0.988 / 0.932 /
 1.000 at 2.1% (per seed 1.8, 2.8, 2.5, 1.7, 1.6%): **NOT met on the claim set**, by 0.1 point of false rejection on the mean (three of
-five seeds meet it). Size: the route adds 8.4 M phases (the reader with it: 11.7 M, against 3.3 M without).
+five seeds meet it). Size: the route allocates 8.4 M phases (the reader with it: 11.7 M, against 3.3 M without); at its used keys 0.15 M (3.47 M; R62, section below).
 
 ## R49 legend growth, BERT-tiny pretrained 'zs' (models/bert_mrc_growth.py; logs/2026-10-25_20*_ / _21*_ / _22*_bert_mrc_growth_*.txt, one per seed; MEASURED)
 
@@ -1627,10 +1627,10 @@ questions of the depth given: the same within 3%).
 
 The product number (R30 item 10: batch 1, one thread): reader 8.2 ms, BERT-tiny 12.2, BERT-mini 15.8, BERT-base 103.5. Batched, the
 small MRC models are faster than the reader on the CPU (20 threads, batch 32: 1.7 against 2.6 ms). The reader with the verb-order route
-(R58) is 11.7 M parameters and was not timed (not in the declared set). The 1 Hz GPU power log of the runs is
+(R58) is 3.47 M parameters at its used keys (11.7 M allocated) and was not timed (not in the declared set). The 1 Hz GPU power log of the runs is
 logs/power_queue_2026-10-25_1958.csv (coarse; no per-sentence energy is claimed).
 
-# JP 1: synthesis (stopping rule R48, amended by R49-R58; written 2026-10-25 22:35, when the declared set was measured)
+# JP 1: synthesis (stopping rule R48, amended by R49-R58; written 2026-10-25 22:30, when the declared set was measured; amended 23:30 by R62 and the sop checks)
 
 Every number below is from a section above (its log named there); nothing here is new. Seeds 0-4 are the pre-specified seeds of the
 pre-registered rows and, since R39, the inspected design set of the reader's changes; seeds 5-9 (frozen 16:06, never inspected) are the
@@ -1660,8 +1660,8 @@ seeds (per-seed lists in the sections). Claim set = seeds 5-9.
 | reader 1a (0-4) | 3.3 M | 0.864 / 0.868 | 0.982 (0.982) | 1.000 | 0.003 | compiled residual 0.876; 1.000 / 0.989 / 1.000; 0.435 |
 | reader 1a (5-9) | 3.3 M | 0.831 / 0.835 | 0.992 (0.992) | 1.000 | 0.001 | 0.883; 1.000 / 1.000 / 1.000; 0.440 |
 | reader 1a + R46 decoder (5-9) | 3.3 M | 0.867 / 0.973 | 0.998 | 1.000 | 0.000 | explained residual 0.979; 0.988 / 0.930 / 1.000; 0.026 |
-| **reader + verb-order route b + R46 (R58; 5-9)** | 11.7 M | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained 0.980; 0.988 / 0.932 / 1.000; **0.021** (design set 0.018: criterion met there) |
-| reader + route a (R56; 0-4, 5-9) | 11.7 M | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
+| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained (transcription) 0.980; 0.988 / 0.932 / 1.000; **0.021**; through sop: reference rejected 0.01-0.02 (see 'Decoder provenance') |
+| reader + route a (R56; 0-4, 5-9) | 11.7 M allocated | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
 | BERT-tiny MRC pretrained (R28, R36; 0-4) | 4.4 M | 0.884 / 0.968 | 0.000 (0.972) | 0.000 | 0.171 | Mahalanobis 0.822, MSP 0.915; NULL threshold 0.992 / 0.943 / 0.954; FR 0.280 |
 | BERT-tiny pretrained (5-9) | 4.4 M | 0.834 / 0.986 | 0.000 (0.943) | 0.000 | 0.176 | Mahalanobis 0.837, MSP 0.898 |
 | BERT-tiny from scratch (0-4) | 4.4 M | 0.628 / 0.806 | 0.000 (0.173) | 0.000 | 0.358 | 0.751 / 0.689 |
@@ -1701,7 +1701,7 @@ headline rows; candidates are restricted to the world's vocabulary for every mod
 assumption the extractive models carry by construction). Grids: none for the block (R35 / R36, fixed configuration); the pre-registered
 BERT rows had a grid, the reader none (in BERT's favour); validation saturates on this world (R34). Cost on this machine (GB10), fp32,
 the reader's readout in numpy. The reader's changes after the pre-registration (R37, R42, R46, R54, R56, R58) were designed on seeds 0-4
-after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-order route enlarges the reader to 11.7 M parameters.
+after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-order route b adds 146 used keys (0.15 M phases; the reader 3.47 M at the used keys, 11.7 M with the allocated table, R62).
 
 ## Limitations
 
@@ -1710,18 +1710,21 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   rule on new formulations without the verb-order route (0.83-0.87) and reaches it only with the route and the R46 decoder (1.000).
 - **The claim is at 4-11 M parameters**: the main comparison is BERT-tiny (4.4 M) and BERT-mini (11.2 M) in the MRC form; BERT-small,
   BERT-base MRC and DistilBERT-MRC were not run (R36, R48, R51); BERT-base and DistilBERT appear only as taggers (Table A).
-- **Refusal at a calibration threshold is met by no model on the claim set**: at 2% false rejection on the training distribution the
+- **Refusal at a calibration threshold is met by no model**: at 2% false rejection on the training distribution the
   compiled residual and every MRC score reject the in-world generalisation rows wholesale (false rejection 0.28-0.51); the best row, the
   reader with route b and the R46 decoder, rejects 0.988 / 0.932 / 1.000 of the out-of-world sources at 2.1% false rejection on the
-  claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set).
+  claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set). Through the tool (sop @ 4a92afd, the
+  reference decoder) the explained residual does not reject the reference world at all (0.01-0.04): the transcription's rejection of it
+  comes from its undecoded-role clause (R42's text), which the tool does not have (questions.md Q30); the claim of an out-of-world
+  rejection by the explained residual therefore holds for random and nonce sentences only.
 - The comparisons (i) and (ii) are decided by a question never trained for the MRC models (above); the out-of-world comparison is the
   one with content, and BERT-mini pretrained ties the reader there.
 - The reader's improvements (R46, R54, R58) were designed after reading the design-set dumps; they are held out only over identities,
   draws and transitions, not over templates (R39).
 - BERT-mini kinds given has 3 seeds (R51); the 'all six questions' rows, the trained coverage head of R26, BERT-mini growth rows, the
   sensitivity grid and every row listed under R48 / R51 are not run.
-- Decoder provenance: every reader row above was decoded by common/decode.py and eval/sentence_candidates.py (transcriptions); the
-  EQUAL checks against sop/ (the tool, R58 item 1) are reported in their own section.
+- Decoder provenance: the per-role and one-to-one accuracy rows of every reader are EQUAL through sop @ 4a92afd and carry that label;
+  the explained-residual rows differ and keep the transcription's label (section 'Decoder provenance').
 
 **Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 (correction of fact: the first of them, k = 5 / 10 / 20 on seeds 0-4, had been launched about a minute before this text was committed; no output of it had been read):** (1) the reader's growth rows with k = 5 / 10 / 20
 template-4 sentences (vss/reader_growth.py --ks 5,10,20, both seed ranges; the two runs and the other CPU jobs below run concurrently, so
