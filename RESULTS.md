@@ -1327,3 +1327,25 @@ confirmatory comparisons on fresh seeds; never pooled with seeds 0-4. MEASURED.
 _1859_confirmatory_d613149.txt, fresh seeds, both stopped by hand when the first failed):** TypeError in json.dump (numpy integers in
 the result) after the first pair's numbers were printed; no result file kept (a truncated one was deleted). Fix: a JSON default for
 numpy scalars (separate commit); the three runs are started again. The printed numbers of the first attempt are not used.
+
+
+## Deviation R54: a second-identity column for every planted row, and the reader's adjacency rule (declared 2026-10-25 before it runs)
+
+(1) Scoring, every model (R54 item 1): in the 'undecided' set, whether the inserted identity was left in no role (a query of another
+kind: the reader's 'unplaced', the MRC rows' untrained 'unsupported' test); the hallucination rate unchanged as defined. The planted
+rows are re-scored with it (eval/planted.py, results logs/results_planted2_*; the earlier columns are recomputed identically).
+(2) R54's text, verbatim:
+
+2. **Decoder rule, declared now, claim on seeds 5-9 (R39):** an identity left in no role, adjacent (the token before or after) to the
+   filler of a role whose kinds admit it, turns that role into 'undecided' with both as candidates and the role's margin set to the gap
+   between them at the role's address; this is what a person does with "p3 p5 gives o1 to p2". Expected effect, written before the run:
+   'undecided' planted queried rises towards the share of sentences where the second identity is left unplaced (to be read from
+   addition 1); needless queries on the other roles unchanged; the 'unsupported' set unchanged except where the appended identity is
+   adjacent to a filler of an admitting role (", p7 ." after the recipient: those become 'undecided' instead of 'unsupported', a kind
+   change counted as still queried, reported separately). Runs with the R46 decoder; both provenance categories kept.
+
+Implementation: eval/planted.py --model reader_r54 (the R46 decoder, then eval/planted.r54_adjacent: 'adjacent' = the token right before
+or after; the role's margin = the absolute gap between the two candidates' in-sentence scores at the role's address; a role so marked
+counts as queried). Design set seeds 0-4 (inspected) and the CLAIM on seeds 5-9, which needs frozen planted sets for seeds 5-9:
+data/planted_seed5-9.json (data/make_planted_sets.py --seed_start 5, the same generator, additionally disjoint from the growth sets),
+committed with sha256 before any model sees them, and the 1a readers of seeds 5-9.

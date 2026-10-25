@@ -7,19 +7,21 @@ basic world for the query-emission row (after JP 1), one file per seed, data/pla
                at random): two candidates in the same position class; the gold of that role is 'undecided', the others keep their values.
 The out-of-world sets (data/oow_seed<s>.json) serve 'unknown'; the frozen splits serve the values. Every planted sentence is drawn from
 its own generator (rng 73_000 + seed) and differs from every sentence of the frozen splits and of the out-of-world sets.
-Run: python3 data/make_planted_sets.py [--seeds 5] [--n 300]"""
+Run: python3 data/make_planted_sets.py [--seeds 5] [--seed_start 0] [--n 300]"""
 import argparse, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from common import basic_world as bwm, mainrepo
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--n", type=int, default=300); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--n", type=int, default=300); a = ap.parse_args()
     print(f"make_planted_sets: main repository {mainrepo.check_pinned()}; seeds {a.seeds}; {a.n} per kind")
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):   # --seed_start: seeds 5-9 for R54's claim (R39)
         split = bwm.load(seed); bw = bwm.build(seed, split["D"]); rng = np.random.default_rng(73_000 + seed)
         oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json")))
         taken = {tuple(it["tokens"]) for v in split["axes"].values() for it in v} | {tuple(x["tokens"]) for part in ("test", "neg") for v in oow[part].values() for x in v}
+        gp = os.path.join(mainrepo.ROOT, "data", f"growth_seed{seed}.json")   # 2026-10-25 (R54, seeds 5-9): also disjoint from the growth sets
+        if seed >= 5 and os.path.exists(gp): taken |= {tuple(x["tokens"]) for k, v in json.load(open(gp)).items() if isinstance(v, list) for x in v}
         P, O = list(bw["trP"]), list(bw["trO"]); out = {"unsupported": [], "undecided": []}
         while len(out["unsupported"]) < a.n or len(out["undecided"]) < a.n:
             d = int(rng.integers(4)); it = bwm.draw(bw, rng, [int(rng.choice(list(bw["TRAIN_T"])))], bw["trP"], bw["trO"], d, 1)[0]
