@@ -394,3 +394,24 @@ any model, and the pre-registered per-role numbers stay the main ones). Add one 
 the OUTER speakers (X2 0.858, X3 0.495) with the inner frame at 1.000 on every seed, which is the same shape of failure the from-scratch
 transformer had in 7b (inner lost, outer kept) in mirror image; stated as observed, not explained, with the per-seed list (seed 0 X2 0.30).
 Then the frozen out-of-world sets (a separate commit), 3a, 3b, as planned.
+
+## R22 (2026-10-25): cutting the remaining time without cutting rigour
+
+1. **No grid for derived rows.** The R10, R14, R17 and R20 rows of runs 2 and 3 are variants of 2a / 2b / 3a / 3b; INSTRUCTIONS already
+   fixes their configuration as "the one selected on seed 0" for that model and tokenizer condition. Run them with that configuration, no
+   grid (write in each row which pre-registered selection it inherits). The grid is kept only for new pre-registered models (3a, 3b) and
+   for R19's small encoders, which have their own fixed grid. On 2a / 2b every grid point gave validation FULL 1.000, so the grid never
+   chose anything but the tie-break; say so in RESULTS once.
+2. **Shared-encoder multi-head training for the add-on heads.** The three depth heads (R20), the out-of-world class (R17 ii) and the cue
+   feature (R14) are heads or input features over the same encoder. Train them in ONE run per model and seed with the losses summed
+   (equal weights, stated), and decode each head as its own row. A stated deviation: the heads share the encoder, which is the standard
+   practice; it favours no model. Keep the pre-registered tagger rows exactly as they are (they ran alone).
+3. **Three GPU slots.** The GB10 has 128 GB unified memory; BERT-base at batch 32 in fp32 uses under 12 GB. Change run.sh (its own commit,
+   reason in the message) to allow up to 3 concurrent runs: one lock per slot (logs/.run.lock.N), the memory guard checked per launch
+   (keep 40 GB available AFTER the launch), separate logs as now. Determinism is per process (fixed seeds, fp32), so concurrency changes no
+   number; wall-clock and energy per run are then shared and must be marked "concurrent (N runs)" in the cost rows, and the per-seed
+   training time used in the cost table must come from a run that was alone (2a, 2b, 3a, 3b, which are). Queue: 3a and 3b first (alone,
+   for their cost rows), then the derived rows three at a time.
+4. **Nothing else is cut**: 5 seeds per row, fp32, the pre-registered rows unchanged. R9.5 and R13 (seeds 5-9) stay after JP 1 and may
+   run overnight. The no-training measurements (R10 saved, R17 i, residual) are minutes.
+Write the new expected order and the derived rows' inherited configurations in RUNBOOK (document change) before starting them.
