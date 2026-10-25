@@ -1,0 +1,37 @@
+# 2026-10-25T14:34:56+01:00  commit=1c37d49  cmd: python3 eval/throughput.py --steps 300  (guard: mem fraction 0.150, min available 16 GB, max 6 h; MemAvailable at start 101 GB; slot logs/.run.lock.6 of 6)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 15% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 7360.31it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+# post-launch guard (slots 6): MemAvailable 90 s after the start 92 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 139.2 s: 69.0 samples/s; peak cuda reserved 2.52 GB; MemAvailable 92.60055160522461 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 167.3 s: 57.4 samples/s; peak cuda reserved 2.52 GB; MemAvailable 96.50425338745117 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 167.4 s: 57.3 samples/s; peak cuda reserved 2.52 GB; MemAvailable 100.38791275024414 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 163.7 s: 58.7 samples/s; peak cuda reserved 2.52 GB; MemAvailable 104.26639175415039 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 160.1 s: 60.0 samples/s; peak cuda reserved 2.52 GB; MemAvailable 108.1535758972168 GB
+throughput: bert-base-uncased MRC, batch 32, 300 steps in 156.5 s: 61.4 samples/s; peak cuda reserved 2.52 GB; MemAvailable 108.18875503540039 GB

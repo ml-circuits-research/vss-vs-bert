@@ -650,3 +650,14 @@ depth 3 on every seed (> 0.9: as 2a). The six-role frame exact match with the le
 (i) the unseen level-3 label comes out right on two seeds (1.000) and partly on two (0.797, 0.244); (ii) the frame with the untrained
 level label is not reliably produced. By the rule ceiling (above), these axes measure whether a model learned the world's rule; DistilBERT
 did, as BERT-base did. The reader on the same rows: six-role exact match 0.982 ± 0.010, confident error at depth 3 0.003 against 0.062.
+
+## Concurrency check of run.sh's slots (responses R23; eval/throughput.py; logs/2026-10-25_14*_throughput_1c37d49.txt)
+
+Training throughput of BERT-MRC (batch 32, fp32, the same script and data), samples per second, summed over concurrent runs:
+- **bert-base-uncased**: alone 368.4; six concurrent 57.3 + 58.7 + 57.4 + 69.0 + 60.0 + 61.4 = 363.8 (0.99x); three concurrent
+  117.7 + 125.9 + 123.6 = 367.2 (1.00x). Below 1.3x at 6 and at 3: BERT-base rows run ONE at a time (the GPU is compute-bound at this
+  size; peak reserved 2.52 GB per process).
+- **BERT-tiny** (L-2_H-128): 5,000 steps alone 2,806.1; six concurrent 1,554.9 + 1,531.0 + 1,537.1 + 1,539.9 + 1,545.5 + 1,543.4 = 9,251.8
+  (3.30x): the small models are launch-bound, and their rows run six at a time. (A first attempt with 300 steps overlapped too little to
+  measure anything, about 3 s per run, and is not used.)
+Per R22 / R23 the cost rows per seed come only from runs that ran alone; the energy of concurrent runs is reported for the batch.
