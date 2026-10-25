@@ -497,3 +497,35 @@ tagger), for unsupported and unknown. State in RESULTS that for MRC the detectio
 state; both are reported as what they are. Criteria written now (the demo's): values emitted under the threshold = 0 for every model by
 construction of the row; planted unsupported slots reported as queries >= 0.90; the hallucination rate reported per axis. Not before JP 1
 and not before the format change; declared now so that the planted worlds are built and frozen before any model is tuned with them in view.
+
+## R27 (2026-10-25): a whole-design review for asymmetries; five fixes, all declared, none touching the pre-registered rows
+
+1. **Kinds are given to the reader and not to BERT.** The reader receives every token's category from kinds.tsv (a given, rule 20) and
+   its route book is indexed by category; BERT receives text only. The paper handled exactly this for the from-scratch control with two
+   variants (7b plain, 7b-bis with categories); BERT has no counterpart here. Fix: a "kinds given" row for BERT, tagger and MRC: one
+   learned embedding per kind added to the token embedding (as 7b-bis adds its category input), configuration inherited, 5 seeds. If it
+   changes BERT's numbers, the reader's advantage on that axis was the given categories, and that is what is written. Before JP 1 for
+   the MRC form (it runs in the same queue), after JP 1 for the tagger.
+2. **The reference ceiling is missing: a large language model with the legend in the prompt, no training.** That is what the field uses
+   for this task today and what a reviewer asks first. It is not a competitor on cost; it is the accuracy ceiling and the anchor of the
+   cost argument. Fix: a reference row (labelled "reference, not a baseline"): a frozen prompt (the legend's questions, the SOP format,
+   ten solved examples from the training split of seed 0, written once and committed before any call), temperature 0, the same scorer,
+   on a fixed subset of every axis of seed 0 (the report half only; 200 items per axis, cost), with the hallucination count (values given
+   where the gold is not given), the cost per sentence (tokens, time, price) and three repeated calls to measure its own determinism. Use
+   the API available on the DGX session (the one this session uses); if none, write the row as PLANNED with the prompt committed.
+3. **Statistics.** "Within seed variance" is a reproduction check, not a comparison. The seeds are shared (same splits per seed), so
+   model differences are PAIRED: report, for every pair of models and axis, the mean paired difference with its 95% t interval over the
+   5 seeds and the number of seeds in which each model is ahead; and a bootstrap over items (1,000 resamples) for the interval of every
+   single row. Add to eval/compare.py; recompute for every row from the stored per-seed numbers; no rerun.
+4. **Inference cost is not measured symmetrically.** BERT at 20 threads, batch 32, torch; the reader in numpy, sentence by sentence.
+   Fix: every model at batch 1 and batch 32, at 1 thread and at 20 threads, same machine, precision stated, median and p95 over the same
+   500 sentences; report the four cells for each. Energy per sentence from the sidecar at batch 32 only.
+5. **Real data and WikiSQL regime statements.** On SNIPS / MASSIVE / TOPv2 the reader's kinds come from skip-gram clusters on the training
+   pool (unsupervised, LEARNED, not given): write it in INSTRUCTIONS_REAL and in every real-data row. On WikiSQL our regime (question
+   without the table, columns as candidates) is below the published table-conditioned systems (about 0.90 selected-column accuracy with
+   the table); the comparison is BERT against the reader in the same regime, never against WikiSQL's state of the art; one sentence in
+   RESULTS 5 and in the paper.
+Asymmetries that stay, each stated in the threats-to-validity section: pretraining (the question itself), worlds built by us and a reader
+developed on them (R12), depth given at decoding to every model (equal; plus the all-questions variant), candidates restricted to the
+world's vocabulary for every model (equal), a grid for BERT and none for the reader (in BERT's favour). A second independent review of
+the DESIGN (not the code) is being made from the reviewing side, briefed as a semantic-parsing reviewer; its findings follow as a response.
