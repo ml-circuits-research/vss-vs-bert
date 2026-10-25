@@ -1451,3 +1451,19 @@ The worst drops fall on new formulations with seen transitions or depth 3 and ar
 0.010); seen, new ids, role cues and depths 1-2 move by 0.000. (The UNSEEN-formulation axis rises because template 4 is one of its
 templates and is no longer unseen.) For the reader a new form costs a full retraining of 135-137 s alone and k = 50 examples, with no
 hyperparameter to choose; a new question composed from known parts costs nothing.
+
+## Confirmatory comparisons (R30 item 8), reader 1a vs BERT-mini (seeds 0-4) and vs BERT-tiny on the CLAIM SET (seeds 5-9) (eval/confirmatory.py; logs/2026-10-25_2003_confirmatory_91932d8.txt, _2004_confirmatory_91932d8.txt; MEASURED)
+
+| pair: reader - model | (i) exact match six, depth 3 not given | (ii) confident error at matched coverage | (iii) AUROC residual vs Mahalanobis | Holm |
+|---|---|---|---|---|
+| BERT-mini pretrained (0-4) | +0.982 [+0.972, +0.991], p < 0.001 | -0.164 [-0.165, -0.162], p < 0.001 | **+0.026 [-0.024, +0.069], p 0.306** (seeds ahead 4 / 1) | (i), (ii) rejected; **(iii) not rejected** |
+| BERT-mini from scratch (0-4) | +0.982, p < 0.001 | -0.362 [-0.392, -0.332], p < 0.001 | +0.055 [+0.029, +0.075], p < 0.001 | all three rejected |
+| BERT-tiny pretrained, CLAIM SET (5-9) | +0.992 [+0.982, +1.000], p < 0.001 | -0.175 [-0.193, -0.164], p < 0.001 | +0.046 [+0.017, +0.082], p < 0.001 | all three rejected |
+
+Secondary (means): BERT-mini pretrained Mahalanobis 0.850, MSP 0.895, NULL gap 0.622, AURC 0.082; BERT-mini from scratch 0.821 / 0.661
+/ 0.570 / 0.264; BERT-tiny seeds 5-9 0.837 / **0.898** / 0.625 / 0.153; the reader (catalog decoder) residual 0.876 (0-4) / 0.883
+(5-9), margin 0.887 / 0.895, explained residual 0.730 / 0.724, AURC 0.000. Withdrawal condition: BERT-mini from scratch inner frame 0.142
+< 0.99, the claim stands. Reading: on the out-of-world comparison with content (iii), the reader's compiled residual is ahead of the
+Mahalanobis score of every small model except BERT-mini pretrained, where the difference (+0.026) is not significant; the pretrained
+models' MSP (0.895-0.915) is above the reader's compiled residual with the catalog decoder (0.876-0.883) on both seed ranges; (i) and
+(ii) are decided by the zero-shot level-3 question, as stated with the BERT-tiny pairs.
