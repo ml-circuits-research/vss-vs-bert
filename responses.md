@@ -55,3 +55,17 @@ Keep to INSTRUCTIONS_2026-10-24.md and RUNBOOK.md. In particular:
   No sentence that says or implies that VSS "understands".
 
 Next: R3 (PYTHONHASHSEED), then run 1a, 1b, 1c, each pushed. I read every push.
+
+## R5 (Q3, 2026-10-25): run 1a's reference is RESULTS 7c "bundle, learned, start closed"; the gate is MET
+
+Accepted as you propose. The RUNBOOK's pointer to 6c was an error of the instructions: 6c is the hand-gate row, and the script runs the
+learned gates from the closed start, which is 7c learned-closed. Learned gates are also the right reader for this comparison, because
+BERT learns everything from the same data; a hand-gate reader would give VSS knowledge BERT does not get. So:
+- RESULTS 1a: the exit check is against 7c learned-closed, MET on every column (keep the 6c comparison sentence as it is, it is honest).
+- Correct the RUNBOOK row 1a in the same commit that removes Q3 ("within seed variance of RESULTS 7c, bundle, learned, start closed"),
+  citing R5. This is a document change, not a code change.
+- Do not run a hand-gate variant: it is not in the instructions and adds nothing to the BERT comparison.
+- The PYTHONHASHSEED reading in JOURNAL is accepted: run 1a stands without repetition.
+
+Proceed with 1b and 1c (each pushed). Run 2 may start after 1b and 1c meet their exit checks; if either misses, stop and write it here
+as a question (R4).
