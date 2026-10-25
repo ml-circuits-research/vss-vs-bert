@@ -1404,3 +1404,8 @@ that the reader answers a question it was never trained on and the extractive mo
 (ii) follows from (i) (the X3 errors are confident); (iii) is the comparison with content, and it favours the reader against the
 pre-specified Mahalanobis score, but BERT-tiny pretrained's MSP (0.915) is above the reader's compiled residual (0.876) with the
 catalog decoder; with the R46 decoder the reader's residuals reach 0.976-0.979 (design / claim set; not a pre-specified comparison).
+
+**R54 caption addition (R55):** the adjacency rule's reference implementation is vss-demo commit f46b8d4 (tool/sop/infer.py
+undecided_adjacent); vss-demo is not a submodule here, so eval/planted.r54_adjacent transcribes R54's definition. The explained
+residual's reference is vss-demo a1f4564 (R42). The verb-order route of vss-demo 434fa40 ('vorder') needs retraining and is NOT a row
+here (R55; after the stop).
