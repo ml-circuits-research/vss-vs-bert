@@ -1,0 +1,151 @@
+# 2026-10-25T17:20:05+01:00  commit=01a4715  cmd: python3 vss/run_reader_basic.py --gates_given init_cues --seeds 5 --save_all  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 100 GB; slot logs/.run.lock.3 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+R37: initial logit of the six given gates = 2.3011 (median of the 4 open learned logits of logs/models/reader_basic_seed0.pt: [1.522, 2.3011, 8.2025, 8.4441]); trainable
+run_reader_basic: main repository e531283; device cuda; D 1024; N 30000; batch 8; lr 0.02; seeds 5
+regime (rule 24): English basic world, prefixed reporting forms, training depths 0-2 (templates TRAIN_T, 12 persons / 12 objects), tested at depth 3 UNSEEN, 6 held-out persons / objects; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0: gates INITIALISED open at logit 2.3011, trainable (R37): ['to', 'by', 'from', '.', 'says', 'that']
+# post-launch guard (slots 16): MemAvailable 90 s after the start 93 GB
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v8_gates.py:139: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0: trained in 392s; gates OPEN ['.', 'by', 'from', 'that', 'to']
+  seed 0: final logits of the six given gates {to: 10.786, by: 5.764, from: 10.223, .: 10.377, says: -8.547, that: 11.378}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 VSS reader, gates given as initialisation (R37) 1.00 (m 0.48) | 1.00 (m 0.49) | 0.79 (m 0.23) | 0.79 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.997 (trained labels 0.997, inner 0.997) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.79 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9994949494949495 (n 3960), unseen 1.0 (n 360)
+  seed 0 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 15.86 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1: gates INITIALISED open at logit 2.3011, trainable (R37): ['to', 'by', 'from', '.', 'says', 'that']
+  seed 1: trained in 574s; gates OPEN ['.', 'by', 'from', 'that', 'to']
+  seed 1: final logits of the six given gates {to: 10.854, by: 5.746, from: 10.268, .: 10.150, says: -8.420, that: 11.651}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 VSS reader, gates given as initialisation (R37) 1.00 (m 0.48) | 1.00 (m 0.49) | 0.76 (m 0.23) | 0.80 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 0.76 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 1 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 15.61 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2: gates INITIALISED open at logit 2.3011, trainable (R37): ['to', 'by', 'from', '.', 'says', 'that']
+  seed 2: trained in 746s; gates OPEN ['.', 'by', 'from', 'that', 'to']
+  seed 2: final logits of the six given gates {to: 10.873, by: 5.829, from: 10.318, .: 10.668, says: -8.351, that: 11.403}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 VSS reader, gates given as initialisation (R37) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.76 (m 0.23) | 0.81 (m 0.16) | 1.00 (m 0.37) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 0.76 | 0.82 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 2 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 21.11 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3: gates INITIALISED open at logit 2.3011, trainable (R37): ['to', 'by', 'from', '.', 'says', 'that']
+  seed 3: trained in 998s; gates OPEN ['.', 'by', 'from', 'that', 'to']
+  seed 3: final logits of the six given gates {to: 10.987, by: 5.705, from: 10.162, .: 10.405, says: -8.654, that: 11.732}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 VSS reader, gates given as initialisation (R37) 1.00 (m 0.48) | 1.00 (m 0.48) | 0.83 (m 0.24) | 0.80 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 0.83 | 0.81 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 3 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 22.14 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4: gates INITIALISED open at logit 2.3011, trainable (R37): ['to', 'by', 'from', '.', 'says', 'that']
+  seed 4: trained in 997s; gates OPEN ['.', 'by', 'from', 'that', 'to']
+  seed 4: final logits of the six given gates {to: 10.792, by: 5.576, from: 10.105, .: 10.485, says: -8.633, that: 11.640}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 VSS reader, gates given as initialisation (R37) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.74 (m 0.23) | 0.79 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained labels 0.996, inner 0.996) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.001
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 0.74 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.9992424242424243 (n 3960), unseen 1.0 (n 360)
+  seed 4 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 21.69 ms/sentence on CPU
+
+== VSS reader, gates given as initialisation (R37): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.778±0.031 [0.79 0.76 0.76 0.83 0.74] | 0.799±0.007 [0.79 0.80 0.81 0.80 0.79] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  FULL frame at depth 3 (UNSEEN): 0.998±0.002 [0.997 0.999 1.000 1.000 0.996]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.998±0.002 [0.997 0.999 1.000 1.000 0.996]
+  FULL at depth 3 over A B C, the inner frame (R6): 0.998±0.002 [0.997 0.999 1.000 1.000 0.996]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  1.000±0.000 | 1.000±0.000 | 0.998±0.002 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 0.999±0.001 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== second rule 'one_to_one' (R10): 1.000 | 1.000 | 0.777 | 0.807 | 1.000 | 1.000 | 1.000 | 1.000
+  'one_to_one' depth 3 full: 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  'one_to_one' depth 3 full_trained: 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  'one_to_one' depth 3 full_inner: 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  'one_to_one' depth 3 per role: 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000
+  'one_to_one' depth 3 by filler position: all roles 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  'one_to_one' calibration new_ids                tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  'one_to_one' calibration depth3_unseen          tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  'one_to_one' calibration depth3_unseen_trained  tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.001)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.001 0.000 0.000 0.000 0.001)
+reference (main repository, RESULTS 6c / 7b, fresh test draws): new ids 1.000, depth 3 1.000 on all six roles
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) 

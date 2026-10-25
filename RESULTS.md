@@ -1090,3 +1090,93 @@ of seeds 5-9 against BERT-tiny of seeds 5-9); the growth regimes of R49 on BERT-
 - BERT-mini in the growth rows (R49) and in the seeds 5-9 rows;
 - consequently: the planted row and the confirmatory comparisons for BERT-mini kinds given (3 seeds only; the paired 5-seed tests need
   5), recorded as not run.
+
+## R41 check: the compiled residual against sentence length, calibration rows only (eval/residual_length_check.py; logs/2026-10-25_1631_residual_length_check_3d8814d.txt)
+
+Command `./run.sh eval/residual_length_check.py --seeds 5 --row 1a`, commit 3d8814d; the saved / retrained 1a readers (EQUAL on every
+seed), the 2,000 calibration sentences of each seed only. Spearman(residual, token count) -0.146 ± 0.046 [-0.152 -0.062 -0.154 -0.205
+-0.156]; mean residual at depth 0 / 1 / 2: 0.409 ± 0.009 / 0.455 ± 0.014 / 0.431 ± 0.009 (not rising on any seed); within one depth the
+correlation is NEGATIVE, -0.42 to -0.89 (longer sentences of a depth have a smaller residual). R41's criterion (> 0.5 and rising means)
+fails on every seed: **R41's length mechanism is refuted** (R43). As R43 writes: the compiled residual has a floor of about 0.43 on the
+training distribution, the share of the state that the compiler's reconstruction never contains (the routes' deposits), and above that
+floor it rises with the novelty of the form (UNSEEN transitions 0.90, depth 3 0.72, random order 0.99), not with the token count.
+Label: MEASURED (calibration only, no report row).
+
+## R42 / R43: the explained-tokens residual on the design set (eval/residual_explained.py --row 1a; logs/2026-10-25_1727_residual_explained_ecd7c47.txt)
+
+Seeds 0-4 (design set, inspected), the saved 1a readers (EQUAL), the original (catalog) decoder, depth from the openers, thresholds at
+2% false rejection on the calibration rows. MEASURED; the claim on seeds 5-9 is a separate row.
+
+| score | AUROC in vs out (random + reference) | AUROC random / reference / nonce ph. | rejected random / reference / nonce ph. at 2% cal. | false rejection pooled |
+|---|---|---|---|---|
+| compiled residual | 0.876 ± 0.005 | 0.984 / 0.768 / 0.842 | 1.000 / 0.989 / 1.000 | 0.435 ± 0.015 |
+| explained residual | 0.730 ± 0.007 | 0.996 / **0.464** / 0.952 | 0.997 / **0.026** / 1.000 | 0.112 ± 0.017 |
+
+Per axis, explained residual false rejection: seen 0.029, new ids 0.025, depth 1-2 0.022-0.023, depth 3 0.051, role cues 0.022, new
+formulations 0.308 / 0.386 (where the frame is wrong, tokens are left unexplained). Reading: with the catalog decoder the explained
+residual removes most false rejections of form novelty (0.435 -> 0.112) but does not see the reference-world sentences at all (AUROC
+0.464, rejected 0.026: their identities are placed into some frame, so nothing is left unexplained); it is a detector of UNPLACED
+content, as R43 says, not of an unfamiliar form. R43's expected failure mode (random sentences filled into a frame pass) does not
+occur for random order (0.997 rejected); it occurs for the reference world instead.
+
+## R37: the reader with the six cue gates given as a trainable initialisation (vss/run_reader_basic.py --gates_given init_cues; logs/2026-10-25_1720_run_reader_basic_01a4715.txt; design set)
+
+Command `./run.sh vss/run_reader_basic.py --gates_given init_cues --seeds 5 --save_all`, commit 01a4715, concurrent (training 392-998 s
+per seed: not a cost number). Initial logit 2.3011 on to, by, from, '.', says, that (trainable). Final logits on every seed: to 10.8-11.0,
+from 10.1-10.3, '.' 10.2-10.7, that 11.4-11.7, by 5.6-5.8, **says -8.4 to -8.7 (closed)**; open set on every seed: . by from that to.
+
+| axis (slot accuracy) | R37 (initialised) | R14 (fixed open) | 1a (learned from closed) |
+|---|---|---|---|
+| seen / new ids / role cues / depth 1 / depth 2 | 1.000 | 1.000 | 1.000 |
+| new form. seen trans. | 0.778 ± 0.031 [0.79 0.76 0.76 0.83 0.74] | 0.764 ± 0.029 | 0.864 ± 0.069 |
+| new form. UNSEEN trans. | 0.799 ± 0.007 [0.79 0.80 0.81 0.80 0.79] | 0.789 ± 0.011 | 0.868 ± 0.040 |
+| depth 3 slot accuracy; exact match six | 1.000; 0.998 ± 0.002 | 1.000; 0.999 | 0.997; 0.982 |
+| one-to-one: new form. seen / UNSEEN; depth-3 exact match | 0.777 / 0.807; 1.000 | 0.768 / 0.796; 1.000 | 0.870 / 0.894; 0.995 |
+| confident error depth 3 (tau 0.000) | 0.000 | 0.000 | 0.003 |
+
+Reading, as R37 wrote it before the run: the row does NOT recover 1a's mean on new formulations (0.778 / 0.799 against 0.864 / 0.868; it
+keeps R14's small seed spread), so **the R14 loss comes from the SET, not from the hardness**. The prediction written in questions.md
+(17:15) holds: T4:B + T11:B errors appear on every R37 seed (289 / 274 / 253 / 278 / 310), as on every R14 seed and on 1a seed 2, the
+readers with 'from' open; T4:C (138-176) and T7:A (171-180) as in every reader. The learned per-seed gate sets that beat the given set
+(R37 asks for the list): 1a seed 0 {. by that to} 0.93 / 0.89, seed 3 {. by that to} 0.95 / 0.88, seed 1 {. that to} 0.82 / 0.89, seed 4
+{. by that to} 0.84 / 0.89 (new form. seen / UNSEEN); all of them leave 'from' (and 'says', which no reader keeps open when it may close
+it) closed; the one 1a seed that opened 'from' (seed 2, {by from that to}) is at 0.77 / 0.79, the R14 / R37 level. The cue word a seed
+found useful that the legend did not give: none; the useful choice was to NOT open 'from' and 'says'. Diagnosis files:
+results/dump_reader_basic_cuesinit_seed0-4.json, results/diagnosis_reader_basic_cuesinit.json (H2 core cells T10:C, T4:B, T4:C, T7:A
+on every seed; H3 22-53 per seed). The claim on seeds 5-9 is a separate run (queued).
+
+## R46: sentence candidates + one-to-one, design set (eval/sentence_candidates.py; logs/2026-10-25_1717_sentence_candidates_01a4715.txt (1a), _1719_ (R14))
+
+Decoder only, the saved readers (original decoder EQUAL to the stored rows on every seed). Caption (R47): it changes the decoder's
+candidate set, not the addresses; the H2 cause stays unfixed; the margin of a decision by elimination is the single-candidate floor,
+not evidence. MEASURED; design set (inspected); the claim on seeds 5-9 is a separate run.
+
+| axis (slot accuracy) | 1a + R46 (one-to-one) | 1a original | R14 + R46 | R14 original |
+|---|---|---|---|---|
+| seen / new ids / role cues / depth 1 / depth 2 | 1.000 | 1.000 | 1.000 | 1.000 |
+| new form. seen trans. | 0.873 [0.959 0.791 0.780 0.994 0.839] | 0.864 [0.93 0.82 0.77 0.95 0.84] | 0.775 | 0.764 |
+| new form. UNSEEN trans. | 0.975 [0.975 0.979 0.978 0.958 0.982] | 0.868 | 0.983 | 0.789 |
+| depth 3 slot accuracy; exact match | 0.998; 0.995 | 0.997; 0.982 | 1.000; 1.000 | 1.000; 0.999 |
+| coverage / confident error at depth 3 (tau 0.000) | 0.997 / 0.001 | 1.000 / 0.003 | — | 1.000 / 0.000 |
+
+(The per-role in-sentence top-1 without one-to-one: 1a 0.873 / 0.919, R14 0.799 / 0.920.) Out-of-world on the one-to-one frames:
+
+| score | 1a + R46: AUROC in vs out; rejected random / reference / nonce ph.; false rejection | R14 + R46 |
+|---|---|---|
+| compiled residual | 0.976 ± 0.004; 1.000 / 0.989 / 0.855; 0.435 | 0.971; 1.000 / 0.989 / 0.848; 0.437 |
+| explained residual | 0.975 ± 0.003; 0.990 / 0.908 / 1.000; **0.026 ± 0.004** | 0.974; 0.990 / 0.907 / 1.000; 0.024 |
+
+R47's decision categories, 1a, new formulations, per seed (address / restriction / elimination; accuracy in each): UNSEEN trans.
+2,557-2,890 / 90-393 / 250-290 (0.976-0.990 / 0.967-1.000 / 0.728-0.890); seen trans. 842-1,029 / 0-125 / 51-122 (0.84-1.00 / 0.26 /
+0.33-0.94); depth 3: 4,302-4,319 by the address, 0 by restriction, 1-18 by elimination; seen: all 2,880 by the address. Per cell (1a,
+seeds pooled, 900 decisions each): T7:A 46 by the address, 414 by restriction (411 right), 440 by elimination (440 right), 6 wrong;
+T4:C 259 / 9 / 632 (632 right), 198 wrong; T4:A 195 eliminations all wrong (198 wrong); T4:B and T11:B 154 / 151 by restriction, all
+right, 0 wrong; T10:A 344 wrong and T10:C 344 wrong (a swap the elimination cannot resolve when both addresses hold the other filler).
+R14 cells the same in kind (T4:B 850 and T11:B 596 decided by restriction, all right; T10 607 wrong in each of A and C).
+Against R46's expectations written before the run: T11 B and T4 B right by construction: yes (0 errors in 1a and R14); T7 A right
+through one-to-one: yes (6 / 13 wrong of 900); T4 C and T10 C right whenever the other role is right: partly (T4: 198 / 117 wrong in A
+and C together; T10: 344 / 607); "the in-world rows cannot fall": seen, ids, depths unchanged, but new formulations with seen
+transitions fall on seed 1 (0.82 -> 0.79) and seed 2 (stays 0.78), the T10 swaps; the mean rises 0.864 -> 0.873. The expected cost
+(random sentences filled into frames more often) is not visible in the rejection: the explained residual on these frames rejects random
+0.990, reference 0.908, nonce 1.000 at 2.6% false rejection, the closest any reader row comes to the demo criterion (>= 0.90 per source
+at <= 2% false rejection; not met: 2.4-2.6%).

@@ -1,0 +1,53 @@
+# 2026-10-25T18:36:55+01:00  commit=b106935  cmd: python3 eval/diagnose_reader.py --rows 1a,r14,r37  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 113 GB; slot logs/.run.lock of 16)
+# Python 3.12.3  NVIDIA GB10
+diagnose_reader: reads results/dump_<tag>_seed<s>.json only (design set, seeds 0-4; R39)
+
+== 1a (reader_basic), seeds [0, 1, 2, 3, 4]: wrong role decisions on the new-formulation rows, by pattern (not exclusive) ==
+seed | open gates | decisions | wrong | H3 rank2+o2o | H2 systematic | H1 seed-dep.+gate | other | rank2 | rank>=3 | o2o fixes | med. margin wrong / right | err before / after verb
+  0 | . by that to | 5400 | 418 | 175 | 339 | 0 | 32 | 255 | 163 | 175 | 0.0171 / 0.2702 | 0.082 (3060) / 0.072 (2340)
+  1 | . that to | 5400 | 563 | 206 | 345 | 0 | 154 | 405 | 158 | 206 | 0.0244 / 0.2654 | 0.125 (3060) / 0.077 (2340)
+  2 | by from that to | 5400 | 934 | 50 | 335 | 305 | 289 | 193 | 741 | 50 | 0.0112 / 0.2848 | 0.151 (3060) / 0.202 (2340)
+  3 | . by that to | 5400 | 431 | 162 | 347 | 0 | 33 | 268 | 163 | 162 | 0.0239 / 0.2735 | 0.082 (3060) / 0.076 (2340)
+  4 | . by that to | 5400 | 526 | 198 | 327 | 0 | 134 | 363 | 163 | 198 | 0.0200 / 0.2501 | 0.118 (3060) / 0.070 (2340)
+  exclusive combinations per seed: [{'only_H3': 47, 'other': 32, 'only_H3+H2': 128, 'only_H2': 211}, {'only_H3': 64, 'other': 154, 'only_H3+H2': 142, 'only_H2': 203}, {'other': 289, 'only_H1': 305, 'only_H2': 290, 'only_H3+H2': 45, 'only_H3': 5}, {'other': 33, 'only_H3': 51, 'only_H2': 236, 'only_H3+H2': 111}, {'other': 134, 'only_H3': 65, 'only_H3+H2': 133, 'only_H2': 194}]
+  systematic cells (error >= 0.5 on every seed): ['T4:C', 'T7:A']
+  seed-dependent cells with a differing cue gate: {'T4:B': ['.'], 'T11:B': ['.', 'from']}
+  cell error rate by cue gate open / closed (cells whose template has the cue): by 0.023 (n 24) / 0.020 (n 6); from 0.369 (n 6) / 0.114 (n 24); . 0.112 (n 96) / 0.216 (n 24)
+  error rate by template (pooled seeds): T4 0.368, T5 0.044, T7 0.321, T8 0.000, T10 0.273, T11 0.057, T13 0.000, T14 0.000
+  cell error rate per seed: {'T4:A': [0.0, 0.0, 0.022, 0.0, 0.0], 'T4:B': [0.0, 0.0, 0.856, 0.0, 0.0], 'T4:C': [0.922, 0.967, 0.878, 0.989, 0.889], 'T5:A': [0.011, 0.028, 0.0, 0.006, 0.0], 'T5:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T5:C': [0.033, 0.094, 0.194, 0.178, 0.122], 'T7:A': [0.961, 0.95, 0.983, 0.939, 0.928], 'T7:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T7:C': [0.0, 0.0, 0.044, 0.0, 0.011], 'T8:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T10:A': [0.156, 0.278, 0.361, 0.017, 0.311], 'T10:B': [0.0, 0.0, 0.011, 0.0, 0.0], 'T10:C': [0.239, 0.806, 1.0, 0.267, 0.644], 'T11:A': [0.0, 0.006, 0.0, 0.0, 0.011], 'T11:B': [0.0, 0.0, 0.839, 0.0, 0.0], 'T11:C': [0.0, 0.0, 0.0, 0.0, 0.006], 'T13:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:C': [0.0, 0.0, 0.0, 0.0, 0.0]}
+  50-item confident-error sample (2872 errors pooled): {'wrong role': 28, 'candidate not in sentence': 22, 'missed role': 0, 'false fill': 0}; results/confident_errors_50_reader_basic.tsv
+
+== r14 (reader_basic_cues), seeds [0, 1, 2, 3, 4]: wrong role decisions on the new-formulation rows, by pattern (not exclusive) ==
+seed | open gates | decisions | wrong | H3 rank2+o2o | H2 systematic | H1 seed-dep.+gate | other | rank2 | rank>=3 | o2o fixes | med. margin wrong / right | err before / after verb
+  0 | . by claims from says that to | 5400 | 933 | 44 | 678 | 0 | 253 | 193 | 740 | 44 | 0.0103 / 0.2911 | 0.153 (3060) / 0.198 (2340)
+  1 | . by claims from says that to | 5400 | 993 | 28 | 705 | 0 | 277 | 198 | 795 | 28 | 0.0103 / 0.2945 | 0.160 (3060) / 0.215 (2340)
+  2 | . by claims from says that to | 5400 | 882 | 36 | 644 | 0 | 237 | 221 | 661 | 36 | 0.0115 / 0.2801 | 0.163 (3060) / 0.164 (2340)
+  3 | . by claims from says that to | 5400 | 888 | 38 | 697 | 0 | 190 | 161 | 727 | 38 | 0.0120 / 0.2853 | 0.142 (3060) / 0.194 (2340)
+  4 | . by claims from says that to | 5400 | 996 | 30 | 687 | 0 | 306 | 239 | 757 | 30 | 0.0099 / 0.2850 | 0.172 (3060) / 0.200 (2340)
+  exclusive combinations per seed: [{'only_H2': 636, 'other': 253, 'only_H3': 2, 'only_H3+H2': 42}, {'only_H2': 688, 'other': 277, 'only_H3+H2': 17, 'only_H3': 11}, {'only_H2': 609, 'other': 237, 'only_H3+H2': 35, 'only_H3': 1}, {'only_H2': 660, 'other': 190, 'only_H3+H2': 37, 'only_H3': 1}, {'only_H2': 660, 'other': 306, 'only_H3+H2': 27, 'only_H3': 3}]
+  systematic cells (error >= 0.5 on every seed): ['T10:C', 'T4:B', 'T4:C', 'T7:A']
+  of which also systematic in 1a: ['T4:C', 'T7:A']
+  seed-dependent cells with a differing cue gate: {}
+  cell error rate by cue gate open / closed (cells whose template has the cue): 
+  error rate by template (pooled seeds): T4 0.612, T5 0.114, T7 0.320, T8 0.000, T10 0.471, T11 0.221, T13 0.000, T14 0.000
+  cell error rate per seed: {'T4:A': [0.0, 0.0, 0.006, 0.0, 0.011], 'T4:B': [0.917, 0.994, 0.917, 0.944, 0.95], 'T4:C': [0.867, 0.978, 0.744, 0.967, 0.889], 'T5:A': [0.011, 0.106, 0.0, 0.006, 0.028], 'T5:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T5:C': [0.206, 0.306, 0.394, 0.344, 0.306], 'T7:A': [0.989, 0.944, 0.917, 0.961, 0.978], 'T7:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T7:C': [0.006, 0.0, 0.006, 0.0, 0.0], 'T8:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T10:A': [0.417, 0.467, 0.456, 0.1, 0.633], 'T10:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T10:C': [0.994, 1.0, 1.0, 1.0, 1.0], 'T11:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T11:B': [0.778, 0.722, 0.461, 0.611, 0.739], 'T11:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:C': [0.0, 0.0, 0.0, 0.0, 0.0]}
+  50-item confident-error sample (4692 errors pooled): {'candidate not in sentence': 38, 'wrong role': 12, 'missed role': 0, 'false fill': 0}; results/confident_errors_50_reader_basic_cues.tsv
+
+== r37 (reader_basic_cuesinit), seeds [0, 1, 2, 3, 4]: wrong role decisions on the new-formulation rows, by pattern (not exclusive) ==
+seed | open gates | decisions | wrong | H3 rank2+o2o | H2 systematic | H1 seed-dep.+gate | other | rank2 | rank>=3 | o2o fixes | med. margin wrong / right | err before / after verb
+  0 | . by from that to | 5400 | 890 | 39 | 673 | 0 | 213 | 176 | 714 | 39 | 0.0090 / 0.2909 | 0.144 (3060) / 0.192 (2340)
+  1 | . by from that to | 5400 | 905 | 22 | 706 | 0 | 196 | 170 | 735 | 22 | 0.0113 / 0.2883 | 0.147 (3060) / 0.194 (2340)
+  2 | . by from that to | 5400 | 865 | 53 | 665 | 0 | 199 | 212 | 653 | 53 | 0.0098 / 0.2781 | 0.154 (3060) / 0.169 (2340)
+  3 | . by from that to | 5400 | 831 | 42 | 686 | 0 | 145 | 145 | 686 | 42 | 0.0131 / 0.2893 | 0.124 (3060) / 0.194 (2340)
+  4 | . by from that to | 5400 | 965 | 28 | 685 | 0 | 276 | 199 | 766 | 28 | 0.0112 / 0.2810 | 0.158 (3060) / 0.205 (2340)
+  exclusive combinations per seed: [{'only_H2': 638, 'other': 213, 'only_H3+H2': 35, 'only_H3': 4}, {'only_H2': 687, 'other': 196, 'only_H3+H2': 19, 'only_H3': 3}, {'only_H2': 613, 'other': 199, 'only_H3+H2': 52, 'only_H3': 1}, {'only_H2': 644, 'other': 145, 'only_H3+H2': 42}, {'only_H2': 661, 'other': 276, 'only_H3+H2': 24, 'only_H3': 4}]
+  systematic cells (error >= 0.5 on every seed): ['T10:C', 'T4:B', 'T4:C', 'T7:A']
+  of which also systematic in 1a: ['T4:C', 'T7:A']
+  seed-dependent cells with a differing cue gate: {}
+  cell error rate by cue gate open / closed (cells whose template has the cue): 
+  error rate by template (pooled seeds): T4 0.613, T5 0.063, T7 0.323, T8 0.000, T10 0.445, T11 0.207, T13 0.000, T14 0.000
+  cell error rate per seed: {'T4:A': [0.0, 0.006, 0.0, 0.0, 0.0], 'T4:B': [0.928, 0.994, 0.928, 0.9, 0.95], 'T4:C': [0.867, 0.978, 0.767, 0.967, 0.911], 'T5:A': [0.017, 0.028, 0.0, 0.0, 0.028], 'T5:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T5:C': [0.25, 0.122, 0.194, 0.128, 0.178], 'T7:A': [0.956, 0.95, 1.0, 0.95, 0.95], 'T7:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T7:C': [0.006, 0.0, 0.022, 0.006, 0.006], 'T8:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T8:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T10:A': [0.256, 0.422, 0.417, 0.028, 0.572], 'T10:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T10:C': [0.989, 1.0, 1.0, 0.994, 0.994], 'T11:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T11:B': [0.678, 0.528, 0.478, 0.644, 0.772], 'T11:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T13:C': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:A': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:B': [0.0, 0.0, 0.0, 0.0, 0.0], 'T14:C': [0.0, 0.0, 0.0, 0.0, 0.0]}
+  50-item confident-error sample (4456 errors pooled): {'candidate not in sentence': 41, 'wrong role': 9, 'missed role': 0, 'false fill': 0}; results/confident_errors_50_reader_basic_cuesinit.tsv
+
+checklist: [x] design set only (seeds 0-4) [x] patterns written before the dumps were read [x] per-seed counts [x] no threshold set on report rows
+# post-launch guard (slots 16): MemAvailable 90 s after the start 113 GB

@@ -1,0 +1,209 @@
+# 2026-10-25T17:17:56+01:00  commit=01a4715  cmd: python3 eval/sentence_candidates.py --row 1a --seed_start 0 --seeds 5  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 109 GB; slot logs/.run.lock of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+sentence_candidates (R46): main repository e531283; row 1a (reader_basic); seeds [0, 1, 2, 3, 4]: DESIGN SET (inspected, R39); decoder only, no retraining
+expected (R46, before the run): T11 B and T4 B right by construction; T4 C, T7 A, T10 C right through one-to-one whenever the other role is right; in-world rows cannot fall; cost: random in-vocabulary sentences filled into frames more often
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 (trained labels 0.982, inner 0.982) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.92 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9964646464646465 (n 3960), unseen 1.0 (n 360)
+  seed 0: loaded logs/models/reader_basic_seed0.pt; original decoder vs stored row: EQUAL
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.49) | 1.00 (m 0.49) | 0.93 (m 0.29) | 0.92 (m 0.18) | 1.00 (m 0.42) | 1.00 (m 0.41) | 1.00 (m 0.37) | 1.00 (m 0.24)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 (trained labels 0.982, inner 0.982) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9964646464646465 (n 3960), unseen 1.0 (n 360)
+  seed 0 compiled  residual on the one-to-one frames: AUROC pooled 0.972 {'random': 0.9883819727891157, 'reference': 0.9558503401360544, 'nonce_placeholder': 0.8233105442176871}; rejected {'random': 1.0, 'reference': 0.982, 'nonce_placeholder': 0.838}; false rejection pooled 0.456
+  seed 0 explained residual on the one-to-one frames: AUROC pooled 0.968 {'random': 0.9919231292517007, 'reference': 0.9441243197278911, 'nonce_placeholder': 1.0}; rejected {'random': 0.986, 'reference': 0.882, 'nonce_placeholder': 1.0}; false rejection pooled 0.024
+  seed 0 R47 decisions (address / restriction / elimination, correct in each): seen 2880/0/0 (2880/0/0); new_ids 2880/0/0 (2880/0/0); new_form_seen_trans 1017/0/63 (991/0/45); new_form_unseen_trans 2890/90/260 (2853/87/220); new_form_role_cues_seen 1080/0/0 (1080/0/0); depth1 2880/0/0 (2880/0/0); depth2_seen 3600/0/0 (3600/0/0); depth3_unseen 4308/0/12 (4304/0/10)
+  seed 0 R47 cells, new formulations (address / restriction / elimination, correct): T10:A 158/0/22 (144/0/14); T10:B 180/0/0 (180/0/0); T10:C 139/0/41 (127/0/31); T11:A 180/0/0 (180/0/0); T11:B 180/0/0 (180/0/0); T11:C 180/0/0 (180/0/0); T13:A 360/0/0 (360/0/0); T13:B 360/0/0 (360/0/0); T13:C 360/0/0 (360/0/0); T14:A 180/0/0 (180/0/0); T14:B 180/0/0 (180/0/0); T14:C 180/0/0 (180/0/0); T4:A 143/0/37 (143/0/0); T4:B 180/0/0 (180/0/0); T4:C 51/0/129 (14/0/129); T5:A 178/0/2 (178/0/2); T5:B 180/0/0 (180/0/0); T5:C 174/5/1 (174/5/1); T7:A 7/85/88 (7/82/88); T7:B 180/0/0 (180/0/0); T7:C 177/0/3 (177/0/0); T8:A 360/0/0 (360/0/0); T8:B 360/0/0 (360/0/0); T8:C 360/0/0 (360/0/0)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 check                              1.00 (m 0.45) | 1.00 (m 0.47) | 0.82 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.39) | 1.00 (m 0.37) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 0.79 | 0.93 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.992 (trained 0.992, inner 0.992); depth3 cw 0.002
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.9936868686868687 (n 3960), unseen 1.0 (n 360)
+  seed 1: loaded logs/models/reader_basic_seed1.pt; original decoder vs stored row: EQUAL
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.49) | 1.00 (m 0.48) | 0.82 (m 0.30) | 0.92 (m 0.18) | 1.00 (m 0.44) | 1.00 (m 0.40) | 1.00 (m 0.36) | 0.99 (m 0.24)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 0.79 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.992 (trained 0.992, inner 0.992); depth3 cw 0.002
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.9936868686868687 (n 3960), unseen 1.0 (n 360)
+  seed 1 compiled  residual on the one-to-one frames: AUROC pooled 0.977 {'random': 0.987811224489796, 'reference': 0.9666156462585034, 'nonce_placeholder': 0.8648044217687075}; rejected {'random': 1.0, 'reference': 0.986, 'nonce_placeholder': 0.882}; false rejection pooled 0.418
+  seed 1 explained residual on the one-to-one frames: AUROC pooled 0.977 {'random': 0.9981231292517007, 'reference': 0.9552238095238095, 'nonce_placeholder': 1.0}; rejected {'random': 0.996, 'reference': 0.906, 'nonce_placeholder': 1.0}; false rejection pooled 0.033
+  seed 1 R47 decisions (address / restriction / elimination, correct in each): seen 2880/0/0 (2880/0/0); new_ids 2880/0/0 (2880/0/0); new_form_seen_trans 965/0/115 (812/0/42); new_form_unseen_trans 2872/107/261 (2838/107/227); new_form_role_cues_seen 1080/0/0 (1080/0/0); depth1 2880/0/0 (2880/0/0); depth2_seen 3600/0/0 (3600/0/0); depth3_unseen 4303/0/17 (4293/0/15)
+  seed 1 R47 cells, new formulations (address / restriction / elimination, correct): T10:A 107/0/73 (62/0/5); T10:B 180/0/0 (180/0/0); T10:C 138/0/42 (30/0/37); T11:A 179/0/1 (179/0/1); T11:B 180/0/0 (180/0/0); T11:C 180/0/0 (180/0/0); T13:A 360/0/0 (360/0/0); T13:B 360/0/0 (360/0/0); T13:C 360/0/0 (360/0/0); T14:A 180/0/0 (180/0/0); T14:B 180/0/0 (180/0/0); T14:C 180/0/0 (180/0/0); T4:A 148/0/32 (148/0/0); T4:B 180/0/0 (180/0/0); T4:C 38/0/142 (6/0/142); T5:A 174/0/6 (174/0/5); T5:B 180/0/0 (180/0/0); T5:C 164/0/16 (163/0/16); T7:A 10/107/63 (9/107/63); T7:B 180/0/0 (180/0/0); T7:C 179/0/1 (179/0/0); T8:A 360/0/0 (360/0/0); T8:B 360/0/0 (360/0/0); T8:C 360/0/0 (360/0/0)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 check                              1.00 (m 0.47) | 1.00 (m 0.48) | 0.77 (m 0.22) | 0.79 (m 0.16) | 1.00 (m 0.37) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 0.77 | 0.80 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 2: loaded logs/models/reader_basic_seed2.pt; original decoder vs stored row: EQUAL
+# post-launch guard (slots 22): MemAvailable 90 s after the start 100 GB
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.51) | 1.00 (m 0.50) | 0.82 (m 0.26) | 0.91 (m 0.18) | 1.00 (m 0.42) | 1.00 (m 0.43) | 1.00 (m 0.38) | 1.00 (m 0.25)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 0.78 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 2 compiled  residual on the one-to-one frames: AUROC pooled 0.972 {'random': 0.9673734693877551, 'reference': 0.9762863945578232, 'nonce_placeholder': 0.8466428571428571}; rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 0.842}; false rejection pooled 0.436
+  seed 2 explained residual on the one-to-one frames: AUROC pooled 0.978 {'random': 0.9941221088435375, 'reference': 0.9615552721088435, 'nonce_placeholder': 1.0}; rejected {'random': 0.99, 'reference': 0.922, 'nonce_placeholder': 1.0}; false rejection pooled 0.023
+  seed 2 R47 decisions (address / restriction / elimination, correct in each): seen 2880/0/0 (2880/0/0); new_ids 2880/0/0 (2880/0/0); new_form_seen_trans 842/125/113 (773/32/37); new_form_unseen_trans 2557/393/290 (2522/390/258); new_form_role_cues_seen 1080/0/0 (1080/0/0); depth1 2880/0/0 (2880/0/0); depth2_seen 3600/0/0 (3600/0/0); depth3_unseen 4319/0/1 (4319/0/1)
+  seed 2 R47 cells, new formulations (address / restriction / elimination, correct): T10:A 114/0/66 (55/0/6); T10:B 178/2/0 (178/2/0); T10:C 10/123/47 (0/30/31); T11:A 180/0/0 (180/0/0); T11:B 29/151/0 (29/151/0); T11:C 180/0/0 (180/0/0); T13:A 360/0/0 (360/0/0); T13:B 360/0/0 (360/0/0); T13:C 360/0/0 (360/0/0); T14:A 180/0/0 (180/0/0); T14:B 180/0/0 (180/0/0); T14:C 180/0/0 (180/0/0); T4:A 149/1/30 (146/1/0); T4:B 26/154/0 (26/154/0); T4:C 52/9/119 (22/6/119); T5:A 180/0/0 (180/0/0); T5:B 180/0/0 (180/0/0); T5:C 145/29/6 (145/29/6); T7:A 5/42/133 (3/42/133); T7:B 180/0/0 (180/0/0); T7:C 171/7/2 (171/7/0); T8:A 360/0/0 (360/0/0); T8:B 360/0/0 (360/0/0); T8:C 360/0/0 (360/0/0)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.95 (m 0.27) | 0.88 (m 0.17) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 (trained labels 0.986, inner 0.986) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 0.99 | 0.90 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.9972222222222222 (n 3960), unseen 1.0 (n 360)
+  seed 3: loaded logs/models/reader_basic_seed3.pt; original decoder vs stored row: EQUAL
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.49) | 1.00 (m 0.49) | 0.95 (m 0.30) | 0.92 (m 0.19) | 1.00 (m 0.42) | 1.00 (m 0.41) | 1.00 (m 0.37) | 1.00 (m 0.24)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 (trained labels 0.986, inner 0.986) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 0.99 | 0.96 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.9972222222222222 (n 3960), unseen 1.0 (n 360)
+  seed 3 compiled  residual on the one-to-one frames: AUROC pooled 0.975 {'random': 0.9863255102040817, 'reference': 0.9633377551020408, 'nonce_placeholder': 0.8435204081632653}; rejected {'random': 1.0, 'reference': 0.978, 'nonce_placeholder': 0.846}; false rejection pooled 0.447
+  seed 3 explained residual on the one-to-one frames: AUROC pooled 0.975 {'random': 0.9946853741496599, 'reference': 0.9554527210884354, 'nonce_placeholder': 1.0}; rejected {'random': 0.992, 'reference': 0.908, 'nonce_placeholder': 1.0}; false rejection pooled 0.026
+  seed 3 R47 decisions (address / restriction / elimination, correct in each): seen 2880/0/0 (2880/0/0); new_ids 2880/0/0 (2880/0/0); new_form_seen_trans 1029/0/51 (1026/0/48); new_form_unseen_trans 2860/130/250 (2792/130/182); new_form_role_cues_seen 1080/0/0 (1080/0/0); depth1 2880/0/0 (2880/0/0); depth2_seen 3600/0/0 (3600/0/0); depth3_unseen 4311/0/9 (4307/0/7)
+  seed 3 R47 cells, new formulations (address / restriction / elimination, correct): T10:A 174/0/6 (174/0/3); T10:B 180/0/0 (180/0/0); T10:C 135/0/45 (132/0/45); T11:A 180/0/0 (180/0/0); T11:B 180/0/0 (180/0/0); T11:C 180/0/0 (180/0/0); T13:A 360/0/0 (360/0/0); T13:B 360/0/0 (360/0/0); T13:C 360/0/0 (360/0/0); T14:A 180/0/0 (180/0/0); T14:B 180/0/0 (180/0/0); T14:C 180/0/0 (180/0/0); T4:A 112/0/68 (112/0/0); T4:B 180/0/0 (180/0/0); T4:C 70/0/110 (2/0/110); T5:A 179/0/1 (179/0/1); T5:B 180/0/0 (180/0/0); T5:C 148/29/3 (148/29/3); T7:A 11/101/68 (11/101/68); T7:B 180/0/0 (180/0/0); T7:C 180/0/0 (180/0/0); T8:A 360/0/0 (360/0/0); T8:B 360/0/0 (360/0/0); T8:C 360/0/0 (360/0/0)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 check                              1.00 (m 0.45) | 1.00 (m 0.46) | 0.84 (m 0.26) | 0.89 (m 0.15) | 1.00 (m 0.38) | 1.00 (m 0.38) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 0.84 | 0.92 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.993 (trained 0.993, inner 0.993); depth3 cw 0.002
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.9939393939393939 (n 3960), unseen 1.0 (n 360)
+  seed 4: loaded logs/models/reader_basic_seed4.pt; original decoder vs stored row: EQUAL
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 VSS reader 1a + sentence candidates (R46) 1.00 (m 0.48) | 1.00 (m 0.47) | 0.84 (m 0.29) | 0.92 (m 0.18) | 1.00 (m 0.42) | 1.00 (m 0.41) | 1.00 (m 0.36) | 0.99 (m 0.24)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 0.84 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.993 (trained 0.993, inner 0.993); depth3 cw 0.002
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.9939393939393939 (n 3960), unseen 1.0 (n 360)
+  seed 4 compiled  residual on the one-to-one frames: AUROC pooled 0.982 {'random': 0.9885187074829932, 'reference': 0.9764639455782312, 'nonce_placeholder': 0.8442996598639456}; rejected {'random': 1.0, 'reference': 1.0, 'nonce_placeholder': 0.866}; false rejection pooled 0.418
+  seed 4 explained residual on the one-to-one frames: AUROC pooled 0.976 {'random': 0.9942156462585034, 'reference': 0.9570758503401361, 'nonce_placeholder': 1.0}; rejected {'random': 0.986, 'reference': 0.922, 'nonce_placeholder': 1.0}; false rejection pooled 0.026
+  seed 4 R47 decisions (address / restriction / elimination, correct in each): seen 2880/0/0 (2880/0/0); new_ids 2880/0/0 (2880/0/0); new_form_seen_trans 958/0/122 (846/0/60); new_form_unseen_trans 2886/101/253 (2857/101/224); new_form_role_cues_seen 1080/0/0 (1080/0/0); depth1 2880/0/0 (2880/0/0); depth2_seen 3599/0/1 (3599/0/1); depth3_unseen 4302/0/18 (4294/0/16)
+  seed 4 R47 cells, new formulations (address / restriction / elimination, correct): T10:A 101/0/79 (69/0/24); T10:B 180/0/0 (180/0/0); T10:C 137/0/43 (57/0/36); T11:A 177/0/3 (177/0/2); T11:B 180/0/0 (180/0/0); T11:C 180/0/0 (179/0/0); T13:A 360/0/0 (360/0/0); T13:B 360/0/0 (360/0/0); T13:C 360/0/0 (360/0/0); T14:A 180/0/0 (180/0/0); T14:B 180/0/0 (180/0/0); T14:C 180/0/0 (180/0/0); T4:A 152/0/28 (152/0/0); T4:B 180/0/0 (180/0/0); T4:C 48/0/132 (20/0/132); T5:A 180/0/0 (180/0/0); T5:B 180/0/0 (180/0/0); T5:C 158/20/2 (158/20/2); T7:A 13/79/88 (13/79/88); T7:B 180/0/0 (180/0/0); T7:C 178/2/0 (178/2/0); T8:A 360/0/0 (360/0/0); T8:B 360/0/0 (360/0/0); T8:C 360/0/0 (360/0/0)
+
+== VSS reader 1a + sentence candidates (R46): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.873±0.059 [0.93 0.82 0.82 0.95 0.84] | 0.919±0.005 [0.92 0.92 0.91 0.92 0.92] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.997±0.002 [1.00 0.99 1.00 1.00 0.99]
+  FULL frame at depth 3 (UNSEEN): 0.982±0.010 [0.982 0.971 0.999 0.986 0.971]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.982±0.010 [0.982 0.971 0.999 0.986 0.971]
+  FULL at depth 3 over A B C, the inner frame (R6): 0.982±0.010 [0.982 0.971 0.999 0.986 0.971]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.990±0.007 | 1.000±0.000 | 0.989±0.006 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.996±0.002 [1.00 0.99 1.00 1.00 0.99] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 0.992±0.005 [0.99 0.99 1.00 0.99 0.99] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== second rule 'one_to_one' (R10): 1.000 | 1.000 | 0.873 | 0.975 | 1.000 | 1.000 | 1.000 | 0.998
+  'one_to_one' depth 3 full: 0.995±0.003 [0.996 0.992 1.000 0.996 0.993]
+  'one_to_one' depth 3 full_trained: 0.995±0.003 [0.996 0.992 1.000 0.996 0.993]
+  'one_to_one' depth 3 full_inner: 0.995±0.003 [0.996 0.992 1.000 0.996 0.993]
+  'one_to_one' depth 3 per role: 0.995 | 1.000 | 0.995 | 1.000 | 1.000 | 1.000
+  'one_to_one' depth 3 by filler position: all roles 0.998±0.001 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  'one_to_one' calibration new_ids                tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  'one_to_one' calibration depth3_unseen          tau 0.000: coverage 0.997 / confident-wrong 0.001 (per seed cw: 0.001 0.002 0.000 0.001 0.002)
+  'one_to_one' calibration depth3_unseen_trained  tau 0.000: coverage 0.997 / confident-wrong 0.001 (per seed cw: 0.001 0.003 0.000 0.001 0.002)
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.003 / acc. answered 0.997  (per seed cw: 0.003 0.006 0.000 0.003 0.006)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.004 / acc. answered 0.996  (per seed cw: 0.004 0.007 0.000 0.003 0.007)
+  compiled residual (one-to-one frames): AUROC pooled 0.976 ± 0.004 [0.972 0.977 0.972 0.975 0.982]; vs random 0.984 ± 0.008 [0.988 0.988 0.967 0.986 0.989]; vs reference 0.968 ± 0.008 [0.956 0.967 0.976 0.963 0.976]; vs nonce_placeholder 0.845 ± 0.013 [0.823 0.865 0.847 0.844 0.844]
+  compiled residual: rejected at 2% calibration FR random 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]; reference 0.989 ± 0.009 [0.982 0.986 1.000 0.978 1.000]; nonce_placeholder 0.855 ± 0.017 [0.838 0.882 0.842 0.846 0.866]; false rejection pooled 0.435 ± 0.015 [0.456 0.418 0.436 0.447 0.418]
+  explained residual (one-to-one frames): AUROC pooled 0.975 ± 0.003 [0.968 0.977 0.978 0.975 0.976]; vs random 0.995 ± 0.002 [0.992 0.998 0.994 0.995 0.994]; vs reference 0.955 ± 0.006 [0.944 0.955 0.962 0.955 0.957]; vs nonce_placeholder 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  explained residual: rejected at 2% calibration FR random 0.990 ± 0.004 [0.986 0.996 0.990 0.992 0.986]; reference 0.908 ± 0.015 [0.882 0.906 0.922 0.908 0.922]; nonce_placeholder 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]; false rejection pooled 0.026 ± 0.004 [0.024 0.033 0.023 0.026 0.026]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] decoder only, no retraining [x] expected effects written before the run (R46) [x] thresholds on calibration rows only (25) [x] DESIGN SET (inspected, R39)
