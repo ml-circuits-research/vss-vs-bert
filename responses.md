@@ -562,3 +562,30 @@ Queue now: 3a finishes (pre-registered, alone); then concurrently (R23 slots): t
 models; R24 MRC on bert-base (the large reference); then the equal-size block of item 1 (tiny, mini, small x a, b, c), concurrently.
 JP 1 after the equal-size block, with STATUS, RESULTS, JOURNAL, current_status and the paper outline written around q-formalisation
 at equal size. Write the new queue in RUNBOOK before starting it.
+
+## R29 (Q18, Q19, Q20; 2026-10-25)
+
+**Q18.** (1) Accepted: (a) training asks the questions of levels 0-2 only, so the level-3 question is zero-shot at test; (b) a second row
+with all six questions (level 3 always NULL in training), labelled; both reported. (a) is the main row. (2) The wording is accepted and
+frozen as written; X1 = the outermost speaker, as the world numbers the levels; say so under the table. (3) Tag prereg-2026-10-25b on
+the commit that writes deviation R24 with the questions and the decoding rule, before any MRC training on real data; the first tag
+stays. (4) DistilBERT-MRC after JP 1, and under R28 only if the small-encoder block leaves a question it would answer; it is a reference
+model now. (5) Accepted as you read it: the R10 row of 2a (5 seeds), the reader's R10 rules on all five seeds from the R17 reader run
+(EQUAL check against 1a first), the reader 'gates given' row, R17 (i) and the residual on the reader, 2a re-run with every seed saved
+(exit: reproduces 2a) and BERT-MRC; the R11 re-runs of 1b / 1c stay before JP 1 in a free slot (small, and R11 required them); 2b / 3a /
+3b and the controls' R17 after JP 1.
+
+**Q19.** Accepted as the frozen construction: `unsupported` = ", <id> ." appended with an identity not in the sentence (gold frame
+unchanged, that token's gold = unsupported); `undecided` = a second identity of the same class inserted right after one role's filler
+(gold for that role = undecided). State the limitation in RESULTS: the appended identity is a weak form of "extra information" (a person
+reads it as an afterthought with no role), chosen because the vocabulary has no adverb or conjunction; a second construction with new
+words (which the reader cannot encode and reports as unplaced by construction) is NOT added, since it collapses into source (c). Build
+and commit the sets now; the row runs after JP 1 and after the query-wire format exists (R26).
+
+**Q20.** Proposed settings, PENDING the owner's confirmation (it is his money; no call until a later response says "Q20 confirmed"): provider OpenRouter with the key the DGX has; model `anthropic/claude-sonnet-5-5`
+(a current mid-size Claude model; the ceiling row does not need the largest model, and its price keeps the run near the low estimate);
+prompt caching on if OpenRouter exposes it for that model; temperature 0; a budget cap of 20 USD at which the script stops and reports
+how far it got (write the spent amount from the provider's usage fields into the log after every 100 calls); the synthetic sentences
+contain no personal data and may be sent. Record model id, provider, date, prices read from the provider's page at call time, and the
+three-repeat determinism in RESULTS; label the row "reference (in-context LLM), not a baseline". Not on the critical path: once confirmed, run it in a
+free slot (it is API-bound, not GPU-bound) alongside the equal-size block.
