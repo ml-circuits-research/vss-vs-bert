@@ -473,3 +473,35 @@ cue feature (BERT-base, R14), the out-of-world class (R17 ii) and the three dept
 decoded as its own row. The R14 tagger row is therefore the cue-given tagger of that multi-head run, not a tagger trained alone with
 the cue feature; it is labelled so. The pre-registered rows ran alone and are unchanged. Concurrency (R22 item 3, questions Q17): at most
 two runs at once, and only after a measured gain >= 1.3x; cost rows of concurrent runs are marked "concurrent (N runs)".
+
+## Deviation R24: BERT-MRC on the basic world (declared 2026-10-25 before it runs; code models/bert_mrc.py; responses R24, R25; questions Q18)
+
+A new row family, not a change of the pre-registered tagger rows: the question-based form of the task (QA-SRL, He et al. 2015; MRC
+extraction, Li et al. 2020). bert-base-uncased before JP 1 (R25); DistilBERT-MRC after JP 1 with R19 (Q18 (4) default).
+- **Questions, frozen here** (one per role and level, verb-neutral, Q18 (2) default): A "who gives?", B "what is given?", C "to whom is
+  it given?", X1 "who says it?", X2 "who says it at level 2?", X3 "who says it at level 3?" (X1 is the outermost speaker, level 1).
+- **Input and head**: "[CLS] question [SEP] sentence [SEP]", start / end logits over the sentence's sub-tokens, NULL = the [CLS]
+  position; one forward pass per (sentence, question).
+- **Training**: the same 30k sentences as every model (rng 200+seed, depths 0-2). Row 'zs' (primary, Q18 (1a) default): the questions of
+  A, B, C, level 1 and level 2 on every sentence, NULL for a level absent at that depth; the level-3 question is never seen in training.
+  Row 'all' (Q18 (1b)): all six questions, level 3 always NULL in training. No out-of-world negatives in either row.
+- **Grid**: the pretrained grid of INSTRUCTIONS section 4 (lr {2e-5, 3e-5, 5e-5} x epochs {3, 5, 10}) on seed 0, selected by validation
+  FULL, ties to the lowest validation span loss (R24: the R10 tie-break if every point is 1.000). The seed-0 grid is about 54 epochs over
+  150,000 (sentence, question) examples, longer than run.sh's 6 h cap (R4: the cap is not raised), so it runs as one run per learning rate
+  (`--grid_only --lrs <lr>`); `--select` reads the three files and prints the choice; the five-seed run then uses that configuration
+  (seed 0 retrained at it).
+- **Decoding**: a role's answer = the candidate word (the world's candidate list, as for every model) with the highest start + end logit
+  (its first and last sub-token), or NULL if the [CLS] score is higher; margin = best minus second best over the candidates and NULL;
+  the threshold rule of rule 18 on the calibration rows, as every model. No one-to-one row for MRC (each question is answered alone; the
+  rule needs one score table per sentence over all roles, which this form does not produce in one pass).
+- **Depth**: given (the questions of the sentence's depth, as every model) and NOT given (all six questions; NULL = not given; depth = the
+  number of answered level questions), both reported; occupancy (false fillers on absent roles, missed present roles) under the second.
+- **R17 (i) in the same run**: on the frozen out-of-world sets (depth from the level openers), rejected = some question of that depth
+  answered NULL (NULL refusal) and, second, the smallest NULL gap below its 2% false-rejection point on the calibration rows; residual
+  analogue = the share of content words that answer no question.
+- **Cost rows**: CPU ms per sentence with all six questions (six passes) and the thread count, parameters, bytes at fp32 / fp16, training
+  time per seed, energy from the sidecar (for the batch when runs are concurrent).
+Interpretations, written before the run (R24, verbatim in substance): inner-frame FULL at depth 3 >= 0.9 means the question form composes
+as the tagger did (expected); the six-role FULL and the level-3 question are the new information (a question never asked in training, row
+'zs'); confident-wrong under NULL training against the reader's residual is the calibration comparison a reviewer will trust most; the cost
+ratio with the legend's size is the argument that survives whatever the accuracy says.
