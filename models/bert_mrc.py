@@ -97,6 +97,7 @@ def train(model, tok, ex, lr, epochs, batch, device, seed):
             s, e = fwd(model, ids, att, tt, spans, pairs); loss = ce(s, ys) + ce(e, ye)
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
             if ep == epochs - 1: last.append(float(loss))
+        print(f"    [progress] epoch {ep + 1}/{epochs} done, last batch loss {float(loss):.3e}", flush=True)   # additive (run.sh's 30-min log-stall watchdog)
     return float(np.mean(last))   # R35: the mean training loss of the last epoch (the convergence rule)
 
 @torch.no_grad()
@@ -152,6 +153,7 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lrs", default="2e-5,3e-5,5e-5"); ap.add_argument("--epochs", default="3,5,10"); ap.add_argument("--grid_only", action="store_true"); ap.add_argument("--select", action="store_true")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--n_val", type=int, default=2000); ap.add_argument("--save_model", action="store_true")
+    ap.add_argument("--save_all", action="store_true", help="save the model of every seed (R30 item 8: Mahalanobis and matched coverage on saved models)"); ap.add_argument("--seed_start", type=int, default=0, help="first seed (a 5-seed row split into runs under the 6 h cap); seeds seed_start..seed_start+seeds-1")
     ap.add_argument("--tag_suffix", default="", help="appended to the results / model names (R35: the sensitivity table's grid points)")
     ap.add_argument("--scratch", action="store_true", help="R28 (b): the same architecture, randomly initialised")
     ap.add_argument("--kinds", default="none", choices=["none", "given"], help="R27 item 1: a learned embedding per word kind on the sentence tokens")
@@ -166,7 +168,7 @@ if __name__ == "__main__":
     print(f"bert_mrc: {name}; main repository {mainrepo.check_pinned()}; device {a.device}; N {a.N}; seeds {1 if a.grid_only else a.seeds}; lr {lrs} x epochs {eps}; batch {a.batch}; questions {QUESTIONS}")
     print("regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; span head over the sentence, NULL on [CLS]; decoding restricted to the world's candidates; frozen splits")
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167"); rows = []; grid = []
-    for seed in (range(1) if a.grid_only else range(a.seeds)):
+    for seed in (range(1) if a.grid_only else range(a.seed_start, a.seed_start + a.seeds)):
         split = bwm.load(seed); bw = bwm.build(seed, a.D); tok = AutoTokenizer.from_pretrained(a.model)
         KINDS = sorted(set(split["cat"].values())) if a.kinds == "given" else None
         if KINDS: KIND_OF = {w_: KINDS.index(c) + 1 for w_, c in split["cat"].items()}
@@ -225,8 +227,8 @@ if __name__ == "__main__":
         print(f"  seed {seed} R17 (i): {row['r17']}; residual analogue {row['residual_analogue']}")
         print(f"  seed {seed} cost: {row['cost']['params']/1e6:.1f}M params, {row['cost']['bytes']/1e6:.0f} MB, {ms6:.1f} ms per sentence on CPU with all six questions (6 passes), {torch.get_num_threads()} threads")
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_seed{seed}.json"), "w") as f: json.dump(row, f)
-        if a.save_model and seed == 0:
-            md = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed0"); os.makedirs(md, exist_ok=True); torch.save(cpu.state_dict(), os.path.join(md, "mrc.pt")); tok.save_pretrained(md)
+        if (a.save_model and seed == 0) or a.save_all:
+            md = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed{seed}"); os.makedirs(md, exist_ok=True); torch.save(cpu.state_dict(), os.path.join(md, "mrc.pt")); tok.save_pretrained(md)
             json.dump({"model": a.model, "kinds": KINDS, "scratch": a.scratch, "train_questions": a.train_questions, "lr": best_cfg[0], "epochs": best_cfg[1]}, open(os.path.join(md, "config.json"), "w"))
         rows.append(row); del model, cpu
     if not a.grid_only:

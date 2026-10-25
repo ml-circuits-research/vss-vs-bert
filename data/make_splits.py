@@ -1,14 +1,15 @@
 """make_splits.py (run 0): write the frozen evaluation splits of the basic world for seeds 0..4 to data/basic_seed<s>.json, and test the
 tag -> frame mapping on the gold data (INSTRUCTIONS run 0 exit check: gold tags must map back to gold frames at 1.000).
-Run: python3 data/make_splits.py [--seeds 5] [--D 1024]"""
+Run: python3 data/make_splits.py [--seeds 5] [--seed_start 0] [--D 1024]"""
 import argparse, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import basic_world as bwm, mainrepo
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--D", type=int, default=1024)
+    ap.add_argument("--seed_start", type=int, default=0)   # R39: the fresh splits basic_seed5-9 without rewriting 0-4
     a = ap.parse_args(); print(f"make_splits: main repository at {mainrepo.check_pinned()}; seeds {a.seeds}; D {a.D}")
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):
         sp = bwm.make_splits(seed, a.D); n_ok = n = 0
         for axis, items in sp["axes"].items():
             for it in items:
