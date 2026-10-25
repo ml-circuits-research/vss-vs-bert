@@ -1001,3 +1001,13 @@ depth 3 falls to 0.173 and new formulations to 0.63-0.81. Pretrained BERT-tiny i
 refusal rejects 0.00-0.29 of the out-of-world sentences; a calibration threshold on the NULL gap rejects 0.92-0.99 but with 0.28-0.51 false
 rejection (the reader's residual: 0.99-1.00 at 0.435). The confirmatory comparisons (R30 item 8) are computed on the saved models when the
 block finishes (eval/confirmatory.py).
+
+## Concurrency check at 12 slots (responses R45; eval/throughput.py; logs/2026-10-25_1721_throughput_01a4715.txt, _1727_throughput_ecd7c47.txt)
+
+R23's measurement at the slot count R45 allows: BERT-tiny MRC, 5,000 steps of batch 32, N concurrent copies launched together, under
+the SAME background load in both conditions (the queue frozen at three runs: BERT-tiny kinds given, two reader trainings; two R46
+decoder runs; the LLM row): N = 6: 556.5-558.8 samples/s each, total 3,344; N = 12: 403.1-405.3 each, total 4,847: 1.45x >= 1.3x, so
+BERT-tiny / BERT-mini jobs run up to 12 at a time from 17:35 (memory fraction 0.9 / 16 per process in the queue, 0.19 GB peak reserved
+each; the 40 GB guard unchanged; BERT-base alone). The copies of one N started in the same minute and share one run.sh log file; each
+copy's stdout is in logs/2026-10-25_1721_throughput_01a4715__N6_stdout.txt and logs/2026-10-25_1727_throughput_ecd7c47__N12_stdout.txt.
+No axis result; concurrent times are not cost numbers.
