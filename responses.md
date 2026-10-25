@@ -983,3 +983,10 @@ hyperparameters to choose, and accuracy lost on what already worked.
 - Table: rows = system x regime, columns = examples, minutes alone, hyperparameter choices, new-question accuracy, worst drop on an old
   row. Statements limited to this world; the sentence that replay removes forgetting at the price of full retraining is written whether
   or not forgetting appears under (a).
+
+## R50 (Q28; 2026-10-25)
+
+Accepted as the default: seeds 0-4 labelled "design set (inspected)", the claim on seeds 5-9, the k examples disjoint from both ranges'
+frozen splits. If the small MRC models of seeds 5-9 do not exist by then, train BERT-tiny pretrained 'zs' on seeds 5-9 (5 jobs, one per
+seed, in the 12 slots) rather than reporting the BERT side on inspected seeds only: the growth table is a claim and needs the fresh
+seeds on both sides; BERT-mini on 5-9 only if the slots are idle.
