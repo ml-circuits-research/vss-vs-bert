@@ -1078,3 +1078,15 @@ model sees them.
 - **Table** (as R49 gives it): rows = system x regime; columns = examples, minutes alone, hyperparameter choices, new-question accuracy,
   worst drop on an old row. Statements limited to this world. Written now, whatever the result: **replay removes forgetting at the price
   of full retraining** (the sentence stands whether or not forgetting appears under (a)).
+
+## Amendment R51 (the owner, 2026-10-25 18:30): BERT training cut to what the result needs
+
+BERT training that still runs or starts: the BERT-mini rows already launched (finished and reported); BERT-tiny pretrained 'zs' on
+seeds 5-9 (5 jobs; the growth claim and the confirmatory comparisons on fresh seeds: eval/confirmatory.py --seed_start 5, reader 1a
+of seeds 5-9 against BERT-tiny of seeds 5-9); the growth regimes of R49 on BERT-tiny only. **Not run: R51**, each:
+- the 'all' rows of R40 (BERT-tiny and BERT-mini pretrained; declared above; the growth rows answer the same objection with examples);
+- BERT-mini kinds given, seeds 3 and 4 (seeds 0-2 had started and are reported as a partial row of 3 seeds; BERT-mini pretrained and
+  from scratch have all five seeds);
+- BERT-mini in the growth rows (R49) and in the seeds 5-9 rows;
+- consequently: the planted row and the confirmatory comparisons for BERT-mini kinds given (3 seeds only; the paired 5-seed tests need
+  5), recorded as not run.

@@ -16,7 +16,7 @@ it mean ± std, the 4-df paired t, seeds ahead and a sign test (reported, not re
 (an encoder FROM SCRATCH with inner-frame exact match >= 0.99 at depth 3, depth not given). Secondary (R48 item 5): AURC of the
 risk-coverage curve on depth 3 (depth not given; margin as confidence) for both models; AUROC of the reader's explained residual (R42)
 and of the MRC NULL gap (minus the smallest best-candidate-minus-NULL score over the six questions). Writes logs/results_confirmatory_<mrc tag>.json.
-Run: ./run.sh eval/confirmatory.py --mrc <tag>[,<tag>...] (tags as logs/models/<tag>_seed<s>/, e.g. mrc_google_bert_uncased_L-2_H-128_A-2_zs)"""
+Run: ./run.sh eval/confirmatory.py [--seed_start 0|5] --mrc <tag>[,<tag>...] (tags as logs/models/<tag>_seed<s>/, e.g. mrc_google_bert_uncased_L-2_H-128_A-2_zs)"""
 import argparse, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -46,8 +46,8 @@ def aurc(correct, conf):
 def est(items): return [dict(it, depth=decode.depth_from_openers(it["tokens"])) for it in items]
 
 # ---------- reader ----------
-def reader_seed(seed, device):
-    m, bw, split, _, how, chk = get_reader("1a", seed, device); world = bw["world"]
+def reader_seed(seed, device, row="1a"):
+    m, bw, split, _, how, chk = get_reader(row, seed, device); world = bw["world"]
     def run(items, axis="x"):
         e = est(items); p = decode.decode_frozen(m, world, {"axes": {axis: e}, "candidates": split["candidates"]}, axis); return e, p
     cal_e, cal_p = run(split["axes"]["calibration"])
@@ -150,12 +150,13 @@ def holm(ps, alpha=0.05):
     return rej
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--mrc", required=True); ap.add_argument("--device", default="cuda"); a = ap.parse_args()
-    print(f"confirmatory (R30 item 8): main repository {mainrepo.check_pinned()}; reader 1a against {a.mrc}; seeds 0-4; two-level bootstrap {B} resamples; Holm at 0.05 over the three comparisons of each pair")
-    R = [reader_seed(s, a.device) for s in SEEDS]; ms = lambda xs: f"{np.mean(xs):.3f} ± {np.std(xs):.3f} [{' '.join(f'{x:.3f}' for x in xs)}]"
+    ap = argparse.ArgumentParser(); ap.add_argument("--mrc", required=True); ap.add_argument("--device", default="cuda"); ap.add_argument("--seed_start", type=int, default=0); a = ap.parse_args()
+    SEEDS = range(a.seed_start, a.seed_start + 5); row = "1a_fresh" if a.seed_start >= 5 else "1a"; label = "CLAIM SET (fresh splits, R39 / R51)" if a.seed_start >= 5 else "seeds 0-4 (the pre-specified seeds; design set since R39)"
+    print(f"confirmatory (R30 item 8): main repository {mainrepo.check_pinned()}; reader {row} against {a.mrc}; seeds {list(SEEDS)}: {label}; two-level bootstrap {B} resamples; Holm at 0.05 over the three comparisons of each pair")
+    R = [reader_seed(s, a.device, row) for s in SEEDS]; ms = lambda xs: f"{np.mean(xs):.3f} ± {np.std(xs):.3f} [{' '.join(f'{x:.3f}' for x in xs)}]"
     print(f"  reader: exact match six (depth 3, not given) {ms([r['em'].mean() for r in R])}; coverage {ms([r['cov'] for r in R])}; confident error {ms([r['cw'].mean() for r in R])}; AUROC residual {ms([auroc(r['in'], r['out']) for r in R])}; AUROC margin {ms([auroc(r['in_margin'], r['out_margin']) for r in R])}")
     for tag in a.mrc.split(","):
-        M = [mrc_seed(tag, s, R[s]["cov"], a.device) for s in SEEDS]; res = {"mrc": tag, "comparisons": {}}
+        M = [mrc_seed(tag, s, R[i]["cov"], a.device) for i, s in enumerate(SEEDS)]; res = {"mrc": tag, "comparisons": {}}
         print(f"\n== reader 1a vs {tag} ==")
         print(f"  {tag}: exact match six {ms([m['em'].mean() for m in M])}; inner {ms([m['inner'] for m in M])}; confident error at matched coverage {ms([m['cw'].mean() for m in M])}; AUROC Mahalanobis {ms([auroc(m['in'], m['out']) for m in M])}; AUROC MSP {ms([auroc(m['in_msp'], m['out_msp']) for m in M])}")
         comps = [("i_exact_match_six_depth3_not_given", paired_item_stat("em"), lambda x: x["em"].mean()),
@@ -178,5 +179,6 @@ if __name__ == "__main__":
                             "auroc_mrc_msp": [auroc(m["in_msp"], m["out_msp"]) for m in M], "auroc_mrc_null_gap": [auroc(m["in_gap"], m["out_gap"]) for m in M],
                             "aurc_reader": [r["aurc"] for r in R], "aurc_mrc": [m["aurc"] for m in M], "coverage_reader": [r["cov"] for r in R], "coverage_mrc": [m["cov"] for m in M]}
         for k, v in res["secondary"].items(): print(f"  {k}: {ms(v)}")
-        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}.json"), "w"), indent=1)
+        res["seeds"] = list(SEEDS); res["reader_row"] = row
+        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_confirmatory_{tag}_s{a.seed_start}.json"), "w"), indent=1)
     metrics.checklist(5, "[x] comparisons pre-specified (R30 item 8) [x] thresholds on calibration rows only [x] two-level bootstrap [x] Holm")
