@@ -9,6 +9,8 @@ transcription because third_party/vsa-semantic-space is pinned at e531283 and re
 - states(): V8.states plus E(vo[side, vcat, cats, ordinal]) * valid at every token, deposited like every term (x F[ids] x mask); the
   term is added after the chain term in the reference and the relative-emitter term is not used here (rel is None), so adding it to the
   state after V8.states is the same sum.
+Variant b (responses R58, reference sop/v8_gates_vorder_ref.py from vss-demo 561cbcb): set_vorder(..., cue_cats=['to', 'by', 'from']):
+a word introduced by a role cue is CUED (no order term, not counted in the ordinals); cue_cats=() is variant a.
 Without set_vorder() the class is V8 exactly (tests: tests/test_vorder.py, EQUAL to 1a on seed 0)."""
 import numpy as np, torch
 from common import mainrepo
@@ -21,8 +23,13 @@ def verb_categories(cats): return [c for c in cats if c not in NONVERB]
 
 class V8Vorder(v8_gates.V8):
     vo = None
-    def set_vorder(self, verb_cats, nmax=4):
+    def set_vorder(self, verb_cats, nmax=4, cue_cats=()):
         K = len(self.cats); D = self.theta.shape[1]; self.nmax = nmax
+        # variant b (R58; sop/v8_gates_vorder_ref.py): a word whose PREVIOUS word's category is in cue_cats is CUED: drawn by no order term
+        # and not counted in the ordinals; cue_cats=() is variant a (R56) exactly
+        self.cue_mask = torch.zeros(K, dtype=self.dtype, device=self.device)
+        for c in cue_cats:
+            if c in self.cat_id: self.cue_mask[self.cat_id[c]] = 1
         self.verb_mask = torch.zeros(K, dtype=self.dtype, device=self.device)
         for c in verb_cats:
             if c in self.cat_id: self.verb_mask[self.cat_id[c]] = 1
@@ -40,11 +47,12 @@ class V8Vorder(v8_gates.V8):
         has_l = left_excl >= 0; has_r = right_excl <= T - 1
         side = has_l.long(); vpos = torch.where(has_l, left_excl, right_excl).clamp(0, T - 1)
         vcat = torch.gather(cats, 1, vpos)
-        cum = torch.cumsum(torch.nn.functional.one_hot(cats, K).to(torch.long) * (mask > 0).long().unsqueeze(-1), 1)   # inclusive counts
+        cued = torch.cat([torch.zeros(B, 1, dtype=torch.bool, device=dev), (self.cue_mask[cats][:, :-1] * mask[:, :-1]) > 0], 1)
+        cum = torch.cumsum(torch.nn.functional.one_hot(cats, K).to(torch.long) * ((mask > 0) & ~cued).long().unsqueeze(-1), 1)   # bare words, inclusive
         before_k = torch.gather(cum, 2, cats.unsqueeze(-1)).squeeze(-1) - 1
         at_v = torch.gather(torch.gather(cum, 1, vpos.unsqueeze(-1).expand(B, T, K)), 2, cats.unsqueeze(-1)).squeeze(-1)
         ordinal = torch.where(has_l, before_k - at_v, before_k).clamp(0, self.nmax - 1)
-        valid = (has_l | has_r) & ~isv & (mask > 0)
+        valid = (has_l | has_r) & ~isv & ~cued & (mask > 0)
         return side, vcat, ordinal, valid
 
     def states(self, cats, ids, mask):

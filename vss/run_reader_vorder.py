@@ -18,15 +18,17 @@ from vss.v8_vorder import V8Vorder, verb_categories
 
 CELLS = {"T4:C": [(4, "C")], "T7:A": [(7, "A")], "T10:A+C": [(10, "A"), (10, "C")], "T4:B+T11:B": [(4, "B"), (11, "B")]}
 
-def build(bw, seed, D, device, vorder):
+def build(bw, seed, D, device, vorder, cues=()):
     m = V8Vorder(bw["w"], D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], device, gate_init="closed"); m.set_F(bw["F"])
-    vc = m.set_vorder(verb_categories(m.cats)) if vorder else None
+    vc = m.set_vorder(verb_categories(m.cats), cue_cats=cues) if vorder else None
     return m, vc
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--check", action="store_true")
-    ap.add_argument("--device", default="cuda"); ap.add_argument("--N", type=int, default=30000); a = ap.parse_args(); D = 1024
-    fresh = a.seed_start >= 5; tag = "reader_vorder_fresh" if fresh else "reader_vorder"; name = "VSS reader 1a + verb-order route (R56)" + (" [fresh splits, seeds 5-9]" if fresh else "")
+    ap.add_argument("--device", default="cuda"); ap.add_argument("--N", type=int, default=30000)
+    ap.add_argument("--variant", default="a", choices=["a", "b"], help="b (R58): words after to / by / from are cued (no order term)"); a = ap.parse_args(); D = 1024
+    CUES = ["to", "by", "from"] if a.variant == "b" else []
+    fresh = a.seed_start >= 5; tag = ("reader_vorderb" if a.variant == "b" else "reader_vorder") + ("_fresh" if fresh else ""); name = "VSS reader 1a + verb-order route " + ("variant b (R58)" if a.variant == "b" else "(R56)") + (" [fresh splits, seeds 5-9]" if fresh else "")
     print(f"run_reader_vorder (R56): main repository {mainrepo.check_pinned()}; reference implementation vss-demo 434fa40 (transcribed in vss/v8_vorder.py); seeds {a.seed_start}-{a.seed_start + a.seeds - 1} ({'CLAIM SET' if fresh else 'DESIGN SET (inspected)'}); 1a's N / batch / lr")
     if a.check:
         s0 = a.seed_start; split = bwm.load(s0); bw = bwm.build(s0, D); m, _ = build(bw, s0, D, a.device, False)
@@ -39,8 +41,8 @@ if __name__ == "__main__":
         del m
     rows = []
     for seed in range(a.seed_start, a.seed_start + a.seeds):
-        split = bwm.load(seed); bw = bwm.build(seed, D); m, vc = build(bw, seed, D, a.device, True)
-        print(f"  seed {seed}: verb categories {vc}; vo {tuple(m.vo.shape)} = {m.vo.numel() / 1e6:.1f} M phases", flush=True)
+        split = bwm.load(seed); bw = bwm.build(seed, D); m, vc = build(bw, seed, D, a.device, True, CUES)
+        print(f"  seed {seed}: variant {a.variant}, cue categories {CUES}; verb categories {vc}; vo {tuple(m.vo.shape)} = {m.vo.numel() / 1e6:.1f} M phases", flush=True)
         t0 = time.time(); m.train(bw["world"], a.N, templates=v5.TRAIN_T, persons=bw["trP"], objects=bw["trO"], batch=8, lr=0.02, depth_train=bwm.DEPTH_TRAIN)
         if a.device == "cuda": torch.cuda.synchronize()
         print(f"  seed {seed}: trained in {time.time() - t0:.0f}s; gates OPEN {sorted(c for c, v in m.gates().items() if v > 0.5)}", flush=True)

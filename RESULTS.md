@@ -1520,3 +1520,24 @@ new-formulation row with seen transitions, which is made of in-world sentences, 
 (T7) and, with the R46 decoder, every UNSEEN-transition formulation (0.998-0.999), but the fronted 'from' of T10 (the giver before the
 verb in second position) is then encoded as the recipient on every item: the order route learns 'the second P before the verb is C'
 from the training templates, which T10 contradicts.
+
+
+## Deviation R58 (item 2): the verb-order route, variant b (declared 2026-10-25 before it runs)
+
+Reference: sop/v8_gates_vorder_ref.py (this repository, from vss-demo 561cbcb; the author's file, read only); transcribed in
+vss/v8_vorder.py as set_vorder(..., cue_cats=['to', 'by', 'from']) (cue_cats=() is variant a, unchanged). Run: vss/run_reader_vorder.py
+--variant b, the same --check (the subclass without the route EQUAL to 1a on the first seed), seeds 0-4 (design) and 5-9 (claim), tags
+reader_vorderb / reader_vorderb_fresh; evaluated as R56 (eval/sentence_candidates.py, eval/residual_explained.py, rows vorderb /
+vorderb_fresh). Checked before the run on CPU: in 'from p4 , p5 receives o1 .' p4 is cued (no order term) and p5 is the bare P with
+ordinal 0 before the verb. Variant a stays reported as rejected. R58's text, verbatim:
+
+2. **Variant b of the verb-order route**, declared row, same protocol as R56 (seeds 0-4 design, 5-9 claim, the per-cell provenance
+   table, the rejection rule unchanged). Variant a was rejected by its own rule and stays reported. Variant b: a word introduced by a
+   role cue (the previous word's category in the given cue set {to, by, from}) is CUED: it is drawn by no order term and not counted in
+   the ordinals; the order route addresses the bare fillers only, the cue chain keeps the cued ones. Expected, written before the run:
+   T7:A still by the address; T10 no longer broken (p11 after 'from' is cued, p8 is the bare first P before the verb, as the subject of
+   every receive template); T4:C unchanged (still by elimination: "P right after the verb" is bare P#1 after a give verb, never seen in
+   training); seen-transition formulations back within one seed std of 1a. If T10 is still wrong, the route is rejected again and the
+   two attempts are reported together. Code: `sop/v8_gates_vorder_ref.py` (`set_vorder(verb_cats, nmax, cue_cats)`; `vorder_index`
+   computes `cued` from `cue_mask[cats[:, :-1]]` shifted right by one, excludes cued words from the one-hot counts and from `valid`);
+   your `vss/v8_vorder.py` subclass takes `cue_cats = ['to', 'by', 'from']`.

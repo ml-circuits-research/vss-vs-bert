@@ -24,7 +24,7 @@ def auroc(inw, out):
 def est(items): return [dict(it, depth=decode.depth_from_openers(it["tokens"])) for it in items]
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--row", default="1a", choices=["1a", "1a_fresh", "vorder", "vorder_fresh"]); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--seeds", type=int, default=5)
+    ap = argparse.ArgumentParser(); ap.add_argument("--row", default="1a", choices=["1a", "1a_fresh", "vorder", "vorder_fresh", "vorderb", "vorderb_fresh"]); ap.add_argument("--seed_start", type=int, default=0); ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--device", default="cuda"); a = ap.parse_args(); seeds = list(range(a.seed_start, a.seed_start + a.seeds))
     label = "CLAIM SET (fresh splits, R39)" if a.seed_start >= 5 else "DESIGN SET (inspected, R39)"
     print(f"residual_explained (R42 / R43): main repository {mainrepo.check_pinned()}; row {a.row}; seeds {seeds}: {label}; thresholds at {FR:.0%} false rejection on the calibration rows")

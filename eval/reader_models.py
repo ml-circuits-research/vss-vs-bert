@@ -12,13 +12,13 @@ from common import basic_world as bwm, decode, report
 from vss.run_reader_basic import GIVEN_OPEN
 
 ROWS = {"1a": "reader_basic", "r14": "reader_basic_cues", "r37": "reader_basic_cuesinit", "1a_fresh": "reader_basic_fresh",
-        "vorder": "reader_vorder", "vorder_fresh": "reader_vorder_fresh"}   # vorder: R56 (vss/v8_vorder.py), loaded only   # 1a_fresh: 1a on seeds 5-9 (R39)
+        "vorder": "reader_vorder", "vorder_fresh": "reader_vorder_fresh", "vorderb": "reader_vorderb", "vorderb_fresh": "reader_vorderb_fresh"}   # vorder: R56 (vss/v8_vorder.py), loaded only   # 1a_fresh: 1a on seeds 5-9 (R39)
 
 def get_reader(row, seed, device="cuda", D=1024, N=30000, batch=8, lr=0.02):
     tag = ROWS[row]; bw = bwm.build(seed, D); path = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed{seed}.pt")
     if row.startswith("vorder"):
         from vss.v8_vorder import V8Vorder, verb_categories
-        m = V8Vorder(bw["w"], D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], device, gate_init="closed"); m.set_F(bw["F"]); m.set_vorder(verb_categories(m.cats))
+        m = V8Vorder(bw["w"], D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], device, gate_init="closed"); m.set_F(bw["F"]); m.set_vorder(verb_categories(m.cats), cue_cats=["to", "by", "from"] if row.startswith("vorderb") else ())
         assert os.path.exists(path), f"{path}: the vorder rows are trained by vss/run_reader_vorder.py"
     else:
         m = v8_gates.V8(bw["w"], D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], device, gate_init="closed"); m.set_F(bw["F"])
