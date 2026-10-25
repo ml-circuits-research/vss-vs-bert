@@ -272,3 +272,32 @@ band; both readings: (i) the frame of the unseen depth is composed except for th
 seeds and wrong on one; (ii) the unseen-depth frame is not reliably produced as a whole, and the across-seed spread (0.017-1.000) is
 itself the result. On this row the reader is at 0.982 ± 0.010 with every seed above 0.97. Calibration: at full coverage BERT has
 confident-wrong 0.039 at depth 3 (0.164 on seed 2) against the reader's 0.003.
+
+## R10 rules on the saved seed-0 models of 1a and 2a (eval/r10_saved.py; logs/2026-10-25_1205_r10_saved_767cf1f.txt)
+
+Command: `./run.sh eval/r10_saved.py --reader logs/models/reader_basic_seed0.pt --tagger logs/models/bert_bert-base-uncased_pre_wordpiece_seed0`,
+commit 767cf1f. No training: the saved seed-0 route book of 1a and the saved seed-0 tagger of 2a decode the frozen seed-0 split; the
+per-role rule recomputed from them equals the stored run on both (EQUAL). Seed 0 only (the runs saved seed 0 only), so this is one seed,
+not a row with an interval. Label: MEASURED (seed 0).
+
+| seed 0 | per-role rule: depth 3 roles / FULL six / trained / inner | one-to-one rule: depth 3 roles / FULL six / trained / inner | depth 3 by filler position, per-role rule: seen / never reached |
+|---|---|---|---|
+| reader (1a) | 0.997 / 0.982 / 0.982 / 0.982 | 0.999 / 0.996 / 0.996 / 0.996 | 0.996 (n 3,960) / 1.000 (n 360) words, training max 15 |
+| BERT-base WordPiece (2a) | 1.000 / 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 / 1.000 | 1.000 (n 4,305) / 1.000 (n 15) sub-tokens, training max 23 |
+
+New formulations under the one-to-one rule (seen / unseen transitions): reader 0.959 / 0.921 (per-role 0.934 / 0.893 on this seed),
+BERT 1.000 / 1.000 (per-role 0.994 / 1.000). Calibration of the one-to-one rule (tau on calibration rows): reader new ids coverage 1.000,
+confident-wrong 0.000; depth 3 coverage 0.997, confident-wrong 0.001. BERT new ids 1.000 / 0.000; depth 3 1.000 / 0.000.
+
+What this measurement can and cannot say about the X3 observation of 2a: the saved model is seed 0, on which X3 was already 1.00 under
+the per-role rule; seed 2 (X3 0.02) was not saved, so the one-to-one rule cannot be measured on the failing seed from saved models. It
+will be measured on every seed in the R10 rows of run 2, where the rule is computed in the run. On BERT's seed 0, only 15 depth-3 role
+decisions have their filler at a sub-token position never reached in training; on the reader's, 360 at an unreached word position,
+all correct.
+
+Correction made before this log (commit 767cf1f; the first run of the script, logs/2026-10-25_1201_r10_saved_8bf061c.txt, is kept and
+is superseded on ONE field only). For a role with a single candidate in the sentence, the one-to-one margin was "score - 0.0", which
+with a tagger's log-probabilities is log p <= 0, i.e. a certain decision counted as unsure (25% of the calibration decisions, 33% of new
+ids); the first log therefore shows the tagger's one-to-one calibration at coverage 0.740 on new ids. Fixed as the per-role rule does it
+("top1 - 0" in probability, so "score - log 1e-30" in log-probability; 0 for the reader's cosines, unchanged). Every other number of the
+first log equals this one.
