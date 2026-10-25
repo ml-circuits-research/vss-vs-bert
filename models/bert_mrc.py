@@ -185,7 +185,7 @@ if __name__ == "__main__":
                 grid.append({"lr": lr, "epochs": ep, "val_full": vfull, "val_loss": vloss, "train_s": tt})
                 if best is None or (vfull, -vloss) > (best[0], -best[1]):
                     if best is not None: del best[2]
-                    best = [vfull, vloss, model, tt]
+                    best = [vfull, vloss, model, tt]; best_cfg = (lr, ep)
                 else: del model
                 torch.cuda.empty_cache() if a.device == "cuda" else None
         if a.grid_only:
@@ -222,6 +222,7 @@ if __name__ == "__main__":
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_{tag}_seed{seed}.json"), "w") as f: json.dump(row, f)
         if a.save_model and seed == 0:
             md = os.path.join(mainrepo.ROOT, "logs", "models", f"{tag}_seed0"); os.makedirs(md, exist_ok=True); torch.save(cpu.state_dict(), os.path.join(md, "mrc.pt")); tok.save_pretrained(md)
+            json.dump({"model": a.model, "kinds": KINDS, "scratch": a.scratch, "train_questions": a.train_questions, "lr": best_cfg[0], "epochs": best_cfg[1]}, open(os.path.join(md, "config.json"), "w"))
         rows.append(row); del model, cpu
     if not a.grid_only:
         report.summarize(rows, name + " (depth given)")
