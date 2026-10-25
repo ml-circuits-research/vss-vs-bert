@@ -713,3 +713,28 @@ was selected under the same rule, in the same world, with the same validation dr
 - The BERT-tiny grid chains that had already started (pretrained, lr 5e-5 / 1e-4 / 3e-4 x 5 / 10 / 20 epochs, seed 0, grid_only) are
   kept and reported as what they are (validation numbers only; no selection is made from them).
 - The 'all six questions in training' rows (Q18 (1b)) are not in R35's block; they wait for a response.
+
+## R14: the reader with the role-cue gates given (vss/run_reader_basic.py --gates_given cues; logs/2026-10-25_1506_run_reader_basic_699a9ec.txt; exploratory)
+
+Command: `./run.sh vss/run_reader_basic.py --gates_given cues --seeds 5 --save_model`, commit 699a9ec, concurrent (six slots; training
+511-545 s per seed against 134-136 s alone in 1a: the time is not a cost number). Gates given open on every seed: to, by, from, '.',
+says, that; every other gate learned from the closed start, and the learned set is the same on all five seeds: the given six plus 'claims'.
+
+| axis (slot accuracy) | gates given (R14) | learned gates (1a) |
+|---|---|---|
+| seen / new ids | 1.000 / 1.000 | 1.000 / 1.000 |
+| new form., seen trans. | 0.764 ± 0.029 [0.76 0.76 0.76 0.82 0.73] | 0.864 ± 0.069 [0.93 0.82 0.77 0.95 0.84] |
+| new form., UNSEEN trans. | 0.789 ± 0.011 [0.79 0.78 0.81 0.79 0.78] | 0.868 ± 0.040 [0.89 0.89 0.79 0.88 0.89] |
+| role cues seen; depth 1; depth 2 | 1.000; 1.000; 1.000 | 1.000; 1.000; 1.000 |
+| depth 3 (UNSEEN) | 1.000 ± 0.000 | 0.997 ± 0.002 |
+| exact match depth 3, six roles / trained / inner | 0.999 ± 0.001 / 0.999 / 0.999 | 0.982 ± 0.010 (all three) |
+
+One-to-one rule: exact match six roles 1.000 on every seed. Calibration: new ids and depth 3 coverage 1.000, confident error 0.000.
+Cost: 3.32 M parameters, route book 13.3 MB (1.7 MB at 4 bits); CPU 16 ms per sentence measured under concurrent load. Label: MEASURED.
+
+Reading. Giving the cue gates removes the gate degeneracy (one gate set on every seed) and the seed spread on new formulations (std
+0.069 -> 0.029, 0.040 -> 0.011), and lifts the depth-3 exact match to 0.999; but it LOWERS the mean on new formulations by 0.08-0.10
+(0.764 / 0.789 against 0.864 / 0.868): the learned gate sets that differed by seed (seed 2 opened 'from', seed 1 closed 'by') were, on
+average, better for unseen forms than the given set. The R14 row is therefore not an improvement of the reader on that axis; it shows that
+the 1a spread was the degeneracy, as R14 expected, and that removing it costs accuracy on new formulations. The matching BERT row (cue
+feature) is deferred (R25 / R28). The rule ceiling (1.000 on every axis) stands above both.

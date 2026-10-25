@@ -28,3 +28,4 @@
 | real data, TOPv2: depth 2 (hops seen), FULL and nested intents | all | PLANNED | | | reader > 0.8 and encoders < 0.5 carries the constructed-world result to real data |
 | real data: size, cost, determinism | all | PLANNED | | | reported; the ratio is part of every claim |
 | real data, MASSIVE multilingual (round 2) | reader, mBERT, XLM-R | PLANNED | | | decided at judgment point 3 |
+| seen / new ids / new forms / depth 3 (basic world) | VSS reader, gates given (R14, exploratory) | MEASURED | logs/2026-10-25_1506_run_reader_basic_699a9ec.txt | new form. 0.764 ± 0.029 / 0.789 ± 0.011 (1a: 0.864 / 0.868); depth-3 exact match 0.999 ± 0.001 | removes the seed spread; lowers new formulations |
