@@ -104,3 +104,4 @@ dump_reader: main repository e531283; row 1a (reader_basic); design set seeds 0-
   seed 4: loaded logs/models/reader_basic_seed4.pt; per-role rule vs stored row: EQUAL; open gates ['.', 'by', 'that', 'to']; 1800 items, 526 wrong role decisions; written results/dump_reader_basic_seed4.json
 
 checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] design set only (seeds 0-4, R39) [x] the reported model (EQUAL check) [x] thresholds not used
+# post-launch guard (slots 8): MemAvailable 90 s after the start 107 GB
