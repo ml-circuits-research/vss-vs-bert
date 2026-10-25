@@ -460,3 +460,16 @@ number of words it tags, so it can output 3 as naturally as a count. On this wor
 a reporting verb ('says', 'claims'): the opener count equals the gold depth on every in-world axis. In the same table the reader's (and
 7b-bis's) depth is that count as a RULE on the token kinds, not a learned head; the rows report the depth accuracy and FULL at depth 3
 (six roles, trained labels, inner) with the decided depth beside the given-depth rows.
+
+## Derived rows: inherited configurations and shared heads (responses R22, 2026-10-25; RUNBOOK section 1b)
+
+On 2a and 2b every one of the 9 grid points reached validation FULL 1.000, so the pre-registered selection never chose anything but the
+first point of the grid (the tie, R10 item 3). By R22 item 1 the derived rows (R10, R11, R14, R17, R20) run without a grid, with the
+configuration selected on seed 0 by the pre-registered row of the same model and tokenizer condition; each row names the selection it
+inherits. R10 item 3 (ties to the lowest validation cross-entropy) is therefore reported, not run: on 2b it would have chosen lr 5e-5, 10
+epochs (cross-entropy 0.00000 against 0.00007 for the chosen lr 2e-5, 3 epochs); 2a ran with the tagged code, which did not print the
+cross-entropy. Deviation (R22 item 2): the add-on heads share the encoder: one run per model and seed trains the tagger together with the
+cue feature (BERT-base, R14), the out-of-world class (R17 ii) and the three depth heads (R20), losses summed with equal weights, each head
+decoded as its own row. The R14 tagger row is therefore the cue-given tagger of that multi-head run, not a tagger trained alone with
+the cue feature; it is labelled so. The pre-registered rows ran alone and are unchanged. Concurrency (R22 item 3, questions Q17): at most
+two runs at once, and only after a measured gain >= 1.3x; cost rows of concurrent runs are marked "concurrent (N runs)".

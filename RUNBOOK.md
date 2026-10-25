@@ -44,6 +44,7 @@ or `prajjwal1/bert-small`.
 | 2b | `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer whole --seeds 5` | same |
 | 3a | `./run.sh models/bert_basic.py --model <small> --tokenizer wordpiece --seeds 5` | same |
 | 3b | `./run.sh models/bert_basic.py --model <small> --tokenizer wordpiece --scratch --seeds 5` | same |
+| 3c | the derived rows below (section 1b), then JP 1 | each row's exit check in section 1b |
 | JP 1 | `python3 eval/compare.py`; RESULTS sections 0-3; STATUS rows; JOURNAL entry; current_status.md; commit; push | the reviewing session decides whether run 4 onward proceeds as written |
 | 4a | `./run.sh data/make_reference_splits.py --seeds 5` | "tag->frame mapping exact" for seeds 0-4; no diff in data/ |
 | 4b | `./run.sh vss/run_reader_reference.py --seeds 5` | depth 3 UNSEEN roles FULL within seed variance of RESULTS 10b-quinquies (0.968 ± 0.020); seen and passives near 1.000 |
@@ -59,6 +60,33 @@ or `prajjwal1/bert-small`.
 
 `<small>` is the encoder recorded before run 3. The grids are fixed in the scripts (INSTRUCTIONS section 4) and are not extended; a
 script that needs another setting is a deviation and is recorded in RESULTS.md before the run that uses it.
+
+## 1b. Derived rows before JP 1 (responses R10, R11, R14, R17, R18, R20, R22; written 2026-10-25 before the first of them)
+
+No grid for a derived row (R22 item 1): it inherits the configuration selected on seed 0 by the pre-registered row of the same model and
+tokenizer condition, passed explicitly with `--lrs` / `--epochs` (taggers) or `--lrs` / `--dropouts` (7b). Inherited configurations:
+BERT-base WordPiece (2a) lr 2e-5, 3 epochs; BERT-base whole (2b) lr 2e-5, 3 epochs; DistilBERT pretrained (3a) and from scratch (3b): the
+configurations their logs print as chosen; 7b-bis (1b) lr 3e-4, dropout 0; 7b (1c) lr 1e-3, dropout 0; the reader has no grid. R10 item 3
+(tie-break by validation cross-entropy) is therefore reported, not run: the pre-registered logs from 2b on print every grid point's
+cross-entropy, and RESULTS says which point the tie-break would have chosen. Add-on heads share the encoder (R22 item 2): one run per model
+and seed trains the tagger with the cue feature (BERT-base only, R14), the out-of-world class (R17 ii) and the three depth heads (R20 a /
+b / c), losses summed with equal weights; each head is decoded as its own row. Concurrency (R22 item 3, Q17 default): `VSA_SLOTS=2` only
+after one measurement of 1 run alone against 2 concurrent runs; below 1.3x the throughput, one slot. Cost rows of concurrent runs are
+marked "concurrent (N runs)"; per-seed training times in the cost table come from runs that ran alone (2a, 2b, 3a, 3b).
+
+| row | command | exit check |
+|---|---|---|
+| D1 (R11) | `./run.sh models/transformer_7b.py --variant cat --lrs 3e-4 --dropouts 0.0 --seeds 5 --save_model --tag_suffix _rerun` | per-role numbers within seed variance of 1b; then the one-to-one rule on the same models |
+| D2 (R11) | the same with `--variant plain --lrs 1e-3` | the same against 1c |
+| D3 (R17 i) | `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --lrs 2e-5 --epochs 3 --seeds 5 --save_all --tag_suffix _saved` | reproduces 2a (per-role, per seed) |
+| D4 (R17 i) | the same with `--tokenizer whole` | reproduces 2b |
+| D5, D6 (R17 i) | the same for DistilBERT pretrained and `--scratch`, with the 3a / 3b configurations | reproduce 3a / 3b |
+| D7-D10 (R10) | `--r10` with the inherited configuration: BERT-base WordPiece; BERT-base whole with `--whole_init pieces`; DistilBERT pretrained; DistilBERT `--scratch`, and `--scratch --pos_offset 10` | the seen row >= 0.95 |
+| D11 (R14) | `./run.sh vss/run_reader_basic.py --gates_given cues --seeds 5 --save_model` | the seen row 1.000 |
+| D12 (R14 + R17 ii + R20) | `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --lrs 2e-5 --epochs 3 --seeds 5 --save_all --cues given --oow_class --depth_head cls,reg,count` | the seen row >= 0.95 |
+| D13 (R17 ii + R20) | the same for DistilBERT pretrained with the 3a configuration, without `--cues` | the seen row >= 0.95 |
+| D14 (no training) | `./run.sh eval/r17_reader.py --seeds 5`; `--gates_given cues`; `--load transformer7b_cat_rerun`; `--load transformer7b_plain_rerun` | the retrained / loaded per-role rule equals the stored row |
+| D15 (no training) | `./run.sh eval/r17_tagger.py --tag <row>` for D3-D6, D12, D13 | prints for every seed |
 
 ## 2. After every run
 
