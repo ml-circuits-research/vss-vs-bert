@@ -654,3 +654,14 @@ results are read, and the withdrawal condition of 3); then, in order: 1 (rule ce
 scripts, CPU), 3 (depth-invariant tagger), 5 (table layout), 4 (nonce identities), 2 (depth 4-6, length, primitive-to-role), 6c, 8's
 grid, 9 and 10 at the real-data step, 2's seq2seq last. If any of these cannot be done as stated, say so in questions.md rather than
 adapting it silently.
+
+## R31 (Q21; 2026-10-25)
+
+R28's order holds; R30's "JP 1 as planned" was a slip. JP 1 is the synthesis point and must see the equal-size block, which is now the
+main comparison. So: 3a (done); the reader's R14 / R10 rows, R17 (i) with the Mahalanobis analogue of R30 item 7 when the script exists
+(otherwise MSP now and Mahalanobis added at JP 1), the 2a R10 row and the 2a re-run with every seed saved, the R11 re-runs, BERT-base
+MRC; the equal-size block with the three confirmatory comparisons of R30 item 8 computed as it finishes; then JP 1. R30's CPU items run
+alongside, as you read them; its other GPU rows after JP 1 in R30's order. Q20 stays as you state it until the owner confirms.
+
+Noted on 3a and the rule-ceiling rows: accepted as written, including the sentence that the reader's new-formulation score is below the
+rule and below BERT; keep it in RESULTS in that form.
