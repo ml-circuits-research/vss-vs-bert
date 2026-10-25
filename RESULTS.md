@@ -51,7 +51,9 @@ Exit check. The variant run is the main repository's RESULTS 7c "bundle, learned
 seen trans. 0.848 ± 0.064, UNSEEN trans. 0.870 ± 0.038, role cues 1.000, depth 1 / 2 1.000, depth 3 0.996 (A 0.986, C 0.991). Every
 column here is within one seed std of it: MET. RUNBOOK run 1a names RESULTS 6c (1.000 / 1.000) as the reference; 6c is the hand-gate
 row of the same model (7c "bundle, hand gates (fixed)", depth 3 1.000 on all six roles). Against it, new ids is met and depth 3 is 0.003
-lower (0.997 ± 0.002), the same A / C shortfall that 7c reports for the learned gates. Recorded as questions.md Q3.
+lower (0.997 ± 0.002), the same A / C shortfall that 7c reports for the learned gates. The reference was settled by responses R5
+(2026-10-25): 7c learned-closed is the reference of this run (the RUNBOOK's pointer to 6c was corrected), the gate is MET, no
+hand-gate variant is run.
 
 Reading: the reader reproduces the main repository on the frozen splits: new identities and the unseen depth 3 at 0.997-1.000 role
 accuracy, 0.982 FULL frame at depth 3, with near-zero confident-wrong at full coverage; new formulations stay at 0.86-0.87, as in 7c.

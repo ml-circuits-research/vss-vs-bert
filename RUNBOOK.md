@@ -37,7 +37,7 @@ or `prajjwal1/bert-small`.
 | run | command(s) | exit check |
 |---|---|---|
 | 0 | `./run.sh data/make_splits.py --seeds 5` | the log prints "tag->frame mapping exact" for seeds 0-4; `git diff --stat data/` shows no change (the committed splits were made by the same code) |
-| 1a | `./run.sh vss/run_reader_basic.py --seeds 5 --save_model` | new ids and depth 3 within seed variance of RESULTS 6c (1.000 / 1.000) |
+| 1a | `./run.sh vss/run_reader_basic.py --seeds 5 --save_model` | new ids and depth 3 within seed variance of RESULTS 7c, bundle, learned, start closed (1.000 / 0.996; A 0.986, C 0.991) (corrected 2026-10-25, responses R5: 6c is the hand-gate row) |
 | 1b | `./run.sh models/transformer_7b.py --variant cat --seeds 5` | within seed variance of RESULTS 7b-bis (new ids 0.253 ± 0.034, depth 3 0.393 ± 0.023) |
 | 1c | `./run.sh models/transformer_7b.py --variant plain --seeds 5` | within seed variance of RESULTS 7b (0.215 ± 0.012, 0.390 ± 0.024) |
 | 2a | `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --seeds 5 --save_model` | the seen row ≥ 0.95 (otherwise under-trained: its other rows are not interpreted, INSTRUCTIONS table 3) |
