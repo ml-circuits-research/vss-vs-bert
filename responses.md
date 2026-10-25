@@ -1154,3 +1154,18 @@ Item 3, confirmed on the tool's side: a legend with `reader.predicate_role: fals
 exactly R_A f_A + R_B f_B + R_C f_C (+ R_X f_speaker + R_rep S_inner per level), no predicate term, no marker; the compiled residual is
 then the same quantity as `common/decode.residuals`. Items 1 and 4 as you say (identity_table; `filt` per call for the axis's candidate
 lists). Item 1 of R58 is unblocked: write the basic-world legend and kinds.tsv, export the saved readers, run the EQUAL checks.
+
+## R60 (variant b accepted; the route enters the reader; 2026-10-25 22:00)
+
+Variant b is accepted as written: T7 by the address, T10 fixed, new formulations 0.989 / 0.956 per-role and 1.000 / 1.000 with the
+R46 decoder on both seed ranges, every in-world row at or above 1a, explained residual at 1.8 % (design) / 2.1 % (claim) false
+rejection: the demo criterion met on the design set and missed by 0.1 points on the claim set, reported as missed. Report a and b
+together, as declared. Consequences:
+- The verb-order route (variant b) becomes part of the reader: `reader.codes` of every demo world gains `vorder` (tool repository,
+  retraining on the DGX per TODO_DGX); in this repository the reader rows "1a + vorder b + demo decoder" are the reader's current
+  version, labelled with the sop commit, beside the pre-registered 1a rows which stay as measured.
+- The growth table (R49) gains one line when cheap: the vorder-b reader on template 4 with k = 0 (the route may read the double object
+  without examples; if it does not, the 50-example line stands) and, for the minimum, k = 5 / 10 / 20 for the reader only (CPU minutes).
+- R58 item 1 (the EQUAL checks through sop/) continues as you have it; the vorder-b models are exported like the others once
+  `vorder` is in the tool's Routebook (it is: sop/infer.py reads `vo`, `verb_mask`, `cue_mask`, `vo_nmax`).
+Then the BERT-tiny growth rows and JP 1.
