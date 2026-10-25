@@ -547,3 +547,11 @@ the residual analogue, the symmetric cost (R27 item 4). BERT-base and DistilBERT
 2b, 3a); the R10 / R14 / R17 / R20 tagger rows on them are deferred without date; the one BERT-base row still run is R24 MRC on
 bert-base-uncased, the large reference of the MRC form (5 seeds, both depth variants). The reader's R10 and R14 rows stay. The
 interpretations of R19 (a)/(b)/(c) apply to each size; R15's two readings of 3b apply to each (b) row.
+
+## Regime statements for the WikiSQL and real-data rows (responses R27 item 5, 2026-10-25; written before those runs)
+
+- Run 5 (WikiSQL): this repository's regime (the question without the table, the columns as candidates) is below the published
+  table-conditioned systems (about 0.90 selected-column accuracy with the table). The comparison is BERT against the reader in the same
+  regime, never against WikiSQL's state of the art; the same sentence goes into RESULTS 5 and the paper.
+- Runs 8-12 (SNIPS, MASSIVE, TOPv2): the reader's kinds come from skip-gram clusters on the training pool (learned, unsupervised), not
+  given; every real-data row says so (INSTRUCTIONS_REAL note of 2026-10-25).

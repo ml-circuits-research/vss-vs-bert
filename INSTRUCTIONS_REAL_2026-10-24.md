@@ -172,3 +172,9 @@ The exact commands and exit checks are in RUNBOOK.md section 4.
   limit of the reader as a product. It is measured here and not repaired here.
 - **Compute.** The tool builds targets for every training step (steps × D complex numbers). MASSIVE full at 10 epochs and D 1024 is
   about 115k × 1024 complex targets, which fits the DGX. The memory curve is in every log (rule 21).
+
+---
+
+**Note added 2026-10-25 (responses R27 item 5; the text above is unchanged).** On SNIPS, MASSIVE and TOPv2 the reader's word kinds come
+from skip-gram clusters on the training pool: they are LEARNED, unsupervised, not given as on the constructed worlds (where kinds.tsv is a
+given, rule 20). Every real-data row of RESULTS states this regime.

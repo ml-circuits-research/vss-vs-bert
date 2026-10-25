@@ -30,3 +30,10 @@
     unfairness to either side are written in questions.md at JP 1, not before.
   - before JP 1, in order (R15-R18): 2b, 3a, 3b (pre-registered); the R10 rows of runs 2-3 with the R11 1b / 1c re-runs; the R14 rows;
     the R17 rows (out-of-world sets committed after 2b, before any model sees them; Q16 open).
+
+- Threats to validity for the write-up (R12, R27, R28), each stated as an asymmetry that stays: pretraining (the question itself); the
+  worlds were built by us and the reader's configuration was developed on them (R12: selection cost 0 here, not blind to these worlds);
+  the depth is given at decoding to every model (equal; plus the depth-not-given rows); the candidates are restricted to the world's
+  vocabulary for every model (equal); a grid for BERT and none for the reader (in BERT's favour); the kinds are given to the reader (and
+  to the 'kinds given' rows of BERT-MRC, R27 item 1); on real data the reader's kinds are learned (R27 item 5); WikiSQL in a regime below
+  the table-conditioned state of the art (R27 item 5); 3b not run (R28).
