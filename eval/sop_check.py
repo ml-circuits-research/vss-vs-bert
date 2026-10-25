@@ -43,12 +43,14 @@ def write_legend():
         for w in sorted(cat): f.write(f"{w}\t{cat[w]}\n")
     L = sop_legend.Legend(os.path.join(LEG_DIR, "legend.json")); print(f"legend written: {L.sha}; errors {L.errors}; warnings {L.warnings}; {len(L.lexicon)} words; verbs {len(verbs)}")
 
-def model_folder(row, seed, m, bw, split, demo):
-    tag = ROWS[row]; d = os.path.join(mainrepo.ROOT, "logs", "models", "sop", f"{tag}_seed{seed}" + ("_demo" if demo else "")); os.makedirs(d, exist_ok=True)
+def model_folder(row, seed, m, bw, split, demo, verbs_explained=False):
+    tag = ROWS[row]; d = os.path.join(mainrepo.ROOT, "logs", "models", "sop", f"{tag}_seed{seed}" + ("_demo" if demo else "") + ("_vx" if verbs_explained else "")); os.makedirs(d, exist_ok=True)
     if getattr(m, "vo", None) is not None: m.vo_nmax = m.nmax
     sop_train.export_routebook(m, os.path.join(d, "routebook.npz"))
     for n in ("legend.json", "kinds.tsv"): shutil.copyfile(os.path.join(LEG_DIR, n), os.path.join(d, n))
-    cat = split["cat"]; content = sorted({"P", "O"} | {k for k in cat.values() if k not in NONCONTENT})
+    cat = split["cat"]; content = ["O", "P"] if verbs_explained else sorted({"P", "O"} | {k for k in cat.values() if k not in NONCONTENT})
+    # verbs_explained (2026-10-25, the R42-equivalent configuration): the verb kinds are not content kinds, so the event verb counts as
+    # explained as R42's definition says (the legend has no predicate role, so the tool never places a lemma); default: verbs are content
     schema = {"roles": {r: {"rate": 1.0, "main": "word", "kinds": ["O" if r == "B" else "P"]} for r in ("A", "B", "C")}, "role_order": ["A", "B", "C"],
               "core_roles": ["A", "B", "C"], "speaker_kinds": ["P"], "max_depth": 2, "neg_event": False, "single_event": "transfer", "content_kinds": content, "unsupported_shapes": []}
     catalog = {"seed": seed, "words": {w: {"kind": k} for w, k in sorted(cat.items())}, "schema": schema,
@@ -73,11 +75,11 @@ def tool_frame(rd, tokens, depth, filt):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--write_legend", action="store_true"); ap.add_argument("--row", default="1a"); ap.add_argument("--seed_start", type=int, default=0)
-    ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--demo", action="store_true"); ap.add_argument("--device", default="cpu"); a = ap.parse_args()
+    ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--demo", action="store_true"); ap.add_argument("--verbs_explained", action="store_true"); ap.add_argument("--device", default="cpu"); a = ap.parse_args()
     print(f"sop_check (R58 item 1): main repository {mainrepo.check_pinned()}; decoder: sop @ {SOURCE} (sop/SOURCE); row {a.row}; seeds {a.seed_start}-{a.seed_start + a.seeds - 1}; {'demo decoder (candidates sentence, residual explained, undecided_adjacent)' if a.demo else 'default decoder'}")
     if a.write_legend: write_legend(); sys.exit(0)
     for seed in range(a.seed_start, a.seed_start + a.seeds):
-        m, bw, split, preds, how, chk = get_reader(a.row, seed, a.device); rd = model_folder(a.row, seed, m, bw, split, a.demo); res = {"seed": seed, "row": a.row, "decoder": f"sop @ {SOURCE}", "demo": a.demo}
+        m, bw, split, preds, how, chk = get_reader(a.row, seed, a.device); rd = model_folder(a.row, seed, m, bw, split, a.demo, a.verbs_explained); res = {"seed": seed, "row": a.row, "decoder": f"sop @ {SOURCE}", "demo": a.demo}
         cal = split["axes"]["calibration"][:50]; worst = 0.0
         with torch.no_grad():
             for it in cal:
@@ -111,5 +113,5 @@ if __name__ == "__main__":
             res["explained"] = {"auroc_pooled": auroc(inw, np.concatenate([o["random"], o["reference"]])), "rejected": {s: float(np.mean(v > t)) for s, v in o.items()}, "false_rejection_pooled": float(np.mean(inw > t)), "threshold": t}
             refx = (r46 or {}).get("oow", {}).get("explained", {})
             print(f"  seed {seed} explained residual (tool): AUROC {res['explained']['auroc_pooled']:.4f} (R46 row {refx.get('auroc_pooled_random_reference', float('nan')):.4f}); rejected {res['explained']['rejected']} (R46 {refx.get('rejected')}); false rejection {res['explained']['false_rejection_pooled']:.4f} (R46 {refx.get('false_rejection_pooled', float('nan')):.4f})", flush=True)
-        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}_seed{seed}.json"), "w"))
+        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}{'_vx' if a.verbs_explained else ''}_seed{seed}.json"), "w"))
     print("checklist: [x] the tool (sop/) is the reference [x] the saved readers, no retraining [x] differences recorded")
