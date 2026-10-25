@@ -49,3 +49,4 @@ make_splits: main repository at e531283; seeds 5; D 1024
   seed 9: 7880 sentences, tag->frame mapping exact on all; axes {'seen': 960, 'new_ids': 960, 'new_form_seen_trans': 360, 'new_form_unseen_trans': 1080, 'new_form_role_cues_seen': 360, 'depth1': 720, 'depth2_seen': 720, 'depth3_unseen': 720, 'calibration': 2000}; vocabulary 66; written data/basic_seed9.json
 chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167 (restricted candidates, as decode_nested)
 exit check (run 0): gold tags map to gold frames at 1.000 on every seed: MET
+# post-launch guard (slots 7): MemAvailable 90 s after the start 107 GB
