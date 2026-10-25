@@ -74,6 +74,18 @@ b / c), losses summed with equal weights; each head is decoded as its own row. C
 after one measurement of 1 run alone against 2 concurrent runs; below 1.3x the throughput, one slot. Cost rows of concurrent runs are
 marked "concurrent (N runs)"; per-seed training times in the cost table come from runs that ran alone (2a, 2b, 3a, 3b).
 
+Slots (responses R23, superseding the two-slot default of Q17). Per-process peak memory, measured once (2026-10-25): the main
+repository's guard does NOT print torch.cuda.max_memory_reserved (R23 assumed it did), so the peak comes from the system: run 3a
+(DistilBERT, batch 32) 2.2 GB GPU (nvidia-smi compute apps) + 2.0 GB host RSS peak (VmHWM); BERT-base (2a / 2b) 7.3-8.6 GB of system
+memory in use during the runs against 2.4 GB idle (sysstat); the largest system-wide reading during any single run of the day is 12.7 GB.
+Peak per process used for the formula: **13 GB** (the conservative upper bound). Formula: slots = min(6, rows waiting, floor(MemAvailable
+after the current launches / 13 GB)), VSA_MEM_FRACTION = 0.9 / slots for every process, the 40 GB post-launch guard kept. With about
+112 GB available that gives 6 slots and a fraction of 0.15 (18 GB of allocator per process, against at most a few GB used). Throughput
+check at the chosen N: samples per second of N concurrent runs against one alone (the same script and configuration); keep N if the total
+is >= 1.3x, else halve N and measure again. The energy of concurrent runs is reported per batch of runs (the sidecar samples the machine),
+the per-seed cost rows only from runs that ran alone. From the first derived row on, models/bert_basic.py also prints its
+torch.cuda.max_memory_reserved per seed (an additive line), and the peak above is checked against it.
+
 | row | command | exit check |
 |---|---|---|
 | D1 (R11) | `./run.sh models/transformer_7b.py --variant cat --lrs 3e-4 --dropouts 0.0 --seeds 5 --save_model --tag_suffix _rerun` | per-role numbers within seed variance of 1b; then the one-to-one rule on the same models |
