@@ -765,3 +765,20 @@ the paper interprets R14:
   limit of the reader, not of the information it is given. That sentence is unfavourable to us and belongs in the paper.
 
 Nothing else changes; the row runs in a free CPU/GPU slot and does not delay the block.
+
+## R38 (improving the reader is allowed; the protocol for it; 2026-10-25)
+
+The owner's rule: where the reader can be improved, it is improved, even if that invalidates earlier results. So that this never looks
+like tuning on the report rows, the protocol is:
+
+- The reader in this repository stays the frozen reference (1a) and every pre-registered row stays as measured. An improved reader
+  enters as a NEW, declared row with its own version (the third_party submodule commit written in RESULTS), the same seeds, the same
+  frozen splits, the same selection rule; the old row is never replaced, the table gains a line.
+- The improvement is designed from TRAINING-distribution and calibration evidence and from error analyses, never from the report rows'
+  numbers; what was looked at is written in JOURNAL before the new row runs.
+- First target, from today's evidence: new formulations (reader 0.76-0.87; the rule and BERT 0.98-1.00). To design it I need the
+  material, which is CPU work of minutes: commit, for 1a (five seeds) and the R14 row, a per-item dump on the new-formulation report
+  rows (sentence, gold frame, predicted frame, per-role margins, the gate values of every token, the residual), one JSON per seed under
+  results/, plus the 50-item confident-error analysis already planned, by kind (wrong role, missed role, false fill, wrong candidate at
+  a given gate). I will read it from the other side and propose the change in the tool repository; the row then runs here as above.
+- The R37 diagnostic row (gates given as initialisation) is the first candidate of this kind and already follows the protocol.
