@@ -9,7 +9,9 @@
   item 3: depth not given: the depth accuracy of the opener count and FULL at depth 3 with it, beside the given-depth FULL.
 The reader is retrained per seed exactly as run 1a (vss/run_reader_basic.py, same generators); the per-role rule is compared with the
 stored 1a results (EQUAL / the largest difference printed). Writes logs/results_r17_reader_seed<s>.json.
-Run: ./run.sh eval/r17_reader.py [--seeds 5] [--gates_given none|cues]"""
+The 7b controls (R18 Q15) are read the same way from their saved R11 re-run models (--load transformer7b_<variant><suffix>): they write
+a state decoded by the world's addresses, so the same residual and the same opener-count depth apply; no training.
+Run: ./run.sh eval/r17_reader.py [--seeds 5] [--gates_given none|cues] [--load transformer7b_cat_<suffix>]"""
 import argparse, json, os, sys, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -44,21 +46,28 @@ def thresholds(cal, neg):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda")
-    ap.add_argument("--gates_given", default="none", choices=["none", "cues"]); a = ap.parse_args()
-    stored_tag = "reader_basic" if a.gates_given == "none" else "reader_basic_cues"; tag = "r17_" + stored_tag
+    ap.add_argument("--gates_given", default="none", choices=["none", "cues"]); ap.add_argument("--load", default=None, help="a saved 7b row (logs/models/<load>_seed<s>.pt)"); a = ap.parse_args()
+    stored_tag = a.load or ("reader_basic" if a.gates_given == "none" else "reader_basic_cues"); tag = "r17_" + stored_tag
     print(f"r17_reader: main repository {mainrepo.check_pinned()}; device {a.device}; seeds {a.seeds}; reader {stored_tag}; false-rejection cap {FR_MAX}")
     print("regime (rule 24): basic world; depth of every sentence estimated from the level openers (no depth given); thresholds on calibration rows only (rule 25); out-of-world sets frozen before this run")
     rows = []
     for seed in range(a.seeds):
         split = bwm.load(seed); bw = bwm.build(seed, a.D); w, world = bw["w"], bw["world"]; oow = json.load(open(oow_path(seed)))
-        m = v8_gates.V8(w, a.D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(bw["F"])
-        if a.gates_given == "cues": m.fix_gates(GIVEN_OPEN, True)
-        t0 = time.time(); m.train(world, a.N, templates=v5.TRAIN_T, persons=bw["trP"], objects=bw["trO"], batch=a.batch, lr=a.lr, depth_train=bwm.DEPTH_TRAIN)
+        t0 = time.time()
+        if a.load:
+            from v9_transformer import TModel
+            from v22_transformer_categories import TModelCat
+            ck = torch.load(os.path.join(mainrepo.ROOT, "logs", "models", f"{a.load}_seed{seed}.pt"), map_location=a.device)
+            m = (TModelCat if ck["variant"] == "cat" else TModel)(w, a.D, a.device, seed, **ck["kw"]); m.set_F(bw["F"]); m.net.load_state_dict(ck["net"])
+        else:
+            m = v8_gates.V8(w, a.D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(bw["F"])
+            if a.gates_given == "cues": m.fix_gates(GIVEN_OPEN, True)
+            m.train(world, a.N, templates=v5.TRAIN_T, persons=bw["trP"], objects=bw["trO"], batch=a.batch, lr=a.lr, depth_train=bwm.DEPTH_TRAIN)
         preds = {ax: decode.decode_frozen(m, world, split, ax) for ax in report.AXES + ["calibration"]}
         st = json.load(open(os.path.join(mainrepo.ROOT, "logs", f"results_{stored_tag}_seed{seed}.json")))
         row0 = report.evaluate("check", seed, preds, split, f"r17check_{stored_tag}")   # a prefix eval/compare.py does not read
         diff = max(abs(row0["axes"][ax]["mean_role"] - st["axes"][ax]["mean_role"]) for ax in report.AXES if st["axes"][ax])
-        print(f"  seed {seed}: retrained in {time.time() - t0:.0f}s; per-role rule vs stored {stored_tag} seed {seed}: {'EQUAL' if diff < 1e-9 else f'largest difference {diff:.4f}'}")
+        print(f"  seed {seed}: {'loaded' if a.load else 'retrained'} in {time.time() - t0:.0f}s; per-role rule vs stored {stored_tag} seed {seed}: {'EQUAL' if diff < 1e-9 else f'largest difference {diff:.4f}'}")
         res = {"seed": seed, "model": stored_tag, "check_max_diff": diff}
         # item 3: depth not given (opener count) on the in-world axes
         dacc, full_est = {}, None

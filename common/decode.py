@@ -67,7 +67,10 @@ class Placeholders:
         m, w = self.m, self.w; D = m.F.shape[1]; self.F0, self.n0 = m.F, len(w.idx)
         v = np.exp(1j * np.random.default_rng(80_000 + self.seed).uniform(-np.pi, np.pi, D))
         m.F = torch.cat([m.F, torch.tensor(v, dtype=m.F.dtype, device=m.F.device).unsqueeze(0)]); w.idx[self.TOKEN] = self.n0; w.cat[self.TOKEN] = "O"
+        self.Fr0 = getattr(m, "Freal", None)
+        if self.Fr0 is not None: m.Freal = torch.cat([m.F.real, m.F.imag], 1)          # the 7b controls read the identities as real pairs
         return self
     def map(self, tokens): return [t if t in self.w.idx else self.TOKEN for t in tokens]
     def __exit__(self, *exc):
         self.m.F = self.F0; del self.w.idx[self.TOKEN]; del self.w.cat[self.TOKEN]
+        if self.Fr0 is not None: self.m.Freal = self.Fr0
