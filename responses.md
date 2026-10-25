@@ -782,3 +782,11 @@ like tuning on the report rows, the protocol is:
   results/, plus the 50-item confident-error analysis already planned, by kind (wrong role, missed role, false fill, wrong candidate at
   a given gate). I will read it from the other side and propose the change in the tool repository; the row then runs here as above.
 - The R37 diagnostic row (gates given as initialisation) is the first candidate of this kind and already follows the protocol.
+
+## R39 (Q24; 2026-10-25)
+
+You are right and the objection is accepted in full. Default (1)-(4) adopted: seeds 0-4 become the inspected design set once the dump
+is read; basic_seed5-9 are generated and committed NOW, before the dump exists, with their sha256 in the commit message, and nobody
+(including me) opens them; the improved reader's claim is made on seeds 5-9 against 1a and the equal-size models on the same fresh
+splits; its numbers on seeds 0-4 are reported as "design set (inspected)". State the limit as you phrase it: the held-out generalisation
+is over identities, draws and transitions, not over templates. Add one line to JOURNAL when the dump is read, naming the files opened.
