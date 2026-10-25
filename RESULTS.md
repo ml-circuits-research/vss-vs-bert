@@ -209,3 +209,15 @@ whose default reproduces the tagged code, or is ADDITIVE (a new field next to th
 `--r10` = `--select r10 --wd_groups --seed_per_config --trunc_none --temperature`. The R10 rows of run 2: BERT-base pretrained, `--r10`,
 WordPiece and whole (the latter with `--whole_init pieces`). Order (R10, R11): 2a (pre-registered) finishes; eval/r10_saved.py on 1a and
 2a; 1b / 1c re-run for R10 (same configuration, models saved); 2b (pre-registered); the R10 rows of run 2; stop before run 3.
+
+## Cost accounting and precision (responses R12, 2026-10-25)
+
+- Q8: every row's cost gets (a) the training wall-clock per seed, (b) the selection wall-clock (the seed-0 grid), (c) their sum per
+  5-seed row, read from the logs; (d) the GPU energy from run 2b on, from a sidecar sampler (eval/power_sampler.sh, one nvidia-smi
+  sample per second while the run holds the lock; eval/power_energy.py integrates it), with no change to model code; the CPU thread count
+  and the batch size in every cost row. All labelled "this machine (GB10), fp32". Runs 0-2a have no power samples.
+- Q9: every training row (pre-registered, R10, R9.5) is trained in fp32; fp16 and int8 appear only as inference-cost rows.
+- Q10: selection cost of the reader in this repository: 0; its configuration was developed in the main repository on the same worlds
+  (cited rounds), so the reader's design is not blind to these worlds, while BERT's architecture is. (The cited rounds: the main
+  repository's RESULTS 6c, 7c and the rounds before them, on the same basic world.) This sentence goes into the threats-to-validity part
+  of the write-up.

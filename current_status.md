@@ -18,4 +18,9 @@
     fixed seed, the key in a separate file committed after the classification), its own commit.
   - real-data round (after JP 2): run 8.0 first, the reproduction of published BERT numbers on SNIPS and MASSIVE en-US with standard
     splits and metrics (R8), written into INSTRUCTIONS_REAL in its own commit when the round starts.
-  - the independent review of the BERT code (R9.6) arrives in responses.md; a finding that changes a number is a stated deviation.
+  - the independent review of the BERT code (R9.6) arrived as R10: deviations declared in RESULTS, R10 rows beside the pre-registered ones.
+  - JP 1: seeds 5-9 (R13) for every model of runs 1-3, same selected configuration, splits data/basic_seed5-9.json committed before any
+    model sees them; never seed selection.
+  - write-up, threats to validity (R12, Q10): "selection cost of the reader in this repository: 0; its configuration was developed in the
+    main repository on the same worlds (cited rounds), so the reader's design is not blind to these worlds, while BERT's architecture is".
+  - cost rows (R12, Q8): training and selection wall-clock from the logs for every row, GPU energy from 2b on, thread count and batch.
