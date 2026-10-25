@@ -818,3 +818,12 @@ new formulations by 0.01-0.03, within the seed spread.
   cache read 0.10 USD per M tokens, unchanged) and the cap lowered to 19.35 USD so that the two runs together stay within 20 USD. Note:
   the stopped run's log shows 819 cache-read tokens on every call, i.e. the prompt cache DID engage, against R33's expectation; the
   restarted run's log is read for the same fields.
+
+## The 'all six questions' MRC rows of the equal-size block (responses R40, declared 2026-10-25 before they run)
+
+BERT-tiny and BERT-mini PRETRAINED only, `--train_questions all` (all six questions in training, the level-3 question always NULL),
+the fixed configuration (lr 1e-4, 5 epochs, batch 32), 5 seeds (BERT-mini split as the zs rows), after the 'zs' block; labelled
+'all'. Sentence for the write-up (R40): a deployed MRC reader is trained with every question of its legend, so 'all' shows how it
+behaves when a question that was always NULL in training becomes answerable (the realistic form of "not given" turning into
+"given"); 'zs' is the fair capacity test. If 'all' refuses level 3 on every seed, that is the expected result and is written as such,
+not as a failure of BERT.
