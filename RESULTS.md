@@ -839,3 +839,32 @@ new formulations (0.864 / 0.868) with R14's seed spread (std about 0.03 / 0.01),
 not from the set, and the demo default should be "given as initialisation"; if it does not, the loss comes from the set, and the learned
 per-seed gate sets that beat it are listed here. Also found while writing it: R14's seed-0 model had been saved as
 logs/models/{tag}_seed0.pt (a missing f-string); renamed to reader_basic_cues_seed0.pt (its logits: the six given gates at 8.0, as R14).
+
+## Deviation R42 / R43: the explained-tokens residual (declared 2026-10-25 before it runs; code 6405a61)
+
+A second rejection score for the reader, beside the compiled residual of every table (which stays). Definition (R42; reference
+implementation vss-demo commit a1f4564, tool/sop/infer.py residual_explained, parity 55/55 there; vss-demo is NOT a submodule of this
+repository, so common/decode.residuals_explained transcribes R42's definition): explained = tokens of a non-content kind (cue words,
+openers, COP, punctuation) U fillers of the decoded roles (speakers included) U the event lemma; rec' = the reader's own state of the same
+sentence restricted to the explained tokens (addresses from the full sentence, identities of unexplained tokens zeroed); residual' =
+||S/|S| - a rec'/|rec'||, a = max(0, Re<rec', S>); 1.0 when nothing is explained or a role of the depth is not decoded; the nonce
+placeholder is never explained. Stated adaptation: the basic-world decoder emits no lemma, so the event lemma is the first token of an
+event-verb kind (one per in-world sentence). Check before any row: 0 (max 2e-15) on 200 calibration sentences with the gold frame, > 0
+(min 0.37) when A is replaced by an absent identity.
+Rationale as corrected by R43: it scores only what the decoded frame leaves unexplained and is insensitive to form novelty by
+construction (0 whenever every token is placed): the score for the query wire of kind `unknown`; the compiled residual is the "form is
+unfamiliar" signal. Both are reported. **Expected failure mode, written now (R43): random in-vocabulary sentences that the decoder still
+fills into a frame leave few tokens unexplained and may pass.**
+Rows: `eval/residual_explained.py --row 1a --seed_start 0` on the saved 1a readers (design set, inspected) and `--row 1a_fresh
+--seed_start 5` on 1a trained on the fresh splits (the CLAIM, R39): AUROC in-world report rows vs out-of-world (random + reference pooled;
+per source; nonce as placeholder apart) and the 2% calibration-threshold table, both residuals. The AUROC on seeds 5-9 decides which
+score separates out-of-world better.
+
+## Fresh seeds 5-9 for the reader 1a and its out-of-world sets (declared 2026-10-25; responses R13, R39, R43)
+
+The claim of R42 / R43 (and later of any improved reader, R38 / R39) is made on seeds 5-9. That needs, with the SAME code and fixed
+seeds as seeds 0-4: data/reference_seed5-9.json (`data/make_reference_splits.py --seed_start 5`, the reference world, the source (b) of
+the out-of-world sets) and data/oow_seed5-9.json (`data/make_oow_sets.py --seed_start 5`), both generated and committed before any model
+sees them (sha256 in the commit message), and the reader 1a trained on the fresh splits (`vss/run_reader_basic.py --seed_start 5 --seeds 5
+--save_all`, named "VSS reader (reference) [fresh splits, seeds 5-9]", tag reader_basic_fresh, never pooled with seeds 0-4; R13's seeds
+5-9 for the reader). Nobody opens their items.
