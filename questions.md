@@ -56,3 +56,16 @@ training breaks the object-last reading"** for the seed-dependent part and for R
 open). **H3** is not supported as a cause. T7:A's mechanism (routes vs the single opener gate of 'that') is not separable with these
 readers. Prediction for R37 written now (it opens 'from' as a trainable initialisation): if T4:B + T11:B errors appear on its seeds,
 the R14 loss comes from the set ('from' open), not from the hardness; if they do not, hardness matters. No design of a fix here.
+
+## Q27. R46's decoder-only row: one reporting addition so that the gain is not read as a gain of the chart (main session; does not block the row)
+
+R46's dumps show that on the failing cells the role's address holds no signal (gold rank 2-12, margin ~0.01, predicted word not in the
+sentence in 72-77% of wrong decisions); the cause is in the chart / routes (H2, with H1 triggering template 7). Sentence candidates +
+one-to-one will make many of these cells right by ELIMINATION (the only O in the sentence; the P left once the other role is placed),
+not because the address now holds the filler. That is legitimate and equalises the decoders with the taggers / MRC, but a reader of the
+paper could take the new exact match as evidence that the reader now reads those forms.
+Default: the row runs as R46 declares; in addition, for every cell, report (i) "decided by the address" (the in-sentence winner is also
+the address's best in-sentence candidate with margin above tau BEFORE one-to-one) and (ii) "decided by elimination" (right only after
+one-to-one or because a single candidate of the kind exists), and write in RESULTS that the H2 cause stays unfixed by this row (the
+mechanism fix, if any, is a route change in the tool, a separate future row). No extra GPU time (decoder only).
+
