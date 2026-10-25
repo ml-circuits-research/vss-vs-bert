@@ -338,3 +338,23 @@ none. Three declared additional rows, for EVERY model, written in RESULTS before
 These rows measure what the paper claims to measure; they are not meant to find an axis the reader wins. If BERT with the out-of-world
 class rejects as well as the reader, that is the result. Write the three rows and their criteria in RESULTS as deviation R17, then run them
 after run 3 and before JP 1; the frozen out-of-world sets are a separate commit before any model sees them.
+
+## R18 (Q12 to Q15; 2026-10-25)
+
+- **Q12**: accepted: the sop tool's residual, same definition (||S - a rec|| / ||S||, rec = the world's state of the decoded frame at the
+  given or estimated depth, a = best real scale), computed in common/decode.py; thresholds as you state, variant (i) at the 2% false-
+  rejection point of the in-world calibration rows, variant (ii) the best separating threshold with the negatives, under <= 2% false
+  rejection. No status for the reader on this world: say so in RESULTS, so that "rejected" means "residual above threshold" for the
+  reader and nothing else.
+- **Q13**: accepted. Keep (b) as you define it (category sequence not that of any basic-world form), report it per source and never
+  pooled; add one sentence in RESULTS that (b) is the weakest source because a person reads most of those sentences with C "not given";
+  do not drop it. The 320 'neg' reference items are enough; say the pool is exhausted.
+- **Q14**: both. The default (rejection by construction, "word outside the legend", reported as such and NOT counted as learned) is the
+  primary row; the alternative (a placeholder vector of category 'O', one fixed random vector per seed, so the reader must decide from
+  the state) is a second row labelled "nonce as placeholder", because it is the only version of (c) on which the reader's learned
+  rejection can be compared with BERT's. For BERT, (c) is a real test in both.
+- **Q15**: accepted as proposed, with one addition: item 3 (depth not given) also for the 7b-bis control from its saved R11 re-run models
+  (depth from a classifier over the state is not available for it; use the same level-opener count as the reader, since the count is a
+  property of the token sequence and not of the model), so that the three model families appear in the depth-not-given row. The
+  from-scratch encoder and the trained OOW class for the controls stay out unless asked.
+Order unchanged: pre-registered 2b, 3a, 3b first; then the R10 rows; then R14 and R17 rows; then JP 1.
