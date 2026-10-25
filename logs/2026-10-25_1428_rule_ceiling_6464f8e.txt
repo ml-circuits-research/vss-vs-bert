@@ -1,0 +1,30 @@
+# 2026-10-25T14:28:21+01:00  commit=6464f8e  cmd: python3 eval/rule_ceiling.py --seeds 5  (guard: mem fraction 0.25, min available 16 GB, max 6 h; MemAvailable at start 112 GB; slot logs/.run.lock.2 of 2)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 25% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rule_ceiling: main repository e531283; seeds 5; models: rule (given kinds + function words), positional, window LR; CPU
+regime (rule 24): basic world, frozen splits; the rule is written from the legend's 16 forms (a ceiling of knowing the grammar); positional and window LR trained on the seed's 30k training sentences
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 0 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/rule_ceiling.py", line 104, in <module>
+    preds = {ax: [fn(it, ax) for it in split["axes"][ax]] for ax in report.AXES + ["calibration"]}
+                  ^^^^^^^^^^
+TypeError: Positional.predict() missing 1 required positional argument: 'axis'
+# post-launch guard (slots 2): MemAvailable 90 s after the start 111 GB

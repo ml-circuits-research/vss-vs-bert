@@ -1,0 +1,250 @@
+# 2026-10-25T14:30:09+01:00  commit=503cf7c  cmd: python3 eval/rule_ceiling.py --seeds 5  (guard: mem fraction 0.25, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock of 2)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 25% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rule_ceiling: main repository e531283; seeds 5; models: rule (given kinds + function words), positional, window LR; CPU
+regime (rule 24): basic world, frozen splits; the rule is written from the legend's 16 forms (a ceiling of knowing the grammar); positional and window LR trained on the seed's 30k training sentences
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 0 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 ceiling: positional                0.79 (m 0.61) | 0.79 (m 0.61) | 0.67 (m 0.67) | 0.61 (m 0.61) | 0.83 (m 0.67) | 0.88 (m 0.73) | 0.88 (m 0.81) | 0.40 (m 0.17)  || depth 3 per role: A 0.00 B 1.00 C 0.12 X1 1.00 X2 0.25 X3 0.00  || FULL depth3 0.000 (trained labels 0.000, inner 0.000) | tau 0.342: new ids cov 0.58 cw 0.000; depth3 cov 0.17 cw 0.021
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.4090909090909091 (n 3960), unseen 0.25 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 ceiling: window_lr                 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 1.00 (m 0.83) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 0.75 (m 0.66)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.49 X3 0.00  || FULL depth3 0.000 (trained labels 0.493, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.251
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.726010101010101 (n 3960), unseen 1.0 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 1 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 ceiling: positional                0.75 (m 0.61) | 0.75 (m 0.61) | 0.67 (m 0.67) | 0.61 (m 0.61) | 0.83 (m 0.67) | 0.88 (m 0.73) | 0.88 (m 0.81) | 0.40 (m 0.17)  || depth 3 per role: A 0.00 B 1.00 C 0.12 X1 1.00 X2 0.25 X3 0.00  || FULL depth3 0.000 (trained labels 0.000, inner 0.000) | tau 0.342: new ids cov 0.58 cw 0.000; depth3 cov 0.17 cw 0.021
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.4090909090909091 (n 3960), unseen 0.25 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 ceiling: window_lr                 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 1.00 (m 0.83) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 0.75 (m 0.66)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.51 X3 0.00  || FULL depth3 0.000 (trained labels 0.511, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.248
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.7292929292929293 (n 3960), unseen 1.0 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 2 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 ceiling: positional                0.75 (m 0.61) | 0.75 (m 0.61) | 0.67 (m 0.67) | 0.61 (m 0.61) | 0.83 (m 0.67) | 0.84 (m 0.73) | 0.90 (m 0.81) | 0.40 (m 0.17)  || depth 3 per role: A 0.00 B 1.00 C 0.12 X1 1.00 X2 0.25 X3 0.00  || FULL depth3 0.000 (trained labels 0.000, inner 0.000) | tau 0.370: new ids cov 0.58 cw 0.000; depth3 cov 0.17 cw 0.021
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.4090909090909091 (n 3960), unseen 0.25 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 ceiling: window_lr                 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.98) | 1.00 (m 0.83) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 0.75 (m 0.66)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.51 X3 0.00  || FULL depth3 0.000 (trained labels 0.511, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.248
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 0.7292929292929293 (n 3960), unseen 1.0 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 3 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 ceiling: positional                0.75 (m 0.62) | 0.75 (m 0.62) | 0.67 (m 0.67) | 0.61 (m 0.61) | 0.83 (m 0.67) | 0.84 (m 0.73) | 0.88 (m 0.81) | 0.40 (m 0.17)  || depth 3 per role: A 0.00 B 1.00 C 0.12 X1 1.00 X2 0.25 X3 0.00  || FULL depth3 0.000 (trained labels 0.000, inner 0.000) | tau 0.350: new ids cov 0.58 cw 0.000; depth3 cov 0.17 cw 0.021
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.4090909090909091 (n 3960), unseen 0.25 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 ceiling: window_lr                 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.98) | 1.00 (m 0.83) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 0.75 (m 0.66)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.52 X3 0.00  || FULL depth3 0.000 (trained labels 0.518, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.247
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.7305555555555555 (n 3960), unseen 1.0 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 ceiling: rule                      1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 4 rule, depth NOT given: exact match per axis {'seen': 1.0, 'new_ids': 1.0, 'new_form_seen_trans': 1.0, 'new_form_unseen_trans': 1.0, 'new_form_role_cues_seen': 1.0, 'depth1': 1.0, 'depth2_seen': 1.0, 'depth3_unseen': 1.0}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 ceiling: positional                0.79 (m 0.62) | 0.79 (m 0.62) | 0.67 (m 0.67) | 0.61 (m 0.61) | 0.83 (m 0.67) | 0.81 (m 0.73) | 0.88 (m 0.81) | 0.40 (m 0.17)  || depth 3 per role: A 0.00 B 1.00 C 0.12 X1 1.00 X2 0.25 X3 0.00  || FULL depth3 0.000 (trained labels 0.000, inner 0.000) | tau 0.332: new ids cov 0.67 cw 0.042; depth3 cov 0.17 cw 0.021
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.4090909090909091 (n 3960), unseen 0.25 (n 360)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 ceiling: window_lr                 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 1.00 (m 0.83) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.99) | 0.75 (m 0.66)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.47 X3 0.00  || FULL depth3 0.000 (trained labels 0.472, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.255
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.7222222222222222 (n 3960), unseen 1.0 (n 360)
+
+== ceiling: rule: MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  FULL frame at depth 3 (UNSEEN): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+
+== ceiling: positional: MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  0.767±0.020 [0.79 0.75 0.75 0.75 0.79] | 0.767±0.020 [0.79 0.75 0.75 0.75 0.79] | 0.667±0.000 [0.67 0.67 0.67 0.67 0.67] | 0.611±0.000 [0.61 0.61 0.61 0.61 0.61] | 0.833±0.000 [0.83 0.83 0.83 0.83 0.83] | 0.850±0.023 [0.88 0.88 0.84 0.84 0.81] | 0.880±0.010 [0.88 0.88 0.90 0.88 0.88] | 0.396±0.000 [0.40 0.40 0.40 0.40 0.40]
+  FULL frame at depth 3 (UNSEEN): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.000±0.000 | 1.000±0.000 | 0.125±0.000 | 1.000±0.000 | 0.250±0.000 | 0.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.409±0.000 [0.41 0.41 0.41 0.41 0.41] / 0.250±0.000 [0.25 0.25 0.25 0.25 0.25]; inner A B C 0.400±0.000 [0.40 0.40 0.40 0.40 0.40] / 0.250±0.000 [0.25 0.25 0.25 0.25 0.25]
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.347: coverage 0.600 / confident-wrong 0.008 / acc. answered 0.988  (per seed cw: 0.000 0.000 0.000 0.000 0.042)
+  depth3_unseen  tau 0.347: coverage 0.167 / confident-wrong 0.021 / acc. answered 0.875  (per seed cw: 0.021 0.021 0.021 0.021 0.021)
+  depth3_unseen_trained tau 0.347: coverage 0.200 / confident-wrong 0.025 / acc. answered 0.875  (per seed cw: 0.025 0.025 0.025 0.025 0.025)
+
+== ceiling: window_lr: MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.750±0.003 [0.75 0.75 0.75 0.75 0.75]
+  FULL frame at depth 3 (UNSEEN): 0.000±0.000 [0.000 0.000 0.000 0.000 0.000]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.501±0.017 [0.493 0.511 0.511 0.518 0.472]
+  FULL at depth 3 over A B C, the inner frame (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.501±0.017 | 0.000±0.000
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.727±0.003 [0.73 0.73 0.73 0.73 0.72] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.250 / acc. answered 0.750  (per seed cw: 0.251 0.248 0.248 0.247 0.255)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.100 / acc. answered 0.900  (per seed cw: 0.101 0.098 0.098 0.096 0.106)
+  rule, depth NOT given, exact match (six roles) seen: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) new_ids: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) new_form_seen_trans: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) new_form_unseen_trans: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) new_form_role_cues_seen: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) depth1: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) depth2_seen: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+  rule, depth NOT given, exact match (six roles) depth3_unseen: 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] no GPU [x] the rule written from the legend's forms, never tuned on report rows
+# post-launch guard (slots 2): MemAvailable 90 s after the start 115 GB

@@ -587,3 +587,26 @@ defined as their sum. Earlier sections keep their words; their numbers mean the 
 0, 1a-1c, 2a, 2b, 3a; 3b not run) and the declared rows, each with its R number and the date of its declaration (R6, R10, R14, R17,
 R19, R20, R22, R24 (tag prereg-2026-10-25b), R26, R27, R28, R30, all 2026-10-25). Nothing is removed. The headline table is the one with the
 depth NOT given / all questions, for every model; the given-depth rows beside it, labelled (R30 item 5).
+
+## Rule ceiling, positional and window-LR rows (responses R30 item 1; eval/rule_ceiling.py; logs/2026-10-25_1430_rule_ceiling_503cf7c.txt)
+
+Command: `VSA_SLOTS=2 ./run.sh eval/rule_ceiling.py --seeds 5`, commit 503cf7c, CPU, 5 seeds, the frozen splits. (The first run,
+logs/2026-10-25_1428_rule_ceiling_6464f8e.txt, stopped with a TypeError after the rule's seed 0; kept.) The rule was written from the
+legend's 16 forms and checked on training sentences only (exact match 1.000 on 3,000 of seed 0's) before any report row was scored.
+
+| row (slot accuracy) | seen | new ids | new form. seen / UNSEEN trans. | role cues | depth 1 / 2 | depth 3 | exact match depth 3: six / trained / inner |
+|---|---|---|---|---|---|---|---|
+| rule (given kinds + says / claims / that / to / by / from) | 1.000 | 1.000 | 1.000 / 1.000 | 1.000 | 1.000 / 1.000 | 1.000 | 1.000 / 1.000 / 1.000 |
+| positional (training frequency of length x position) | 0.767 ± 0.020 | 0.767 ± 0.020 | 0.667 / 0.611 | 0.833 | 0.850 / 0.880 | 0.39 | 0.000 / 0.000 / 0.000 |
+| window LR (previous word, kind, next word) | 1.000 | 1.000 | 1.000 / 1.000 | 1.000 | 1.000 / 1.000 | 0.75 | 0.000 / 0.501 ± 0.017 / 1.000 |
+
+Per seed: the rule is 1.000 on every axis and seed, also with the depth NOT given (its own speaker count; exact match of all six roles
+1.000 on every axis); the positional row's per-seed lists are in the log (seen 0.79 0.75 0.75 0.75 0.79); window LR at depth 3: X2
+0.47-0.52, X3 0.00 on every seed. Label: MEASURED.
+
+Consequence, written as R30 item 1 asks. On every axis of the basic world a hand-written rule over the given kinds and six function words
+reaches exact match 1.000, with or without the depth given, and a logistic regression over a three-word window reaches 1.000 on every
+axis except depth 3 (inner frame 1.000 there too). These axes therefore measure whether a model learned this rule, not composition. The
+reader's 0.86-0.87 on new formulations is BELOW the rule (and below BERT-base, 0.98-1.00). The composition evidence must come from axes
+where the rule fails or does not apply (depth not given beyond the training depths, out-of-world sets, the planted sets) and from the
+equal-size block; the depth-3 rows of the taggers measure the frame exact match with the levels as labels.
