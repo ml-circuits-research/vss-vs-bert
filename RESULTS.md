@@ -1011,3 +1011,21 @@ BERT-tiny / BERT-mini jobs run up to 12 at a time from 17:35 (memory fraction 0.
 each; the 40 GB guard unchanged; BERT-base alone). The copies of one N started in the same minute and share one run.sh log file; each
 copy's stdout is in logs/2026-10-25_1721_throughput_01a4715__N6_stdout.txt and logs/2026-10-25_1727_throughput_ecd7c47__N12_stdout.txt.
 No axis result; concurrent times are not cost numbers.
+
+## Stopping rule R48 (declared by the owner, 2026-10-25 17:50): the declared set and the rows NOT RUN
+
+The experiment stops when this set is measured, whatever the numbers say: (1) BERT-mini pretrained / from scratch / kinds given and
+BERT-tiny kinds given; (2) the 'all' rows of BERT-tiny and BERT-mini pretrained (R40); (3) the reader rows R37, R46 (three decision
+categories) and R42 / R43, each with its claim on seeds 5-9 and the 1a readers of seeds 5-9 (R37 is also trained on seeds 5-9 for its
+claim); (4) the planted-sets row (R26 / Q19) for the reader and the small MRC models, 'undecided' and 'unsupported' as query emission;
+(5) the three confirmatory comparisons (R30 item 8), reader vs each small model, risk-coverage and AURC, AUROC in- vs out-of-world for
+every score the saved models allow, the cost table at equal precision (R30 item 10); (6) the LLM reference. Then JP 1, the synthesis.
+
+**Not run: the declared set is complete (R48).** Each of these is recorded here with that reason and was removed from the queue at 17:56:
+- BERT-base MRC (R24 / R34 (B)): the owner avoids training a 110 M model; the claim is stated at the reader's size; BERT-base stays as
+  the measured tagger reference (2a, 2b, the R10 row).
+- BERT-small MRC (R28 / R36), the BERT-mini sensitivity grid (R35), the 2a re-run with every seed saved and R17 (i) on it.
+- R30 items 2 (depth 4-6, length control, primitive-to-role, seq2seq), 4 (nonce identities), 6c (7b with a tagging head).
+- The deferred BERT-base tagger rows (R10 rows of 2b, 3a, 3b; R14 cue feature; R17 (ii); R20 depth heads), seeds 5-9 for the controls.
+- The real-data round and the multilingual round (runs 4-12 of RUNBOOK): a later paper with its own pre-registration.
+- The address-level fix of H2 (R47): tool-repository work after the stop.
