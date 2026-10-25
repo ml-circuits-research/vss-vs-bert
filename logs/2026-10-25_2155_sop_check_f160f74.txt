@@ -1,0 +1,6 @@
+# 2026-10-25T21:55:11+01:00  commit=f160f74  cmd: python3 eval/sop_check.py --write_legend  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 113 GB; slot logs/.run.lock.2 of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+sop_check (R58 item 1): main repository e531283; decoder: sop @ 4a92afd (sop/SOURCE); row 1a; seeds 0-4; default decoder
+legend written: sha256:06a12766fca7274b25b57c29b88483dcbf67e21cd69c74e6aa38aead2a0edefd; errors []; warnings []; 66 words; verbs 18
+# post-launch guard (slots 22): MemAvailable 90 s after the start 115 GB

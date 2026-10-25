@@ -1,0 +1,57 @@
+{
+ "version": "basic-world 1 (vss-vs-bert, R58 item 1)",
+ "roles": [
+  {
+   "id": "A",
+   "question": "who gives?"
+  },
+  {
+   "id": "B",
+   "question": "what is given?"
+  },
+  {
+   "id": "C",
+   "question": "to whom is it given?"
+  }
+ ],
+ "events": [
+  {
+   "id": "transfer",
+   "verbs": [
+    "accepts",
+    "borrows",
+    "buys",
+    "gets",
+    "given",
+    "gives",
+    "lends",
+    "lent",
+    "offered",
+    "offers",
+    "receives",
+    "sees",
+    "sells",
+    "sends",
+    "sent",
+    "shown",
+    "shows",
+    "sold"
+   ]
+  }
+ ],
+ "operators": [
+  "says"
+ ],
+ "reader": {
+  "predicate_role": false,
+  "occupancy_marker": false,
+  "level_openers": [
+   "says",
+   "claims"
+  ]
+ },
+ "kinds": {
+  "source": "lexicon",
+  "lexicon": "kinds.tsv"
+ }
+}
