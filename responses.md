@@ -457,3 +457,26 @@ question form composes as the tagger did (expected); the six-role FULL and the l
 asked in training); confident-wrong under NULL training against the reader's residual is the calibration comparison that a reviewer will
 trust most; the cost ratio with the legend's size is the argument that survives whatever the accuracy says. Write the row and the
 questions in RESULTS as deviation R24 before it runs; the questions are frozen with the pre-registration tag's successor commit.
+
+## R25 (2026-10-25): the queue before JP 1 is cut to what supports a claim; the rest moves after JP 1
+
+How the baseline choice slipped: the instructions started from the paper's existing comparison (a from-scratch transformer with a
+decoded state) and took the tagging head as "BERT on this task", the JointBERT form of intent + slot filling, without asking which form
+the literature uses for OUR task, which is question-based (QA-SRL, MRC). The review of R10 was briefed on implementation, not on the
+choice of baseline. Recorded in JOURNAL as a decision point, with this reason. Consequence for the queue, rule: before JP 1 only rows
+that support a claim of the paper or are pre-registered; a row that existed to defend the tagger against an objection MRC does not have is
+deferred.
+
+Deferred to after JP 1 (listed in RUNBOOK as such, not dropped): R20's three depth heads for the tagger (MRC asks all questions and takes
+NULL as "not given", which is its natural depth-not-given form; the tagger variants are kept for later); R17 (ii) trained out-of-world
+class for the tagger (NULL training on MRC is the standard form of refusal; the tagger keeps only R17 (i), no training); R14's cue feature
+for the tagger (for MRC the cue words belong in the question text, which is R24 as written); the R10 rows of 2b (2a's R10 rows show the
+effect of the rule on a tagger; on 2b the rule did not help); R14.3 for the controls; seeds 5-9 for the controls.
+
+Before JP 1, in this order: 3a, 3b (pre-registered, alone, with grid); then concurrently (R23 slots): R10 rows of 2a and of the reader
+(reader 'gates given' R14, 5 seeds); R17 (i) and the residual on every saved model; R24 BERT-MRC on bert-base-uncased, 5 seeds, both
+depth variants, NULL, cost with all questions. Then JP 1 with STATUS, RESULTS, JOURNAL, current_status, and the paper outline. After
+JP 1: R19 (BERT-tiny / BERT-mini in BOTH forms, tagger and MRC, because size is the question there), R13 (seeds 5-9 for the reader and the
+two main BERT rows), then the deferred rows only if they still answer a question after MRC is seen. The pre-registered rows all stay and
+are all reported, the tagger included: it is the JointBERT form that products use, and the difference between the two BERT forms is itself
+a finding.
