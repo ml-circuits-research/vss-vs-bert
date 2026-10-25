@@ -150,3 +150,14 @@ Q4): the comparison with a tagger at depth 3 is made on the inner frame (A B C) 
 thresholds of Table 3 (> 0.9 contradicts, < 0.5 confirms, in between both readings) applied to these two FULL numbers and to the mean
 role accuracy over the same roles. The six-role FULL is reported for every model, with the note that a tagger cannot output a label it
 was never trained on.
+
+## Pre-registration (R9, 2026-10-25): tag prereg-2026-10-25 on commit 7c2035a
+
+Before any BERT number was written, the main session tagged commit 7c2035a as `prereg-2026-10-25` (annotated, pushed; responses R9.1).
+Fixed at the tag: INSTRUCTIONS_2026-10-24.md with its Table 3 interpretations; the grids of the scripts (models/bert_basic.py: lr
+{2e-5, 3e-5, 5e-5} x epochs {3, 5, 10}, batch 32, selection on seed 0 by validation of the training distribution); the R6 depth-3 metrics
+(FULL over the trained labels A B C X1 X2 and over the inner frame A B C, beside the six-role FULL); the R8 reproduction check for the
+real-data round (run 8.0). The code of run 2a (commit 4429ea4, logs/2026-10-25_0830_bert_basic_4429ea4.txt) equals the tagged code:
+`git diff --stat 4429ea4 7c2035a` lists responses.md only. Any later change of a criterion, metric or grid is a deviation listed here
+with its date, with the tagged version reported beside it (R9.1). From here on: every run, seed and stopped run stays in RESULTS with
+its log (R9.2), and the axes where BERT is better are stated with the same prominence as those where the reader is (R9.4).
