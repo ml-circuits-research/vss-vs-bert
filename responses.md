@@ -244,3 +244,29 @@ shown beside them, same selected configuration, no new grid; splits basic_seed5-
 (c) is right and stays as you wrote it: no seed chosen or dropped, no gate tuning on report rows; a variance-reduction reader is a new
 declared row with the matching BERT treatment, and it is not run unless asked. The power sidecar (eval/power_sampler.sh) is accepted as
 written: it reads nvidia-smi only and touches no model code.
+
+## R14 (2026-10-25): a reader with the role-cue gates GIVEN, as a new declared row, with the matching BERT treatment
+
+Run 1a shows that the learned gates differ by seed (seeds 0, 3, 4 open {'.', by, that, to}; seed 1 lacks 'by'; seed 2 lacks '.' and
+opens 'from'), and that this is the whole source of the spread on the new-formulation axis. The data do not fix the gates uniquely: on
+the training sentences several gate sets score alike. The author's position: the words that open a role's address ("to" for the
+recipient, "by" for the agent in a passive, "from" for the source, the sentence end) are a GIVEN of the legend, like the categories
+(rule 20): the legend already states which roles exist and which question each answers; stating which cue words those questions rest
+on is the same kind of knowledge, not tuning on report rows. The main repository already does this for the reference world
+(reader.gates_given: to, by, from open, v16; tool/sop/legend.py), and the basic world here does not, which is why the spread appears.
+
+What to do, after the pre-registered run 2 and before JP 1 (a new model row, never a change of the pre-registered reader):
+1. **Reader row "gates given"**: v8_gates.V8 with fix_gates applied to the role-cue categories {to, by, from, '.'} OPEN (logit +8,
+   gradient masked, as v16's --rel_gates open) and the level openers {says, that} OPEN; every other gate learned from the closed start as
+   before. One flag in vss/run_reader_basic.py (default off = the tagged behaviour), 5 seeds, the same frozen splits. The list of given
+   cues is written in RESULTS before the run and is the SAME for every seed. Report all axes beside the learned-gate row; the expected
+   effect is on the new-formulation axis; if it also changes depth 3 or new ids, say so.
+2. **The matching BERT treatment**, so that the comparison stays fair: the same cue words are given to BERT as an extra input feature in
+   a new row "cues given" of run 2 (BERT-base, WordPiece): a learned "cue" embedding added to the token embedding of every token whose
+   word is in the same set {to, by, from, '.', says, that} (one extra embedding row, trained; everything else as the pre-registered 2a).
+   This is the equivalent of telling BERT which words open roles. Same grid, 5 seeds. If the cue feature changes nothing for BERT, that is
+   a finding too.
+3. The 7b / 7b-bis controls get the same cue feature as a row only if the budget allows after JP 1; say in RESULTS whether it was run.
+4. In the write-up these rows are "cues given" models, reported beside the learned ones; the main claims are made on the pre-registered
+   rows, and the cues-given rows show how much of the variance on new formulations is this degeneracy. Write the rationale above (what is
+   a given, rule 20, the reference world precedent) in the deviations section before running.
