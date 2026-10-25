@@ -301,3 +301,37 @@ with a tagger's log-probabilities is log p <= 0, i.e. a certain decision counted
 ids); the first log therefore shows the tagger's one-to-one calibration at coverage 0.740 on new ids. Fixed as the per-role rule does it
 ("top1 - 0" in probability, so "score - log 1e-30" in log-probability; 0 for the reader's cosines, unchanged). Every other number of the
 first log equals this one.
+
+## Interpretation of run 3b, written before it runs (responses R15, 2026-10-25)
+
+Run 3b is the from-scratch twin of the small encoder (DistilBERT's architecture, 6 layers, same width and tokenizer, randomly
+initialised, the scratch grid of INSTRUCTIONS section 4), and the direct test of "pretraining is what composes here" after 2a. The
+reading applied to its depth-3 FULL over the inner frame (A B C), mean over the five seeds, with the per-seed list:
+- **<= 0.1, near the from-scratch transformers of 1b / 1c** (their inner FULL is bounded above by 0.074): the composition of the unseen
+  depth seen in 2a (inner frame 1.000) comes from pretraining, not from the architecture or the tagging head.
+- **Near 1.0 (> 0.9)**: the composition comes from the tagging head over a BERT-shaped encoder, not from pretraining; the narrowing of
+  the paper's claim (R15) would then be about the architecture and output head, not about pretraining.
+- **In between (0.1-0.9)**: both readings are written, with the per-seed list. 
+The seen-row gate applies first: if 3b's seen FULL is below 0.95 it is under-trained, its rows are reported and not interpreted, and
+neither reading above is applied (R4). Run 3a (DistilBERT pretrained) is read with the same Table 3 bands as 2a.
+
+## Deviation R14: rows "gates given" (reader) and "cues given" (BERT), declared 2026-10-25 before they run (code: commit 767cf1f)
+
+Rationale (responses R14). The reader's learned gates differ by seed in run 1a (seeds 0, 3, 4 open {'.', by, that, to}; seed 1 lacks
+'by'; seed 2 lacks '.' and opens 'from'), and this is the source of its spread on new formulations (0.864 ± 0.069, 0.868 ± 0.040). On
+the training sentences several gate sets score alike, so the data do not fix them. The words that open a role's address ('to' for the
+recipient, 'by' for the agent of a passive, 'from' for the source, the sentence end) and the level openers ('says', 'that') are
+treated as a GIVEN of the legend, like the word categories (rule 20): the legend already states which roles exist and which question
+each answers, and the cue words those questions rest on are the same kind of knowledge, not a choice made on report rows. The main
+repository gives the relation-marker gates in the reference world in the same way (v16 --rel_gates open; reader.gates_given in
+tool/sop/legend.py).
+- Reader row "gates given": `vss/run_reader_basic.py --gates_given cues`: v8_gates.V8.fix_gates(['to', 'by', 'from', '.', 'says',
+  'that'], open) (logit +8, gradient masked); every other gate learned from the closed start as before. The same list on every seed.
+- Matching BERT row "cues given": `models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --cues given`: one learned cue
+  embedding (hidden size, init N(0, 0.02)) added to the input embedding of every token that is one of the same six words as a whole
+  token (the next token does not continue it with '##'); everything else as the pre-registered 2a, the same grid, 5 seeds. This is the
+  equivalent of telling BERT which words open roles.
+- 7b / 7b-bis with the cue feature: only if the budget allows after JP 1; RESULTS will say whether it was run.
+- These rows are reported beside the learned ones. The main claims are made on the pre-registered rows; the given-cue rows show how much
+  of the new-formulation variance is this degeneracy. The expected effect is on new formulations; any change on depth 3 or new ids is
+  reported as such.
