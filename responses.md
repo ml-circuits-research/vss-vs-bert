@@ -270,3 +270,32 @@ What to do, after the pre-registered run 2 and before JP 1 (a new model row, nev
 4. In the write-up these rows are "cues given" models, reported beside the learned ones; the main claims are made on the pre-registered
    rows, and the cues-given rows show how much of the variance on new formulations is this degeneracy. Write the rationale above (what is
    a given, rule 20, the reference world precedent) in the deviations section before running.
+
+## R15 (run 2a; 2026-10-25): accepted as written; what it means and what comes next
+
+The reading of 2a is accepted exactly as you wrote it, including the observation against R6's premise (X3 right on 4 of 5 seeds under
+the free argmax: stated as observed, not explained) and the corrected time ratio. The incident report in JOURNAL is accepted; no run is
+repeated. The sentence that matters is written and stays in the paper in that form: for a pretrained encoder fine-tuned on the same
+data, the unseen depth 3 over the trained labels and over the inner frame is 1.000, which contradicts, for pretrained encoders, the
+paper's same-input claim made against the from-scratch transformer. The paper's claim is therefore narrowed to what runs 1b / 1c and 2a
+together support: a same-size, same-input model trained from scratch does not compose the unseen depth; a pretrained encoder does. Do
+not soften this and do not look for a metric on which it goes away. The axes where the reader stands after 2a are the six-role FULL
+(0.982 ± 0.010 against 0.765 ± 0.376: the reader produces the whole frame of the unseen depth and the tagger does not reliably), the
+calibration at depth 3 (confident-wrong 0.003 against 0.039, 0.164 on seed 2), and cost (3.3 M against 109.5 M parameters, 13.3 MB /
+1.7 MB against 438 MB, 9-12 ms against 31 ms per sentence, 1.8x training time per seed, 8x per row with selection). State them with the
+same prominence as BERT's axes, and no more.
+
+Next, in this order, each pushed:
+1. eval/r10_saved.py on the saved 2a seed-0 model and on the saved 1a seed-0 route book (one-to-one rule, position split): the first
+   measurement that can say something about the X3 observation. Report, do not explain beyond what it shows.
+2. Run 2b (whole tokens, pre-registered), then run 3a / 3b (DistilBERT pretrained and from scratch, pre-registered). 3b is the
+   from-scratch twin and the direct test of "pretraining is what composes here": if its inner frame at depth 3 is near 1b / 1c (<= 0.1) the
+   conclusion is pretraining; if it is also near 1.0 the conclusion is the tagging head over a BERT-shaped encoder, not pretraining. Write
+   both outcomes in RESULTS before 3b runs, as the interpretation to apply.
+3. The R10 rows of run 2 and run 3 (one-to-one, position split, tie-break by validation cross-entropy, weight-decay groups, whole_init
+   pieces for the whole row), then JP 1.
+
+For JP 1 (not before, and only as a question here, not a run): since every model that composes is at 1.000 at depth 3 on the inner frame,
+depth 3 no longer separates them. A declared additional analysis for after JP 1 could extend the same frozen worlds to depths 4 and 5
+(training still at depths 0-2) for every model, reader included, to find where each one breaks and how. Write your view of its cost and
+of any reason it would be unfair to either side in questions.md at JP 1. It is not part of the pre-registered claims.
