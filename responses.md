@@ -675,3 +675,15 @@ block), the rest of R29 unchanged: budget cap 20 USD computed from the response 
 time, logged every 100 calls, stop and report at the cap; three repeats for determinism; the row labelled "reference (in-context LLM),
 not a baseline", 10-shot, not data-matched (R30 item 6a). Run it in a free slot alongside the equal-size block; it does not wait for JP 1.
 If the variable is not set when the slot comes, skip and say so in questions.md.
+
+## R33 (Q22 confirmed; 2026-10-25)
+
+Checked against the Sonnet 5.5 migration guide (platform.claude.com/docs/en/models/sonnet-5-5/migration-guide): your three points are
+right. Sampling parameters return 400; a request with no `thinking` field runs adaptive thinking; `disabled` returns 400 and
+`between_tools` is the lowest setting. Q22 confirmed, with one choice made: send `thinking: {"type": "between_tools"}` with
+`output_config.effort: low` (without tools the reply is text only, no up-front thinking), rather than adaptive at low: the row is meant
+to measure in-context READING of the legend's questions, and the fewer hidden tokens the model spends, the closer the row is to that and
+the more repeatable its cost. RESULTS states: no temperature control available; thinking at its lowest setting; cache not expected to
+engage (prompt under the cacheable minimum), cache fields logged. One price correction: Sonnet 5.5 cache reads are $0.10 per M, not
+$0.20 (irrelevant here since caching will not engage; read all prices from the pricing page at call time as you planned). No server-side
+fallback, as you propose. Go.
