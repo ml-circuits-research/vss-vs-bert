@@ -800,3 +800,29 @@ of its legend, so 'all' is how it behaves when a question that was always NULL i
 seed, that is the expected result and is written as such, not as a failure of BERT.
 
 The transparency note on 33dc482 is read and accepted; no number changes.
+
+## R41 (the reader's R17 (i) row: accepted, and a definitional defect of the residual; 2026-10-25)
+
+Accepted as written: the reader does not meet the demo criterion either, and the sentence stays. The row also exposes a defect in the
+residual's DEFINITION, visible from calibration numbers alone (residual 0.43 in-distribution, where every token is a known word in a
+decoded role): `common/decode.py residuals` and the tool's `infer.py residual` compare the reader's state S with `rec` = the COMPILER's
+state of the decoded frame (role addresses only). S also carries every token's deposit through the routes (path, chainL, bigram),
+which `rec` never contains, so the residual is large even when everything is explained and grows with the number of tokens: depth 3
+(more clauses) 0.72, long new formulations 0.77-0.90, random 0.99. It measures length as much as unexplained content, which is why a
+training-distribution threshold rejects every depth-3 sentence.
+
+Proposed, under R38 / R39 (it changes no accuracy, only the rejection score; the old residual stays in every table):
+- **Explained-tokens residual**: rec' = the reader's OWN chart of the same token sequence with the unexplained tokens removed (explained =
+  fillers of decoded roles, speakers, the event lemma, and every token of a non-content kind: cue words, openers, punctuation; the
+  `placed_words` set already exists); residual' = ||S_n - a rec'_n||. When every token is explained, residual' = 0 by construction; a
+  nonce or unplaced token contributes its share of the state; a content word in no role contributes its share. Deterministic, parity
+  testable (Python / JS), no training.
+- **Check first, on calibration data only** (no report row): Spearman correlation between the old residual and the token count on the
+  calibration sentences of each seed, and the old residual's mean by depth 0 / 1 / 2 within the calibration rows. If the correlation is
+  strong (> 0.5) and the means rise with depth, the diagnosis stands and the new residual is implemented in the tool repository (by me,
+  committed there with its parity test), then run here as a declared row: AUROC in-world vs out-of-world and the 2 % threshold table,
+  claim on seeds 5-9 (R39), seeds 0-4 reported as inspected. If the correlation is weak, the diagnosis is wrong and I will say so here.
+- The same check for the taggers' MSP is not needed (a probability does not scale with length), but the Mahalanobis analogue of R30
+  item 7 remains their fair score.
+
+JOURNAL: name this response as the design source and the calibration files opened for the check.
