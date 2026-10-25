@@ -28,6 +28,11 @@ def score_axis(items, preds, roles):
     mean_role = float(np.mean([c for _, c, _, _ in dec]))
     return {"n": len(items), "mean_role": mean_role, "full": full, "per_role": per_role, "margin": per_margin}
 
+def full_over(items, preds, roles):
+    """FULL frame over a subset of roles (R6, 2026-10-25): every listed role exact. Used at depth 3 for the roles whose labels occur in
+    training (A, B, C, X1, X2) and for the inner frame (A, B, C), beside the six-role FULL, because a tagger cannot output X3 (never trained)"""
+    return float(np.mean([all(p["frame"].get(r) == it["frame"].get(r) for r in roles) for it, p in zip(items, preds)]))
+
 def set_tau(cal_dec, max_confident_wrong=0.02, grid=None):
     """the threshold rule (written before the runs): the SMALLEST tau at which the confident-wrong rate on the calibration rows is below
     max_confident_wrong (as the paper's verifier threshold, RESULTS 11-octies); tau = +inf when no threshold reaches it"""

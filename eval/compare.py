@@ -29,10 +29,11 @@ def ci_diff(a, b):
 def basic_tables(out):
     rows = load("results_reader_basic_seed*.json"); rows.update(load("results_transformer7b_*_seed*.json")); rows.update(load("results_bert_*_seed*.json"))
     if not rows: return
-    ref = next((m for m in rows if m.startswith("VSS reader")), None); lines = ["# Basic world: mean role accuracy per axis (mean ± std over seeds [per seed])", "", "| model | " + " | ".join(COLS) + " | FULL depth 3 |", "|---|" + "---|" * (len(COLS) + 1)]
+    ref = next((m for m in rows if m.startswith("VSS reader")), None); lines = ["# Basic world: mean role accuracy per axis (mean ± std over seeds [per seed])", "", "| model | " + " | ".join(COLS) + " | FULL depth 3 | FULL depth 3, trained labels (A B C X1 X2) | FULL depth 3, inner (A B C) |", "|---|" + "---|" * (len(COLS) + 3)]
     for m, rs in rows.items():
         cells = [ms([r["axes"][a]["mean_role"] for r in rs if r["axes"][a]]) if any(r["axes"][a] for r in rs) else "nan" for a in AXES]
-        lines.append(f"| {m} | " + " | ".join(cells) + f" | {ms([r['axes']['depth3_unseen']['full'] for r in rs])} |")
+        d3 = lambda k: ms([r["axes"]["depth3_unseen"][k] for r in rs]) if all(k in r["axes"]["depth3_unseen"] for r in rs) else "not stored (R6)"
+        lines.append(f"| {m} | " + " | ".join(cells) + f" | {d3('full')} | {d3('full_trained')} | {d3('full_inner')} |")
     if ref:
         lines += ["", f"## Difference to {ref} (model minus reader), 95% interval over paired seeds", "", "| model | new ids | depth 3 (UNSEEN) | new form., UNSEEN trans. |", "|---|---|---|---|"]
         rr = rows[ref]
