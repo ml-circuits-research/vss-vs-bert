@@ -140,3 +140,73 @@ The comparison must be one that a reader who favours BERT would accept. In addit
    new-identity axes, to show that the conclusion does not depend on the grid. If the wider grid changes a conclusion, that is written.
 6. **An independent review of the BERT code** is being made from the reviewing side (models/bert_*.py, common/, eval/); its findings
    arrive here as a response. Until then, run as planned; a finding that changes a number will be handled as a stated deviation.
+
+## R10 (R9.6, 2026-10-25): findings of the independent review of the BERT baselines, and what to do
+
+An independent reviewer, briefed only to be the advocate of the BERT baseline, read models/bert_*.py, common/, eval/ and ran small
+checks on CPU with tests/tiny-bert (mechanisms, not levels). Tokenization and label alignment were checked correct (all 76,940 words of
+seed 0, both conditions). The findings below can lower BERT's numbers. The pre-registered rows (tag prereg-2026-10-25) stay exactly as
+they are and are reported; every fix below is a DEVIATION declared now, before any BERT number, implemented behind flags whose defaults
+reproduce the tagged code, and run as additional rows labelled "reviewed (R10)" beside the pre-registered ones. Let run 2a (pre-registered)
+finish; then implement R10 in its own commit(s); then continue with 2b and the R10 rows.
+
+### Must do (changes numbers materially)
+1. **One-to-one decoding** (bert_basic.py:82-86, bert_reference.py:62-70, common/decode.py:262-269). Each role takes its own argmax token,
+   so one token can fill two roles; in the data the fillers are always distinct (0 repeats on all seeds) and every depth-3 item has
+   exactly 5 person tokens for its 5 person roles. Under a one-to-one assignment (maximise the summed log-probability, or the summed
+   score for the reader, over roles x candidate tokens; Hungarian or brute force) X3 is the token left once the trained roles are placed,
+   so the "X3 by construction" loss of R6 largely disappears. Reviewer's tiny-model check: depth-3 FULL 0.000 -> 0.353. Add it as a
+   SECOND decoding rule for EVERY model (reader, 7b, taggers) through the common decoder, reported beside the current rule. It uses a
+   property of the world (fillers are distinct) that is equally available to all models; state it. For 1a, recompute it from the saved
+   route book (seed 0) as in R6; for 2a and later, from the saved models (--save_model), with no retraining.
+2. **Positions never seen in training** (scratch encoder; bert_basic.py:28). The scratch twin learns absolute position embeddings; the
+   7b control uses sinusoidal positions precisely so that longer depth-3 sentences are representable (v9_transformer.py:10, 26-27). On
+   seed 0, 75% (whole words) / 100% (WordPiece) of depth-3 sentences are longer than any training sentence; 37-50% of A/B/C fillers sit
+   at positions never reached. Do: (a) for EVERY model, report the depth-3 accuracy split by "filler position seen in training / not"
+   (this separates composition failures from position failures); (b) for the scratch rows (3b), an R10 variant with random position-id
+   offsets in training (shift by k in 0..10 per sentence). Optionally the same offsets for BERT-base and DistilBERT as an R10 variant.
+3. **Model selection ties go to the least-trained setting** (strict `>` at bert_basic.py:129, bert_reference.py:101, bert_wikisql.py:94,
+   bert_real.py:177; the grid starts at lr 2e-5, 3 epochs). On a training-distribution validation every setting is likely 1.000, so the
+   "selected" model is simply the first grid point. Do: print the validation token cross-entropy of every grid point; R10 tie-break =
+   lowest validation cross-entropy among the points with the best validation FULL. The pre-registered selection stays as reported; if
+   R10 selects a different configuration, its 5 seeds are run as the R10 row.
+
+### Should do (may change numbers)
+4. **'whole' condition initialisation** (bert_basic.py:29): transformers 5.20.2 resize_token_embeddings uses mean_resizing=True, so new
+   rows are not "randomly initialised" as INSTRUCTIONS says, and the held-out identities get no gradient and lose the p/o category that
+   WordPiece keeps. State the actual init in RESULTS (it is the pre-registered row); R10 variant: initialise each new token as the mean
+   of its WordPiece pieces' embeddings.
+5. **Weight decay on biases and LayerNorm** (all bert_*.py AdamW lines): R10 = two parameter groups, no decay for bias and LayerNorm
+   (the standard BERT recipe). Apply in every R10 row.
+6. **Temperature scaling** exists only in bert_real.py; implement it for the basic, reference and WikiSQL scripts as INSTRUCTIONS asks,
+   and state for every model that in-distribution calibration rows (near 100% correct) cannot calibrate out-of-distribution axes. Add the
+   depth-3 calibration block over the trained roles beside the six-role one.
+7. **Reference world predicate from [CLS]** (bert_reference.py:25-26, 71) while the reader reads it from the verb token; FULL includes
+   it. R10: tag the verb token with a 'P' label decoded over the verb candidates; and report FULL with and without the predicate for all.
+8. **WikiSQL**: aggregator predicted from the question alone (bert_wikisql.py:33-38) while standard BERT systems condition it on the
+   column; max_len 64 truncates some question+header pairs. R10: aggregator from the (question, column) pair; max_len 128. State in RESULTS
+   that BERT encodes the header text jointly with the question (the standard cross-encoder) and that this is the same regime as the reader's
+   header-bundle candidates.
+9. **Few-step training at 1k / 5k** (bert_wikisql.py:44, bert_real.py:57: 96-320 optimizer steps at 1k): the data-efficiency claim rests
+   on these rows. R10: at least 1,000 optimizer steps at the small sizes (epochs raised accordingly), as a robustness row.
+10. **Cased multilingual models get lower-cased text** (common/real_data.py:11, 56, 144) for run 12, and span F1 is computed on
+   normalised tokens: give cased encoders the original-case tokens (alignment unchanged), and compute the R8 check on the dataset's own
+   tokens with conlleval. Needed only for the real-data round.
+
+### Presentation (no number changes; write in RESULTS / the cost table)
+11. Depth given at decoding to every model and no event / depth head on the basic world: equal for all, but a deviation from INSTRUCTIONS
+    section 3; write it. No CRF: standard, state it.
+12. Occupancy at depth 3 counts X3 as missed by construction: add the occupancy over the trained labels.
+13. Cost: report BERT also at fp16 and int8 dynamic quantization, and the CPU thread count for ms/sentence; note that the scratch twin
+    carries a 30,522-row embedding table for a 66-word world.
+14. Reproducibility: seed torch per grid configuration (as bert_real.py:173), not once before the grid, so a selected configuration can
+    be re-run alone.
+15. bert_basic.py:45 fallback `f.append(0)` would label [CLS] for a truncated word; never triggers here; make it None / -100 as in
+    bert_real.py.
+
+Order: finish 2a (pre-registered); one commit with items 1-3, 5, 6, 11-15 (common code and the basic world), each behind a flag whose
+default is the tagged behaviour, smoke-tested on CPU; the R10 decoding (1) and the position split (2a) applied to 1a and 2a from their
+saved models; then 2b, then the R10 rows of run 2 (BERT-base, both tokenizer conditions), then run 3 with both its pre-registered and
+R10 rows. Items 4, 7, 8, 9, 10 go in when their runs come (3 / 4 / 5 / real round). List every R10 item in RESULTS under one heading
+"Deviations after the independent review (R10)", with this response cited. If any item looks wrong to you, say so in questions.md
+before implementing it.
