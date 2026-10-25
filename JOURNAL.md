@@ -26,3 +26,16 @@ v9_transformer, v22_transformer_categories. Findings:
   order: hash-independent.
 Conclusion: nothing in the reader's or the transformer's path assigns an id or draws at random from a hash-ordered iteration; the fixed
 PYTHONHASHSEED is a safeguard, not a correction, and run 1a (which ran without it) needs no repetition on this account.
+
+## 2026-10-25 — incident: loss of network at 09:57, power cycle at 11:52 (no run affected)
+
+Facts from the system journal and sysstat of the boot 07:35-11:51. At 09:57:31 NetworkManager removed the Wi-Fi profile in use
+(fwv-46172; device wlP9s9, state change 'connection-removed') in the same second as a password SSH session from the LAN
+(192.168.1.130, opened 07:36:01) closed. The interface stayed disconnected; it did not fall back to the other saved profile (axlg), so
+the machine had no network from 09:57 on (Tailscale relay errors every minute until 11:51). The experimental session's worker lost the
+API (DNS EAI_AGAIN) and stopped. Run 2a was not affected: it finished at 10:02:40 with its checklist, and its log and JSONs were committed
+after the restart (RESULTS 2a). Memory was normal throughout (sysstat: about 2.4 GB used and 121 GB available from 10:10 to 11:50; at most
+12.7 GB used during the runs). The journal has no OOM, no GPU Xid and no thermal event; the GPU never entered thermal slowdown. The
+journal ends at 11:51:36 with no shutdown sequence: the machine was power-cycled at about 11:52 and came back at 11:53 on the axlg
+profile, later fwv-46172. Cause of the profile removal: not established from the logs (it coincides with the close of that SSH
+session). Work resumed from the committed state; no run was repeated.
