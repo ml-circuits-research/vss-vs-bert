@@ -827,3 +827,15 @@ the fixed configuration (lr 1e-4, 5 epochs, batch 32), 5 seeds (BERT-mini split 
 behaves when a question that was always NULL in training becomes answerable (the realistic form of "not given" turning into
 "given"); 'zs' is the fair capacity test. If 'all' refuses level 3 on every seed, that is the expected result and is written as such,
 not as a failure of BERT.
+
+## Deviation R37: the reader with the six cue gates given as a trainable initialisation (declared 2026-10-25 before it runs; code 4bc0a1e)
+
+Diagnostic row (exploratory), same seeds and frozen splits as 1a / R14: `./run.sh vss/run_reader_basic.py --gates_given init_cues
+--seeds 5 --save_all`. The six R14 gates (to, by, from, '.', says, that) start OPEN at 1a's typical learned logit and stay trainable;
+every other gate starts closed as in 1a. The typical learned logit, fixed by rule before the run: the median (torch.median, the lower
+middle value) of the open learned logits of the saved 1a model (logs/models/reader_basic_seed0.pt, the only saved 1a model): open
+gates '.' 1.522, by 2.301, to 8.203, that 8.444 -> 2.3011 (sigmoid 0.909). Reading written now (R37): if the row recovers 1a's mean on
+new formulations (0.864 / 0.868) with R14's seed spread (std about 0.03 / 0.01), R14's loss comes from the HARDNESS of the given gates,
+not from the set, and the demo default should be "given as initialisation"; if it does not, the loss comes from the set, and the learned
+per-seed gate sets that beat it are listed here. Also found while writing it: R14's seed-0 model had been saved as
+logs/models/{tag}_seed0.pt (a missing f-string); renamed to reader_basic_cues_seed0.pt (its logits: the six given gates at 8.0, as R14).
