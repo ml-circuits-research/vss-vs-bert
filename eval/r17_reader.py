@@ -56,7 +56,7 @@ if __name__ == "__main__":
         t0 = time.time(); m.train(world, a.N, templates=v5.TRAIN_T, persons=bw["trP"], objects=bw["trO"], batch=a.batch, lr=a.lr, depth_train=bwm.DEPTH_TRAIN)
         preds = {ax: decode.decode_frozen(m, world, split, ax) for ax in report.AXES + ["calibration"]}
         st = json.load(open(os.path.join(mainrepo.ROOT, "logs", f"results_{stored_tag}_seed{seed}.json")))
-        row0 = report.evaluate("check", seed, preds, split, "none")
+        row0 = report.evaluate("check", seed, preds, split, f"r17check_{stored_tag}")   # a prefix eval/compare.py does not read
         diff = max(abs(row0["axes"][ax]["mean_role"] - st["axes"][ax]["mean_role"]) for ax in report.AXES if st["axes"][ax])
         print(f"  seed {seed}: retrained in {time.time() - t0:.0f}s; per-role rule vs stored {stored_tag} seed {seed}: {'EQUAL' if diff < 1e-9 else f'largest difference {diff:.4f}'}")
         res = {"seed": seed, "model": stored_tag, "check_max_diff": diff}
