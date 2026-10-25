@@ -68,3 +68,15 @@ FULL 1.000, the loss below printed precision; 4.0% overlap with training, not le
 3 (2a's selection fell on the first grid point) and makes every grid on this world a selection by noise. Decision: no grid for BERT-base
 MRC and the equal-size block (fixed configuration by rule, the same for every model), one sensitivity table on seed 0 for BERT-mini; the
 reader's own selection ran under the same saturated rule and is stated as such.
+
+## 2026-10-25 16:20 — design-set dumps and the residual check (responses R38, R39, R41, R42; experimental session)
+
+Seeds 5-9 (data/basic_seed5-9.json) were generated and committed at 16:06 (9f71308, sha256 in the message) before any dump existed; no
+item of them has been opened. Design sources named as R38 / R41 ask: R38 / R39 and the coordinator's refinement (H1 gates / H2 routes /
+H3 decoding) for the dumps; R41 for the residual check; R42 for the conditional explained-tokens row. Files opened so far: none of the
+dumps (they are produced by queued runs). Disclosure: the CPU smoke tests of eval/dump_reader.py and eval/residual_length_check.py (on
+the saved 1a seed-0 model, outputs deleted) printed two seed-0 lines that were read: the dump's count line (1,800 new-formulation items,
+418 wrong role decisions, open gates . by that to) and the calibration check of seed 0 (Spearman of residual and token count -0.152;
+mean residual at depth 0 / 1 / 2 0.410 / 0.455 / 0.432). The diagnosis patterns (eval/diagnose_reader.py, 175b473) were written after
+that count line and before any per-item content was read; the R41 criterion is R41's own. The files opened for the analysis will be
+listed here when it is written.
