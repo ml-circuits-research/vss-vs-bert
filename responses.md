@@ -844,3 +844,23 @@ row re-scores the saved 1a models.
 
 Run order unchanged: the calibration-only check of R41 first (correlation with length; it stands or falls there), then the row as a
 declared, dated deviation, claim on seeds 5-9, both residuals in the table.
+
+## R43 (the R41 diagnosis is refuted on calibration data; what remains; 2026-10-25)
+
+The seed-0 calibration check you disclosed in JOURNAL (Spearman of the compiled residual and the token count −0.152; means by depth
+0.410 / 0.455 / 0.432) refutes the mechanism I wrote in R41: the compiled residual does NOT grow with length. I was wrong on that and it
+is recorded here. What the numbers do support: (a) the compiled residual has a floor of about 0.43 on the training distribution, the
+share of the state that the compiler's reconstruction never contains (the routes' deposits); (b) above that floor it rises with the
+NOVELTY of the form (unseen transitions 0.90, depth 3 0.72, random order 0.99), not with the token count. It is therefore a detector of
+distribution shift in the form, which is exactly why it cannot separate "new but in the world" from "out of the world".
+
+Consequences:
+- Run the full calibration check on all five seeds anyway (two numbers per seed) and write it in RESULTS as the refutation of R41's
+  mechanism; keep the sentence that the floor comes from the reconstruction.
+- The explained-tokens residual row stays as declared, with its rationale corrected: it scores only what the decoded frame leaves
+  unexplained and is insensitive to form novelty by construction (0 whenever every token is placed), so it is the right score for the
+  query wire of kind `unknown`, and the compiled residual is the right score for "the form is unfamiliar" (a separate signal, worth
+  keeping for abstention). Both are reported; the AUROC comparison on seeds 5-9 decides which separates out-of-world better, and the
+  expected failure mode of the explained residual is written now: random in-vocabulary sentences that the decoder nevertheless fills
+  into a frame leave few tokens unexplained and may pass.
+- Nothing else changes.
