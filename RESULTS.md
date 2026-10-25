@@ -749,3 +749,19 @@ feature) is deferred (R25 / R28). The rule ceiling (1.000 on every axis) stands 
   BERT-small variants run only if the picture differs between tiny and mini, otherwise they are recorded as not run with that reason.
 - GPU order: the six tiny and mini rows in parallel (the LLM reference beside them); then BERT-base MRC alone (2a's configuration); then
   the 2a re-run with every seed saved and R17 on it; then the BERT-mini seed-0 sensitivity grid.
+
+## Execution notes for the equal-size block (written 2026-10-25 16:10, before any block row runs; commit 33dc482; no number changes)
+
+- Every block run is `models/bert_mrc.py --model <tiny|mini> --train_questions zs [--scratch | --kinds given] --lrs 1e-4 --epochs 5
+  --save_all` (R36), 5 seeds. BERT-tiny: one run of 5 seeds per variant. BERT-mini: each variant split into two runs (`--seeds 3`, and
+  `--seed_start 3 --seeds 2`) so that no run approaches run.sh's 6 h cap (R4: the cap is not raised); the five per-seed JSONs are pooled
+  for the row. Seeds and data are those of a single run (the seed sets everything; the split changes no number).
+- `--save_all` keeps every seed's model (logs/models/, untracked) so that R30 item 8 (ii) and (iii) (matched coverage, Mahalanobis on
+  encoder states) and R17 (i) are computed on the saved models without retraining.
+- bert_mrc.py now prints one line per epoch: run.sh's log-stall watchdog (30 min without log growth) killed the BERT-tiny 5e-5 grid chain
+  at its 10-epoch point (below), and a BERT-mini run of 5 epochs would print nothing for longer than that.
+- Only the 'zs' rows (training questions of levels 0-2, the main row of Q18 (1a)) run in the block; the 'all six questions' rows wait for
+  the answer to questions Q25 (R35 left them pending).
+- BERT-small: not run unless tiny and mini disagree (R36), decided after both are read.
+- Concurrency: up to six queue runs plus the LLM reference (API-bound) in a seventh run.sh slot (VSA_SLOTS=7: memory fraction 0.129 per
+  process; measured peaks 0.2 GB for BERT-tiny, 2.5 GB for BERT-base). Cost rows from these runs are concurrent and are not cost numbers.
