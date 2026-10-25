@@ -519,6 +519,12 @@ class Reader:
         Sn, rn = S / nS, rec / nr; a = max(0.0, float(np.real(np.vdot(rn, Sn))))
         return float(np.linalg.norm(Sn - a * rn))
 
+    def frame_incomplete(self, f):
+        """a frame that does not answer every always-present (core) question of the legend, or a speaker of its depth, explains nothing as a
+        frame: the explained residual is then 1.0 (vss-vs-bert R42 / Q30; an optional role left 'not given' does not count)"""
+        if any(f["roles"].get(r) is None for r in self.schema.get("core_roles", [])): return True
+        return any(sp is None for sp in f.get("speakers", []))
+
     def residual_explained(self, S, addr, kept, tokens, placed):
         """the explained-tokens residual (addendum q-formalisation 9; vss-vs-bert R41): rec' = the reader's OWN chart of the explained tokens
         (fillers of decoded roles, speakers, the event lemma, and every token whose kind is not a content kind: cue words, openers,
@@ -593,7 +599,7 @@ class Reader:
         top.set("_status", status)
         top.lines.insert(next((i + 1 for i, l in enumerate(top.lines) if l.key == "_sentence"), 0), soplang.line("_world", self.cfg.get("world", "?")))
         mode = self.cfg.get("residual", "compiled")                      # "compiled" (the paper's) | "explained" (R41)
-        res = (self.residual_explained(S, addr, kept, tokens, placed) if mode == "explained" else self.residual(S, wires, tokens)) if f["shape"] == "ok" else 1.0
+        res = ((1.0 if self.frame_incomplete(f) else self.residual_explained(S, addr, kept, tokens, placed)) if mode == "explained" else self.residual(S, wires, tokens)) if f["shape"] == "ok" else 1.0
         top.set("_residual", fmt(res))
         if unplaced: top.set("_unplaced", ",".join(tokens[i] for i in unplaced))
         for r, (a, b) in undecided.items(): top.set(f"_undecided.{r}", f"{a}|{b}")

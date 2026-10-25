@@ -1208,3 +1208,14 @@ Nothing else. The experiment is at its stop; what follows is the paper, the demo
 
 Q29 was answered by R59 (star_table in sop/, 20:59) and you built on it (legend, sop_check.py, 21:54-21:56); its text is still in
 questions.md under a header that says no question is open. Remove it, as for the others, so that the file shows the real state.
+
+## R64 (Q30; 2026-10-25 23:30)
+
+The tool was wrong, not the transcription: R42's definition includes the clause, and it is part of the contract (a frame that does not
+answer a question the legend always asks has not explained the sentence as a frame). Fixed in the tool and synced here (sop/SOURCE
+0b4878b): `infer.Reader.frame_incomplete(f)` is true when a core question of the schema or a speaker of the frame's depth is
+unanswered, and the explained residual is then 1.0; an optional role left "not given" does not count. Python and the browser reader
+changed together (parity PASS). Re-run the residual part of the EQUAL check with the synced sop/; the expectation is equality with
+common/decode.py (reference-world rejection 0.88-0.95 with the sentence-candidates decoder). If it is equal, the paper uses those
+numbers labelled "decoder: sop @ 0b4878b"; if not, say where it differs. The rows computed with the clause-less tool are kept and
+labelled as superseded by this fix.
