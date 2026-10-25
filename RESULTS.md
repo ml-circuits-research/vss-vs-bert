@@ -450,4 +450,4 @@ Added by responses R21 (2026-10-25). The one-to-one rule LOWERS this row (X2 0.8
 a finding against the rule, not a free improvement for any model; the pre-registered per-role numbers stay the main ones. Observed, not
 explained: in 2b every depth-3 error is on the OUTER speakers (X2 0.858 ± 0.281, per seed 0.30 1.00 0.99 1.00 1.00; X3 0.495 ± 0.444)
 while the inner frame is 1.000 on every seed, the mirror image of the 7b controls' failure shape at the same depth (inner roles lost,
-A / B / C 0.08-0.10, outer speakers X1 / X2 kept at 1.000, runs 1b / 1c).
+A / B / C 0.08-0.10, outer speakers X1 / X2 kept at 0.999-1.000, X3 0.06-0.07, runs 1b / 1c).
