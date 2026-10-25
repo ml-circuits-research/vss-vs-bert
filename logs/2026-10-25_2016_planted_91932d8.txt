@@ -1,0 +1,134 @@
+# 2026-10-25T20:16:48+01:00  commit=91932d8  cmd: python3 eval/planted.py --model reader_r46 --seed_start 5  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 88 GB; slot logs/.run.lock.3 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+planted (R26 / Q19 / R48 item 4): main repository e531283; model reader_r46; seeds 0-4; frozen planted sets; depth from the level openers; threshold = 2% quantile of the calibration margins
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 5 check                              1.00 (m 0.48) | 1.00 (m 0.49) | 0.80 (m 0.23) | 0.78 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 5   rule 'one_to_one': 1.00 | 1.00 | 0.80 | 0.78 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 5   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+# post-launch guard (slots 16): MemAvailable 90 s after the start 86 GB
+  seed 5 undecided  : planted queried 0.890 (267/300), invented 33; other roles correct 644, needless query 422, confident error 0, queried wrong 5 of 1071; needless 'unsupported' 0 of 0; hallucination rate 0.024
+  seed 5 unsupported: planted queried 0.973 (292/300), invented 8; other roles correct 685, needless query 667, confident error 0, queried wrong 8 of 1360; needless 'unsupported' 8 of 1360; hallucination rate 0.005
+  seed 5: loaded logs/models/reader_basic_fresh_seed5.pt; EQUAL; threshold 0.2478
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 6 check                              1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.27) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.38) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.975 (trained labels 0.975, inner 0.975) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.004
+  seed 6   rule 'one_to_one': 1.00 | 1.00 | 0.96 | 0.91 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 6   depth-3 role accuracy by filler position (words; train max 15): seen 0.9954545454545455 (n 3960), unseen 1.0 (n 360)
+  seed 6 undecided  : planted queried 0.430 (129/300), invented 171; other roles correct 927, needless query 98, confident error 0, queried wrong 16 of 1041; needless 'unsupported' 0 of 0; hallucination rate 0.128
+  seed 6 unsupported: planted queried 0.987 (296/300), invented 4; other roles correct 1120, needless query 218, confident error 0, queried wrong 6 of 1344; needless 'unsupported' 4 of 1344; hallucination rate 0.002
+  seed 6: loaded logs/models/reader_basic_fresh_seed6.pt; EQUAL; threshold 0.1292
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 7 check                              1.00 (m 0.47) | 1.00 (m 0.48) | 0.78 (m 0.23) | 0.82 (m 0.17) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 7   rule 'one_to_one': 1.00 | 1.00 | 0.78 | 0.84 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 7   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 7 undecided  : planted queried 0.843 (253/300), invented 47; other roles correct 692, needless query 377, confident error 0, queried wrong 3 of 1072; needless 'unsupported' 0 of 0; hallucination rate 0.034
+  seed 7 unsupported: planted queried 0.993 (298/300), invented 2; other roles correct 785, needless query 590, confident error 0, queried wrong 2 of 1377; needless 'unsupported' 2 of 1377; hallucination rate 0.001
+  seed 7: loaded logs/models/reader_basic_fresh_seed7.pt; EQUAL; threshold 0.2290
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 8 check                              1.00 (m 0.44) | 1.00 (m 0.45) | 0.84 (m 0.26) | 0.90 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.37) | 1.00 (m 0.34) | 1.00 (m 0.21)  || depth 3 per role: A 0.99 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 (trained labels 0.986, inner 0.986) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.002
+  seed 8   rule 'one_to_one': 1.00 | 1.00 | 0.85 | 0.93 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.996 (trained 0.996, inner 0.996); depth3 cw 0.001
+  seed 8   depth-3 role accuracy by filler position (words; train max 15): seen 0.9977272727272727 (n 3960), unseen 0.9972222222222222 (n 360)
+  seed 8 undecided  : planted queried 0.490 (147/300), invented 153; other roles correct 877, needless query 157, confident error 0, queried wrong 26 of 1060; needless 'unsupported' 0 of 0; hallucination rate 0.113
+  seed 8 unsupported: planted queried 0.987 (296/300), invented 4; other roles correct 1040, needless query 278, confident error 0, queried wrong 4 of 1322; needless 'unsupported' 4 of 1322; hallucination rate 0.002
+  seed 8: loaded logs/models/reader_basic_fresh_seed8.pt; EQUAL; threshold 0.1419
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 9 check                              1.00 (m 0.48) | 1.00 (m 0.49) | 0.81 (m 0.23) | 0.79 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 9   rule 'one_to_one': 1.00 | 1.00 | 0.81 | 0.82 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 9   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 9 undecided  : planted queried 0.887 (266/300), invented 34; other roles correct 678, needless query 369, confident error 0, queried wrong 5 of 1052; needless 'unsupported' 0 of 0; hallucination rate 0.025
+  seed 9 unsupported: planted queried 0.983 (295/300), invented 5; other roles correct 772, needless query 547, confident error 0, queried wrong 5 of 1324; needless 'unsupported' 5 of 1324; hallucination rate 0.003
+  seed 9: loaded logs/models/reader_basic_fresh_seed9.pt; EQUAL; threshold 0.2439
+
+== planted, reader_r46: MEANS over 0 seeds (per-seed list) ==
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/fromnumeric.py:3862: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:219: RuntimeWarning: Degrees of freedom <= 0 for slice
+  ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:178: RuntimeWarning: invalid value encountered in divide
+  arrmean = um.true_divide(arrmean, div, out=arrmean,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:211: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+  undecided: planted queried nan ± nan []; hallucination rate nan ± nan []; other roles needless query nan ± nan []; confident error nan ± nan []
+  unsupported: planted queried nan ± nan []; hallucination rate nan ± nan []; other roles needless query nan ± nan []; confident error nan ± nan []
+  undecided set: the inserted identity left in no role (R54 (1)) nan ± nan []; unsupported set: planted queried as 'undecided' (R54 (2)) nan ± nan []
+  needless 'unsupported' on original identities nan ± nan []
+  criterion (R26, the demo's): planted unsupported reported as queries >= 0.90
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] planted sets frozen before any model (e6c6f68) [x] thresholds on calibration rows only (25) [x] depth not given [x] the same coverage test for every model

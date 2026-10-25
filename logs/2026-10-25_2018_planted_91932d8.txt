@@ -1,0 +1,39 @@
+# 2026-10-25T20:18:03+01:00  commit=91932d8  cmd: python3 eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs --seed_start 5  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 88 GB; slot logs/.run.lock.4 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+planted (R26 / Q19 / R48 item 4): main repository e531283; model mrc_google_bert_uncased_L-2_H-128_A-2_zs; seeds 0-4; frozen planted sets; depth from the level openers; threshold = 2% quantile of the calibration margins
+  seed 5 undecided  : planted queried 0.973 (292/300), invented 8; other roles correct 482, needless query 480, confident error 10, queried wrong 99 of 1071; needless 'unsupported' 0 of 0; hallucination rate 0.013
+  seed 5 unsupported: planted queried 0.673 (202/300), invented 98; other roles correct 548, needless query 628, confident error 12, queried wrong 172 of 1360; needless 'unsupported' 180 of 1360; hallucination rate 0.066
+  seed 5: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed5; threshold 46.4580
+  seed 6 undecided  : planted queried 0.997 (299/300), invented 1; other roles correct 606, needless query 366, confident error 29, queried wrong 40 of 1041; needless 'unsupported' 0 of 0; hallucination rate 0.022
+  seed 6 unsupported: planted queried 0.813 (244/300), invented 56; other roles correct 577, needless query 632, confident error 40, queried wrong 95 of 1344; needless 'unsupported' 135 of 1344; hallucination rate 0.058
+  seed 6: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed6; threshold 43.7769
+  seed 7 undecided  : planted queried 1.000 (300/300), invented 0; other roles correct 461, needless query 512, confident error 15, queried wrong 84 of 1072; needless 'unsupported' 0 of 0; hallucination rate 0.011
+  seed 7 unsupported: planted queried 0.913 (274/300), invented 26; other roles correct 581, needless query 679, confident error 22, queried wrong 95 of 1377; needless 'unsupported' 116 of 1377; hallucination rate 0.029
+  seed 7: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed7; threshold 46.2643
+  seed 8 undecided  : planted queried 1.000 (300/300), invented 0; other roles correct 538, needless query 426, confident error 21, queried wrong 75 of 1060; needless 'unsupported' 0 of 0; hallucination rate 0.015
+  seed 8 unsupported: planted queried 0.357 (107/300), invented 193; other roles correct 648, needless query 418, confident error 19, queried wrong 237 of 1322; needless 'unsupported' 256 of 1322; hallucination rate 0.131
+  seed 8: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed8; threshold 48.4900
+  seed 9 undecided  : planted queried 0.993 (298/300), invented 2; other roles correct 667, needless query 308, confident error 17, queried wrong 60 of 1052; needless 'unsupported' 0 of 0; hallucination rate 0.014
+  seed 9 unsupported: planted queried 0.923 (277/300), invented 23; other roles correct 694, needless query 542, confident error 18, queried wrong 70 of 1324; needless 'unsupported' 88 of 1324; hallucination rate 0.025
+  seed 9: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_seed9; threshold 40.8543
+
+== planted, mrc_google_bert_uncased_L-2_H-128_A-2_zs: MEANS over 0 seeds (per-seed list) ==
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/fromnumeric.py:3862: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:219: RuntimeWarning: Degrees of freedom <= 0 for slice
+  ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:178: RuntimeWarning: invalid value encountered in divide
+  arrmean = um.true_divide(arrmean, div, out=arrmean,
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py:211: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+  undecided: planted queried nan ± nan []; hallucination rate nan ± nan []; other roles needless query nan ± nan []; confident error nan ± nan []
+  unsupported: planted queried nan ± nan []; hallucination rate nan ± nan []; other roles needless query nan ± nan []; confident error nan ± nan []
+  undecided set: the inserted identity left in no role (R54 (1)) nan ± nan []; unsupported set: planted queried as 'undecided' (R54 (2)) nan ± nan []
+  needless 'unsupported' on original identities nan ± nan []
+  criterion (R26, the demo's): planted unsupported reported as queries >= 0.90
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] planted sets frozen before any model (e6c6f68) [x] thresholds on calibration rows only (25) [x] depth not given [x] the same coverage test for every model
+# post-launch guard (slots 16): MemAvailable 90 s after the start 94 GB

@@ -1467,3 +1467,27 @@ Secondary (means): BERT-mini pretrained Mahalanobis 0.850, MSP 0.895, NULL gap 0
 Mahalanobis score of every small model except BERT-mini pretrained, where the difference (+0.026) is not significant; the pretrained
 models' MSP (0.895-0.915) is above the reader's compiled residual with the catalog decoder (0.876-0.883) on both seed ranges; (i) and
 (ii) are decided by the zero-shot level-3 question, as stated with the BERT-tiny pairs.
+
+## R54: the second-identity column and the reader's adjacency rule (eval/planted.py; logs/2026-10-25_20*_planted_*.txt; results logs/results_planted2_*; MEASURED)
+
+Every earlier column is recomputed identically. New column: in the 'undecided' set, the share of sentences whose inserted identity was
+left in no role (a query of another kind). The adjacency rule (reference implementation vss-demo f46b8d4) runs with the R46 decoder.
+
+| model (seeds) | undecided: planted queried [per seed] | inserted identity left in no role | other roles needless | halluc. | unsupported: planted queried (as 'undecided') | halluc. |
+|---|---|---|---|---|---|---|
+| reader 1a (0-4) | 0.513 ± 0.163 | 0.959 | 0.171 | 0.108 | 0.984 (0.000) | 0.003 |
+| reader 1a + R46 (0-4) | 0.522 ± 0.180 | 0.951 | 0.154 | 0.106 | 0.983 (0.000) | 0.003 |
+| **reader 1a + R46 + R54 rule (0-4, design)** | **0.997 ± 0.005** [1.000 0.987 1.000 1.000 0.997] | 0.951 | 0.154 | 0.001 | 0.983 (0.000) | 0.003 |
+| reader 1a + R46 (5-9) | 0.708 ± 0.204 | 0.962 | 0.268 | 0.065 | 0.985 (0.000) | 0.003 |
+| **reader 1a + R46 + R54 rule (5-9, CLAIM)** | **0.999 ± 0.003** [1.000 0.993 1.000 1.000 1.000] | 0.962 | 0.268 | 0.000 | 0.985 (0.000) | 0.003 |
+| BERT-tiny pretrained (0-4) | 0.991 ± 0.013 | 0.407 ± 0.231 | 0.352 | 0.024 | 0.835 | 0.053 |
+| BERT-tiny pretrained (5-9) | 0.993 ± 0.010 | 0.391 ± 0.255 | 0.394 | 0.015 | 0.736 ± 0.210 | 0.062 |
+| BERT-tiny from scratch / kinds (0-4) | 0.837 / 0.985 | 0.760 / 0.537 | 0.223 / 0.313 | 0.092 / 0.027 | 0.705 / 0.663 | 0.100 / 0.085 |
+| BERT-mini pretrained / from scratch (0-4) | 1.000 / 0.945 | 0.605 / 0.657 | 0.360 / 0.287 | 0.000 / 0.060 | 0.747 / 0.690 | 0.046 / 0.097 |
+
+Against R54's expectations written before the run: 'undecided' planted queried rises towards (here beyond) the share of sentences in
+which the second identity is left unplaced (0.95-0.96; the remaining queries come from margins below the threshold): yes, 0.997 /
+0.999; needless queries on the other roles unchanged: yes (0.154 / 0.268, identical); the 'unsupported' set unchanged: yes (no appended
+identity is adjacent to a filler: it always follows ',', so 0 kind changes). The reader's silent failure on the undecided set was a
+misnamed query, not a silent one: in 95-96% of the sentences it left the inserted identity unplaced, against 39-76% for the MRC rows,
+which place it in some role in 24-61% of the sentences.
