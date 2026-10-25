@@ -30,10 +30,10 @@ def forward(model, tok, items, device, batch=128):
         chunk = items[i:i + batch]; ids, att, firsts = bb.encode_batch(tok, [it["tokens"] for it in chunk], device)
         prob = torch.softmax(model(ids, att), -1).cpu().numpy(); cls = model.last_cls
         poow = torch.softmax(model.oow_head(cls), -1)[:, 1].cpu().numpy() if model.oow_head is not None else None
-        dep = model.depth_of(cls, firsts).cpu().numpy() if model.depth_head is not None else None
+        dep = {k: model.depth_of(k, cls, firsts).cpu().numpy() for k in model.depth_kinds}
         for b, it in enumerate(chunk):
             p = np.stack([prob[b][j] if j is not None else np.zeros(len(bb.LABELS)) for j in firsts[b]])
-            out.append({"p": p, "oow": None if poow is None else float(poow[b]), "depth": None if dep is None else int(dep[b])})
+            out.append({"p": p, "oow": None if poow is None else float(poow[b]), "depth": {k: int(v[b]) for k, v in dep.items()}})
     return out
 
 def accept_score(it, f, split, axis):
@@ -80,17 +80,17 @@ if __name__ == "__main__":
             res["false_rejection"]["ii"] = {k: float(np.mean(po[k] > t2)) for k in inw}
             res["false_rejection_pooled"]["ii"] = float(np.mean(np.concatenate([po[k] for k in inw]) > t2))
         res["residual_analogue_mean"] = {k: float(np.mean([residual_analogue(it, f, split) for it, f in zip(sets[k][1], F[k])])) for k in sets}
-        if model.depth_head is not None:
-            gold = {ax: split["axes"][ax] for ax in inw}
-            res["depth_head_accuracy"] = {ax: float(np.mean([f["depth"] == it["depth"] for it, f in zip(gold[ax], F[ax])])) for ax in inw}
-            items3 = [dict(it, depth=f["depth"]) for it, f in zip(split["axes"]["depth3_unseen"], F["depth3_unseen"])]
+        gold = {ax: split["axes"][ax] for ax in inw}; res["depth_head_accuracy"] = {}; res["full_depth3_head_depth"] = {}
+        for kind in model.depth_kinds:                                           # one row per depth head (R20 a / b / c)
+            res["depth_head_accuracy"][kind] = {ax: float(np.mean([f["depth"][kind] == it["depth"] for it, f in zip(gold[ax], F[ax])])) for ax in inw}
+            items3 = [dict(it, depth=f["depth"][kind]) for it, f in zip(split["axes"]["depth3_unseen"], F["depth3_unseen"])]
             p3 = bb.predict(model, tok, {"axes": {"depth3_unseen": items3}, "candidates": split["candidates"]}, "depth3_unseen", a.device)
             g3 = split["axes"]["depth3_unseen"]; full = lambda roles: float(np.mean([all(p["frame"].get(r) == it["frame"][r] for r in roles) for p, it in zip(p3, g3)]))
-            res["full_depth3_head_depth"] = {"six": full(bwm.ROLES), "trained": full(["A", "B", "C", "X1", "X2"]), "inner": full(["A", "B", "C"])}
+            res["full_depth3_head_depth"][kind] = {"six": full(bwm.ROLES), "trained": full(["A", "B", "C", "X1", "X2"]), "inner": full(["A", "B", "C"])}
         print(f"  seed {seed}: threshold (i) {t1:.4f}; rejected (i) {res['rejected']['i']}; false rejection pooled {res['false_rejection_pooled']}")
         if "ii" in res["rejected"]: print(f"  seed {seed}: rejected (ii) {res['rejected']['ii']}")
         print(f"  seed {seed}: residual analogue means {res['residual_analogue_mean']}")
-        if "depth_head_accuracy" in res: print(f"  seed {seed}: depth head accuracy {res['depth_head_accuracy']}; FULL depth 3 with the head's depth {res['full_depth3_head_depth']}")
+        for kind in model.depth_kinds: print(f"  seed {seed}: depth head '{kind}' accuracy {res['depth_head_accuracy'][kind]}; FULL depth 3 with its depth {res['full_depth3_head_depth'][kind]}")
         with open(os.path.join(mainrepo.ROOT, "logs", f"results_r17_{a.tag}_seed{seed}.json"), "w") as f: json.dump(res, f)
         rows.append(res); del model; torch.cuda.empty_cache() if a.device == "cuda" else None
     ms = lambda xs: f"{np.mean(xs):.3f} ± {np.std(xs):.3f} [{' '.join(f'{x:.3f}' for x in xs)}]"
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         for src in ("random", "reference", "nonce"): print(f"  rejected ({v}) {src:10s} {ms([r['rejected'][v][src] for r in rows])}")
         print(f"  false rejection ({v}) pooled in-world report axes {ms([r['false_rejection_pooled'][v] for r in rows])}")
     print(f"  criterion (demo specification): rejected >= 0.90 per source with false rejections <= {FR_MAX}")
-    if "depth_head_accuracy" in rows[0]:
-        print(f"  depth head accuracy, depth3_unseen {ms([r['depth_head_accuracy']['depth3_unseen'] for r in rows])}")
-        for k in ("six", "trained", "inner"): print(f"  FULL depth 3 with the head's depth, {k} {ms([r['full_depth3_head_depth'][k] for r in rows])}")
+    for kind in rows[0]["depth_head_accuracy"]:
+        print(f"  depth head '{kind}' accuracy, depth3_unseen {ms([r['depth_head_accuracy'][kind]['depth3_unseen'] for r in rows])}")
+        for k in ("six", "trained", "inner"): print(f"  FULL depth 3 with the '{kind}' head's depth, {k} {ms([r['full_depth3_head_depth'][kind][k] for r in rows])}")
     metrics.checklist(len(rows), "[x] out-of-world sets frozen before the run [x] thresholds on calibration rows only [x] sources reported apart [x] no training")

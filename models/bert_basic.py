@@ -47,7 +47,9 @@ class Tagger(nn.Module):
                     for new_id, pieces in piece_init.items(): E[new_id] = E[pieces].mean(0)
         self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1); self.cue = None; self.last_cls = None
         self.oow_head = nn.Linear(cfg.hidden_size, 2) if oow else None                     # R17 item 1 (ii)
-        self.depth_kind = depth_head; self.depth_head = {"cls": lambda: nn.Linear(cfg.hidden_size, 4), "reg": lambda: nn.Linear(cfg.hidden_size, 1), "count": lambda: nn.Linear(cfg.hidden_size, 2)}.get(depth_head, lambda: None)()
+        # R17 item 3 / R20; R22 item 2: several depth heads over the same encoder in one run (comma list, e.g. 'cls,reg,count')
+        self.depth_kinds = [k for k in depth_head.split(",") if k != "none"]; mk = {"cls": 4, "reg": 1, "count": 2}
+        self.depth_heads = nn.ModuleDict({k: nn.Linear(cfg.hidden_size, mk[k]) for k in self.depth_kinds}) if self.depth_kinds else None
         if cue_tok is not None:                        # R14: a token is a cue iff it is a cue word's own (single) token and the next token does not continue it
             vocab = cue_tok.get_vocab(); cont = torch.zeros(max(n_tokens, len(vocab)), dtype=torch.bool)
             for t, i in vocab.items():
@@ -65,14 +67,15 @@ class Tagger(nn.Module):
             h = self.enc(inputs_embeds=emb, attention_mask=att, **kw).last_hidden_state
         self.last_cls = h[:, 0]; self.last_h = h
         return self.head(self.drop(h))
-    def depth_of(self, cls, firsts=None):
-        """R17 item 3: the depth decided by the head (argmax of 0-3, or the regression rounded and clipped; R20 count: the number of words
-        whose first sub-token is tagged as a level opener, clipped to 0-3)"""
-        if self.depth_kind == "count":
-            o = self.depth_head(self.last_h).argmax(-1).cpu()
+    def depth_of(self, kind, cls, firsts=None):
+        """R17 item 3: the depth decided by one head (cls: argmax of 0-3; reg: the regression rounded and clipped; R20 count: the number of
+        words whose first sub-token is tagged as a level opener, clipped to 0-3)"""
+        h = self.depth_heads[kind]
+        if kind == "count":
+            o = h(self.last_h).argmax(-1).cpu()
             return torch.tensor([min(3, sum(int(o[b, j]) for j in f if j is not None)) for b, f in enumerate(firsts)])
-        o = self.depth_head(cls)
-        return o.argmax(-1) if self.depth_kind == "cls" else o.squeeze(-1).round().clamp(0, 3).long()
+        o = h(cls)
+        return o.argmax(-1) if kind == "cls" else o.squeeze(-1).round().clamp(0, 3).long()
 
 def encode_batch(tok, sents, device, max_len=96, trunc_none=False):
     """word-level inputs: first sub-token of every word carries the label; returns ids, attention, first-subtoken positions per word"""
@@ -129,18 +132,19 @@ def train(model, tok, data, lr, epochs, batch, device, seed, wd_groups=False, po
             logits = model(ids, att, pid); loss = ce(logits.view(-1, len(LABELS)), lab.view(-1).to(device))
             if model.oow_head is not None:
                 y = torch.tensor([int(j >= n_in) for j in perm[i:i + batch]], device=device); loss = loss + ce(model.oow_head(model.drop(model.last_cls)), y)
-            if model.depth_head is not None and model.depth_kind == "count":    # R20: gold level openers, one label per word
-                lo = torch.full(ids.shape, -100, dtype=torch.long)
-                for b, (toks, tags) in enumerate(chunk):
-                    for k, op in enumerate(opener_flags(toks)):
-                        if firsts[b][k] is not None and perm[i + b] < n_in: lo[b, firsts[b][k]] = int(op)
-                loss = loss + ce(model.depth_head(model.drop(model.last_h)).view(-1, 2), lo.view(-1).to(device))
-            elif model.depth_head is not None:
-                keep = torch.tensor([j < n_in for j in perm[i:i + batch]], device=device)
-                d = torch.tensor([sum(x.startswith("X") for x in c[1]) for c in chunk], device=device)
-                if keep.any():
-                    o = model.depth_head(model.drop(model.last_cls[keep]))
-                    loss = loss + (ce(o, d[keep]) if model.depth_kind == "cls" else nn.functional.mse_loss(o.squeeze(-1), d[keep].float()))
+            for kind in model.depth_kinds:                                       # losses summed with equal weights (R22 item 2)
+                if kind == "count":                                              # R20: gold level openers, one label per word
+                    lo = torch.full(ids.shape, -100, dtype=torch.long)
+                    for b, (toks, tags) in enumerate(chunk):
+                        for k, op in enumerate(opener_flags(toks)):
+                            if firsts[b][k] is not None and perm[i + b] < n_in: lo[b, firsts[b][k]] = int(op)
+                    loss = loss + ce(model.depth_heads[kind](model.drop(model.last_h)).view(-1, 2), lo.view(-1).to(device))
+                else:
+                    keep = torch.tensor([j < n_in for j in perm[i:i + batch]], device=device)
+                    d = torch.tensor([sum(x.startswith("X") for x in c[1]) for c in chunk], device=device)
+                    if keep.any():
+                        o = model.depth_heads[kind](model.drop(model.last_cls[keep]))
+                        loss = loss + (ce(o, d[keep]) if kind == "cls" else nn.functional.mse_loss(o.squeeze(-1), d[keep].float()))
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
 
 @torch.no_grad()
@@ -223,10 +227,11 @@ if __name__ == "__main__":
     ap.add_argument("--tag_suffix", default="", help="appended to the results / model names (R17: a re-run of a row with its selected configuration and saved models)")
     ap.add_argument("--save_all", action="store_true", help="R17: save every seed's model to logs/models/<tag>_seed<s>")
     ap.add_argument("--oow_class", action="store_true", help="R17 item 1 (ii): a [CLS] out-of-world head trained on the 'neg' part of data/oow_seed<s>.json")
-    ap.add_argument("--depth_head", default="none", choices=["none", "cls", "reg", "count"], help="R17 item 3 / R20: a depth head")
+    ap.add_argument("--depth_head", default="none", help="R17 item 3 / R20: depth heads, a comma list of cls, reg, count (R22: one run, shared encoder)")
     ap.add_argument("--cues", default="none", choices=["none", "given"], help="R14: 'given' adds the learned cue embedding on the CUE_WORDS tokens (row 'cues given')")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 model and tokenizer to logs/models/ for eval/determinism.py")
     a = ap.parse_args()
+    assert all(k in ("none", "cls", "reg", "count") for k in a.depth_head.split(",")), a.depth_head
     if a.r10: a.select, a.wd_groups, a.seed_per_config, a.trunc_none, a.temperature = "r10", True, True, True, True
     r10 = a.r10 or a.select == "r10" or a.wd_groups or a.seed_per_config or a.trunc_none or a.temperature or a.pos_offset or a.whole_init != "resize"
     lrs = [float(x) for x in (a.lrs or ("1e-4,3e-4,1e-3" if a.scratch else "2e-5,3e-5,5e-5")).split(",")]
@@ -240,7 +245,7 @@ if __name__ == "__main__":
         name += " cues given (R14)"; tag += "_cues"; print(f"R14: cue embedding added on the tokens of {CUE_WORDS}")
     if a.oow_class or a.depth_head != "none":
         name += " R17 (" + ", ".join(x for x in (("out-of-world class" if a.oow_class else ""), (f"depth head {a.depth_head}" if a.depth_head != "none" else "")) if x) + ")"
-        tag += "_r17" + ("_oow" if a.oow_class else "") + (f"_depth{a.depth_head}" if a.depth_head != "none" else "")
+        tag += "_r17" + ("_oow" if a.oow_class else "") + (f"_depth{a.depth_head.replace(',', '')}" if a.depth_head != "none" else "")
     if a.tag_suffix: name += f" [{a.tag_suffix.strip('_')}]"; tag += a.tag_suffix
     print(f"bert_basic: {name}; main repository {mainrepo.check_pinned()}; device {a.device}; N {a.N}; seeds {a.seeds}; grid lr {lrs} x epochs {eps}; batch {a.batch}")
     print("regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; token-tagging head; decoding restricted to the world's candidates; frozen splits")
