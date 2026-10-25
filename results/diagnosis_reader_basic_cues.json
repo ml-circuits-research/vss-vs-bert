@@ -1,0 +1,366 @@
+{
+ "row": "r14",
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "per_seed": [
+  {
+   "seed": 0,
+   "open": [
+    ".",
+    "by",
+    "claims",
+    "from",
+    "says",
+    "that",
+    "to"
+   ],
+   "decisions": 5400,
+   "counts": {
+    "wrong": 933,
+    "rank2": 193,
+    "rank3plus": 740,
+    "o2o_fixed": 44,
+    "H2": 678,
+    "only_H2": 636,
+    "other": 253,
+    "H3": 44,
+    "only_H3": 2,
+    "only_H3+H2": 42
+   },
+   "median_margin_wrong": 0.010288916262461704,
+   "median_margin_right": 0.29105654899480166,
+   "error_rate_before_verb": 0.15326797385620916,
+   "error_rate_after_verb": 0.19829059829059828,
+   "n_before_verb": 3060,
+   "n_after_verb": 2340
+  },
+  {
+   "seed": 1,
+   "open": [
+    ".",
+    "by",
+    "claims",
+    "from",
+    "says",
+    "that",
+    "to"
+   ],
+   "decisions": 5400,
+   "counts": {
+    "wrong": 993,
+    "rank2": 198,
+    "rank3plus": 795,
+    "o2o_fixed": 28,
+    "H2": 705,
+    "only_H2": 688,
+    "other": 277,
+    "H3": 28,
+    "only_H3+H2": 17,
+    "only_H3": 11
+   },
+   "median_margin_wrong": 0.010310957920691644,
+   "median_margin_right": 0.29445339418817523,
+   "error_rate_before_verb": 0.15980392156862744,
+   "error_rate_after_verb": 0.2153846153846154,
+   "n_before_verb": 3060,
+   "n_after_verb": 2340
+  },
+  {
+   "seed": 2,
+   "open": [
+    ".",
+    "by",
+    "claims",
+    "from",
+    "says",
+    "that",
+    "to"
+   ],
+   "decisions": 5400,
+   "counts": {
+    "wrong": 882,
+    "rank2": 221,
+    "rank3plus": 661,
+    "o2o_fixed": 36,
+    "H2": 644,
+    "only_H2": 609,
+    "other": 237,
+    "H3": 36,
+    "only_H3+H2": 35,
+    "only_H3": 1
+   },
+   "median_margin_wrong": 0.011451629617600155,
+   "median_margin_right": 0.28014712692000565,
+   "error_rate_before_verb": 0.1630718954248366,
+   "error_rate_after_verb": 0.16367521367521368,
+   "n_before_verb": 3060,
+   "n_after_verb": 2340
+  },
+  {
+   "seed": 3,
+   "open": [
+    ".",
+    "by",
+    "claims",
+    "from",
+    "says",
+    "that",
+    "to"
+   ],
+   "decisions": 5400,
+   "counts": {
+    "wrong": 888,
+    "rank2": 161,
+    "rank3plus": 727,
+    "o2o_fixed": 38,
+    "H2": 697,
+    "only_H2": 660,
+    "other": 190,
+    "H3": 38,
+    "only_H3+H2": 37,
+    "only_H3": 1
+   },
+   "median_margin_wrong": 0.01196137882015602,
+   "median_margin_right": 0.28533699715243255,
+   "error_rate_before_verb": 0.1415032679738562,
+   "error_rate_after_verb": 0.19444444444444445,
+   "n_before_verb": 3060,
+   "n_after_verb": 2340
+  },
+  {
+   "seed": 4,
+   "open": [
+    ".",
+    "by",
+    "claims",
+    "from",
+    "says",
+    "that",
+    "to"
+   ],
+   "decisions": 5400,
+   "counts": {
+    "wrong": 996,
+    "rank2": 239,
+    "rank3plus": 757,
+    "o2o_fixed": 30,
+    "H2": 687,
+    "only_H2": 660,
+    "other": 306,
+    "H3": 30,
+    "only_H3+H2": 27,
+    "only_H3": 3
+   },
+   "median_margin_wrong": 0.009925331590270804,
+   "median_margin_right": 0.2850331638216136,
+   "error_rate_before_verb": 0.17222222222222222,
+   "error_rate_after_verb": 0.20042735042735044,
+   "n_before_verb": 3060,
+   "n_after_verb": 2340
+  }
+ ],
+ "systematic_cells": [
+  "T10:C",
+  "T4:B",
+  "T4:C",
+  "T7:A"
+ ],
+ "systematic_cells_shared_with_1a": [
+  "T4:C",
+  "T7:A"
+ ],
+ "seed_dependent_cells": {},
+ "gate_effect": {},
+ "cell_error_rate": {
+  "T4:A": [
+   0.0,
+   0.0,
+   0.006,
+   0.0,
+   0.011
+  ],
+  "T4:B": [
+   0.917,
+   0.994,
+   0.917,
+   0.944,
+   0.95
+  ],
+  "T4:C": [
+   0.867,
+   0.978,
+   0.744,
+   0.967,
+   0.889
+  ],
+  "T5:A": [
+   0.011,
+   0.106,
+   0.0,
+   0.006,
+   0.028
+  ],
+  "T5:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T5:C": [
+   0.206,
+   0.306,
+   0.394,
+   0.344,
+   0.306
+  ],
+  "T7:A": [
+   0.989,
+   0.944,
+   0.917,
+   0.961,
+   0.978
+  ],
+  "T7:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T7:C": [
+   0.006,
+   0.0,
+   0.006,
+   0.0,
+   0.0
+  ],
+  "T8:A": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T8:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T8:C": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T10:A": [
+   0.417,
+   0.467,
+   0.456,
+   0.1,
+   0.633
+  ],
+  "T10:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T10:C": [
+   0.994,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "T11:A": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T11:B": [
+   0.778,
+   0.722,
+   0.461,
+   0.611,
+   0.739
+  ],
+  "T11:C": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T13:A": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T13:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T13:C": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T14:A": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T14:B": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "T14:C": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "error_rate_by_template": {
+  "T4": 0.6122222222222222,
+  "T5": 0.11370370370370371,
+  "T7": 0.32,
+  "T8": 0.0,
+  "T10": 0.4711111111111111,
+  "T11": 0.22074074074074074,
+  "T13": 0.0,
+  "T14": 0.0
+ },
+ "confident_error_kinds_50": {
+  "candidate not in sentence": 38,
+  "wrong role": 12,
+  "missed role": 0,
+  "false fill": 0
+ },
+ "n_errors_pooled": 4692
+}

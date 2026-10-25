@@ -80,3 +80,12 @@ the saved 1a seed-0 model, outputs deleted) printed two seed-0 lines that were r
 mean residual at depth 0 / 1 / 2 0.410 / 0.455 / 0.432). The diagnosis patterns (eval/diagnose_reader.py, 175b473) were written after
 that count line and before any per-item content was read; the R41 criterion is R41's own. The files opened for the analysis will be
 listed here when it is written.
+
+## 2026-10-25 17:15 — the design-set dumps were read (R38 / R39; experimental session)
+
+Files opened (programmatically, aggregated; no item of seeds 5-9 was opened): results/dump_reader_basic_seed0-4.json,
+results/dump_reader_basic_cues_seed0-4.json (by eval/diagnose_reader.py and by a cell breakdown of the same files: per-cell error counts,
+swap / absent kinds, gold ranks, one example sentence per cell), results/diagnosis_reader_basic.json,
+results/diagnosis_reader_basic_cues.json, logs/2026-10-25_1705_diagnose_reader_eb89dbb.txt; results/confident_errors_50_*.tsv written,
+counted by kind only. From now on seeds 0-4 are the inspected design set. Calibration files of the R41 check:
+logs/results_r41check_seed0-4.json (calibration rows only). The diagnosis is in questions.md (note of 17:15).

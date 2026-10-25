@@ -1,0 +1,51 @@
+seed	axis	i	template	role	gold	pred	kind	rank_gold	margin	gate_before_gold	before_verb	sentence
+0	new_form_seen_trans	53	T10	A	p2	p1	wrong role	2	0.0022	from:0.000	True	from p2 , p1 receives o8 .
+0	new_form_seen_trans	100	T10	A	p4	p2	wrong role	2	0.0142	from:0.000	True	from p4 , p2 buys o8 .
+0	new_form_seen_trans	153	T10	C	p9	p7	wrong role	2	0.0035	,:0.000	True	from p7 , p9 gets o4 .
+0	new_form_seen_trans	238	T10	C	p10	p1	wrong role	2	0.0227	,:0.000	True	from p1 , p10 borrows o3 .
+0	new_form_seen_trans	341	T10	C	p11	p7	wrong role	2	0.0017	,:0.000	True	from p7 , p11 accepts o2 .
+0	new_form_unseen_trans	12	T4	C	p2	p3	wrong role	2	0.0796	gives:0.000	False	p3 gives p2 o0 .
+0	new_form_unseen_trans	26	T4	C	p1	p0	wrong role	2	0.0208	gives:0.000	False	p0 gives p1 o5 .
+0	new_form_unseen_trans	74	T7	A	p3	p8	candidate not in sentence	10	0.0065	that:1.000	True	it is o2 that p3 gives to p4 .
+0	new_form_unseen_trans	385	T4	C	p0	p8	wrong role	2	0.0760	sends:0.000	False	p8 sends p0 o6 .
+0	new_form_unseen_trans	432	T7	A	p7	p1	candidate not in sentence	7	0.0000	that:1.000	True	it is o5 that p7 sends to p3 .
+0	new_form_unseen_trans	548	T4	C	p9	p4	wrong role	2	0.0614	lends:0.000	False	p4 lends p9 o11 .
+0	new_form_unseen_trans	803	T7	A	p7	p11	candidate not in sentence	2	0.0216	that:1.000	True	it is o4 that p7 shows to p2 .
+1	new_form_seen_trans	159	T10	A	p7	p9	wrong role	2	0.0136	from:0.000	True	from p7 , p9 gets o5 .
+1	new_form_seen_trans	162	T10	C	p6	p1	wrong role	2	0.0199	,:0.000	True	from p1 , p6 gets o11 .
+1	new_form_unseen_trans	365	T4	C	p5	p4	wrong role	2	0.0217	sends:0.000	False	p4 sends p5 o8 .
+1	new_form_unseen_trans	419	T5	C	p2	p9	wrong role	2	0.0071	-	True	p2 is sent o2 by p9 .
+1	new_form_unseen_trans	446	T7	A	p8	p1	candidate not in sentence	11	0.0002	that:1.000	True	it is o11 that p8 sends to p11 .
+1	new_form_unseen_trans	724	T4	C	p0	p10	wrong role	2	0.0106	shows:0.000	False	p10 shows p0 o1 .
+1	new_form_unseen_trans	737	T4	C	p1	p8	wrong role	2	0.0244	shows:0.000	False	p8 shows p1 o4 .
+2	new_form_seen_trans	221	T10	C	p6	p3	candidate not in sentence	12	0.0023	,:0.000	True	from p1 , p6 borrows o10 .
+2	new_form_seen_trans	274	T10	C	p10	p9	candidate not in sentence	11	0.0026	,:0.000	True	from p2 , p10 sees o0 .
+2	new_form_seen_trans	345	T10	C	p10	p9	candidate not in sentence	12	0.0167	,:0.000	True	from p4 , p10 accepts o11 .
+2	new_form_unseen_trans	198	T4	C	p9	p6	candidate not in sentence	6	0.0262	sells:0.000	False	p8 sells p9 o9 .
+2	new_form_unseen_trans	262	T7	A	p4	p0	candidate not in sentence	2	0.0047	that:1.000	True	it is o0 that p4 sells to p3 .
+2	new_form_unseen_trans	275	T11	B	o2	o10	candidate not in sentence	11	0.0499	p4:0.000	False	p8 buys from p4 o2 .
+2	new_form_unseen_trans	383	T4	C	p8	p10	wrong role	3	0.0425	sends:0.000	False	p10 sends p8 o5 .
+2	new_form_unseen_trans	440	T7	A	p10	p1	candidate not in sentence	11	0.0385	that:1.000	True	it is o2 that p10 sends to p7 .
+2	new_form_unseen_trans	445	T7	A	p0	p1	candidate not in sentence	5	0.0285	that:1.000	True	it is o2 that p0 sends to p3 .
+2	new_form_unseen_trans	540	T4	B	o9	o6	candidate not in sentence	11	0.0278	p11:0.000	False	p5 lends p11 o9 .
+2	new_form_unseen_trans	546	T4	B	o1	o7	candidate not in sentence	3	0.0006	p7:0.000	False	p9 lends p7 o1 .
+2	new_form_unseen_trans	736	T4	C	p11	p2	wrong role	2	0.0087	shows:0.000	False	p2 shows p11 o1 .
+2	new_form_unseen_trans	801	T7	A	p5	p1	candidate not in sentence	11	0.0066	that:1.000	True	it is o3 that p5 shows to p8 .
+2	new_form_unseen_trans	836	T11	B	o1	o10	candidate not in sentence	7	0.0259	p0:0.000	False	p1 sees from p0 o1 .
+2	new_form_unseen_trans	839	T11	B	o3	o5	candidate not in sentence	2	0.0327	p10:0.000	False	p3 sees from p10 o3 .
+2	new_form_unseen_trans	921	T4	C	p7	p5	wrong role	3	0.0363	offers:0.000	False	p5 offers p7 o9 .
+2	new_form_unseen_trans	958	T5	C	p5	p11	candidate not in sentence	7	0.0185	-	True	p5 is offered o0 by p2 .
+2	new_form_unseen_trans	1008	T11	B	o6	o1	candidate not in sentence	4	0.0206	p9:0.000	False	p3 accepts from p9 o6 .
+3	new_form_seen_trans	59	T10	C	p0	p9	wrong role	2	0.0018	,:0.000	True	from p9 , p0 receives o2 .
+3	new_form_unseen_trans	240	T7	A	p1	p0	candidate not in sentence	6	0.0025	that:1.000	True	it is o6 that p1 sells to p7 .
+3	new_form_unseen_trans	252	T7	A	p10	p8	candidate not in sentence	7	0.0055	that:1.000	True	it is o0 that p10 sells to p4 .
+3	new_form_unseen_trans	565	T4	C	p4	p11	wrong role	2	0.0539	lends:0.000	False	p11 lends p4 o5 .
+3	new_form_unseen_trans	916	T4	C	p5	p4	wrong role	2	0.0587	offers:0.000	False	p4 offers p5 o5 .
+3	new_form_unseen_trans	962	T7	A	p11	p8	candidate not in sentence	7	0.0055	that:1.000	True	it is o0 that p11 offers to p3 .
+4	new_form_seen_trans	119	T10	C	p0	p10	wrong role	2	0.0490	,:0.000	True	from p10 , p0 buys o8 .
+4	new_form_seen_trans	168	T10	A	p8	p4	wrong role	2	0.0099	from:0.000	True	from p8 , p4 gets o9 .
+4	new_form_seen_trans	222	T10	C	p3	p4	wrong role	2	0.0439	,:0.000	True	from p4 , p3 borrows o11 .
+4	new_form_seen_trans	277	T10	C	p3	p6	wrong role	2	0.0397	,:0.000	True	from p6 , p3 sees o0 .
+4	new_form_unseen_trans	191	T4	C	p7	p4	wrong role	2	0.0049	sells:0.000	False	p4 sells p7 o10 .
+4	new_form_unseen_trans	386	T4	C	p5	p8	wrong role	2	0.0429	sends:0.000	False	p8 sends p5 o7 .
+4	new_form_unseen_trans	624	T7	A	p7	p0	wrong role	2	0.0148	that:1.000	True	it is o3 that p7 lends to p0 .
