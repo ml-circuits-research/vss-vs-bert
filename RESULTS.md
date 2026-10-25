@@ -1491,3 +1491,32 @@ which the second identity is left unplaced (0.95-0.96; the remaining queries com
 identity is adjacent to a filler: it always follows ',', so 0 kind changes). The reader's silent failure on the undecided set was a
 misnamed query, not a silent one: in 95-96% of the sentences it left the inserted identity unplaced, against 39-76% for the MRC rows,
 which place it in some role in 24-61% of the sentences.
+
+## R56: the reader 1a + the verb-order route (vss/run_reader_vorder.py; logs/2026-10-25_2000_run_reader_vorder_0ea758b.txt (seeds 0-4), logs/2026-10-25_2001_run_reader_vorder_0ea758b.txt (seeds 5-9); evaluations logs/2026-10-25_2038_ / _2039_sentence_candidates_a773e88.txt, _2040_ / _2041_residual_explained_a773e88.txt; MEASURED)
+
+Checks: the subclass without the route reproduces 1a EQUAL on seed 0 and on seed 5. Training 261-458 s per seed (concurrent with a few
+evaluation jobs: not a cost number). Learned open gates as 1a's kind of sets ({. by that to} on 6 of 10 seeds, 'from' open on 4).
+
+| axis (slot accuracy) | vorder, per-role (0-4 / 5-9) | vorder + R46 decoder, one-to-one (0-4 / 5-9) | 1a per-role (0-4 / 5-9) | 1a + R46 one-to-one (0-4 / 5-9) |
+|---|---|---|---|---|
+| seen / ids / role cues / depth 1 / depth 2 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 |
+| new form. seen trans. | **0.656 ± 0.020 / 0.664 ± 0.005** | 0.667 / 0.667 | 0.864 ± 0.069 / 0.831 ± 0.055 | 0.873 / 0.867 |
+| new form. UNSEEN trans. | 0.912 ± 0.021 / 0.912 ± 0.013 | **0.999 / 0.998** | 0.868 / 0.835 | 0.975 / 0.973 |
+| depth-3 exact match | 0.996 / 0.997 | 0.999 / 1.000 | 0.982 / 0.992 | 0.995 / 0.998 |
+| explained residual (R46 frames): AUROC; rejected random / ref. / nonce; false rejection | — | 0.974 / 0.979; 0.990 / 0.907 / 1.000 (0-4), 0.988 / 0.929 / 1.000 (5-9); 0.025 / 0.026 | — | 0.975 / 0.979; 0.026 / 0.026 |
+| catalog decoder: compiled residual AUROC; explained residual AUROC (reference) | 0.873 / 0.876; 0.732 (0.466) / 0.732 (0.466) | — | 0.876 / 0.883; 0.730 (0.464) / 0.724 (0.451) | — |
+
+Per cell (design set, R47 categories with the R46 decoder, 900 decisions each, seeds pooled): **T7:A 899 decided by the address, all
+right** (1a: 46 by the address, the rest by restriction / elimination); **T4:C 34 by the address, 845 by elimination** (1a: 259 / 632),
+7 wrong; T4:A 7 wrong (1a 198); T4:B, T11:B right (by the address 842 / 859); **T10:A and T10:C wrong on all 900 each, decided by the
+address** (1a: 344 wrong each). Per-role rule, wrong decisions on new formulations per seed: 560 / 612 / 824 / 625 / 658 (1a 418 / 563
+/ 934 / 431 / 526), of which T10 358-360, T4:C 169-180, T7:A 0-1.
+Against R56's expectations written before the run: T7:A decided by the address on most items: **yes** (899 / 900); T4:C decided by
+the address on most items: **no** (34 / 900; still by elimination); T10 improved: **no** (worse: wrong on every item, the route now
+places A and C confidently in each other's address); nothing else moves outside the seed std: **no**. Rejection rule (R56): "if the
+in-world rows fall by more than one seed std, the route is rejected": seen, new ids, role cues and depths 1-3 do not fall; the
+new-formulation row with seen transitions, which is made of in-world sentences, falls from 0.864 ± 0.069 to 0.656 (three seed stds;
+0.831 -> 0.664 on the claim set). **Read as written, the route is REJECTED.** What it shows: an order-relative address fixes the cleft
+(T7) and, with the R46 decoder, every UNSEEN-transition formulation (0.998-0.999), but the fronted 'from' of T10 (the giver before the
+verb in second position) is then encoded as the recipient on every item: the order route learns 'the second P before the verb is C'
+from the training templates, which T10 contradicts.
