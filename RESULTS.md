@@ -661,3 +661,33 @@ Training throughput of BERT-MRC (batch 32, fp32, the same script and data), samp
   (3.30x): the small models are launch-bound, and their rows run six at a time. (A first attempt with 300 steps overlapped too little to
   measure anything, about 3 s per run, and is not used.)
 Per R22 / R23 the cost rows per seed come only from runs that ran alone; the energy of concurrent runs is reported for the batch.
+
+## R11 re-runs of 1b / 1c with saved models, and R17 (i) on them and on the saved 2a seed-0 tagger (exploratory; R30 item 8)
+
+Logs: logs/2026-10-25_1507_transformer_7b_699a9ec.txt (1b re-run), logs/2026-10-25_1508_transformer_7b_699a9ec.txt (1c re-run),
+logs/2026-10-25_1516_r17_reader_bb13fee.txt and _1517_ (R17 on them), logs/2026-10-25_1507_r17_tagger_699a9ec.txt (R17 on 2a, seed 0).
+Concurrent runs (six slots; GPU energy for the batch in logs/power_queue_2026-10-25_1506.csv). Label: MEASURED.
+
+**R11 re-runs (same pre-registered configuration, models saved; exit check: the per-role rule reproduces 1b / 1c).** 7b-bis
+(lr 3e-4, dropout 0): new ids 0.246 ± 0.051, depth 3 0.390 ± 0.021 (pre-registered 1b: 0.251 ± 0.048, 0.390 ± 0.021; within seed
+variance, MET; not bit-identical, GPU non-determinism). 7b (lr 1e-3, dropout 0): 0.215 ± 0.015, 0.392 ± 0.025, identical to 1c (MET).
+One-to-one rule on the same models (R10 item 1): depth-3 exact match six roles 0.000, inner frame 0.002 ± 0.003 (7b-bis) and 0.003 ±
+0.002 (7b); slot accuracy at depth 3 0.399 / 0.401. The rule does not change the controls' picture.
+
+**R17 (i), out-of-world rejection with thresholds at the 2% false-rejection point of the in-world calibration rows** (the depth from the
+level openers, which equals the gold depth on every in-world axis, 1.000):
+
+| model | rejected: random | reference | nonce (placeholder) | nonce (by construction) | false rejection, pooled in-world report axes |
+|---|---|---|---|---|---|
+| 7b-bis (residual) | 0.997 ± 0.002 | 0.524 ± 0.168 | 0.976 ± 0.041 | 1.000 | 0.374 ± 0.039 |
+| 7b (residual) | 0.971 ± 0.025 | 0.340 ± 0.186 | 0.789 ± 0.132 | 1.000 | 0.353 ± 0.018 |
+| BERT-base WordPiece, 2a seed 0 only (MSP: min over roles of the max candidate probability) | 1.000 | 0.982 | 0.954 (a real test) | n/a | 0.391 |
+
+The false rejections are not spread evenly: per axis (7b-bis / 7b / 2a seed 0) seen 0.000 / 0.015 / 0.000, new ids 1.000 / 1.000 /
+1.000, depth 3 1.000 / 1.000 / 1.000, new formulations 0.19-0.34 / 0.06-0.30 / 0.35-0.50. A threshold set at 2% false rejection on the
+training distribution (where every model is near 100% correct and its scores saturate: 2a's threshold is a probability of 0.9998)
+rejects every new-identity and every depth-3 sentence for all three models: on this world the in-world "out-of-distribution" axes and
+the out-of-world sets are not separated by a training-distribution threshold. None meets the demo criterion (>= 0.90 per source with <=
+2% false rejection). Q8's question for the confirmatory comparisons is therefore the AUROC (R30 item 8 (iii)), not a single threshold.
+The tagger's residual analogue (content tokens with no role probability >= 0.5) is degenerate in-world (0.11-0.25 on every in-world axis,
+because the verbs are content words that no role takes) and is reported but not interpreted (R30 item 7).

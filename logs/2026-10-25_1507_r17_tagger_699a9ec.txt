@@ -1,0 +1,31 @@
+# 2026-10-25T15:07:25+01:00  commit=699a9ec  cmd: python3 eval/r17_tagger.py --tag bert_bert-base-uncased_pre_wordpiece --seeds 1  (guard: mem fraction 0.150, min available 16 GB, max 6 h; MemAvailable at start 109 GB; slot logs/.run.lock.3 of 6)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 15% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+r17_tagger: main repository e531283; device cuda; saved row bert_bert-base-uncased_pre_wordpiece; seeds 1; false-rejection cap 0.02
+regime (rule 24): basic world; depth of every sentence from the level openers for items 1-2; thresholds on calibration rows only (rule 25); out-of-world sets frozen before this run
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 8455.06it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0: threshold (i) 0.9998; rejected (i) {'random': 1.0, 'reference': 0.982, 'nonce': 0.954}; false rejection pooled {'i': 0.39098639455782314}
+  seed 0: residual analogue means {'calibration': 0.15245833333333333, 'seen': 0.1875, 'new_ids': 0.1875, 'new_form_seen_trans': 0.25, 'new_form_unseen_trans': 0.16666666666666666, 'new_form_role_cues_seen': 0.25, 'depth1': 0.15, 'depth2_seen': 0.125, 'depth3_unseen': 0.10714285714285712, 'oow_random': 0.25419115884115884, 'oow_reference': 0.19025238095238098, 'oow_nonce': 0.3154285714285714}
+
+== R17, bert_bert-base-uncased_pre_wordpiece: MEANS over 1 seeds (per-seed list) ==
+  rejected (i) random     1.000 ± 0.000 [1.000]
+  rejected (i) reference  0.982 ± 0.000 [0.982]
+  rejected (i) nonce      0.954 ± 0.000 [0.954]
+  false rejection (i) pooled in-world report axes 0.391 ± 0.000 [0.391]
+  criterion (demo specification): rejected >= 0.90 per source with false rejections <= 0.02
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] out-of-world sets frozen before the run [x] thresholds on calibration rows only [x] sources reported apart [x] no training
+# post-launch guard (slots 6): MemAvailable 90 s after the start 97 GB
