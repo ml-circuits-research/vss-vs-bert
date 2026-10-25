@@ -13,7 +13,9 @@ R10 (responses R10, 2026-10-25; deviations after the independent review, RESULTS
 (tag prereg-2026-10-25): --r10 (= --select r10 --wd_groups --seed_per_config --trunc_none --temperature), --pos_offset K (random position
 offsets 0..K in training), --whole_init pieces. Always on and additive (no pre-registered number changes): per-candidate scores for the
 one-to-one rule, the validation cross-entropy of every grid point, the depth-3 split by filler position (first-sub-token index), the
-occupancy over the trained labels, the cost at fp16 and int8 dynamic quantization and the CPU thread count."""
+occupancy over the trained labels, the cost at fp16 and int8 dynamic quantization and the CPU thread count.
+R14 (responses R14, 2026-10-25): --cues given adds ONE learned 'cue' embedding (hidden size, init N(0, 0.02)) to the input embedding of
+every token that is a whole cue word of CUE_WORDS (the same set the reader's gates are given for); default 'none' = the tagged code."""
 import argparse, os, sys, time, json, io
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
@@ -25,9 +27,10 @@ from common import basic_world as bwm, report
 from eval import metrics
 
 LABELS = ["O"] + bwm.ROLES; LAB = {l: i for i, l in enumerate(LABELS)}
+CUE_WORDS = ["to", "by", "from", ".", "says", "that"]   # R14: the role-cue and level-opener words, given from the legend (rule 20)
 
 class Tagger(nn.Module):
-    def __init__(self, name, scratch, n_tokens, piece_init=None):
+    def __init__(self, name, scratch, n_tokens, piece_init=None, cue_tok=None):
         super().__init__()
         cfg = AutoConfig.from_pretrained(name)
         self.enc = AutoModel.from_config(cfg) if scratch else AutoModel.from_pretrained(name)
@@ -37,9 +40,22 @@ class Tagger(nn.Module):
                 E = self.enc.get_input_embeddings().weight
                 with torch.no_grad():
                     for new_id, pieces in piece_init.items(): E[new_id] = E[pieces].mean(0)
-        self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1)
+        self.head = nn.Linear(cfg.hidden_size, len(LABELS)); self.drop = nn.Dropout(0.1); self.cue = None
+        if cue_tok is not None:                        # R14: a token is a cue iff it is a cue word's own (single) token and the next token does not continue it
+            vocab = cue_tok.get_vocab(); cont = torch.zeros(max(n_tokens, len(vocab)), dtype=torch.bool)
+            for t, i in vocab.items():
+                if t.startswith("##"): cont[i] = True
+            ids_ = [vocab[w_] for w_ in CUE_WORDS if w_ in vocab]; assert len(ids_) == len(CUE_WORDS), "every cue word must be one token"
+            self.register_buffer("cue_ids", torch.tensor(ids_)); self.register_buffer("cont", cont)
+            self.cue = nn.Parameter(torch.randn(cfg.hidden_size) * 0.02)
     def forward(self, ids, att, position_ids=None):
-        h = self.enc(input_ids=ids, attention_mask=att, **({"position_ids": position_ids} if position_ids is not None else {})).last_hidden_state
+        kw = {"position_ids": position_ids} if position_ids is not None else {}
+        if self.cue is None: h = self.enc(input_ids=ids, attention_mask=att, **kw).last_hidden_state
+        else:
+            nxt = torch.cat([ids[:, 1:], torch.zeros_like(ids[:, :1])], 1)
+            m = torch.isin(ids, self.cue_ids) & ~self.cont[nxt] & att.bool()
+            emb = self.enc.get_input_embeddings()(ids) + m.unsqueeze(-1).to(self.cue.dtype) * self.cue
+            h = self.enc(inputs_embeds=emb, attention_mask=att, **kw).last_hidden_state
         return self.head(self.drop(h))
 
 def encode_batch(tok, sents, device, max_len=96, trunc_none=False):
@@ -99,7 +115,7 @@ def predict(model, tok, split, axis, device, batch=128, T=1.0, trunc_none=False)
         prob = torch.softmax(model(ids, att) / T, -1).cpu().numpy()
         for b, it in enumerate(chunk):
             p = np.stack([prob[b][j] if j is not None else np.zeros(len(LABELS)) for j in firsts[b]])   # words x labels
-            out = {"frame": {r: None for r in bwm.ROLES}, "margins": {}, "free_frame": {r: None for r in bwm.ROLES}}
+            out = {"frame": {r: None for r in bwm.ROLES}, "margins": {}, "free_frame": {r: None for r in bwm.ROLES}, "score_floor": float(np.log(1e-30))}
             for r in bwm.roles_at(it["depth"]):
                 cands = bwm.candidates_for(split, axis, r); pos = [k for k, t in enumerate(it["tokens"]) if t in cands]
                 sc = np.array([p[k, LAB[r]] for k in pos]) if pos else np.zeros(0)
@@ -166,6 +182,7 @@ if __name__ == "__main__":
     ap.add_argument("--select", default="prereg", choices=["prereg", "r10"], help="r10: ties of validation FULL go to the lowest validation cross-entropy (R10 item 3)")
     ap.add_argument("--wd_groups", action="store_true"); ap.add_argument("--seed_per_config", action="store_true"); ap.add_argument("--trunc_none", action="store_true")
     ap.add_argument("--temperature", action="store_true"); ap.add_argument("--pos_offset", type=int, default=0); ap.add_argument("--whole_init", default="resize", choices=["resize", "pieces"])
+    ap.add_argument("--cues", default="none", choices=["none", "given"], help="R14: 'given' adds the learned cue embedding on the CUE_WORDS tokens (row 'cues given')")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lrs", default=None); ap.add_argument("--epochs", default=None); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="save the seed-0 model and tokenizer to logs/models/ for eval/determinism.py")
     a = ap.parse_args()
     if a.r10: a.select, a.wd_groups, a.seed_per_config, a.trunc_none, a.temperature = "r10", True, True, True, True
@@ -177,6 +194,8 @@ if __name__ == "__main__":
         name += " reviewed (R10" + (f", position offsets 0-{a.pos_offset}" if a.pos_offset else "") + (", piece-mean init" if a.whole_init == "pieces" else "") + ")"
         tag += "_r10" + (f"_off{a.pos_offset}" if a.pos_offset else "") + ("_pieceinit" if a.whole_init == "pieces" else "")
         print(f"R10 flags: select {a.select}, wd groups {a.wd_groups}, seed per config {a.seed_per_config}, truncated word -> None {a.trunc_none}, temperature {a.temperature}, position offsets 0-{a.pos_offset}, whole init {a.whole_init}")
+    if a.cues == "given":
+        name += " cues given (R14)"; tag += "_cues"; print(f"R14: cue embedding added on the tokens of {CUE_WORDS}")
     print(f"bert_basic: {name}; main repository {mainrepo.check_pinned()}; device {a.device}; N {a.N}; seeds {a.seeds}; grid lr {lrs} x epochs {eps}; batch {a.batch}")
     print("regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; token-tagging head; decoding restricted to the world's candidates; frozen splits")
     print("chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167"); chosen = None; rows = []
@@ -193,7 +212,7 @@ if __name__ == "__main__":
         for lr in (lrs if seed == 0 else [chosen[0]]):
             for ep in (eps if seed == 0 else [chosen[1]]):
                 if a.seed_per_config: torch.manual_seed(seed)   # R10 item 14: a selected configuration can be re-run alone
-                model = Tagger(a.model, a.scratch, len(tok), piece_init).to(a.device); t0 = time.time(); train(model, tok, data, lr, ep, a.batch, a.device, seed, a.wd_groups, a.pos_offset, a.trunc_none)
+                model = Tagger(a.model, a.scratch, len(tok), piece_init, tok if a.cues == "given" else None).to(a.device); t0 = time.time(); train(model, tok, data, lr, ep, a.batch, a.device, seed, a.wd_groups, a.pos_offset, a.trunc_none)
                 vp = predict(model, tok, val_split, "val", a.device, trunc_none=a.trunc_none); vfull = np.mean([all(p["frame"][r] == it["frame"][r] for r in bwm.roles_at(it["depth"])) for it, p in zip(val_items, vp)])
                 L_, Y_ = logits_and_labels(model, tok, val_items, a.device, trunc_none=a.trunc_none); vce = float(nn.CrossEntropyLoss()(L_, Y_))
                 print(f"  seed {seed} lr={lr:g} epochs={ep} ({time.time() - t0:.0f}s, {sum(p.numel() for p in model.parameters())/1e6:.1f}M params) validation FULL {vfull:.3f}, token cross-entropy {vce:.5f}", flush=True)
@@ -228,7 +247,7 @@ if __name__ == "__main__":
         if a.save_model and seed == 0:
             md = os.path.join(mainrepo.ROOT, "logs", "models", tag + "_seed0"); os.makedirs(md, exist_ok=True)
             torch.save(model.state_dict(), os.path.join(md, "tagger.pt")); tok.save_pretrained(md)
-            json.dump({"model": a.model, "scratch": a.scratch, "n_tokens": len(tok)}, open(os.path.join(md, "config.json"), "w"))
+            json.dump({"model": a.model, "scratch": a.scratch, "n_tokens": len(tok), "cues": a.cues}, open(os.path.join(md, "config.json"), "w"))
         rows.append(row); model.to(a.device); del model
     report.summarize(rows, name)
     print("written interpretation (INSTRUCTIONS table 3): new ids > 0.9 => the pieces carry the role; < 0.5 => the vocabulary gap is structural; depth 3 > 0.9 would contradict the paper's same-input claim, < 0.5 confirms it; in between reported with both readings")

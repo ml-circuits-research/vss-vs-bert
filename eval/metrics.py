@@ -42,6 +42,8 @@ def one_to_one(pred, roles):
     second-best assignment's total (R11). Returns a prediction in the scorer's format."""
     from scipy.optimize import linear_sum_assignment
     cs = pred["cand_scores"]; rs = [r for r in roles if r in cs and len(cs[r][0])]
+    floor = pred.get("score_floor", 0.0)   # a role with ONE candidate: margin = score - floor, as the per-role rule's 'top1 - 0' (fix 2026-10-25:
+                                           # with log-probabilities the old 0.0 gave log p < 0, i.e. 'unsure', for a certain single candidate)
     out = {"frame": {r: None for r in pred["frame"]}, "margins": {r: 0.0 for r in roles}}
     if not rs: return out
     U = sorted({f for r in rs for f in cs[r][0]}); col = {f: j for j, f in enumerate(U)}
@@ -55,7 +57,7 @@ def one_to_one(pred, roles):
     out["assignment_margin"] = float(total - second) if np.isfinite(second) else 0.0
     for i, j in zip(ri, ci):
         r = rs[i]; f = U[j]; sc = dict(zip(*cs[r])); others = [v for g, v in sc.items() if g != f]
-        out["frame"][r] = f; out["margins"][r] = float(sc[f] - (max(others) if others else 0.0))
+        out["frame"][r] = f; out["margins"][r] = float(sc[f] - (max(others) if others else floor))
     return out
 
 def position_split(items, preds, positions, train_max, roles):

@@ -34,7 +34,7 @@ if __name__ == "__main__":
         from transformers import AutoTokenizer
         from models import bert_basic as bb
         cfg = json.load(open(os.path.join(a.tagger, "config.json"))); seed = 0; split = bwm.load(seed); bw = bwm.build(seed, split["D"])
-        tok = AutoTokenizer.from_pretrained(a.tagger); model = bb.Tagger(cfg["model"], cfg["scratch"], cfg["n_tokens"]).to(a.device)
+        tok = AutoTokenizer.from_pretrained(a.tagger); model = bb.Tagger(cfg["model"], cfg["scratch"], cfg["n_tokens"], cue_tok=tok if cfg.get("cues") == "given" else None).to(a.device)
         model.load_state_dict(torch.load(os.path.join(a.tagger, "tagger.pt"), map_location=a.device))
         preds = {ax: bb.predict(model, tok, split, ax, a.device) for ax in AX}
         pos = bb.subword_positions(tok, split["axes"]["depth3_unseen"]); tmax = bb.train_max_subwords(tok, bb.make_train(bw, seed, 30000))
