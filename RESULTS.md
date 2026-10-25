@@ -688,6 +688,6 @@ The false rejections are not spread evenly: per axis (7b-bis / 7b / 2a seed 0) s
 training distribution (where every model is near 100% correct and its scores saturate: 2a's threshold is a probability of 0.9998)
 rejects every new-identity and every depth-3 sentence for all three models: on this world the in-world "out-of-distribution" axes and
 the out-of-world sets are not separated by a training-distribution threshold. None meets the demo criterion (>= 0.90 per source with <=
-2% false rejection). Q8's question for the confirmatory comparisons is therefore the AUROC (R30 item 8 (iii)), not a single threshold.
+2% false rejection). The confirmatory comparison on this point is therefore the AUROC (R30 item 8 (iii)), not a single threshold.
 The tagger's residual analogue (content tokens with no role probability >= 0.5) is degenerate in-world (0.11-0.25 on every in-world axis,
 because the verbs are content words that no role takes) and is reported but not interpreted (R30 item 7).
