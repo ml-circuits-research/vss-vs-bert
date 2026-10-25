@@ -124,7 +124,7 @@ class Reader:
                 raise ModelError(f"legend mismatch: {legend_path} is {other.sha}, the model was trained with {self.legend.sha} (--force to inspect)")
         self.rb = Routebook(os.path.join(model_dir, "routebook.npz")); self.D = self.rb.D
         self.st = world.Stars(self.cfg["seed"], self.D, self.cat.get("star_seed", world.GLOBAL_STAR_SEED), self.cat.get("identity_table"),
-                              self.cfg.get("star_version", 1))
+                              self.cfg.get("star_version", 1), self.cat.get("star_table"))
         self.comp = world.Compiler(self.legend, self.st)
         self.words = self.cat["words"]                      # word -> {"kind", "lemma"?}
         self.schema = self.cat["schema"]; self.th = self.cfg.get("thresholds", {})

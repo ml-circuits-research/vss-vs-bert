@@ -58,15 +58,21 @@ def star_v2(seed, name, D):
 class Stars:
     """cache of stars: word identities from the GLOBAL star seed (shared across worlds), role / operator vectors and the occupancy marker
     from the world's training seed (the world's named stars; not shared)"""
-    def __init__(self, seed, D, star_seed=GLOBAL_STAR_SEED, identity_table=None, star_version=1):
+    def __init__(self, seed, D, star_seed=GLOBAL_STAR_SEED, identity_table=None, star_version=1, star_table=None):
         self.seed, self.D, self.star_seed, self.cache = seed, D, star_seed, {}
         self.star_version = int(star_version or 1)          # 1 = NumPy generator (every existing world), 2 = portable (browser)
-        self.table = None
+        self.table = None; self.named = {}
+        if star_table:          # named stars GIVEN by a per-seed draw (vss-vs-bert Q29: the basic world's role / level vectors R_A, R_B, R_C, R_X,
+            # R_rep from np.random.default_rng(100 + seed) in that order): catalog.json "star_table": {"rng_seed": int, "order": ["role:A", ...]};
+            # read by get() before the hashed star, the same pattern as identity_table
+            rng = np.random.default_rng(star_table["rng_seed"])
+            for name in star_table["order"]: self.named[name] = np.exp(1j * rng.uniform(-np.pi, np.pi, D))
         if identity_table:      # a per-seed identity DRAW over a world vocabulary, as experiment/v16_reference (judgment e9274a9 C2, run C)
             voc = identity_table["vocab"]; rng = np.random.default_rng(identity_table["rng_seed"])
             F = np.exp(1j * rng.uniform(-np.pi, np.pi, (len(voc), D))); self.table = {w: F[i] for i, w in enumerate(voc)}
             self.marker_word = identity_table.get("marker_word")
     def get(self, name, seed=None):
+        if name in self.named: return self.named[name]
         seed = self.seed if seed is None else seed; v = self.cache.get((seed, name))
         if v is None: v = self.cache[(seed, name)] = (star_v2 if self.star_version == 2 else star)(seed, name, self.D)
         return v
