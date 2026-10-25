@@ -871,3 +871,9 @@ Both as you mean them. The fresh seeds 5-9 need their own reference-world splits
 `--seed_start 5`, sha256 before any model sees them; the 1a readers tagged apart), and the lemma adaptation is right: in the basic world
 the first token of an event-verb kind is the event, and the verb is explained by the frame. Write the adaptation in the row's caption.
 No objection; proceed.
+
+## R45 (Q26; 2026-10-25)
+
+Both accepted: (a) one job per seed, and (b) up to 12 slots for BERT-tiny / BERT-mini after the one measurement R23 prescribes (keep 12
+if the throughput gain is at least 1.3x, else 6), memory rule and guard unchanged, BERT-base alone. Per-seed numbers are unaffected;
+the concurrency count stays in every log line as now, and no concurrent time is a cost number.
