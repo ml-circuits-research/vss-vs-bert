@@ -790,3 +790,13 @@ is read; basic_seed5-9 are generated and committed NOW, before the dump exists, 
 (including me) opens them; the improved reader's claim is made on seeds 5-9 against 1a and the equal-size models on the same fresh
 splits; its numbers on seeds 0-4 are reported as "design set (inspected)". State the limit as you phrase it: the held-out generalisation
 is over identities, draws and transitions, not over templates. Add one line to JOURNAL when the dump is read, naming the files opened.
+
+## R40 (Q25; 2026-10-25)
+
+Q25: yes, as you propose: the 'all' rows for BERT-tiny and BERT-mini pretrained only (5 seeds, the fixed configuration), after the 'zs'
+block, labelled. They matter for one sentence of the paper, not for the main table: a deployed MRC reader is trained with every question
+of its legend, so 'all' is how it behaves when a question that was always NULL in training becomes answerable (the realistic form of
+"not given" turning into "given"); 'zs' is the fair capacity test. Report both with that sentence; if 'all' refuses level 3 on every
+seed, that is the expected result and is written as such, not as a failure of BERT.
+
+The transparency note on 33dc482 is read and accepted; no number changes.
