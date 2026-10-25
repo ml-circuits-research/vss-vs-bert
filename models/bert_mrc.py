@@ -85,6 +85,7 @@ def examples(data, roles_fn):
     return out
 
 def train(model, tok, ex, lr, epochs, batch, device, seed):
+    last = []
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01); steps = epochs * ((len(ex) + batch - 1) // batch)
     sched = get_linear_schedule_with_warmup(opt, int(0.1 * steps), steps); g = torch.Generator().manual_seed(seed); ce = nn.CrossEntropyLoss()
     for ep in range(epochs):
@@ -95,6 +96,8 @@ def train(model, tok, ex, lr, epochs, batch, device, seed):
             ye = torch.tensor([0 if k is None else spans[b][k][1] for b, (_, _, k) in enumerate(chunk)], device=device)
             s, e = fwd(model, ids, att, tt, spans, pairs); loss = ce(s, ys) + ce(e, ye)
             opt.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0); opt.step(); sched.step()
+            if ep == epochs - 1: last.append(float(loss))
+    return float(np.mean(last))   # R35: the mean training loss of the last epoch (the convergence rule)
 
 @torch.no_grad()
 def answer(model, tok, pairs_meta, device, batch=256):
@@ -149,10 +152,11 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=32)
     ap.add_argument("--lrs", default="2e-5,3e-5,5e-5"); ap.add_argument("--epochs", default="3,5,10"); ap.add_argument("--grid_only", action="store_true"); ap.add_argument("--select", action="store_true")
     ap.add_argument("--device", default="cuda"); ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--n_val", type=int, default=2000); ap.add_argument("--save_model", action="store_true")
+    ap.add_argument("--tag_suffix", default="", help="appended to the results / model names (R35: the sensitivity table's grid points)")
     ap.add_argument("--scratch", action="store_true", help="R28 (b): the same architecture, randomly initialised")
     ap.add_argument("--kinds", default="none", choices=["none", "given"], help="R27 item 1: a learned embedding per word kind on the sentence tokens")
     a = ap.parse_args()
-    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}" + ("_scratch" if a.scratch else "") + ("_kinds" if a.kinds == "given" else ""); name = f"{a.model} MRC [train questions {a.train_questions}]" + (" from scratch" if a.scratch else "") + (" kinds given (R27)" if a.kinds == "given" else "")
+    tag = f"mrc_{a.model.replace('/', '_')}_{a.train_questions}" + ("_scratch" if a.scratch else "") + ("_kinds" if a.kinds == "given" else "") + a.tag_suffix; name = f"{a.model} MRC [train questions {a.train_questions}]" + (" from scratch" if a.scratch else "") + (" kinds given (R27)" if a.kinds == "given" else "")
     if a.select:
         pts = [p for f in sorted(glob.glob(os.path.join(mainrepo.ROOT, "logs", f"mrc_grid_{tag}_lr*.json"))) for p in json.load(open(f))]
         best = max(pts, key=lambda p: (p["val_full"], -p["val_loss"])); print(f"bert_mrc --select ({tag}): {len(pts)} grid points: " + "; ".join(f"lr {p['lr']:g} ep {p['epochs']} FULL {p['val_full']:.3f} loss {p['val_loss']:.5f}" for p in pts))
@@ -171,7 +175,7 @@ if __name__ == "__main__":
         vex = examples(val, tq); best = None
         for lr in lrs:
             for ep in eps:
-                torch.manual_seed(seed); model = MRC(a.model, KINDS, a.scratch).to(a.device); t0 = time.time(); train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
+                torch.manual_seed(seed); model = MRC(a.model, KINDS, a.scratch).to(a.device); t0 = time.time(); tl = train(model, tok, ex, lr, ep, a.batch, a.device, seed); tt = time.time() - t0
                 vp = read(model, tok, {"axes": {"val": vitems}, "candidates": split["candidates"]}, "val", vitems, a.device)
                 vfull = float(np.mean([all(p["frame"][r] == it["frame"][r] for r in bwm.roles_at(it["depth"])) for it, p in zip(vitems, vp)]))
                 with torch.no_grad():
@@ -181,11 +185,11 @@ if __name__ == "__main__":
                         ys = torch.tensor([0 if k is None else spans[b][k][0] for b, (_, _, k) in enumerate(chunk)], device=a.device); ye = torch.tensor([0 if k is None else spans[b][k][1] for b, (_, _, k) in enumerate(chunk)], device=a.device)
                         L += float(ce(s, ys) + ce(e, ye))
                 vloss = L / len(vex)
-                print(f"  seed {seed} lr={lr:g} epochs={ep} ({tt:.0f}s, {sum(p.numel() for p in model.parameters())/1e6:.1f}M params, {len(ex)} examples) validation FULL {vfull:.3f}, span loss {vloss:.5f}; peak cuda reserved {torch.cuda.max_memory_reserved()/1e9 if a.device == 'cuda' else 0:.1f} GB", flush=True)
-                grid.append({"lr": lr, "epochs": ep, "val_full": vfull, "val_loss": vloss, "train_s": tt})
+                print(f"  seed {seed} lr={lr:g} epochs={ep} ({tt:.0f}s, {sum(p.numel() for p in model.parameters())/1e6:.1f}M params, {len(ex)} examples) validation FULL {vfull:.3f}, span loss {vloss!r}, final training loss {tl!r}; peak cuda reserved {torch.cuda.max_memory_reserved()/1e9 if a.device == 'cuda' else 0:.1f} GB", flush=True)
+                grid.append({"lr": lr, "epochs": ep, "val_full": vfull, "val_loss": vloss, "train_loss_last_epoch": tl, "train_s": tt})
                 if best is None or (vfull, -vloss) > (best[0], -best[1]):
                     if best is not None: del best[2]
-                    best = [vfull, vloss, model, tt]; best_cfg = (lr, ep)
+                    best = [vfull, vloss, model, tt, tl]; best_cfg = (lr, ep)
                 else: del model
                 torch.cuda.empty_cache() if a.device == "cuda" else None
         if a.grid_only:
@@ -216,6 +220,7 @@ if __name__ == "__main__":
         ms6 = 1000 * (time.time() - t0) / len(sents)
         row["cost"] = {"params": sum(p.numel() for p in cpu.parameters()), "bytes": model_bytes(cpu), "bytes_fp16": 2 * sum(p.numel() for p in cpu.parameters()), "cpu_ms_per_sentence_all_questions": ms6,
                        "passes_per_sentence_all_questions": 6, "cpu_threads": torch.get_num_threads(), "batch": a.batch, "train_s": best[3], "examples_per_epoch": len(ex)}
+        row["train_loss_last_epoch"] = best[4]; row["config"] = {"lr": best_cfg[0], "epochs": best_cfg[1]}
         print(f"  seed {seed} depth not given: {row['depth_not_given']}; occupancy (not given) {occ}")
         print(f"  seed {seed} R17 (i): {row['r17']}; residual analogue {row['residual_analogue']}")
         print(f"  seed {seed} cost: {row['cost']['params']/1e6:.1f}M params, {row['cost']['bytes']/1e6:.0f} MB, {ms6:.1f} ms per sentence on CPU with all six questions (6 passes), {torch.get_num_threads()} threads")
