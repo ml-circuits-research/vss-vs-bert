@@ -1223,3 +1223,14 @@ match at depth 3 is 0.000 for every BERT row against the reader's 0.982 (one-to-
 picture (tiny: inner 0.722 against 0.972 without, with a large seed spread; mini seeds 0-2: 0.963 against 1.000). Pretraining is what
 separates the rows at equal size: from scratch the inner frame falls to 0.14-0.17 and new formulations to 0.63-0.89. The confirmatory
 comparisons follow in their own section.
+
+**R46 / R42 on the design set, accepted by R53; three sentences written before any seeds 5-9 row is read:** (1) the design-set
+numbers of the reader 1a with sentence candidates + one-to-one (UNSEEN formulations 0.868 -> 0.975, depth-3 exact match 0.995 at
+coverage 0.997 with confident error 0.001, explained-residual AUROC 0.975, rejected 0.99 / 0.91 / 1.00 at 2.6% false rejection) are
+DESIGN-SET numbers only; the claim is the seeds 5-9 row. (2) The demo criterion (>= 0.90 per source at <= 2% false rejection) is NOT
+met: missed by 0.6 points of false rejection. (3) The largest remaining error is one cell, T10 (fronted 'from': A and C swapped, both
+addresses holding the other filler; 344 wrong decisions in each of A and C over the five seeds), which elimination cannot resolve and
+only the route fix can. Correction of fact to R53's wording, from the same files: T4 also keeps errors (198 wrong decisions in each of
+A and C pooled, where both addresses hold A's filler and the elimination assigns it to C, leaving A wrong); every other cell has at most
+13 wrong decisions of 900. Decision provenance stays in the table: T7:A is right by restriction (411) and elimination (440), not by
+the address (43).
