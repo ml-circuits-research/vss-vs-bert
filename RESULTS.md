@@ -386,3 +386,17 @@ R17 as settled by responses R18 (2026-10-25; Q12-Q15):
   BERT-base WordPiece (2a configuration) and DistilBERT pretrained (3a configuration) with the matching reader rows; item 3 also for 7b-bis
   from its saved R11 re-run models, with the same level-opener count as the reader (a property of the token sequence, not of the model).
   The from-scratch encoder and the controls' trained OOW class are out unless asked.
+
+## Deviation R19: small pretrained encoders at the reader's size (declared 2026-10-25; runs after JP 1)
+
+Declared by responses R19, run after JP 1 (not before). BERT-tiny (google/bert_uncased_L-2_H-128_A-2) and BERT-mini
+(google/bert_uncased_L-4_H-256_A-4), pretrained, fine-tuned on the basic world, 5 seeds, both tokenizer conditions, the one-to-one rule and
+the position split as every row, the cue feature in a second row (R14). Grid for these models, fixed now and not extended: lr {5e-5,
+1e-4, 3e-4} x epochs {5, 10, 20}, batch 32, warm-up 10%, selection on seed 0 with the R10 tie-break (the larger learning rates are the
+published practice for the small BERTs, Turc et al. 2019). Load check on the DGX (2026-10-25, transformers 5.20.2, no training): both load
+with their fast BertTokenizer and are cached; 4,385,920 and 11,170,560 encoder parameters; 'p7 says that o3 .' -> p ##7 says that o ##3 .
+Interpretations, written before the run (R19, verbatim): (a) inner-frame FULL at depth 3 < 0.9 for the small encoders while the reader
+stays at 0.98: at equal size, the reader composes the unseen depth and the pretrained encoders do not; (b) >= 0.9: pretraining composes
+on this world even at 4 M parameters, and the reader's case rests on the six-role FULL, the calibration, the residual and the cost; (c)
+in between, both readings. Cost rows for both (parameters, bytes at fp32 / fp16 / int8, CPU ms per sentence with the thread count) on
+the same table as the accuracy. These rows do not change the pre-registered claims.
