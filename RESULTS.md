@@ -1723,7 +1723,7 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
 - Decoder provenance: every reader row above was decoded by common/decode.py and eval/sentence_candidates.py (transcriptions); the
   EQUAL checks against sop/ (the tool, R58 item 1) are reported in their own section.
 
-**Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 before they run:** (1) the reader's growth rows with k = 5 / 10 / 20
+**Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 (correction of fact: the first of them, k = 5 / 10 / 20 on seeds 0-4, had been launched about a minute before this text was committed; no output of it had been read):** (1) the reader's growth rows with k = 5 / 10 / 20
 template-4 sentences (vss/reader_growth.py --ks 5,10,20, both seed ranges; the two runs and the other CPU jobs below run concurrently, so
 their training times are not the alone wall-clock of the table above, which stays 135-137 s); (2) the route-b reader's template-4 cell
 with k = 0 (eval/vorder_keys.py; template 4 was never in its training); (3) the route's size at its USED keys, the distinct (side, verb
