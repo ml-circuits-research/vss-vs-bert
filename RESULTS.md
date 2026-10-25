@@ -1281,3 +1281,29 @@ level-3 question it was never shown in the ten examples (depth 3 exact match 0.9
 role (0 false fills), and is at 0.95-1.00 on every new-formulation axis; it is the accuracy ceiling of this row family, on one seed's
 subset, at about 0.5 thousandths of a dollar and 2 s per sentence through an API, against a reader of 13 MB. It is not compared
 statistically with the trained models (one seed, a 200-item subset, 10-shot).
+
+## The planted-sets row, query emission (R26 / Q19 / R48 item 4; eval/planted.py; logs/2026-10-25_1848_ to _1855_planted_*.txt; MEASURED)
+
+Rules as declared (depth from the openers; 'undecided' when the planted role's margin is below the 2% quantile of the model's
+calibration margins; 'unsupported' for every identity placed in no role; no trained coverage head for any model). Seeds 0-4, the frozen
+planted sets (300 + 300 per seed). mean ± std over 5 seeds; "needless" = a right value queried; "conf. err." = a wrong value at or above
+the threshold; hallucination rate = invented planted decisions + confident errors, over all decisions.
+
+| model | undecided: planted queried [per seed] | other roles: needless / conf. err. | halluc. | unsupported: planted queried [per seed] | needless 'unsupported' on original ids | other roles: needless / conf. err. | halluc. |
+|---|---|---|---|---|---|---|---|
+| reader 1a | 0.513 ± 0.163 [0.470 0.380 0.833 0.450 0.433] | 0.171 / 0.000 | 0.108 | **0.984 ± 0.005** [0.977 0.993 0.983 0.983 0.983] | 0.005 | 0.216 / 0.000 | 0.003 |
+| reader 1a + R46 decoder | 0.522 ± 0.180 [0.470 0.380 0.877 0.450 0.433] | 0.154 / 0.000 | 0.106 | **0.983 ± 0.006** | 0.004 | 0.206 / 0.000 | 0.003 |
+| BERT-tiny pretrained | **0.991 ± 0.013** [0.967 1.000 0.990 1.000 1.000] | 0.352 / 0.029 | 0.024 | 0.835 ± 0.116 [0.883 0.610 0.920 0.920 0.840] | 0.094 | 0.431 / 0.028 | 0.053 |
+| BERT-tiny from scratch | 0.837 ± 0.063 | 0.223 / 0.072 | 0.092 | 0.705 ± 0.062 | 0.129 | 0.254 / 0.056 | 0.100 |
+| BERT-tiny kinds given | 0.985 ± 0.010 | 0.313 / 0.031 | 0.027 | 0.663 ± 0.121 | 0.132 | 0.365 / 0.029 | 0.085 |
+| BERT-mini pretrained | **1.000 ± 0.000** | 0.360 / 0.000 | 0.000 | 0.747 ± 0.066 [0.783 0.797 0.800 0.733 0.623] | 0.113 | 0.399 / 0.000 | 0.046 |
+| BERT-mini from scratch | 0.945 ± 0.021 | 0.287 / 0.061 | 0.060 | 0.690 ± 0.087 | 0.134 | 0.307 / 0.049 | 0.097 |
+
+Criterion (R26, the demo's): planted unsupported reported as queries >= 0.90: met by the reader (0.98 on every seed), by no MRC row
+(0.66-0.84). Reading. The two kinds of query split the models: the reader leaves an appended identity unplaced (0.98) because no
+address holds it, and the MRC rows answer some question with it in 16-34% of the sentences (and leave 9-13% of the sentences' own
+identities unplaced, needless queries); an MRC model's margin flags two equally placed candidates (undecided 0.99-1.00 pretrained),
+which the reader's margin does in only half the cases (0.51; the inserted identity sits in an address the role's readout reads with
+little interference). Every MRC row pays for its undecided queries with 0.29-0.43 needless queries on the other roles (the 2%
+calibration threshold sits on margins that fall on any perturbed sentence); the reader 0.15-0.22. The trained coverage head of R26 was
+not built (no new training in the declared set), so the MRC 'unsupported' numbers are those of the untrained test, as for the reader.

@@ -1,0 +1,28 @@
+# 2026-10-25T18:53:17+01:00  commit=0fe6cc4  cmd: python3 eval/planted.py --model mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds  (guard: mem fraction 0.056, min available 16 GB, max 6 h; MemAvailable at start 86 GB; slot logs/.run.lock.3 of 16)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 6% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+planted (R26 / Q19 / R48 item 4): main repository e531283; model mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds; seeds 0-4; frozen planted sets; depth from the level openers; threshold = 2% quantile of the calibration margins
+  seed 0 undecided  : planted queried 0.987 (296/300), invented 4; other roles correct 634, needless query 312, confident error 22, queried wrong 79 of 1047; needless 'unsupported' 0 of 0; hallucination rate 0.019
+  seed 0 unsupported: planted queried 0.513 (154/300), invented 146; other roles correct 697, needless query 378, confident error 47, queried wrong 215 of 1337; needless 'unsupported' 225 of 1337; hallucination rate 0.118
+  seed 0: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds_seed0; threshold 40.7347
+  seed 1 undecided  : planted queried 0.983 (295/300), invented 5; other roles correct 534, needless query 395, confident error 25, queried wrong 97 of 1051; needless 'unsupported' 0 of 0; hallucination rate 0.022
+  seed 1 unsupported: planted queried 0.643 (193/300), invented 107; other roles correct 561, needless query 591, confident error 16, queried wrong 196 of 1364; needless 'unsupported' 187 of 1364; hallucination rate 0.074
+  seed 1: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds_seed1; threshold 43.9632
+  seed 2 undecided  : planted queried 0.970 (291/300), invented 9; other roles correct 675, needless query 274, confident error 30, queried wrong 103 of 1082; needless 'unsupported' 0 of 0; hallucination rate 0.028
+  seed 2 unsupported: planted queried 0.593 (178/300), invented 122; other roles correct 748, needless query 355, confident error 49, queried wrong 198 of 1350; needless 'unsupported' 195 of 1350; hallucination rate 0.104
+  seed 2: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds_seed2; threshold 42.1199
+  seed 3 undecided  : planted queried 0.987 (296/300), invented 4; other roles correct 636, needless query 336, confident error 29, queried wrong 53 of 1054; needless 'unsupported' 0 of 0; hallucination rate 0.024
+  seed 3 unsupported: planted queried 0.873 (262/300), invented 38; other roles correct 684, needless query 576, confident error 21, queried wrong 92 of 1373; needless 'unsupported' 113 of 1373; hallucination rate 0.035
+  seed 3: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds_seed3; threshold 39.9222
+  seed 4 undecided  : planted queried 1.000 (300/300), invented 0; other roles correct 640, needless query 341, confident error 57, queried wrong 24 of 1062; needless 'unsupported' 0 of 0; hallucination rate 0.042
+  seed 4 unsupported: planted queried 0.690 (207/300), invented 93; other roles correct 598, needless query 577, confident error 60, queried wrong 114 of 1349; needless 'unsupported' 174 of 1349; hallucination rate 0.093
+  seed 4: loaded logs/models/mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds_seed4; threshold 43.5531
+
+== planted, mrc_google_bert_uncased_L-2_H-128_A-2_zs_kinds: MEANS over 5 seeds (per-seed list) ==
+  undecided: planted queried 0.985 ± 0.010 [0.987 0.983 0.970 0.987 1.000]; hallucination rate 0.027 ± 0.008 [0.019 0.022 0.028 0.024 0.042]; other roles needless query 0.313 ± 0.040 [0.298 0.376 0.253 0.319 0.321]; confident error 0.031 ± 0.012 [0.021 0.024 0.028 0.028 0.054]
+  unsupported: planted queried 0.663 ± 0.121 [0.513 0.643 0.593 0.873 0.690]; hallucination rate 0.085 ± 0.029 [0.118 0.074 0.104 0.035 0.093]; other roles needless query 0.365 ± 0.076 [0.283 0.433 0.263 0.420 0.428]; confident error 0.029 ± 0.013 [0.035 0.012 0.036 0.015 0.044]
+  needless 'unsupported' on original identities 0.132 ± 0.028 [0.168 0.137 0.144 0.082 0.129]
+  criterion (R26, the demo's): planted unsupported reported as queries >= 0.90
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] planted sets frozen before any model (e6c6f68) [x] thresholds on calibration rows only (25) [x] depth not given [x] the same coverage test for every model
+# post-launch guard (slots 16): MemAvailable 90 s after the start 93 GB
