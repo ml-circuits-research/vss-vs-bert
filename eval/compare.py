@@ -26,6 +26,45 @@ def ci_diff(a, b):
     from scipy import stats
     h = stats.t.ppf(0.975, n - 1) * d.std(ddof=1) / np.sqrt(n); return f"{d.mean():+.3f} [{d.mean() - h:+.3f}, {d.mean() + h:+.3f}]"
 
+PAIR_METRICS = [(a, "mean_role") for a in AXES] + [("depth3_unseen", "full"), ("depth3_unseen", "full_trained"), ("depth3_unseen", "full_inner")]
+
+def paired(rows):
+    """R27 item 3: for every pair of models and every metric, the mean PAIRED difference over the shared seeds (the seeds share their
+    splits) with its 95% t interval, and the number of seeds on which each model is ahead"""
+    from scipy import stats
+    out = ["", "## Paired differences (R27 item 3): row model minus column model over the shared seeds; mean [95% t interval]; seeds ahead (first / second / tie)", "",
+           "| first | second | metric | difference | seeds ahead |", "|---|---|---|---|---|"]
+    ms_ = list(rows)
+    for i in range(len(ms_)):
+        for j in range(i + 1, len(ms_)):
+            A = {r["seed"]: r for r in rows[ms_[i]]}; B = {r["seed"]: r for r in rows[ms_[j]]}; S = sorted(set(A) & set(B))
+            if len(S) < 2: continue
+            for ax, k in PAIR_METRICS:
+                if not all(A[s_]["axes"].get(ax) and k in A[s_]["axes"][ax] and B[s_]["axes"].get(ax) and k in B[s_]["axes"][ax] for s_ in S): continue
+                d = np.array([A[s_]["axes"][ax][k] - B[s_]["axes"][ax][k] for s_ in S]); h = stats.t.ppf(0.975, len(d) - 1) * d.std(ddof=1) / np.sqrt(len(d))
+                out.append(f"| {ms_[i]} | {ms_[j]} | {ax} {k} | {d.mean():+.3f} [{d.mean() - h:+.3f}, {d.mean() + h:+.3f}] | {int((d > 0).sum())} / {int((d < 0).sum())} / {int((d == 0).sum())} |")
+    return out
+
+def bootstrap(rows, n_boot=1000):
+    """R27 item 3: an item bootstrap (1,000 resamples, items resampled within each seed, the mean over seeds) for the depth-3 FULL of every
+    row whose per-item predictions are stored (depth3_items; rows written before R10 store none and are listed as such)"""
+    rng = np.random.default_rng(0); gold = {}
+    out = ["", "## Item bootstrap, depth 3 (UNSEEN) (R27 item 3): mean over seeds [95% percentile interval of 1,000 item resamples]", "",
+           "| model | FULL six roles | FULL trained labels | FULL inner |", "|---|---|---|---|"]
+    sets = {"six": bwm.ROLES, "trained": ["A", "B", "C", "X1", "X2"], "inner": ["A", "B", "C"]}
+    for m, rs in rows.items():
+        if not all("depth3_items" in r for r in rs): out.append(f"| {m} | per-item predictions not stored | | |"); continue
+        cells = []
+        for k, roles in sets.items():
+            per_seed = []
+            for r in rs:
+                g = gold.setdefault(r["seed"], bwm.load(r["seed"])["axes"]["depth3_unseen"])
+                per_seed.append(np.array([all(p["frame"].get(x) == it["frame"][x] for x in roles) for p, it in zip(r["depth3_items"], g)], dtype=float))
+            boots = [np.mean([v[rng.integers(len(v), size=len(v))].mean() for v in per_seed]) for _ in range(n_boot)]
+            cells.append(f"{np.mean([v.mean() for v in per_seed]):.3f} [{np.quantile(boots, 0.025):.3f}, {np.quantile(boots, 0.975):.3f}]")
+        out.append(f"| {m} | " + " | ".join(cells) + " |")
+    return out
+
 def basic_tables(out):
     rows = load("results_reader_basic_seed*.json"); rows.update(load("results_transformer7b_*_seed*.json")); rows.update(load("results_bert_*_seed*.json"))
     if not rows: return
@@ -40,6 +79,7 @@ def basic_tables(out):
         for m, rs in rows.items():
             if m == ref: continue
             lines.append(f"| {m} | " + " | ".join(ci_diff([r["axes"][a]["mean_role"] for r in rs], [r["axes"][a]["mean_role"] for r in rr]) for a in ("new_ids", "depth3_unseen", "new_form_unseen_trans")) + " |")
+    lines += paired(rows) + bootstrap(rows)
     lines += ["", "## Second decoding rule: one-to-one assignment (R10 item 1; rows without per-candidate scores: not available)", "", "| model | " + " | ".join(COLS) + " | FULL depth 3 | FULL trained labels | FULL inner |", "|---|" + "---|" * (len(COLS) + 3)]
     for m, rs in rows.items():
         R = [r["one_to_one"] for r in rs if "one_to_one" in r]
