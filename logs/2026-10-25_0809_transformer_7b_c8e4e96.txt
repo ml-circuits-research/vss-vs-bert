@@ -1,0 +1,171 @@
+# 2026-10-25T08:09:38+01:00  commit=c8e4e96  cmd: python3 models/transformer_7b.py --variant cat --seeds 5  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+transformer_7b: transformer 7b-bis (categories given); main repository e531283; device cuda; D 1024; N 30000; epochs 12; seeds 5
+regime (rule 24): as RESULTS 7b / 7b-bis: same world, same fixed identities F at the input, objective -cos(S, S_world), decoded with the world's addresses on the frozen splits
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v9_transformer.py:29: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D); self.drop = nn.Dropout(dropout)
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 0 lr=0.001 dropout=0 (85s, 0.80M params) validation cos 0.918
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v9_transformer.py:29: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D); self.drop = nn.Dropout(dropout)
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 0 lr=0.001 dropout=0.1 (76s, 0.80M params) validation cos 0.857
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 0 lr=0.0003 dropout=0 (80s, 0.80M params) validation cos 0.963
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 0 lr=0.0003 dropout=0.1 (66s, 0.80M params) validation cos 0.859
+  => chosen config: lr=0.0003, dropout=0 (by validation cos, seed 0)
+  seed 0 transformer 7b-bis (categories given) 1.00 (m 0.54) | 0.22 (m 0.02) | 0.89 (m 0.45) | 0.68 (m 0.42) | 1.00 (m 0.54) | 1.00 (m 0.47) | 0.80 (m 0.29) | 0.43 (m 0.15)  || depth 3 per role: A 0.13 B 0.19 C 0.17 X1 1.00 X2 1.00 X3 0.07  || FULL depth3 0.001 | tau 0.038: new ids cov 0.03 cw 0.023; depth3 cov 0.35 cw 0.017
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 1 lr=0.0003 dropout=0 (35s, 0.80M params) validation cos 0.963
+  seed 1 transformer 7b-bis (categories given) 1.00 (m 0.54) | 0.22 (m 0.01) | 1.00 (m 0.53) | 0.75 (m 0.43) | 1.00 (m 0.54) | 1.00 (m 0.46) | 0.81 (m 0.29) | 0.38 (m 0.16)  || depth 3 per role: A 0.07 B 0.07 C 0.06 X1 1.00 X2 1.00 X3 0.06  || FULL depth3 0.000 | tau 0.036: new ids cov 0.01 cw 0.009; depth3 cov 0.35 cw 0.013
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 2 lr=0.0003 dropout=0 (35s, 0.80M params) validation cos 0.923
+  seed 2 transformer 7b-bis (categories given) 1.00 (m 0.54) | 0.27 (m 0.01) | 0.88 (m 0.38) | 0.63 (m 0.35) | 1.00 (m 0.53) | 0.89 (m 0.30) | 0.80 (m 0.29) | 0.38 (m 0.15)  || depth 3 per role: A 0.07 B 0.07 C 0.09 X1 1.00 X2 1.00 X3 0.04  || FULL depth3 0.000 | tau 0.043: new ids cov 0.00 cw 0.001; depth3 cov 0.34 cw 0.007
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 3 lr=0.0003 dropout=0 (37s, 0.80M params) validation cos 0.958
+  seed 3 transformer 7b-bis (categories given) 1.00 (m 0.54) | 0.34 (m 0.01) | 0.67 (m 0.42) | 0.96 (m 0.40) | 1.00 (m 0.41) | 1.00 (m 0.44) | 0.80 (m 0.29) | 0.37 (m 0.15)  || depth 3 per role: A 0.06 B 0.03 C 0.07 X1 1.00 X2 1.00 X3 0.07  || FULL depth3 0.000 | tau 0.035: new ids cov 0.02 cw 0.006; depth3 cov 0.35 cw 0.015
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+    epoch 1/12 done
+    epoch 2/12 done
+    epoch 3/12 done
+    epoch 4/12 done
+    epoch 5/12 done
+    epoch 6/12 done
+    epoch 7/12 done
+    epoch 8/12 done
+    epoch 9/12 done
+    epoch 10/12 done
+    epoch 11/12 done
+    epoch 12/12 done
+  seed 4 lr=0.0003 dropout=0 (43s, 0.80M params) validation cos 0.962
+  seed 4 transformer 7b-bis (categories given) 1.00 (m 0.54) | 0.21 (m 0.01) | 0.67 (m 0.44) | 0.91 (m 0.41) | 1.00 (m 0.49) | 1.00 (m 0.45) | 0.80 (m 0.29) | 0.40 (m 0.14)  || depth 3 per role: A 0.07 B 0.13 C 0.10 X1 1.00 X2 0.99 X3 0.07  || FULL depth3 0.000 | tau 0.039: new ids cov 0.02 cw 0.011; depth3 cov 0.35 cw 0.014
+
+== transformer 7b-bis (categories given): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.251±0.048 [0.22 0.22 0.27 0.34 0.21] | 0.821±0.133 [0.89 1.00 0.88 0.67 0.67] | 0.786±0.126 [0.68 0.75 0.63 0.96 0.91] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.978±0.044 [1.00 1.00 0.89 1.00 1.00] | 0.803±0.002 [0.80 0.81 0.80 0.80 0.80] | 0.390±0.021 [0.43 0.38 0.38 0.37 0.40]
+  FULL frame at depth 3 (UNSEEN): 0.000±0.001 [0.001 0.000 0.000 0.000 0.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.081±0.026 | 0.099±0.059 | 0.101±0.039 | 1.000±0.000 | 0.999±0.002 | 0.061±0.010
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.038: coverage 0.016 / confident-wrong 0.010 / acc. answered 0.366  (per seed cw: 0.023 0.009 0.001 0.006 0.011)
+  depth3_unseen  tau 0.038: coverage 0.347 / confident-wrong 0.013 / acc. answered 0.963  (per seed cw: 0.017 0.013 0.007 0.015 0.014)
+reference (main repository): 7b new ids 0.215±0.012, depth 3 0.390±0.024; 7b-bis new ids 0.253±0.034, depth 3 0.393±0.023 (fresh test draws)
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) 

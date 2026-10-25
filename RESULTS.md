@@ -57,3 +57,31 @@ hand-gate variant is run.
 
 Reading: the reader reproduces the main repository on the frozen splits: new identities and the unseen depth 3 at 0.997-1.000 role
 accuracy, 0.982 FULL frame at depth 3, with near-zero confident-wrong at full coverage; new formulations stay at 0.86-0.87, as in 7c.
+
+## 1b. Transformer control 7b-bis, word categories at the input (models/transformer_7b.py --variant cat; logs/2026-10-25_0809_transformer_7b_c8e4e96.txt)
+
+Command: `./run.sh models/transformer_7b.py --variant cat --seeds 5`, commit c8e4e96 (PYTHONHASHSEED=0), device cuda. Model: the
+main repository's v22 TModelCat (0.80 M parameters), objective -cos(S, S_world), decoded with the world's addresses on the frozen splits.
+Grid on seed 0 by validation cos of the training distribution (lr 1e-3 / 3e-4, dropout 0 / 0.1: 0.918 / 0.857 / 0.963 / 0.859):
+chosen lr 3e-4, dropout 0; validation cos per seed 0.963 0.963 0.923 0.958 0.962.
+
+| axis (mean role accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new ids | 0.251 ± 0.048 | 0.22 0.22 0.27 0.34 0.21 |
+| new form., seen trans. | 0.821 ± 0.133 | 0.89 1.00 0.88 0.67 0.67 |
+| new form., UNSEEN trans. | 0.786 ± 0.126 | 0.68 0.75 0.63 0.96 0.91 |
+| new form., ROLE CUES seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 1 | 0.978 ± 0.044 | 1.00 1.00 0.89 1.00 1.00 |
+| depth 2 (seen) | 0.803 ± 0.002 | 0.80 0.81 0.80 0.80 0.80 |
+| depth 3 (UNSEEN) | 0.390 ± 0.021 | 0.43 0.38 0.38 0.37 0.40 |
+| FULL frame at depth 3 (UNSEEN) | 0.000 ± 0.001 | 0.001 0.000 0.000 0.000 0.000 |
+
+Depth 3 per role: A 0.081 ± 0.026, B 0.099 ± 0.059, C 0.101 ± 0.039, X1 1.000, X2 0.999 ± 0.002, X3 0.061 ± 0.010.
+Calibration (rule 18; tau on calibration rows, mean 0.038): new ids coverage 0.016, confident-wrong 0.010 (per seed 0.023 0.009 0.001
+0.006 0.011), accuracy among answered 0.366; depth 3 coverage 0.347, confident-wrong 0.013 (per seed 0.017 0.013 0.007 0.015 0.014),
+accuracy among answered 0.963. Label: MEASURED.
+
+Exit check against the main repository's RESULTS 7b-bis (new ids 0.253 ± 0.034, depth 3 0.393 ± 0.023): 0.251 ± 0.048 and 0.390 ±
+0.021, MET. Reading: as in 7b-bis, the control fits the seen rows and fails on new identities (0.25, chance 0.167) and on the unseen
+depth (0.39; it keeps the two outer speakers X1 X2 and loses the inner frame and X3, FULL 0.000).
