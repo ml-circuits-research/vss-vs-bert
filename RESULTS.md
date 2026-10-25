@@ -765,3 +765,56 @@ feature) is deferred (R25 / R28). The rule ceiling (1.000 on every axis) stands 
 - BERT-small: not run unless tiny and mini disagree (R36), decided after both are read.
 - Concurrency: up to six queue runs plus the LLM reference (API-bound) in a seventh run.sh slot (VSA_SLOTS=7: memory fraction 0.129 per
   process; measured peaks 0.2 GB for BERT-tiny, 2.5 GB for BERT-base). Cost rows from these runs are concurrent and are not cost numbers.
+
+## R17 (i), the residual and the R10 rules on the reader 1a, five seeds (eval/r17_reader.py; logs/2026-10-25_1507_r17_reader_699a9ec.txt; exploratory)
+
+Command: `VSA_SLOTS=6 ./run.sh eval/r17_reader.py --seeds 5`, commit 699a9ec, concurrent (six slots; retraining 515-620 s per seed is not
+a cost number). Each seed's reader is retrained by 1a's code and checked against the stored 1a row: per-role numbers EQUAL on all five
+seeds (max difference 0.0). The depth is estimated from the level openers (no depth given): depth accuracy 1.000 on every in-world axis
+and seed; exact match at depth 3 with the estimated depth 0.982 ± 0.010 [0.982 0.971 0.999 0.986 0.971], identical to the given-depth row.
+Thresholds: (i) residual, (ii) residual with the 'neg' part, both at the 2% false-rejection point of the calibration rows (0.546-0.600).
+
+| quantity | mean ± std | per seed (0-4) |
+|---|---|---|
+| rejected, random | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+| rejected, reference | 0.989 ± 0.009 | 0.982 0.986 1.000 0.978 1.000 |
+| rejected, nonce (placeholder) / (by construction) | 1.000 / 1.000 | 1.000 on every seed |
+| false rejection, pooled in-world report axes | 0.435 ± 0.015 | 0.456 0.418 0.436 0.447 0.418 |
+| false rejection: seen / new ids | 0.021 ± 0.017 / 0.083 ± 0.047 | 0.046 0.032 0.000 0.005 0.023 / 0.121 0.116 0.000 0.060 0.118 |
+| false rejection: new form. seen trans. / UNSEEN trans. / role cues | 0.881 ± 0.146 / 1.000 / 0.883 ± 0.144 | 1.000 0.681 1.000 1.000 0.725 / 1.000 x5 / 1.000 0.683 1.000 1.000 0.733 |
+| false rejection: depth 1 / depth 2 / depth 3 | 0.032 ± 0.026 / 0.001 / 1.000 | 0.006 0.036 0.060 0.060 0.000 / - / 1.000 x5 |
+
+(ii) gives the same numbers as (i) on every seed. Residual means (fraction of the sentence not explained by the decoded frame):
+calibration 0.432, seen 0.408, new ids 0.435, depth 1 / 2 0.454 / 0.431, new formulations 0.768 (seen trans.) / 0.900 (UNSEEN) / 0.675
+(role cues), depth 3 0.723; out-of-world random 0.987, reference 0.774, nonce 0.852 (std 0.003-0.029 over seeds).
+
+R10 rules on the same five readers (the one-to-one rule): slot accuracy new formulations, seen trans. 0.870 ± 0.089 [0.96 0.79 0.77 0.99
+0.84] (per-role rule 0.864), UNSEEN trans. 0.894 ± 0.048 [0.92 0.93 0.80 0.90 0.92] (per-role 0.868); exact match at depth 3 0.995 ±
+0.003 [0.996 0.992 1.000 0.996 0.993] (per-role 0.982); confident error at depth 3 0.000-0.002. Label: MEASURED.
+
+Reading. The reader's residual rejects the out-of-world sources at 0.98-1.00, but a threshold at 2% false rejection on the training
+distribution also rejects every depth-3 and every UNSEEN-transition sentence and most new-formulation sentences (pooled false rejection
+0.435): as for the controls and 2a (section R11 above), a training-distribution threshold does not separate the in-world generalisation
+axes from the out-of-world sets, and the demo criterion (>= 0.90 per source with <= 2% false rejection) is NOT met by the reader either.
+The residual is graded (depth 3 0.72 and UNSEEN formulations 0.90 lie between in-distribution 0.41-0.45 and random 0.99), so the
+confirmatory comparison remains the AUROC (R30 item 8 (iii)). The one-to-one rule raises the depth-3 exact match to 0.995 and
+new formulations by 0.01-0.03, within the seed spread.
+
+## Runs stopped on 2026-10-25 around 16:02-16:03 (kept, partial; logs untracked until this commit)
+
+- **BERT-tiny MRC grid chains** (pretrained, zs, seed 0, `--grid_only --epochs 5,10,20`; logs/2026-10-25_1509_bert_mrc_699a9ec.txt
+  lr 5e-5, logs/2026-10-25_1518_bert_mrc_bb13fee.txt lr 1e-4, logs/2026-10-25_1519_bert_mrc_bb13fee.txt lr 3e-4). The 5-epoch point of
+  each chain completed: validation exact match 1.000 and span loss 0.00000 (printed at 5 decimals; the full-precision print came with
+  b5e0aee, after these runs started) at lr 5e-5 (1,385 s), 1e-4 (1,306 s) and 3e-4 (1,309 s), concurrent, 4.4 M parameters, 150,000
+  examples per epoch, peak reserved 0.2 GB. The 10- and 20-epoch points did not finish: the lr 1e-4 and 3e-4 chains were stopped by the
+  main session at 16:03 because R35 / R36 removed the grid; the lr 5e-5 chain was killed at about the same time by run.sh's log-stall
+  watchdog (its log: "log did not advance for 30 min"; the script printed nothing during a 10-epoch point, fixed in 33dc482). Status:
+  kept, partial, stopped per R36; no selection is made from them; no grid JSON was written.
+- **LLM reference row** (eval/llm_reference.py --call, commit bb13fee; logs/2026-10-25_1514_llm_reference_bb13fee.txt): stopped
+  unintentionally at 16:02 after 1,300 of 4,800 calls (repeat 1 of 3), 0.6221 USD spent at the last log line (at most about 0.65 USD by
+  the stop). Cause: the run was a child process of the previous experimental session's shell and was terminated with it. No result was
+  written (the script writes a repeat's JSON when the repeat completes). Restarted at 16:12 from the start, detached from any session
+  (setsid), with the same settings and prices read again on the pricing page at call time (input 2, output 10, 5-minute cache write 2.5,
+  cache read 0.10 USD per M tokens, unchanged) and the cap lowered to 19.35 USD so that the two runs together stay within 20 USD. Note:
+  the stopped run's log shows 819 cache-read tokens on every call, i.e. the prompt cache DID engage, against R33's expectation; the
+  restarted run's log is read for the same fields.

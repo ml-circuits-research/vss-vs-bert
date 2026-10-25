@@ -1,0 +1,44 @@
+# 2026-10-25T15:19:05+01:00  commit=bb13fee  cmd: python3 models/bert_mrc.py --model google/bert_uncased_L-2_H-128_A-2 --train_questions zs --grid_only --lrs 3e-4 --epochs 5,10,20  (guard: mem fraction 0.150, min available 16 GB, max 6 h; MemAvailable at start 97 GB; slot logs/.run.lock.5 of 6)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 15% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_mrc: google/bert_uncased_L-2_H-128_A-2 MRC [train questions zs]; main repository e531283; device cuda; N 30000; seeds 1; lr [0.0003] x epochs [5, 10, 20]; batch 32; questions {'A': 'who gives?', 'B': 'what is given?', 'C': 'to whom is it given?', 'X1': 'who says it?', 'X2': 'who says it at level 2?', 'X3': 'who says it at level 3?'}
+regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; span head over the sentence, NULL on [CLS]; decoding restricted to the world's candidates; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 7045.30it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+# post-launch guard (slots 6): MemAvailable 90 s after the start 95 GB
+  seed 0 lr=0.0003 epochs=5 (1309s, 4.4M params, 150000 examples) validation FULL 1.000, span loss 0.00000; peak cuda reserved 0.2 GB
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 15803.10it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.

@@ -1,0 +1,27 @@
+# 2026-10-25T15:14:20+01:00  commit=bb13fee  cmd: python3 eval/llm_reference.py --call --price_in 2 --price_out 10 --price_cache_write 2.5 --price_cache_read 0.1 --cap 20 --effort low  (guard: mem fraction 0.129, min available 16 GB, max 6 h; MemAvailable at start 90 GB; slot logs/.run.lock.7 of 7)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 13% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+prompt 1660 characters (about 415 tokens); items 1600 over 8 axes; with 3 repeats 4800 calls; about 2.14 M input and 0.19 M output tokens
+llm_reference --call: model claude-sonnet-5-5, thinking between_tools, effort low, no sampling parameter, prices per M tokens in 2.0 out 10.0 cache write 2.5 cache read 0.1 (read on the provider's page at call time), cap 20.0 USD, 3 repeats
+# post-launch guard (slots 7): MemAvailable 90 s after the start 90 GB
+  100 calls, spent 0.0492 USD (cache read tokens this call 819)
+  200 calls, spent 0.0967 USD (cache read tokens this call 819)
+  300 calls, spent 0.1439 USD (cache read tokens this call 819)
+  400 calls, spent 0.1923 USD (cache read tokens this call 819)
+  500 calls, spent 0.2394 USD (cache read tokens this call 819)
+  600 calls, spent 0.2869 USD (cache read tokens this call 819)
+  700 calls, spent 0.3340 USD (cache read tokens this call 819)
+  800 calls, spent 0.3812 USD (cache read tokens this call 819)
+  900 calls, spent 0.4285 USD (cache read tokens this call 819)
+  1000 calls, spent 0.4758 USD (cache read tokens this call 819)
+  1100 calls, spent 0.5241 USD (cache read tokens this call 819)
+  1200 calls, spent 0.5727 USD (cache read tokens this call 819)
+  1300 calls, spent 0.6221 USD (cache read tokens this call 819)
