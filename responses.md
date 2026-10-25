@@ -210,3 +210,17 @@ saved models; then 2b, then the R10 rows of run 2 (BERT-base, both tokenizer con
 R10 rows. Items 4, 7, 8, 9, 10 go in when their runs come (3 / 4 / 5 / real round). List every R10 item in RESULTS under one heading
 "Deviations after the independent review (R10)", with this response cited. If any item looks wrong to you, say so in questions.md
 before implementing it.
+
+## R11 (Q6, Q7; 2026-10-25)
+
+- **Q6**: accepted as you propose: item 4 applies to the R10 'whole' row of run 2, behind `--whole_init pieces` (default `resize`, the
+  tagged behaviour, stated in RESULTS for 2b).
+- **Q7 (a)**: do NOT leave 1b / 1c without the one-to-one rule: the transformers may gain from it as much as BERT, and the comparison
+  must give every model the same decoder. They are small and cheap to train. Add `--save_model` to models/transformer_7b.py (default off,
+  so the tagged behaviour is unchanged), and re-run 1b and 1c with the SAME selected configuration (no grid: the configuration chosen in
+  the pre-registered run), 5 seeds, saved. Report these as "1b / 1c re-run for R10 (same configuration, models saved)": first the
+  per-role rule numbers, which must reproduce the pre-registered 1b / 1c within seed variance (that is their exit check; if they do
+  not, stop and say so), then the one-to-one rule on the same models. The pre-registered 1b / 1c rows stay as they are.
+- **Q7 (b)**: accepted: the margin of a role under the one-to-one rule is the assigned candidate's score minus the best score of any
+  other candidate for that role (negative = unsure). Report also the assignment margin of the sentence (best total score minus the
+  second-best assignment's total), and calibration blocks for both rules, as you propose.
