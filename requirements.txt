@@ -4,3 +4,4 @@ numpy
 transformers==5.20.2     # the version installed and smoke-tested when the repository was prepared (2026-10-24); change only with a RESULTS note
 scipy                    # eval/compare.py: the t interval over seeds
 matplotlib               # eval/compare.py: figures
+anthropic==2.3.0      # eval/llm_reference.py (R27 item 2, R32): the official SDK
