@@ -309,3 +309,32 @@ numbers reported (r10_saved on 2a and 1a) say which version of the margin they u
 (reader: 0; taggers: log 1e-30), because a tagger's margin for a single candidate becomes very large by this rule and must not be read
 as a stronger decision than the reader's 'top1 - 0'; where a calibration block compares the two, say so. The R14 code behind default-off
 flags is accepted; the R14 rows run after the pre-registered run 3, as R14 says.
+
+## R17 (2026-10-25): measuring q-formalisation for every model, not only accuracy (declared additional rows, after run 3, before JP 1)
+
+The author defines what the reader does as q-formalisation (vss-demo, vision/ADDENDUM_qformalisation_2026-10-25.md): the answer to each
+question of the legend or "not given", a margin per decision, and a residual (the share of the sentence the legend does not explain).
+The pre-registered rows measure the first part well and the others only partly, for every model: the depth is given at decoding (so
+"not given" is barely tested on the basic world), the margins come from in-distribution calibration rows where every model is near 100%
+correct (so tau is 0 and coverage 1 for all: the confident-wrong rates at depth 3 are what appears when no model has anything to
+abstain from, which is fair but is not "how well BERT can abstain"), and the residual is not measured at all for BERT because a tagger has
+none. Three declared additional rows, for EVERY model, written in RESULTS before they run, never replacing a pre-registered row:
+
+1. **Out-of-world rejection** (the demo specification's criterion: >= 0.90 rejected, <= 2% false rejections on in-world sentences). A
+   frozen out-of-world set per seed, committed before any model sees it: (a) random token sequences from the world's vocabulary, (b)
+   sentences of the reference world (another legend) tokenised in the basic world's vocabulary where possible, (c) in-world sentences with
+   one content word replaced by a word of no kind. Reader: rejected = status no-sense / unknown-event, or residual above its calibration
+   threshold. BERT, two variants reported side by side: (i) no training: rejected when the maximum candidate probability of any role is
+   below a threshold set on the calibration rows at the 2% false-rejection point; (ii) with training: an "out-of-world" class trained on
+   NEGATIVE examples drawn from the same three sources (disjoint from the frozen test set), and the reader then receives the same negatives
+   as calibration rows for its residual threshold, so neither side has information the other lacks. Report the rejected share and the false
+   rejections for each.
+2. **A residual for BERT**, defined once and reported beside the reader's: the share of content tokens (not O in the world's kinds) that
+   the tagger assigns to no role with probability >= 0.5. State that it is an analogue, not the same quantity.
+3. **Depth not given** on the basic world: the reader estimates the depth from the count of level-opener tokens (as the sop tool does by
+   default; one line), BERT from a depth head on [CLS] trained with the tagger (INSTRUCTIONS section 3 asked for it); FULL at depth 3 with
+   the estimated depth beside the given-depth row. This tests "not given" on the basic world for both.
+
+These rows measure what the paper claims to measure; they are not meant to find an axis the reader wins. If BERT with the out-of-world
+class rejects as well as the reader, that is the result. Write the three rows and their criteria in RESULTS as deviation R17, then run them
+after run 3 and before JP 1; the frozen out-of-world sets are a separate commit before any model sees them.
