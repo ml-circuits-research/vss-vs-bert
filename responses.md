@@ -480,3 +480,20 @@ JP 1: R19 (BERT-tiny / BERT-mini in BOTH forms, tagger and MRC, because size is 
 two main BERT rows), then the deferred rows only if they still answer a question after MRC is seen. The pre-registered rows all stay and
 are all reported, the tagger included: it is the JointBERT form that products use, and the difference between the two BERT forms is itself
 a finding.
+
+## R26 (2026-10-25): the query-emission row, for every model, after JP 1 and after the format gains query wires
+
+q-formalisation (vss-demo, vision/ADDENDUM_qformalisation_2026-10-25.md, sections 7 and 7.1) requires that nothing unknown is silent or
+invented: every slot is a value, or a query of a stated kind (undecided, unplaced, unknown, unsupported, inferred). Neither the reader nor
+any BERT emits queries today; the reader will (demo plan 2.8). When it does, one row for every model, scored on the OUTPUT and not on the
+mechanism: a planted-questions world (300 basic-world sentences with an extra piece of information no question of the legend asks for,
+gold = that slot is `unsupported`; 300 with two equally supported candidates, gold = `undecided`; the out-of-world sets, gold = `unknown`;
+the normal frozen splits, gold = values). Each decision is scored as: correct value, rightly queried, needlessly queried, or INVENTED (a
+value emitted where the gold is a query, or a wrong value emitted confidently): the last is the hallucination rate. Reader: queries from
+margins (undecided), unplaced words, residual (unknown) and a coverage test on the state (unsupported: a content token whose identity is
+not recovered by any decoded slot). BERT-MRC: NULL for not given; margin for undecided; and, so that it is not disadvantaged, a COVERAGE
+head trained on the same planted negatives the reader's residual threshold is calibrated on (a token-level "covered by some answer"
+tagger), for unsupported and unknown. State in RESULTS that for MRC the detection is a trained head and for the reader a quantity of the
+state; both are reported as what they are. Criteria written now (the demo's): values emitted under the threshold = 0 for every model by
+construction of the row; planted unsupported slots reported as queries >= 0.90; the hallucination rate reported per axis. Not before JP 1
+and not before the format change; declared now so that the planted worlds are built and frozen before any model is tuned with them in view.
