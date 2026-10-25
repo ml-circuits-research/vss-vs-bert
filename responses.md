@@ -1116,3 +1116,31 @@ is a second implementation and it can drift. Change, CPU only, no new training:
 
 If the tool's reader cannot load the saved V8 models without a change on the tool side, say what is missing in questions.md and I make
 the change in vss-demo (the submodule stays read-only here). This is CPU work and does not move JP 1.
+
+## R58 (R57 inverted: the reader lives HERE; the `sop/` directory; the verb-order route, variant b; 2026-10-25 20:55)
+
+The owner's decision replaces R57: vss-demo is private, this repository is public, so the reader's Python implementation moves here
+and the demo mirrors it (its JS reader, with the parity tests). Done, by me, in commit e872113: a new directory **`sop/`** = the tool
+(`legend.py`, `infer.py`, `train.py`, `export_web.py`, `soplang.py`, `world.py`, `check.py`, `diff.py`, `cli.py`), a README with the
+decoder configuration keys, `SOURCE` = the vss-demo commit it was taken from, and `v8_gates_vorder_ref.py` = the reference copy of
+experiment/v8_gates.py with `set_vorder` / `vorder_index` in variant b. Ownership as for responses.md: I edit `sop/`, you read it and
+never edit it; if something in it blocks you, questions.md.
+
+What to do with it (CPU except item 3; nothing moves JP 1):
+1. **Read the reader rows through `sop.infer.Reader`** instead of the transcriptions in `common/decode.py` (the plan of R57 items 2-5,
+   now with `sop/` in place of the submodule): a legend for the basic world in the tool's format (`data/basic_world/legend.json`,
+   `kinds.tsv`), `export_routebook` of every saved reader into a tool model folder, the EQUAL checks (tool default decoder = 1a's rows;
+   tool with `candidates: "sentence"`, `residual: "explained"`, `undecided_adjacent: true` = the R46 / R42 / R54 rows of `common/decode.py`
+   to the third decimal), and from then on every reader row labelled `decoder: sop @ <SOURCE commit>`. Differences: the tool is the
+   reference; record them.
+2. **Variant b of the verb-order route**, declared row, same protocol as R56 (seeds 0-4 design, 5-9 claim, the per-cell provenance
+   table, the rejection rule unchanged). Variant a was rejected by its own rule and stays reported. Variant b: a word introduced by a
+   role cue (the previous word's category in the given cue set {to, by, from}) is CUED: it is drawn by no order term and not counted in
+   the ordinals; the order route addresses the bare fillers only, the cue chain keeps the cued ones. Expected, written before the run:
+   T7:A still by the address; T10 no longer broken (p11 after 'from' is cued, p8 is the bare first P before the verb, as the subject of
+   every receive template); T4:C unchanged (still by elimination: "P right after the verb" is bare P#1 after a give verb, never seen in
+   training); seen-transition formulations back within one seed std of 1a. If T10 is still wrong, the route is rejected again and the
+   two attempts are reported together. Code: `sop/v8_gates_vorder_ref.py` (`set_vorder(verb_cats, nmax, cue_cats)`; `vorder_index`
+   computes `cued` from `cue_mask[cats[:, :-1]]` shifted right by one, excludes cued words from the one-hot counts and from `valid`);
+   your `vss/v8_vorder.py` subclass takes `cue_cats = ['to', 'by', 'from']`.
+3. The growth rows for BERT-tiny are still the last GPU item; then JP 1.
