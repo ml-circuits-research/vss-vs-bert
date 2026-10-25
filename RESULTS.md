@@ -555,3 +555,35 @@ interpretations of R19 (a)/(b)/(c) apply to each size; R15's two readings of 3b 
   regime, never against WikiSQL's state of the art; the same sentence goes into RESULTS 5 and the paper.
 - Runs 8-12 (SNIPS, MASSIVE, TOPv2): the reader's kinds come from skip-gram clusters on the training pool (learned, unsupervised), not
   given; every real-data row says so (INSTRUCTIONS_REAL note of 2026-10-25).
+
+## Declared NOW, before any result of the equal-size block is read (responses R30 items 3, 7, 8, 12; 2026-10-25)
+
+**Confirmatory comparisons (R30 item 8), pre-specified.** Pairs: the reader against each equal-size encoder of R28 in the MRC form
+(BERT-tiny, BERT-mini, BERT-small, each pretrained and from scratch: six pairs) and against BERT-base MRC (one pair). Three comparisons per
+pair, on the five shared seeds (seed 0's frozen splits and so on):
+- (i) six-question exact match at depth 3 with the depth NOT given (the frame exact match with the levels as labels; the reader with
+  the depth from its level-opener count, MRC with all six questions and NULL = not given);
+- (ii) the confident-error rate at matched coverage: the reader's coverage on depth 3 (depth not given) under its threshold set on the
+  calibration rows; the other model's threshold chosen on the same calibration rows to give that coverage; confident error = a wrong
+  answered decision, over all decisions;
+- (iii) the out-of-world AUROC, in-world report rows against out-of-world sources (a) random and (b) reference pooled (source (c)
+  reported apart, the reader rejecting it by construction): the reader's residual (and margin), the encoder's Mahalanobis score on its
+  encoder states (and MSP).
+Test: the difference reader minus model, its p-value from the two-level bootstrap (seeds x items, 1,000 resamples, two-sided), Holm's
+correction over the three comparisons of each pair at alpha 0.05; mean ± std, the 4-df paired t, the seeds-ahead count and a sign
+test are reported beside it and not relied on (the seeds are bimodal). Every other row declared in R10-R27 is EXPLORATORY.
+
+**Withdrawal condition (R30 item 3), written before the block runs.** If an encoder of the reader's size trained FROM SCRATCH reaches an
+inner frame (A B C) exact match >= 0.99 at depth 3 with the depth not given (mean over the five seeds), the claim "same-size models
+trained from scratch do not compose this world" is WITHDRAWN, not re-narrowed. Until the block runs, the from-scratch evidence at BERT-base
+size is the 7b control only (3b is not run, R28).
+
+**Terminology (R30 items 3, 7), from here on.** "FULL" is reported as **exact match** (the six-role FULL at depth 3 is "frame exact
+match with the levels as labels", not "composition"); per-role accuracy as **slot accuracy**; a wrong value given with a margin above the
+threshold is a **confident error**, a value given where the gold is absent is a **false fill**; "hallucination" appears at most once,
+defined as their sum. Earlier sections keep their words; their numbers mean the same.
+
+**Layout (R30 item 12).** The tables of the write-up (eval/compare.py) are split in two: the pre-registered rows (tag prereg-2026-10-25:
+0, 1a-1c, 2a, 2b, 3a; 3b not run) and the declared rows, each with its R number and the date of its declaration (R6, R10, R14, R17,
+R19, R20, R22, R24 (tag prereg-2026-10-25b), R26, R27, R28, R30, all 2026-10-25). Nothing is removed. The headline table is the one with the
+depth NOT given / all questions, for every model; the given-depth rows beside it, labelled (R30 item 5).

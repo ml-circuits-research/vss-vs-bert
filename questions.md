@@ -14,3 +14,10 @@ the synthetic sentences may be sent (no personal data). Estimated cost at the fr
 for 4,800 calls, i.e. a few dollars at mid-size prices. R29 makes the call conditional on a later response saying "Q20 confirmed".
 Default: no call; the row stays PLANNED with the prompt and items committed. Not on the critical path (API-bound; runs in a free slot
 alongside the equal-size block once confirmed).
+
+## Q21. R30 against R28: is JP 1 before or after the equal-size block?
+
+R28: "JP 1 after the equal-size block". R30: "Queue after this response: JP 1 as planned; the R28 small-encoder block ...". Default: R28's
+order (3a; the reader's R14 / R10 rows, R17 (i), the 2a R10 row and the 2a re-run with every seed saved, the R11 re-runs, BERT-base MRC;
+the equal-size block; then JP 1), with R30's CPU items (rule ceiling, evaluation scripts) done alongside, and R30's other GPU rows (items 2,
+3, 4, 6c, 8's grid) after JP 1 in R30's order. Say if JP 1 should come before the block.
