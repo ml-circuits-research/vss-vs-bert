@@ -99,7 +99,7 @@ if __name__ == "__main__":
     for seed in range(a.seeds):
         split = bwm.load(seed); bw = bwm.build(seed, split["D"]); data = make_train(bw, seed, a.N); cat = split["cat"]
         pos, lr = Positional(data), WindowLR(data, split)
-        models = {"rule": lambda it, ax: as_pred(rule(it["tokens"], cat), it["depth"]), "positional": pos.predict, "window_lr": lr.predict}
+        models = {"rule": lambda it, ax: as_pred(rule(it["tokens"], cat), it["depth"]), "positional": lambda it, ax: pos.predict(it, split, ax), "window_lr": lambda it, ax: lr.predict(it, split, ax)}
         for name, fn in models.items():
             preds = {ax: [fn(it, ax) for it in split["axes"][ax]] for ax in report.AXES + ["calibration"]}
             row = report.evaluate(f"ceiling: {name}", seed, preds, split, f"ceiling_{name}")
