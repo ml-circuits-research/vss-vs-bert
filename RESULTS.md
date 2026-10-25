@@ -400,3 +400,49 @@ stays at 0.98: at equal size, the reader composes the unseen depth and the pretr
 on this world even at 4 M parameters, and the reader's case rests on the six-role FULL, the calibration, the residual and the cost; (c)
 in between, both readings. Cost rows for both (parameters, bytes at fp32 / fp16 / int8, CPU ms per sentence with the thread count) on
 the same table as the accuracy. These rows do not change the pre-registered claims.
+
+## 2b. BERT-base pretrained, whole-word tokens, pre-registered (models/bert_basic.py --tokenizer whole; logs/2026-10-25_1207_bert_basic_f2afe4e.txt)
+
+Command: `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer whole --seeds 5`, commit f2afe4e. The code differs from
+the tag prereg-2026-10-25 only by default-off flags and additive outputs (R10, R14, the margin correction of R10 item 16), so the
+pre-registered numbers are those of the tagged code; the additive R10 fields (one-to-one rule, position split) are computed in the run.
+Device cuda, fp32, batch 32, N 30,000; the 66 world words added as whole tokens (1.00 piece per word) with transformers 5.20.2
+`resize_token_embeddings` (mean_resizing=True: new rows from the mean and covariance of the existing embeddings, not "randomly
+initialised" as INSTRUCTIONS section 4 says; R10 item 4). Grid on seed 0: all 9 points validation FULL 1.000 (token cross-entropy 0.00007
+at lr 2e-5 / 3 epochs down to 0.00000 at 5e-5 / 10); the pre-registered rule kept the first point, lr 2e-5, 3 epochs.
+
+| axis (mean role accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new ids | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., seen trans. | 0.993 ± 0.015 | 1.00 0.96 1.00 1.00 1.00 |
+| new form., UNSEEN trans. | 0.977 ± 0.018 | 1.00 0.98 0.99 0.96 0.95 |
+| new form., ROLE CUES seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 1 | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 2 (seen) | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 3 (UNSEEN) | 0.892 ± 0.107 | 0.72 1.00 0.91 1.00 0.84 |
+| FULL frame at depth 3 (UNSEEN), six roles | 0.495 ± 0.444 | 0.000 1.000 0.460 1.000 0.014 |
+| FULL at depth 3 over A B C X1 X2, trained labels (R6) | 0.858 ± 0.281 | 0.296 1.000 0.994 1.000 1.000 |
+| FULL at depth 3 over A B C, inner frame (R6) | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+
+Depth 3 per role: A, B, C, X1 1.000; X2 0.858 ± 0.281 (seed 0 0.30); X3 0.495 ± 0.444. Position split (R10 item 2a): every depth-3
+error is at a sub-token position seen in training (0.890 seen / 1.000 never reached). One-to-one rule (R10 item 1, corrected margin):
+depth 3 per role 0.839, FULL six 0.516 ± 0.445 (0.000 1.000 0.565 1.000 0.014), trained labels 0.516 ± 0.445, inner 1.000; the rule does
+not help this row (it lowers X2 from 0.858 to 0.516). Calibration (rule 18): new ids coverage 1.000, confident-wrong 0.000; depth 3
+coverage 1.000, confident-wrong 0.108 (per seed 0.284 0.000 0.091 0.000 0.164), over the trained labels 0.028 (0.141 0.000 0.001 0.000
+0.000). Occupancy: no false filler on any axis; at depth 3 'missed_present' 0.167 (X3), 0.000 over the trained labels.
+Cost (this machine, GB10, fp32): 109.5 M parameters (embedding table 30,560 rows), 438 MB at fp32, 219 MB at fp16, 182 MB int8 dynamic;
+CPU 28.3-30.5 ms per sentence (int8 16.5-18.8 ms), 20 threads, batch 32; training 228-231 s per seed, selection 4,104 s (the 9 grid
+points), 5-seed row 4,104 + 4 x 229 = 5,019 s; GPU energy of the whole run 77.9 Wh (5,179 s sampled, mean 54.1 W, peak 90.3 W, idle
+draw at start 4.3 W; eval/power_energy.py on logs/power_run2b.csv). Label: MEASURED.
+
+Gate (R4): seen 1.000 >= 0.95, MET.
+
+Reading (Table 3 bands; BERT's results first). With whole-word tokens BERT-base is again at ceiling on new identities (1.000: > 0.9),
+near it on new formulations (0.993 / 0.977, above the reader's 0.864 / 0.868 by 0.11-0.13), and at 1.000 on the inner frame of the unseen
+depth on every seed (> 0.9, as 2a). The trained-label FULL at depth 3 (0.858 ± 0.281) is in the in-between band: (i) the unseen depth
+is composed over the trained labels on 4 seeds (0.994-1.000) and the outer speaker X2 is misplaced on one (seed 0, 0.30); (ii) with whole
+tokens the frame of the unseen depth is not reliably produced beyond the inner clause. The six-role FULL (0.495 ± 0.444, two seeds near 0)
+is in the in-between band with the same two readings. Against 2a (WordPiece), the whole-token condition lowers depth 3 (0.892 vs 0.961
+per role) and does not change the inner frame. The reader on the same rows: six-role FULL 0.982 ± 0.010, confident-wrong at depth 3
+0.003 against 0.108 here, at 3.3 M parameters against 109.5 M.

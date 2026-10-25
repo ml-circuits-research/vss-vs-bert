@@ -1,0 +1,302 @@
+# 2026-10-25T12:07:09+01:00  commit=f2afe4e  cmd: python3 models/bert_basic.py --model bert-base-uncased --tokenizer whole --seeds 5  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 116 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_basic: bert-base-uncased pretrained [whole]; main repository e531283; device cuda; N 30000; seeds 5; grid lr [2e-05, 3e-05, 5e-05] x epochs [3, 5, 10]; batch 32
+regime (rule 24): basic world, prefixed forms, training depths 0-2, tested at depth 3 UNSEEN; token-tagging head; decoding restricted to the world's candidates; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0: tokenizer 'whole', pieces per world word 1.00
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 17148.45it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+[transformers] The new embeddings will be initialized from a multivariate normal distribution that has old embeddings' mean and covariance. As described in this article: https://nlp.stanford.edu/~johnhew/vocab-expansion.html. To disable this, use `mean_resizing=False`
+  seed 0 lr=2e-05 epochs=3 (231s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00007
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9360.29it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=2e-05 epochs=5 (380s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00003
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 8587.55it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=2e-05 epochs=10 (759s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00001
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9388.40it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=3 (229s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00005
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9622.85it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=5 (380s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00003
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9176.80it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=3e-05 epochs=10 (758s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00001
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 10151.01it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=3 (229s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00003
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9309.34it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=5 (380s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00002
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 12905.35it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 0 lr=5e-05 epochs=10 (758s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00000
+  => chosen config: lr=2e-05, epochs=3 (by validation FULL frame, seed 0)
+  seed 0 bert-base-uncased pretrained [whole] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.97) | 1.00 (m 0.82) | 1.00 (m 0.97) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.72 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.30 X3 0.00  || FULL depth3 0.000 (trained labels 0.296, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.284
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 0.67  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.00 X3 0.00  || FULL depth3 0.000 (trained 0.000, inner 1.000); depth3 cw 0.286
+  seed 0   depth-3 role accuracy by filler position (sub-tokens; train max 17): seen 0.7099290780141844 (n 4230), unseen 1.0 (n 90)
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/models/bert_basic.py:240: DeprecationWarning: torch.ao.quantization is deprecated and will be removed in 2.10. 
+For migrations of users: 
+1. Eager mode quantization (torch.ao.quantization.quantize, torch.ao.quantization.quantize_dynamic), please migrate to use torchao eager mode quantize_ API instead 
+2. FX graph mode quantization (torch.ao.quantization.quantize_fx.prepare_fx,torch.ao.quantization.quantize_fx.convert_fx, please migrate to use torchao pt2e quantization API instead (prepare_pt2e, convert_pt2e) 
+3. pt2e quantization has been migrated to torchao (https://github.com/pytorch/ao/tree/main/torchao/quantization/pt2e) 
+see https://github.com/pytorch/ao/issues/2259 for more details
+  q = torch.ao.quantization.quantize_dynamic(cpu, {nn.Linear}, dtype=torch.qint8); t0 = time.time()
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/.venv/lib/python3.12/site-packages/torch/ao/nn/quantized/modules/utils.py:72: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/quantized/Quantizer.cpp:111.)
+  qweight = torch.quantize_per_tensor(
+  seed 0 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 109.5M params, 438 MB, 29.4 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1: tokenizer 'whole', pieces per world word 1.00
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9149.84it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 1 lr=2e-05 epochs=3 (228s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00007
+  seed 1 bert-base-uncased pretrained [whole] 1.00 (m 1.00) | 1.00 (m 1.00) | 0.96 (m 0.81) | 0.98 (m 0.81) | 1.00 (m 0.98) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 1   depth-3 role accuracy by filler position (sub-tokens; train max 17): seen 1.0 (n 4230), unseen 1.0 (n 90)
+  seed 1 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 109.5M params, 438 MB, 28.7 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2: tokenizer 'whole', pieces per world word 1.00
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 5882.32it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 2 lr=2e-05 epochs=3 (229s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00007
+  seed 2 bert-base-uncased pretrained [whole] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.91) | 0.99 (m 0.81) | 1.00 (m 0.96) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.91 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.99 X3 0.46  || FULL depth3 0.460 (trained labels 0.994, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.091
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 0.86  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.57 X3 0.57  || FULL depth3 0.565 (trained 0.565, inner 1.000); depth3 cw 0.070
+  seed 2   depth-3 role accuracy by filler position (sub-tokens; train max 17): seen 0.9070921985815603 (n 4230), unseen 1.0 (n 90)
+  seed 2 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 109.5M params, 438 MB, 28.3 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3: tokenizer 'whole', pieces per world word 1.00
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 13408.51it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 3 lr=2e-05 epochs=3 (229s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00007
+  seed 3 bert-base-uncased pretrained [whole] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.94) | 0.96 (m 0.80) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 3   depth-3 role accuracy by filler position (sub-tokens; train max 17): seen 1.0 (n 4230), unseen 1.0 (n 90)
+  seed 3 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 109.5M params, 438 MB, 29.8 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4: tokenizer 'whole', pieces per world word 1.00
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 11449.63it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  seed 4 lr=2e-05 epochs=3 (229s, 109.5M params) validation FULL 1.000, token cross-entropy 0.00006
+  seed 4 bert-base-uncased pretrained [whole] 1.00 (m 1.00) | 1.00 (m 1.00) | 1.00 (m 0.89) | 0.95 (m 0.87) | 1.00 (m 0.98) | 1.00 (m 1.00) | 1.00 (m 1.00) | 0.84 (m 0.67)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 0.01  || FULL depth3 0.014 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.164
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 0.67  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 0.01 X3 0.01  || FULL depth3 0.014 (trained 0.014, inner 1.000); depth3 cw 0.164
+  seed 4   depth-3 role accuracy by filler position (sub-tokens; train max 17): seen 0.8321513002364066 (n 4230), unseen 1.0 (n 90)
+  seed 4 occupancy (free tags) {'seen': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'new_ids': {'false_fill_on_absent': 0.0, 'missed_present': 0.0, 'missed_present_trained_labels': 0.0}, 'depth3_unseen': {'false_fill_on_absent': 0.0, 'missed_present': 0.16666666666666666, 'missed_present_trained_labels': 0.0}}; cost 109.5M params, 438 MB, 30.5 ms/sentence on CPU
+
+== bert-base-uncased pretrained [whole]: MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.993±0.015 [1.00 0.96 1.00 1.00 1.00] | 0.977±0.018 [1.00 0.98 0.99 0.96 0.95] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.892±0.107 [0.72 1.00 0.91 1.00 0.84]
+  FULL frame at depth 3 (UNSEEN): 0.495±0.444 [0.000 1.000 0.460 1.000 0.014]
+  FULL at depth 3 over A B C X1 X2, the labels seen in training (R6): 0.858±0.281 [0.296 1.000 0.994 1.000 1.000]
+  FULL at depth 3 over A B C, the inner frame (R6): 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.858±0.281 | 0.495±0.444
+== depth 3 by filler position (R10 item 2a; seen in training / never reached): all roles 0.890±0.110 [0.71 1.00 0.91 1.00 0.83] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]; inner A B C 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+== second rule 'one_to_one' (R10): 1.000 | 1.000 | 0.996 | 0.996 | 1.000 | 1.000 | 1.000 | 0.839
+  'one_to_one' depth 3 full: 0.516±0.445 [0.000 1.000 0.565 1.000 0.014]
+  'one_to_one' depth 3 full_trained: 0.516±0.445 [0.000 1.000 0.565 1.000 0.014]
+  'one_to_one' depth 3 full_inner: 1.000±0.000 [1.000 1.000 1.000 1.000 1.000]
+  'one_to_one' depth 3 per role: 1.000 | 1.000 | 1.000 | 1.000 | 0.516 | 0.516
+  'one_to_one' depth 3 by filler position: all roles 0.835±0.151 [0.66 1.00 0.85 1.00 0.66] / 1.000±0.000 [1.00 1.00 1.00 1.00 1.00]
+  'one_to_one' calibration new_ids                tau 0.000: coverage 1.000 / confident-wrong 0.000 (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  'one_to_one' calibration depth3_unseen          tau 0.000: coverage 0.939 / confident-wrong 0.104 (per seed cw: 0.286 0.000 0.070 0.000 0.164)
+  'one_to_one' calibration depth3_unseen_trained  tau 0.000: coverage 0.932 / confident-wrong 0.029 (per seed cw: 0.143 0.000 0.001 0.000 0.000)
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.108 / acc. answered 0.892  (per seed cw: 0.284 0.000 0.091 0.000 0.164)
+  depth3_unseen_trained tau 0.000: coverage 1.000 / confident-wrong 0.028 / acc. answered 0.972  (per seed cw: 0.141 0.000 0.001 0.000 0.000)
+written interpretation (INSTRUCTIONS table 3): new ids > 0.9 => the pieces carry the role; < 0.5 => the vocabulary gap is structural; depth 3 > 0.9 would contradict the paper's same-input claim, < 0.5 confirms it; in between reported with both readings
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] tokenizer condition stated [x] grid fixed in advance
