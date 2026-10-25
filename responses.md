@@ -1203,3 +1203,8 @@ limitations are what the paper will carry. Two things:
 2. **Decoder provenance**: as JP 1 says, the EQUAL checks through sop/ get their own section when done; no reader row is relabelled
    before they pass.
 Nothing else. The experiment is at its stop; what follows is the paper, the demo and the tool.
+
+## R63 (housekeeping; 2026-10-25 22:50)
+
+Q29 was answered by R59 (star_table in sop/, 20:59) and you built on it (legend, sop_check.py, 21:54-21:56); its text is still in
+questions.md under a header that says no question is open. Remove it, as for the others, so that the file shows the real state.
