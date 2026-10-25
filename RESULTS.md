@@ -16,4 +16,42 @@ The second exit check of RUNBOOK run 0 ("`git diff --stat data/` shows no change
 files have the same JSON content as the committed ones on all five seeds (parsed objects equal), but the key order of one mapping (word
 -> category) differs, because it is built from a Python set whose iteration order depends on the per-process string hash. The committed
 files were therefore kept unchanged (`git checkout data/`), and every model reads them. Not a deviation of the splits; recorded so that
-the byte diff is not mistaken for a change of data.
+the byte diff is not mistaken for a change of data. From commit c8e4e96 on, every run has PYTHONHASHSEED=0 (responses R3); run 0 ran
+without it and its content was verified equal to the committed files.
+
+## 1a. The VSS reader on the frozen basic-world splits (vss/run_reader_basic.py; logs/2026-10-25_0750_run_reader_basic_fade9d5.txt)
+
+Command: `./run.sh vss/run_reader_basic.py --seeds 5 --save_model`, commit fade9d5 (code identical to c8e4e96 except run.sh's
+PYTHONHASHSEED line), D 1024, N 30,000, batch 8, lr 0.02, device cuda. This run started before responses R3 was read, so it ran
+**without PYTHONHASHSEED=0**. The code reading of R3 (JOURNAL 2026-10-25) found no index, id or random draw in the reader's path that
+depends on set or hash order (every category or vocabulary list is sorted before use), so the hash seed cannot change its numbers; it is
+not repeated. Model: v8_gates.V8, codes path + chainL + bigram, gates learned from the all-closed start (the main repository's RESULTS
+7c row "bundle, learned, start closed"). Learned OPEN gates: seeds 0, 3, 4 {'.', by, that, to}; seed 1 {'.', that, to}; seed 2 {by, from,
+that, to}.
+
+| axis (mean role accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new ids | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., seen trans. | 0.864 ± 0.069 | 0.93 0.82 0.77 0.95 0.84 |
+| new form., UNSEEN trans. | 0.868 ± 0.040 | 0.89 0.89 0.79 0.88 0.89 |
+| new form., ROLE CUES seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 1 | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 2 (seen) | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 3 (UNSEEN) | 0.997 ± 0.002 | 1.00 0.99 1.00 1.00 0.99 |
+| FULL frame at depth 3 (UNSEEN) | 0.982 ± 0.010 | 0.982 0.971 0.999 0.986 0.971 |
+
+Depth 3 per role: A 0.990 ± 0.007, B 1.000, C 0.989 ± 0.006, X1 1.000, X2 1.000, X3 1.000.
+Calibration (rule 18; tau set on the calibration rows): new ids tau 0.000, coverage 1.000, confident-wrong 0.000 (per seed 0.000 x5),
+accuracy among answered 1.000; depth 3 tau 0.000, coverage 1.000, confident-wrong 0.003 (per seed 0.003 0.006 0.000 0.003 0.006),
+accuracy among answered 0.997. Cost: 3.32 M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 9.0-12.5 ms per
+sentence on CPU. Label: MEASURED.
+
+Exit check. The variant run is the main repository's RESULTS 7c "bundle, learned, start closed" (5 seeds): seen 1.000, new ids 1.000,
+seen trans. 0.848 ± 0.064, UNSEEN trans. 0.870 ± 0.038, role cues 1.000, depth 1 / 2 1.000, depth 3 0.996 (A 0.986, C 0.991). Every
+column here is within one seed std of it: MET. RUNBOOK run 1a names RESULTS 6c (1.000 / 1.000) as the reference; 6c is the hand-gate
+row of the same model (7c "bundle, hand gates (fixed)", depth 3 1.000 on all six roles). Against it, new ids is met and depth 3 is 0.003
+lower (0.997 ± 0.002), the same A / C shortfall that 7c reports for the learned gates. Recorded as questions.md Q3.
+
+Reading: the reader reproduces the main repository on the frozen splits: new identities and the unseen depth 3 at 0.997-1.000 role
+accuracy, 0.982 FULL frame at depth 3, with near-zero confident-wrong at full coverage; new formulations stay at 0.86-0.87, as in 7c.

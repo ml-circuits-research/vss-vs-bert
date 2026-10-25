@@ -1,0 +1,76 @@
+# 2026-10-25T07:50:18+01:00  commit=fade9d5  cmd: python3 vss/run_reader_basic.py --seeds 5 --save_model  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_basic: main repository e531283; device cuda; D 1024; N 30000; batch 8; lr 0.02; seeds 5
+regime (rule 24): English basic world, prefixed reporting forms, training depths 0-2 (templates TRAIN_T, 12 persons / 12 objects), tested at depth 3 UNSEEN, 6 held-out persons / objects; frozen splits
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v8_gates.py:139: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0: trained in 136s; gates OPEN ['.', 'by', 'that', 'to']
+  seed 0 VSS reader (reference)             1.00 (m 0.46) | 1.00 (m 0.47) | 0.93 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.23)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.982 | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 0 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 9.86 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1: trained in 135s; gates OPEN ['.', 'that', 'to']
+  seed 1 VSS reader (reference)             1.00 (m 0.45) | 1.00 (m 0.47) | 0.82 (m 0.26) | 0.89 (m 0.16) | 1.00 (m 0.39) | 1.00 (m 0.37) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 1 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 11.78 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2: trained in 135s; gates OPEN ['by', 'from', 'that', 'to']
+  seed 2 VSS reader (reference)             1.00 (m 0.47) | 1.00 (m 0.48) | 0.77 (m 0.22) | 0.79 (m 0.16) | 1.00 (m 0.37) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.23)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 11.99 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3: trained in 134s; gates OPEN ['.', 'by', 'that', 'to']
+  seed 3 VSS reader (reference)             1.00 (m 0.46) | 1.00 (m 0.47) | 0.95 (m 0.27) | 0.88 (m 0.17) | 1.00 (m 0.38) | 1.00 (m 0.39) | 1.00 (m 0.35) | 1.00 (m 0.22)  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.986 | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.003
+  seed 3 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 12.45 ms/sentence on CPU
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4: trained in 134s; gates OPEN ['.', 'by', 'that', 'to']
+  seed 4 VSS reader (reference)             1.00 (m 0.45) | 1.00 (m 0.46) | 0.84 (m 0.26) | 0.89 (m 0.15) | 1.00 (m 0.38) | 1.00 (m 0.38) | 1.00 (m 0.34) | 0.99 (m 0.22)  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 4 cost: 3.32M parameters (phases), route book 13.3 MB at 32 bits (1.7 MB at 4 bits), 9.02 ms/sentence on CPU
+
+== VSS reader (reference): MEANS over 5 seeds (mean role accuracy; per-seed list) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.864±0.069 [0.93 0.82 0.77 0.95 0.84] | 0.868±0.040 [0.89 0.89 0.79 0.88 0.89] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 1.000±0.000 [1.00 1.00 1.00 1.00 1.00] | 0.997±0.002 [1.00 0.99 1.00 1.00 0.99]
+  FULL frame at depth 3 (UNSEEN): 0.982±0.010 [0.982 0.971 0.999 0.986 0.971]
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  0.990±0.007 | 1.000±0.000 | 0.989±0.006 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== calibration (rule 18; tau set on calibration rows, reported on the axes): coverage / confident-wrong / accuracy among answered
+  new_ids        tau 0.000: coverage 1.000 / confident-wrong 0.000 / acc. answered 1.000  (per seed cw: 0.000 0.000 0.000 0.000 0.000)
+  depth3_unseen  tau 0.000: coverage 1.000 / confident-wrong 0.003 / acc. answered 0.997  (per seed cw: 0.003 0.006 0.000 0.003 0.006)
+reference (main repository, RESULTS 6c / 7b, fresh test draws): new ids 1.000, depth 3 1.000 on all six roles
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) 
