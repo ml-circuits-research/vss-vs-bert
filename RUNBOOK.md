@@ -122,6 +122,12 @@ concurrently, every model with R19's grid `--lrs 5e-5,1e-4,3e-4 --epochs 5,10,20
 `L-4_H-256_A-4`, `L-4_H-512_A-8`, each (a) pretrained, (b) `--scratch`, (c) `--kinds given`; then the symmetric cost (R27 item 4) for
 every model. Then stop and report; JP 1 follows.
 
+**Queue as amended by responses R35 (2026-10-25)**, superseding the MRC parts of the R28 queue above: BERT-base MRC with 2a's
+configuration (`--lrs 2e-5 --epochs 3 --seeds 5 --save_model`, alone); the nine equal-size variants with `--lrs 1e-4 --epochs 10 --seeds 5
+--save_model` (six at a time); the sensitivity table, BERT-mini pretrained, seed 0, nine points (`--seeds 1 --lrs L --epochs E --tag_suffix
+_sens_<L>_<E>`), after the fixed rows; the convergence rule's 20-epoch rows only where it triggers. Still in the queue: the reader's R14 and
+R17 rows, the 2a R10 row and the 2a re-run with every seed saved, R17 on it. The 'all questions' MRC rows wait for a response.
+
 ## 2. After every run
 
 - **RESULTS.md**: a numbered section (`## <run>. <title> (<script>; logs/<log name>)`) with the exact command, the commit, the table the

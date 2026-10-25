@@ -691,3 +691,25 @@ the out-of-world sets are not separated by a training-distribution threshold. No
 2% false rejection). The confirmatory comparison on this point is therefore the AUROC (R30 item 8 (iii)), not a single threshold.
 The tagger's residual analogue (content tokens with no role probability >= 0.5) is degenerate in-world (0.11-0.25 on every in-world axis,
 because the verbs are content words that no role takes) and is reported but not interpreted (R30 item 7).
+
+## Deviation R34 / R35: no grid for BERT-base MRC and for the equal-size block; one sensitivity table (declared 2026-10-25, before any of these rows is read)
+
+Reason (questions Q23 point 3, written by the main session): on this world the validation set cannot discriminate. Every grid point
+measured so far (2a, 2b, 3a; BERT-tiny MRC at three learning rates) gives validation FULL 1.000, the MRC span loss prints as 0.00000,
+and the selection rule (best validation FULL, ties to the lowest validation loss) chooses by numerical noise. The validation draw is not
+leaked: on seed 0, 80 of 2,000 validation sentences (4.0%) also occur among the 29,359 distinct training sentences. The cause is the
+world itself: the rule ceiling (above) reaches exact match 1.000 on the training distribution. **The saturation is symmetric**: the reader
+was selected under the same rule, in the same world, with the same validation draw; its rows are not re-selected (R34, R35).
+- **BERT-base MRC** (the large reference): 2a's configuration (lr 2e-5, 3 epochs), no grid, 5 seeds (R34 (B)).
+- **Equal-size block, all nine variants** (BERT-tiny / mini / small x pretrained / from scratch / kinds given): no grid; one configuration
+  fixed by rule before any report row is read, the middle point of R19's grid: lr 1e-4, 10 epochs, batch 32; 5 seeds each; the same for
+  every model.
+- **Convergence rule** (R35): a from-scratch variant whose last-epoch training loss is not below the pretrained variant's by more than a
+  factor of 10 at 10 epochs (i.e. has not converged as the pretrained one has) gets ONE extra row at 20 epochs, labelled; no further
+  tuning. The validation and training losses are printed at full float precision from commit b5e0aee.
+- **One sensitivity table, not a selection**: BERT-mini pretrained, seed 0 only, the full R19 grid (lr {5e-5, 1e-4, 3e-4} x epochs {5,
+  10, 20}), the report-axis numbers for all nine points; read only after the fixed-configuration rows; it never picks a configuration.
+  If its spread on depth 3 (depth not given) or out-of-world exceeds the seed spread, that is written here and in the limitations.
+- The BERT-tiny grid chains that had already started (pretrained, lr 5e-5 / 1e-4 / 3e-4 x 5 / 10 / 20 epochs, seed 0, grid_only) are
+  kept and reported as what they are (validation numbers only; no selection is made from them).
+- The 'all six questions in training' rows (Q18 (1b)) are not in R35's block; they wait for a response.

@@ -60,3 +60,11 @@ pretrained, from scratch and with the kinds given. BERT-base and DistilBERT are 
 BERT-base row is MRC as the large reference. Run 3b, pre-registered, is not run (RESULTS '3b: not run'), because its question
 (pretraining or form) is answered by the from-scratch variant at every small size. Tagger add-on rows on BERT-base (R10 / R14 / R17 /
 R20) are deferred without date.
+
+## 2026-10-25 — validation saturation (questions Q23, responses R34 / R35)
+
+The validation set drawn from the training distribution cannot discriminate between configurations on this world (every grid point at
+FULL 1.000, the loss below printed precision; 4.0% overlap with training, not leakage; a rule reaches 1.000 on it). This explains R10 item
+3 (2a's selection fell on the first grid point) and makes every grid on this world a selection by noise. Decision: no grid for BERT-base
+MRC and the equal-size block (fixed configuration by rule, the same for every model), one sensitivity table on seed 0 for BERT-mini; the
+reader's own selection ran under the same saturated rule and is stated as such.
