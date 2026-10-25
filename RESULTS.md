@@ -346,3 +346,26 @@ tool/sop/legend.py).
 - These rows are reported beside the learned ones. The main claims are made on the pre-registered rows; the given-cue rows show how much
   of the new-formulation variance is this degeneracy. The expected effect is on new formulations; any change on depth 3 or new ids is
   reported as such.
+
+## Deviation R17: out-of-world rejection, a residual for the taggers, depth not given (declared 2026-10-25 before any R17 row; responses R17)
+
+Declared additional rows, for every model, after the pre-registered run 3 and before JP 1, never replacing a pre-registered row. They
+measure the parts of q-formalisation the pre-registered rows measure only partly ("not given", abstention outside the training
+distribution, the residual). Open points with their defaults: questions.md Q12-Q15.
+1. **Out-of-world rejection.** Frozen sets data/oow_seed<s>.json (data/make_oow_sets.py, committed before any model sees them): 500 per
+   source per seed, (a) random sequences of the world's vocabulary, (b) reference-world sentences whose form is not a basic-world form,
+   (c) in-world sentences with one content word replaced by a nonce word; a disjoint 'neg' part for training / calibration. Criterion
+   (the demo specification): rejected share >= 0.90 on each source, with false rejections <= 2% on the in-world report rows (the axes of
+   runs 1-3). Reader: rejected when its residual is above a threshold set on calibration rows (Q12). BERT, side by side: (i) no training:
+   rejected when the largest candidate probability of any role is below a threshold set on the in-world calibration rows at the 2%
+   false-rejection point; (ii) with an out-of-world class trained on the 'neg' part, the reader's threshold then also set with the 'neg'
+   part, so neither side has information the other lacks. Reported per source: rejected share and false rejections, mean ± std over
+   seeds with the per-seed list.
+2. **A residual for the taggers**, defined once: the share of content tokens (tokens whose world kind is not a function word) that the
+   tagger assigns to no role with probability >= 0.5. Reported beside the reader's residual; it is an analogue, not the same quantity.
+3. **Depth not given.** The reader estimates the depth from the count of level-opener tokens ('says', 'claims' followed by 'that'; the
+   sop tool's default); BERT from a depth head on [CLS] trained with the tagger (INSTRUCTIONS section 3). FULL at depth 3 (six roles,
+   trained labels, inner) with the estimated depth, beside the given-depth row, plus the depth accuracy itself.
+Reading, written now: if BERT with the trained out-of-world class (ii) rejects at >= 0.90 with <= 2% false rejections on a source, BERT
+meets the criterion there, whatever the reader does; the same for the reader. Results are reported per source, so that a source on which
+a model rejects by construction (the reader's lexicon on (c), Q14) is not mixed with a learned rejection.
