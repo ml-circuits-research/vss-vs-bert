@@ -1,0 +1,150 @@
+# 2026-10-25T23:01:49+01:00  commit=018f3a9  cmd: python3 eval/vorder_keys.py --variant b --seed_start 0 --seeds 5  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 100 GB; slot logs/.run.lock.3 of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+vorder_keys (R62): main repository e531283; variant b; seeds 0-4; N 30000
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 0 check                              1.00 (m 0.50) | 1.00 (m 0.51) | 1.00 (m 0.26) | 0.97 (m 0.19) | 1.00 (m 0.36) | 1.00 (m 0.40) | 1.00 (m 0.35) | 0.99 (m 0.25)  || depth 3 per role: A 0.97 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.971 (trained labels 0.971, inner 0.971) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.006
+  seed 0   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.99 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.993 (trained 0.993, inner 0.993); depth3 cw 0.002
+  seed 0   depth-3 role accuracy by filler position (words; train max 15): seen 0.9939393939393939 (n 3960), unseen 1.0 (n 360)
+  seed 0: 146 used keys of 8192 allocated; route 0.15 M used / 8.39 M allocated; reader 3.47 M (used) / 11.71 M (allocated); template 4, k = 0: per-role slot 0.831 exact 0.494; R46 slot 1.000 exact 1.000 (loaded logs/models/reader_vorderb_seed0.pt; EQUAL)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 1 check                              1.00 (m 0.50) | 1.00 (m 0.52) | 0.99 (m 0.23) | 0.96 (m 0.19) | 1.00 (m 0.35) | 1.00 (m 0.41) | 1.00 (m 0.36) | 1.00 (m 0.26)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained labels 0.999, inner 0.999) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 1   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 1   depth-3 role accuracy by filler position (words; train max 15): seen 0.9997474747474747 (n 3960), unseen 1.0 (n 360)
+  seed 1: 146 used keys of 8192 allocated; route 0.15 M used / 8.39 M allocated; reader 3.47 M (used) / 11.71 M (allocated); template 4, k = 0: per-role slot 0.770 exact 0.311; R46 slot 1.000 exact 1.000 (loaded logs/models/reader_vorderb_seed1.pt; EQUAL)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 2 check                              1.00 (m 0.50) | 1.00 (m 0.51) | 0.96 (m 0.22) | 0.94 (m 0.19) | 1.00 (m 0.35) | 1.00 (m 0.41) | 1.00 (m 0.36) | 1.00 (m 0.26)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 2   rule 'one_to_one': 1.00 | 1.00 | 0.97 | 0.94 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 2   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 2: 146 used keys of 8192 allocated; route 0.15 M used / 8.39 M allocated; reader 3.47 M (used) / 11.71 M (allocated); template 4, k = 0: per-role slot 0.748 exact 0.333; R46 slot 1.000 exact 1.000 (loaded logs/models/reader_vorderb_seed2.pt; EQUAL)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 3 check                              1.00 (m 0.49) | 1.00 (m 0.50) | 1.00 (m 0.27) | 0.96 (m 0.19) | 1.00 (m 0.36) | 1.00 (m 0.39) | 1.00 (m 0.36) | 1.00 (m 0.25)  || depth 3 per role: A 0.98 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.976 (trained labels 0.976, inner 0.976) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.004
+  seed 3   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.99 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 0.99 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.993 (trained 0.993, inner 0.993); depth3 cw 0.001
+  seed 3   depth-3 role accuracy by filler position (words; train max 15): seen 0.9957070707070707 (n 3960), unseen 1.0 (n 360)
+  seed 3: 146 used keys of 8192 allocated; route 0.15 M used / 8.39 M allocated; reader 3.47 M (used) / 11.71 M (allocated); template 4, k = 0: per-role slot 0.804 exact 0.411; R46 slot 1.000 exact 1.000 (loaded logs/models/reader_vorderb_seed3.pt; EQUAL)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 4 check                              1.00 (m 0.49) | 1.00 (m 0.49) | 1.00 (m 0.26) | 0.96 (m 0.19) | 1.00 (m 0.35) | 1.00 (m 0.40) | 1.00 (m 0.35) | 0.99 (m 0.25)  || depth 3 per role: A 0.96 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.951 (trained labels 0.951, inner 0.951) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.010
+  seed 4   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.99 | 1.00 | 1.00 | 1.00 | 0.99  || depth 3 per role: A 0.98 B 1.00 C 0.98 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.983 (trained 0.983, inner 0.983); depth3 cw 0.005
+  seed 4   depth-3 role accuracy by filler position (words; train max 15): seen 0.9893939393939394 (n 3960), unseen 1.0 (n 360)
+  seed 4: 146 used keys of 8192 allocated; route 0.15 M used / 8.39 M allocated; reader 3.47 M (used) / 11.71 M (allocated); template 4, k = 0: per-role slot 0.817 exact 0.450; R46 slot 1.000 exact 1.000 (loaded logs/models/reader_vorderb_seed4.pt; EQUAL)
+
+== reader_vorderb: used keys [146, 146, 146, 146, 146]; reader size 3.468 ± 0.000 [3.468 3.468 3.468 3.468 3.468] M at the used keys, 11.71 M allocated; BERT-tiny 4.39 M
+  template 4, k = 0: per-role slot 0.794 ± 0.031 [0.831 0.770 0.748 0.804 0.817], exact 0.400 ± 0.069 [0.494 0.311 0.333 0.411 0.450]; R46 slot 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000], exact 1.000 ± 0.000 [1.000 1.000 1.000 1.000 1.000]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] training sentences reproduced draw for draw [x] saved models, no training
+# post-launch guard (slots 22): MemAvailable 90 s after the start 94 GB

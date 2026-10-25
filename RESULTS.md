@@ -1730,3 +1730,16 @@ with k = 0 (eval/vorder_keys.py; template 4 was never in its training); (3) the 
 kind, word kind, ordinal) tuples with valid = 1 in each seed's 30,000 training sentences (reproduced draw for draw), times D, beside the
 allocated table (eval/vorder_keys.py); if the used count leaves the reader above BERT-tiny's 4.4 M, the size comparison is stated at that
 count.
+
+## The verb-order route at its used keys, and template 4 at k = 0 (R62 item 1, R60; eval/vorder_keys.py; logs/2026-10-25_2301_vorder_keys_018f3a9.txt, logs/2026-10-25_2302_vorder_keys_018f3a9.txt; MEASURED)
+
+**Size.** In the 30,000 training sentences of every seed (both ranges) the route b indexes **146** distinct (side, verb kind, word
+kind, ordinal) keys of the 2 x 32 x 32 x 4 = 8,192 allocated; at D = 1,024 that is **0.15 M** phases used against 8.39 M allocated.
+The reader with route b is therefore **3.47 M parameters at the used keys** (11.71 M with the full allocated table; 1a: 3.32 M),
+below BERT-tiny (4.39 M) and BERT-mini (11.17 M). The size comparison of the paper is made at the used count (R62); the allocated count
+is what the present export ships until the tool stores the used keys only (sop/, the author's change).
+
+**Template 4 with k = 0** (route b never saw template 4): per-role slot accuracy 0.794 ± 0.031 (design) / 0.853 ± 0.044 (claim), exact
+match 0.400 / 0.560; with the R46 decoder + one-to-one **1.000 on every seed of both ranges** (exact 1.000). So the route-b reader reads
+the double object without examples when it chooses among the sentence's words; the per-role catalog readout still needs the examples
+(the 50-example line of the growth table, which was measured on 1a, stands for the per-role rule).
