@@ -221,3 +221,54 @@ WordPiece and whole (the latter with `--whole_init pieces`). Order (R10, R11): 2
   (cited rounds), so the reader's design is not blind to these worlds, while BERT's architecture is. (The cited rounds: the main
   repository's RESULTS 6c, 7c and the rounds before them, on the same basic world.) This sentence goes into the threats-to-validity part
   of the write-up.
+
+## 2a. BERT-base pretrained, WordPiece, pre-registered (models/bert_basic.py; logs/2026-10-25_0830_bert_basic_4429ea4.txt)
+
+Command: `./run.sh models/bert_basic.py --model bert-base-uncased --tokenizer wordpiece --seeds 5 --save_model`, commit 4429ea4 (code
+identical to the pre-registration tag prereg-2026-10-25 on 7c2035a; PYTHONHASHSEED=0), device cuda, fp32, batch 32, N 30,000, 1.58
+WordPiece pieces per world word, 109.5 M parameters. Started 08:30, finished 10:02:40 (the network loss of 09:57, JOURNAL 2026-10-25,
+did not affect it). Grid on seed 0 (fixed, INSTRUCTIONS section 4): every one of the 9 points reached validation FULL 1.000 (lr 2e-5 /
+3e-5 / 5e-5 x 3 / 5 / 10 epochs: 247 / 410 / 820 s, 249 / 405 / 813 s, 246 / 410 / 816 s); the pre-registered rule (strict `>`) kept the
+first point, lr 2e-5, 3 epochs (the tie R10 item 3 describes). Seeds 1-4: 246 s each.
+
+| axis (mean role accuracy) | mean ± std | per seed (0-4) |
+|---|---|---|
+| seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new ids | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., seen trans. | 0.999 ± 0.002 | 0.99 1.00 1.00 1.00 1.00 |
+| new form., UNSEEN trans. | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| new form., ROLE CUES seen | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 1 | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 2 (seen) | 1.000 ± 0.000 | 1.00 1.00 1.00 1.00 1.00 |
+| depth 3 (UNSEEN) | 0.961 ± 0.063 | 1.00 1.00 0.84 0.98 0.99 |
+| FULL frame at depth 3 (UNSEEN), six roles | 0.765 ± 0.376 | 1.000 0.978 0.017 0.886 0.943 |
+| FULL at depth 3 over A B C X1 X2, trained labels (R6) | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+| FULL at depth 3 over A B C, inner frame (R6) | 1.000 ± 0.000 | 1.000 1.000 1.000 1.000 1.000 |
+
+Depth 3 per role: A, B, C, X1, X2 1.000 on every seed; X3 0.765 ± 0.376 (per seed 1.00 0.98 0.02 0.89 0.94).
+Calibration (rule 18; tau on calibration rows): new ids tau 0.000, coverage 1.000, confident-wrong 0.000 (per seed 0.000 x5), accuracy
+among answered 1.000; depth 3 tau 0.000, coverage 1.000, confident-wrong 0.039 (per seed 0.000 0.004 0.164 0.019 0.009), accuracy among
+answered 0.961. Occupancy (free tags): no false filler on absent roles on any axis; at depth 3 'missed_present' 0.167 on every seed,
+i.e. one of the six roles (X3) counted as missed by the free-tag occupancy rule (R10 item 12 adds the occupancy over the trained labels).
+Cost: 109.5 M parameters, 438 MB at 32 bits, 30.5-31.3 ms per sentence on CPU (torch default, 20 threads), batch 32; training 246 s per
+seed, selection 4,416 s (the seed-0 grid), 5-seed row 4,416 + 4 x 246 = 5,400 s, this machine (GB10), fp32; no power samples (the
+sidecar starts at 2b). Label: MEASURED.
+
+Gate (R4, INSTRUCTIONS Table 3): seen 1.000 >= 0.95, MET; the other rows are interpreted.
+
+Observation against R6's premise. R6 expected X3 "at chance by construction", because the label never occurs in training. It is not at
+chance: under the pre-registered per-role argmax over the world's candidates, X3 is the correct speaker on 4 of 5 seeds (0.89-1.00) and
+fails on seed 2 (0.02). The X3 output row is untrained; why the argmax lands on the one person token left by the trained roles is not
+established by this run (the R10 one-to-one rule and the position split, applied to the saved seed-0 model, are the next measurement).
+Stated as observed, not explained.
+
+Reading (Table 3 bands; R9.4: BERT's results first). BERT-base fine-tuned on the basic world is at ceiling on every axis whose labels
+it was trained on: new identities 1.000 (> 0.9: the WordPiece pieces carry the role), new formulations 0.999 / 1.000 (the reader 0.864 /
+0.868, run 1a: BERT is better on this axis by 0.13, at 109.5 M parameters against the reader's 3.3 M and 33x the per-seed training
+time), and the unseen depth 3 over the trained labels and over the inner frame at 1.000 (> 0.9: by the reading written in Table 3 for
+depth 3, this contradicts, for a pretrained encoder, the paper's same-input claim made against the from-scratch transformer 7b,
+whose inner frame is <= 0.074 on the same splits, runs 1b / 1c). The six-role FULL at depth 3 (0.765 ± 0.376) is in the in-between
+band; both readings: (i) the frame of the unseen depth is composed except for the one label never trained, which comes out right on 4
+seeds and wrong on one; (ii) the unseen-depth frame is not reliably produced as a whole, and the across-seed spread (0.017-1.000) is
+itself the result. On this row the reader is at 0.982 ± 0.010 with every seed above 0.97. Calibration: at full coverage BERT has
+confident-wrong 0.039 at depth 3 (0.164 on seed 2) against the reader's 0.003.
