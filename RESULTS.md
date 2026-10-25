@@ -161,3 +161,51 @@ real-data round (run 8.0). The code of run 2a (commit 4429ea4, logs/2026-10-25_0
 `git diff --stat 4429ea4 7c2035a` lists responses.md only. Any later change of a criterion, metric or grid is a deviation listed here
 with its date, with the tagged version reported beside it (R9.1). From here on: every run, seed and stopped run stays in RESULTS with
 its log (R9.2), and the axes where BERT is better are stated with the same prominence as those where the reader is (R9.4).
+
+## Deviations after the independent review (R10), declared 2026-10-25 before any R10 row runs (code: commit 3b06af9)
+
+Responses R10 (the findings of an independent review of the BERT baselines, made from the side of BERT) and R11 (Q6, Q7). The
+pre-registered rows (tag prereg-2026-10-25) stay exactly as they are and are reported. Every item below is implemented behind a flag
+whose default reproduces the tagged code, or is ADDITIVE (a new field next to the unchanged ones). Rows run with the flags are labelled
+"reviewed (R10)" (results files `*_r10*`) and are reported beside the pre-registered rows, never instead of them.
+
+1. **One-to-one decoding** (additive, every model): a second decoding rule beside the per-role argmax. The fillers of one sentence are
+   always distinct in the world (a property equally available to every model; it is stated as such). The roles are assigned to distinct
+   candidates maximising the summed score (cosine for the reader and the 7b transformers, log-probability for a tagger), exactly
+   (Hungarian, eval/metrics.one_to_one). Role margin = the assigned candidate's score minus the best score of any other candidate for
+   that role (negative = unsure); the sentence's assignment margin = best total minus the second-best assignment's total (R11). Both
+   rules get their calibration blocks. Applied to 1a (seed 0, saved route book) and 2a (seed 0, saved model) with eval/r10_saved.py,
+   without retraining; to 1b / 1c by a re-run with the pre-registered selected configuration and saved models (R11, below); to every
+   later run in the run itself.
+2. **Positions never seen in training.** (a) Additive, every model: the depth-3 role accuracy split by whether the gold filler's
+   position was reached by a training sentence (words for the reader and the 7b transformers: the longest training sentence has 15
+   words, 75% of depth-3 sentences are longer; first sub-token index for a tagger, against its longest training encoding). (b) Flag
+   `--pos_offset K`: random position-id offsets 0..K per training sentence (K = 10 for the R10 scratch row of run 3b; optional for the
+   pretrained encoders).
+3. **Model selection ties.** Additive: the validation token cross-entropy of every grid point is printed. Flag `--select r10`: among
+   the grid points with the best validation FULL, the lowest validation cross-entropy (the tagged rule takes the first, i.e. the least
+   trained, point on a tie). If R10 selects another configuration, its 5 seeds are the R10 row.
+4. **'whole' initialisation** (R11: applies to the R10 'whole' row of run 2): the pre-registered 'whole' rows use transformers 5.20.2
+   `resize_token_embeddings`, whose default `mean_resizing=True` initialises the new rows from the mean and covariance of the existing
+   embeddings, NOT "randomly" as INSTRUCTIONS section 4 says; this is the actual initialisation of the pre-registered row 2b. Flag
+   `--whole_init pieces`: each new whole-word token = the mean of its WordPiece pieces' embeddings.
+5. **Weight decay** (flag `--wd_groups`): no decay on biases and LayerNorm weights (the standard BERT recipe), in every R10 row.
+6. **Temperature scaling** (flag `--temperature`): one temperature for the tagger's softmax, fitted on the calibration rows (token
+   cross-entropy); the calibration block of the temperature-scaled tagger is reported beside the softmax one. Additive for every model:
+   the depth-3 calibration block over the trained roles (A B C X1 X2) beside the six-role one. Stated for every model: the calibration
+   rows are the training distribution (near 100% correct), so no threshold or temperature fitted on them can calibrate the
+   out-of-distribution axes (new identities, depth 3); the calibration numbers on those axes measure transfer, not fit.
+7-10. Reference-world predicate, WikiSQL aggregator and max_len, step counts at 1k / 5k, cased multilingual inputs: implemented when
+   their runs come (runs 4, 5 and the real-data round), each in its own commit and listed here before its run.
+11. Stated: the depth of a sentence is given at decoding to every model (the roles read are those of its depth), and there is no event /
+   depth head on the basic world. This is equal for all models and a deviation from INSTRUCTIONS section 3. The taggers have no CRF
+   (standard for BERT token classification).
+12. Additive: the taggers' occupancy at depth 3 is also given over the trained labels (X3 is missed by construction).
+13. Additive: the cost of a tagger also at fp16 (bytes), with int8 dynamic quantization (bytes and CPU ms per sentence), the CPU thread
+   count, and the embedding table's size (the scratch twin carries the 30,522-row WordPiece table for a 66-word world).
+14. Flag `--seed_per_config`: torch is seeded before every grid configuration, so a selected configuration can be re-run alone.
+15. Flag `--trunc_none`: a word truncated away gets no label and no prediction (the tagged code points it at [CLS]; it never triggers on
+   this world, max_len 96).
+`--r10` = `--select r10 --wd_groups --seed_per_config --trunc_none --temperature`. The R10 rows of run 2: BERT-base pretrained, `--r10`,
+WordPiece and whole (the latter with `--whole_init pieces`). Order (R10, R11): 2a (pre-registered) finishes; eval/r10_saved.py on 1a and
+2a; 1b / 1c re-run for R10 (same configuration, models saved); 2b (pre-registered); the R10 rows of run 2; stop before run 3.
