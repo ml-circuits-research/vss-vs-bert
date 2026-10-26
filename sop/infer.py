@@ -642,6 +642,21 @@ class Reader:
         # a model without the key predates round 3: its primary estimator was the open-gate count
         estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
         f = self.read(S, tokens, filt, force, force_depth, estimator, presence, table) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
+        if kept and f["shape"] == "ok" and self.cfg.get("presence_without_placed"):
+            # vss-demo Q17 / D28: a second reading of the roles left absent, on the state WITHOUT the deposits of the words already placed
+            # in other roles (each word explains one role: a label read as the landmark is no evidence of a text); the same thresholds
+            placed0 = self.placed_words(f)
+            ex = [j for j, i in enumerate(kept) if tokens[i] in placed0 or self.lemma(tokens[i]) in placed0]
+            if ex and len(ex) < len(kept):
+                Fp = np.array([self.st.id(self.ident(tokens[kept[j]])) for j in ex]); S2 = S - (addr[ex] * Fp).sum(0)
+                f2 = self.read(S2, tokens, filt, (f["depth"], f["neg"]), None, estimator, presence, table)
+                if f2["shape"] == "ok":
+                    for r, fl in f2["roles"].items():
+                        if f["roles"].get(r) is None and fl is not None and not (set(world.filler_words(fl)) & placed0):
+                            f["roles"][r] = fl; f["presence"][r] = f2["presence"].get(r); f.setdefault("second_pass", []).append(r)
+                            for k, v in f2["margins"].items():
+                                if k == r or k.startswith(r + "."): f["margins"][k] = v
+                            f.get("presence_queries", {}).pop(r, None)
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
         if f["shape"] == "ok" and self.legend.reader.get("spans") == "kind_run":      # Q38 / R87: multi-word fillers: a filler is the run of its kind around the head
             kinds_seq = [self.kind(t) for t in tokens]
