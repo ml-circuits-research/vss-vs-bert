@@ -2238,3 +2238,30 @@ and the most frequent unplaced words. Results logs/results_r78_readout_base_seed
 Noted before the run, from the smoke test: `vorder`'s need signal fires on AddToPlaylist only at seed 0 (2.4% of its rows), not on the
 three worlds of R74 (which used the hand kinds); and the per-intent legends declare the event verb `command` only, which is no word of
 the utterances, so the verb-order route would find no verb category (set_vorder returns the verb categories found).
+
+## R84 item 1: measured (logs/2026-10-26_1501_r84_oppoints_2f82ad4.txt (ood s0), _1504_ (ood s1), _1505_ (base s1), _1506_ (ood s2), _1507_r84_oppoints_d0f6db4.txt (base s2), _1509_r84_oppoints_0b71b5f.txt (base s0; the first base s0 launch was refused by run.sh because eval/r78_readout.py was not yet committed); code 2f82ad4 (later commits RESULTS / other scripts only); sop @ 82585ea; results logs/results_r84_oppoints_<condition>_seed<s>.json; MEASURED)
+
+ood_intents (held-out intent GetWeather), seeds 0-2: thresholds on dev_cal (300 in-domain), reported on test (held-out 100, in-domain
+600). "held-out" = share of held-out utterances refused; "FR" = in-domain false rejection on test [per seed].
+
+| signal | AUROC test [per seed] | FR target 1%: held-out / test FR | 2%: held-out [per seed] / test FR | 5%: held-out [per seed] / test FR |
+|---|---|---|---|---|
+| **residual (chosen world)** | 0.941 ± 0.004 | 0.080 / 0.006 | **0.183 ± 0.048** [0.160 0.250 0.140] / 0.008 | 0.467 ± 0.017 [0.450 0.460 0.490] / 0.031 |
+| anchor (1 - chosen anchor percentile) | 0.892 ± 0.009 | 0.000 / 0.001 | 0.000 [0 0 0] / 0.004 | 0.100 ± 0.051 [0.050 0.170 0.080] / 0.028 |
+| max of the two (percentile units) | 0.887 ± 0.009 | 0.030 / 0.002 | 0.057 / 0.003 | 0.090 / 0.019 |
+| residual_all (second line) | 0.881 ± 0.005 | 0.237 / 0.013 | 0.327 ± 0.025 [0.320 0.300 0.360] / 0.031 | 0.447 / 0.056 |
+| anchor_z_all (second line) | 0.895 ± 0.010 | 0.013 / 0.008 | 0.087 / 0.016 | 0.303 ± 0.045 [0.240 0.330 0.340] / 0.041 |
+
+dev_rep (second line; held-out 50, in-domain 300) agrees in order: residual at 2% 0.153 at FR 0.013, at 5% 0.487 at 0.041; anchor at
+5% 0.080. base (the demo's worlds, no held-out intent), test false rejection at the dev_cal thresholds: residual 0.000 / 0.007 / 0.035
+at 1% / 2% / 5% (thresholds 0.941 / 0.887 / 0.767, mean over seeds), anchor 0.000 / 0.005 / 0.035, residual_all 0.017 / 0.031 / 0.050.
+
+**Against R84's expectations.** At 5% false rejection the anchor signal rejects well above 0.28: NOT met (0.100 ± 0.051 at 0.028). The
+anchor's AUROC (0.892) comes from the bulk of the distributions, not from the tail: the in-domain utterances with the lowest anchor
+percentile sit as low as the held-out ones, and the percentile cannot order below a world's calibration minimum (its continuous
+version, anchor_z_all, reaches 0.303 at 5%). The better of the three declared signals at 2% is the chosen world's residual: 0.183 ±
+0.048 held-out at 0.008 test false rejection (0.467 at 5%, 0.031). **Demo refusal line (R84 item 1): the chosen world's explained
+residual above the dev_cal threshold at 2% false rejection**, threshold = the 98th percentile of the chosen world's residual on the base
+dev calibration half (0.887 mean over seeds; per seed in the JSON; the export uses the exported seed's own value). Second line, not the
+declared choice: residual_all (every world's residual percentile high) refuses more at the 2% target (0.327) but its test false
+rejection is 0.031, above the target.
