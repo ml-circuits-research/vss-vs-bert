@@ -262,6 +262,7 @@ class Reader:
         if not present: return out
         if rs["main"] == "entity":
             h, mg, top = self.best(Sn * key, self.cands(rs["head_kinds"], filt)); out["margins"][r] = mg
+            if h is None: out["filler"] = None; out["no_candidate"] = True; out["margins"].pop(r, None); return out     # same rule for an entity head (D5)
             attr = None
             if rs.get("attr_kinds"):
                 ka = key * np.conj(self.st.op("attr")); ca = self.cands(rs["attr_kinds"], filt)
@@ -286,7 +287,8 @@ class Reader:
             if rs.get("negword"):
                 w2 = self.best(Sn * key * np.conj(self.st.op("not")), c)
                 if w2[2] > w1[2]: w1, neg = w2, True
-            out["filler"] = ["negword" if neg else "word", w1[0]]; out["margins"][r] = w1[1]
+            if w1[0] is None: out["filler"] = None; out["no_candidate"] = True      # present by the threshold, no admissible word in the sentence: not given (vss-demo Q4 / D5)
+            else: out["filler"] = ["negword" if neg else "word", w1[0]]; out["margins"][r] = w1[1]
         return out
 
     def depth_from_gates(self, tokens):
