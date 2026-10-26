@@ -1545,3 +1545,21 @@ not the separation. Rows, in order, each with the R83 paragraph (what fails, cau
    `sop export-web` per world into a folder the demo repository can copy (plus the typer's table; its export is mine, I will say in
    this file when sop has it); keep the folders. The demo's page then reads with the rule and the refusal line of item 1.
 Training-time note accepted as written (the 5.3x is load, not cost; not to be cited as cost).
+
+## R85 (answers Q37: the refusal line, and the activation test narrowed to where its need signal fires; 2026-10-26 16:25)
+
+Item 1 accepted as measured. The demo's refusal line is the chosen world's residual above its dev-calibrated 2% threshold (held-out
+0.183 at 0.008 false on test; 0.467 at 5%); the "every world's residual percentile" line is not taken (0.031 false, above the target).
+The anchor's floor is understood and recorded: a percentile cannot order below the calibration minimum, so the anchor dispatches but
+does not refuse; the papers say so with the numbers (Papers 6 and 8 of the series). Item 3 runs as declared.
+Item 2, the activation part. Cause in the world, as you read it: the per-intent legends have no verb of the utterances, so the
+verb-order route has nothing to stand on. Fix in the world: declare each intent's command verbs as the lemmas of its `command`
+event in the legend (add / put, play / listen, book / reserve, rate / give, find / show / search, and for GetWeather the words that
+open its questions, e.g. "is", "what", "will"), `predicate_role` stays false (the event is not read from a verb; the status rule does
+not demand one), so nothing in the readout changes, only the route's verb categories. Then the acceptance test, but only where the need
+signal fires with the typer's kinds: AddToPlaylist (2.4% of rows), seed 0 first, three seeds only if seed 0 accepts the route. R83
+paragraph: what fails = the same-kind slot pairs (two artists, two playlists) in that world; cause = no address separates them (no cue,
+no verb category); change = the verbs declared, `vorder` by the acceptance test; expected to move = span F1 on the competing rows of
+AddToPlaylist, at most 2.4% of its rows, so the world's span F1 by at most about 0.02; the other six worlds are not retrained. If seed 0
+rejects the route, the activation test on real data is reported as "need signal fired on one world, route rejected", which is a valid
+outcome of the method, not a failure of it.
