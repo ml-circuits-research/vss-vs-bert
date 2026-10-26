@@ -2023,3 +2023,20 @@ SearchCreativeWork 0.92), because more than 2% of a world's own training utteran
 this data the per-intent dispatch by the explained residual does not reach the one-world configuration (intent 0.595 vs 0.977, residual
 AUROC 0.775 vs 0.933); the level-W vote is not refuted outright (the AUROC moved), but it does not hold at the expected level. R78's rows
 (the per-intent readout, --activate auto, the held-out refusal) are NOT started: R78 makes them conditional on R75's expectations.
+
+## R79: one world per intent with the intent anchor (DECLARED 2026-10-26, before the run)
+
+Configuration: R75's, unchanged (seeds 0-2, D 512, 10 epochs, routes path + chainL + bigram, no vorder, --world_kinds all, --dispatch
+residual, conditions base and ood_intents, one process per seed and condition, OMP_NUM_THREADS 3, nice 10), plus `--intent_anchor` (code
+0f8fcbc): every per-intent world keeps the closed-value `intent` role with its single value in its legend (reader.closed_values) and in
+every example (rate 1.0, so it is a core question and the structure anchor), and the schema is built by sop @ 7ce5c50 (R79 (a): core =
+only the questions present in >= 95% of training rows; no silent fallback; a warning when there is none). The decoder is sop @ 7ce5c50.
+World folders logs/worlds/real_snips_<cond>_intent_<I>_seed<s>_r79 (R75's folders are kept); results
+logs/results_real_snips_*_reader_worlds_r79_full_seed{0,1,2}.json (tag reader_worlds_r79). A 1-epoch smoke test at seed 9 (not a result;
+its outputs deleted) printed core roles containing `intent` for all seven worlds and no warning.
+
+Expectations written by R79 before the run: (1) the no-anchor warning appears for no world; (2) every world threshold is below 1.0;
+(3) chosen-frame abstention far below 0.6; (4) dispatch intent well above 0.595 (one-world reference 0.977); (5) residual AUROC above
+0.775; (6) held-out-intent rejection above 0, in-domain false rejection under 0.05. If dispatch intent stays under 0.9 with the anchor in
+place, the per-intent vote is reported as below the one-world reader on this data and R78 (1) is run on the one-world configuration
+instead.
