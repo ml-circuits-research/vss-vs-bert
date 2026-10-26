@@ -1,0 +1,135 @@
+# 2026-10-26T18:58:26+01:00  commit=a944dff  cmd: python3 vss/run_reader_real.py --dataset snips --sizes full --seeds 1 --seed_start 2 --test --epochs 10 --kinds typer --worlds per_intent --world_kinds all --dispatch residual --D 512 --intent_anchor --negatives --activate auto --declare_verbs --retrain_worlds AddToPlaylist --run_tag _paired --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_25de418  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 106 GB; slot logs/.run.lock.3 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_real: main repository e531283; dataset snips / condition base; device cuda; D 512; batch 32; lr 0.02; sizes ['full'], epochs {'full': 10}; seeds 1; train 13084, dev calibration 350; eval dev_rep 350, dev_rep:new_slot_values 96, dev_rep:unseen_template 174, test 700, test:new_slot_values 207, test:unseen_template 402
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+[R72] 7 worlds (one per intent): ['AddToPlaylist', 'BookRestaurant', 'GetWeather', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; D 512; routes path + chainL + bigram; decoder: sop @ 25de418 (residual explained)
+[R85] seed 2 world AddToPlaylist: command verbs declared ['add']; left out (kind not their own): [('put', 'O')]
+[R85] seed 2 world AddToPlaylist: the route's verb kinds will be ['w:add']
+[R79] seed 2 world AddToPlaylist: core roles ['intent', 'playlist'], structure anchor core roles
+[R84] seed 2 world AddToPlaylist: need signals vorder FIRES (44 training rows (2.4%) fill two roles with the same kind; in 44 of them neither word is cued, so only the order relative to the verb separates them); pos no (the most frequent absolute position of a core role's head covers only 19% of the rows: the order is not rigid)
+[activate] candidates ['vorder'] (44 training rows (2.4%) fill two roles with the same kind; in 44 of them neither word is cued, so only the order relative to the verb separates them); selection rows 402 (of which with same-kind competition 5); trials trained on 3332 rows
+[train] seed 2: 1665 NEGATIVE examples among the 3332 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3332 training rows x 10 epoch(s) -> 33320 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: add this artist named kirk hammett to my playlist los 40 radio éxitos
+[trace] tokens/kinds: add/w:add this/w:this artist/S:music_item named/O kirk/S:artist hammett/S:artist to/w:to my/S:playlist_owner playlist/w:playlist los/S:playlist 40/S:playlist radio/S:playlist éxitos/S:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "hammett"], "intent": ["word", "AddToPlaylist"], "music_item": ["word", "artist"], "playlist": ["word", "\u00e9xitos"], "playlist_owner": ["word", "my"]}, "scope": null, "shape": "ok", "speakers": []}
+/tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_25de418/sop/train.py:470: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
+[trace] target |S_world| = 72.73 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 1.60 GB | torch alloc 0.44 GB reserved 0.51 GB | MemAvailable 102.3 GB
+[train seed 2] step 500 sent 16000/33320 loss -0.874 (57s) | RSS 2.72 GB | torch alloc 0.70 GB reserved 3.27 GB | MemAvailable 98.3 GB
+# post-launch guard (slots 8): MemAvailable 90 s after the start 97 GB
+[train seed 2] step 1000 sent 32000/33320 loss -0.881 (123s) | RSS 2.72 GB | torch alloc 0.70 GB reserved 3.27 GB | MemAvailable 95.8 GB
+[train seed 2] end: RSS 2.72 GB | torch alloc 0.70 GB reserved 0.78 GB | MemAvailable 98.5 GB (129s)
+[export] numpy reader vs torch states: max relative difference 1.06e-07 (float32 phases in the route book)
+[activate] trial path+chainL+bigram: FULL 0.507 on 402 selection rows, 0.000 on the 5 with same-kind competition | calibration_dev 0.380 train 0.543
+[train] seed 2: 1665 NEGATIVE examples among the 3332 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3332 training rows x 10 epoch(s) -> 33320 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[train] verb-order route (reader.codes / --codes): verb kinds ['w:add']; cue kinds []
+[trace] text: add this artist named kirk hammett to my playlist los 40 radio éxitos
+[trace] tokens/kinds: add/w:add this/w:this artist/S:music_item named/O kirk/S:artist hammett/S:artist to/w:to my/S:playlist_owner playlist/w:playlist los/S:playlist 40/S:playlist radio/S:playlist éxitos/S:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "hammett"], "intent": ["word", "AddToPlaylist"], "music_item": ["word", "artist"], "playlist": ["word", "\u00e9xitos"], "playlist_owner": ["word", "my"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 72.73 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.29 GB | torch alloc 0.67 GB reserved 0.82 GB | MemAvailable 100.9 GB
+[train seed 2] step 500 sent 16000/33320 loss -0.880 (53s) | RSS 3.32 GB | torch alloc 1.39 GB reserved 4.03 GB | MemAvailable 95.9 GB
+[train seed 2] step 1000 sent 32000/33320 loss -0.902 (150s) | RSS 3.32 GB | torch alloc 1.39 GB reserved 4.03 GB | MemAvailable 94.1 GB
+[train seed 2] end: RSS 3.32 GB | torch alloc 1.39 GB reserved 1.43 GB | MemAvailable 96.7 GB (158s)
+[export] numpy reader vs torch states: max relative difference 9.48e-08 (float32 phases in the route book)
+[activate] trial path+chainL+bigram+vorder: FULL 0.538 on 402 selection rows, 0.000 on the 5 with same-kind competition | calibration_dev 0.440 train 0.566
+[activate] paired path+chainL+bigram+vorder vs base: all wins 18 losses 11 (noise 10.8); marked wins 0 losses 0 (noise 0.0); splits calibration_dev +5/-2 train +13/-9 -> rejected
+[activate] accepted none: codes ['path', 'chainL', 'bigram']; diagnostics: 5 selection rows with same-kind competition are still misread with the accepted bundle: no route separates them; a question is missing from the legend or this world should be split
+[R84] seed 2 world AddToPlaylist: accepted []; codes ['path', 'chainL', 'bigram']
+[train] seed 2: 1842 NEGATIVE examples among the 3684 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3684 training rows x 10 epoch(s) -> 36840 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: please add this rex griffin tune to the steampunk playlist
+[trace] tokens/kinds: please/O add/w:add this/w:this rex/S:artist griffin/S:artist tune/S:music_item to/w:to the/w:the steampunk/S:playlist playlist/w:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "griffin"], "intent": ["word", "AddToPlaylist"], "music_item": ["word", "tune"], "playlist": ["word", "steampunk"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 65.47 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.08 GB | torch alloc 0.53 GB reserved 1.43 GB | MemAvailable 100.8 GB
+[train seed 2] step 500 sent 16000/36840 loss -0.818 (26s) | RSS 3.08 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 98.0 GB
+[train seed 2] step 1000 sent 32000/36840 loss -0.856 (51s) | RSS 3.08 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 98.7 GB
+[train seed 2] end: RSS 3.08 GB | torch alloc 0.73 GB reserved 0.78 GB | MemAvailable 101.3 GB (59s)
+[export] numpy reader vs torch states: max relative difference 6.58e-08 (float32 phases in the route book)
+[R81] seed 2 world AddToPlaylist: 1842 positives, 1842 negatives; training 538.8 s (concurrent)
+[R72] seed 2 world AddToPlaylist: 1842 training utterances, 5 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world BookRestaurant: core roles ['intent'], structure anchor core roles
+[R84] seed 2 world BookRestaurant: need signals vorder no (27 training rows (1.4%) fill two roles with the same kind; in 27 of them neither word is cued, so only the order relative to the verb separates them); pos no (no core roles)
+[R84] seed 2 world BookRestaurant: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_BookRestaurant_seed2_r81/model_seed)
+[R81] seed 2 world BookRestaurant: 1873 positives, 1873 negatives; training 0.2 s (concurrent)
+[R72] seed 2 world BookRestaurant: 1873 training utterances, 14 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world GetWeather: core roles ['intent'], structure anchor core roles
+[R84] seed 2 world GetWeather: need signals vorder no (3 training rows (0.2%) fill two roles with the same kind; in 3 of them neither word is cued, so only the order relative to the verb separates them); pos no (no core roles)
+[R84] seed 2 world GetWeather: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_GetWeather_seed2_r81/model_seed)
+[R81] seed 2 world GetWeather: 1900 positives, 1900 negatives; training 0.2 s (concurrent)
+[R72] seed 2 world GetWeather: 1900 training utterances, 9 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world PlayMusic: core roles ['intent'], structure anchor core roles
+[R84] seed 2 world PlayMusic: need signals vorder no (14 training rows (0.7%) fill two roles with the same kind; in 14 of them neither word is cued, so only the order relative to the verb separates them); pos no (no core roles)
+[R84] seed 2 world PlayMusic: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_PlayMusic_seed2_r81/model_seed)
+[R81] seed 2 world PlayMusic: 1900 positives, 1900 negatives; training 0.2 s (concurrent)
+[R72] seed 2 world PlayMusic: 1900 training utterances, 9 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world RateBook: core roles ['intent', 'rating_value'], structure anchor core roles
+[R84] seed 2 world RateBook: need signals vorder no (3 training rows (0.2%) fill two roles with the same kind; in 3 of them neither word is cued, so only the order relative to the verb separates them); pos no (the most frequent absolute position of a core role's head covers only 22% of the rows: the order is not rigid)
+[R84] seed 2 world RateBook: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_RateBook_seed2_r81/model_seed)
+[R81] seed 2 world RateBook: 1856 positives, 1856 negatives; training 0.2 s (concurrent)
+[R72] seed 2 world RateBook: 1856 training utterances, 7 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world SearchCreativeWork: core roles ['intent', 'object_name'], structure anchor core roles
+[R84] seed 2 world SearchCreativeWork: need signals vorder no (11 training rows (0.6%) fill two roles with the same kind; in 11 of them neither word is cued, so only the order relative to the verb separates them); pos no (the most frequent absolute position of a core role's head covers only 17% of the rows: the order is not rigid)
+[R84] seed 2 world SearchCreativeWork: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_SearchCreativeWork_seed2_r81/model_seed)
+[R81] seed 2 world SearchCreativeWork: 1854 positives, 1854 negatives; training 0.1 s (concurrent)
+[R72] seed 2 world SearchCreativeWork: 1854 training utterances, 2 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world SearchScreeningEvent: core roles ['intent'], structure anchor core roles
+[R84] seed 2 world SearchScreeningEvent: need signals vorder no (4 training rows (0.2%) fill two roles with the same kind; in 4 of them neither word is cued, so only the order relative to the verb separates them); pos no (no core roles)
+[R84] seed 2 world SearchScreeningEvent: no candidate fires: the R81 model copied (/home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_SearchScreeningEvent_seed2_r81/model_seed)
+[R81] seed 2 world SearchScreeningEvent: 1859 positives, 1859 negatives; training 0.2 s (concurrent)
+[R72] seed 2 world SearchScreeningEvent: 1859 training utterances, 7 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep (n 350): FULL 0.280 intent 0.403 slot heads 0.395 | frame tau 0.075: coverage 0.18 confident-wrong 0.063 | intent abstain 0.766 | span F1 0.524
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep:new_slot_values (n 96): FULL 0.208 intent 0.406 slot heads 0.352 new-value heads 0.320 (n 100) | frame tau 0.075: coverage 0.16 confident-wrong 0.094 | intent abstain 0.750 | span F1 0.463
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep:unseen_template (n 174): FULL 0.224 intent 0.368 slot heads 0.340 | frame tau 0.075: coverage 0.14 confident-wrong 0.069 | intent abstain 0.805 | span F1 0.474
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test (n 700): FULL 0.247 intent 0.379 slot heads 0.391 | frame tau 0.075: coverage 0.15 confident-wrong 0.044 | intent abstain 0.753 | span F1 0.503
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test:new_slot_values (n 207): FULL 0.198 intent 0.367 slot heads 0.345 new-value heads 0.279 (n 219) | frame tau 0.075: coverage 0.13 confident-wrong 0.048 | intent abstain 0.783 | span F1 0.438
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test:unseen_template (n 402): FULL 0.192 intent 0.353 slot heads 0.340 | frame tau 0.075: coverage 0.15 confident-wrong 0.070 | intent abstain 0.739 | span F1 0.439
+  seed 2: rejected by every world {'dev_rep': 0.002857142857142857, 'dev_rep:new_slot_values': 0.0, 'dev_rep:unseen_template': 0.005747126436781609, 'test': 0.0, 'test:new_slot_values': 0.0, 'test:unseen_template': 0.0}; by the residual alone {'dev_rep': 0.002857142857142857, 'dev_rep:new_slot_values': 0.0, 'dev_rep:unseen_template': 0.005747126436781609, 'test': 0.0, 'test:new_slot_values': 0.0, 'test:unseen_template': 0.0}; by status {'dev_rep': 0.5371428571428571, 'dev_rep:new_slot_values': 0.6666666666666666, 'dev_rep:unseen_template': 0.6551724137931034, 'test': 0.5285714285714286, 'test:new_slot_values': 0.642512077294686, 'test:unseen_template': 0.6318407960199005}; chosen frame abstains {'dev_rep': 0.7571428571428571, 'dev_rep:new_slot_values': 0.8229166666666666, 'dev_rep:unseen_template': 0.8045977011494253, 'test': 0.7885714285714286, 'test:new_slot_values': 0.8695652173913043, 'test:unseen_template': 0.8482587064676617}; cost 61.02 M phases (7 readers, D 512) + 2.69 M typer weights; 16.8 ms per utterance for all worlds
+
+== VSS, one world per intent + dispatcher (R72): snips / base / size full: mean ± std over 1 seeds [per seed] ==
+  dev_rep (n 350): FULL 0.280±0.000 [0.280] | intent 0.403±0.000 [0.403] | slot heads 0.395±0.000 [0.395]
+      frame coverage 0.183±0.000 [0.183] confident-wrong 0.063±0.000 [0.063] | intent abstain 0.766±0.000 [0.766] | absent read absent 0.993±0.000 [0.993] | span F1 0.524±0.000 [0.524]
+  dev_rep:new_slot_values (n 96): FULL 0.208±0.000 [0.208] | intent 0.406±0.000 [0.406] | slot heads 0.352±0.000 [0.352] | new-value heads 0.320±0.000 [0.320]
+      frame coverage 0.156±0.000 [0.156] confident-wrong 0.094±0.000 [0.094] | intent abstain 0.750±0.000 [0.750] | absent read absent 0.992±0.000 [0.992] | span F1 0.463±0.000 [0.463]
+  dev_rep:unseen_template (n 174): FULL 0.224±0.000 [0.224] | intent 0.368±0.000 [0.368] | slot heads 0.340±0.000 [0.340]
+      frame coverage 0.138±0.000 [0.138] confident-wrong 0.069±0.000 [0.069] | intent abstain 0.805±0.000 [0.805] | absent read absent 0.993±0.000 [0.993] | span F1 0.474±0.000 [0.474]
+  test (n 700): FULL 0.247±0.000 [0.247] | intent 0.379±0.000 [0.379] | slot heads 0.391±0.000 [0.391]
+      frame coverage 0.153±0.000 [0.153] confident-wrong 0.044±0.000 [0.044] | intent abstain 0.753±0.000 [0.753] | absent read absent 0.991±0.000 [0.991] | span F1 0.503±0.000 [0.503]
+  test:new_slot_values (n 207): FULL 0.198±0.000 [0.198] | intent 0.367±0.000 [0.367] | slot heads 0.345±0.000 [0.345] | new-value heads 0.279±0.000 [0.279]
+      frame coverage 0.126±0.000 [0.126] confident-wrong 0.048±0.000 [0.048] | intent abstain 0.783±0.000 [0.783] | absent read absent 0.990±0.000 [0.990] | span F1 0.438±0.000 [0.438]
+  test:unseen_template (n 402): FULL 0.192±0.000 [0.192] | intent 0.353±0.000 [0.353] | slot heads 0.340±0.000 [0.340]
+      frame coverage 0.154±0.000 [0.154] confident-wrong 0.070±0.000 [0.070] | intent abstain 0.739±0.000 [0.739] | absent read absent 0.990±0.000 [0.990] | span F1 0.439±0.000 [0.439]
+  written interpretation: INSTRUCTIONS_REAL_2026-10-24.md table R7 (the axes and what each outcome will be said to mean)
+  rejected_by_status, dev_rep: 0.537 [0.537]
+  rejected_by_status, dev_rep:new_slot_values: 0.667 [0.667]
+  rejected_by_status, dev_rep:unseen_template: 0.655 [0.655]
+  rejected_by_status, test: 0.529 [0.529]
+  rejected_by_status, test:new_slot_values: 0.643 [0.643]
+  rejected_by_status, test:unseen_template: 0.632 [0.632]
+  chosen_abstains, dev_rep: 0.757 [0.757]
+  chosen_abstains, dev_rep:new_slot_values: 0.823 [0.823]
+  chosen_abstains, dev_rep:unseen_template: 0.805 [0.805]
+  chosen_abstains, test: 0.789 [0.789]
+  chosen_abstains, test:new_slot_values: 0.870 [0.870]
+  chosen_abstains, test:unseen_template: 0.848 [0.848]
+  rejected by every world, dev_rep: 0.003 ± 0.000 [0.003]
+  rejected by every world, dev_rep:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by every world, dev_rep:unseen_template: 0.006 ± 0.000 [0.006]
+  rejected by every world, test: 0.000 ± 0.000 [0.000]
+  rejected by every world, test:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by every world, test:unseen_template: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), dev_rep: 0.003 ± 0.000 [0.003]
+  rejected by the residual of every world (status ignored), dev_rep:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), dev_rep:unseen_template: 0.006 ± 0.000 [0.006]
+  rejected by the residual of every world (status ignored), test: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), test:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), test:unseen_template: 0.000 ± 0.000 [0.000]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] worlds from the training annotation only [x] thresholds on the dev calibration half [x] three routes only (R73)

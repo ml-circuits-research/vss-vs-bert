@@ -1,0 +1,29 @@
+# 2026-10-26T18:59:36+01:00  commit=0cffd2e  cmd: python3 vss/export_demo.py --seed 2 --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_040d44e --out logs/export/snips_demo_seed2  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 98 GB; slot logs/.run.lock.4 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+export_demo: seed 2; reading sop @ 040d44e; export-web and typer export by the tree's sop @ 60f861b; out logs/export/snips_demo_seed2
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_AddToPlaylist_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/AddToPlaylist (bits 8, D 512, star_version 1, 12185 stars): model.json 0.790 MB, routebook.bin 8.719 MB, stars.bin 6.392 MB; total 15.901 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world AddToPlaylist: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_BookRestaurant_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/BookRestaurant (bits 8, D 512, star_version 1, 12194 stars): model.json 0.793 MB, routebook.bin 8.719 MB, stars.bin 6.397 MB; total 15.909 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world BookRestaurant: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.40 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_GetWeather_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/GetWeather (bits 8, D 512, star_version 1, 12189 stars): model.json 0.791 MB, routebook.bin 8.719 MB, stars.bin 6.395 MB; total 15.904 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world GetWeather: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_PlayMusic_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/PlayMusic (bits 8, D 512, star_version 1, 12189 stars): model.json 0.791 MB, routebook.bin 8.719 MB, stars.bin 6.395 MB; total 15.904 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world PlayMusic: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_RateBook_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/RateBook (bits 8, D 512, star_version 1, 12187 stars): model.json 0.790 MB, routebook.bin 8.719 MB, stars.bin 6.394 MB; total 15.902 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world RateBook: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_SearchCreativeWork_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/SearchCreativeWork (bits 8, D 512, star_version 1, 12182 stars): model.json 0.789 MB, routebook.bin 8.719 MB, stars.bin 6.391 MB; total 15.898 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world SearchCreativeWork: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+export-web: /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_intent_SearchScreeningEvent_seed2_r81/model_seed -> logs/export/snips_demo_seed2/worlds/SearchScreeningEvent (bits 8, D 512, star_version 1, 12187 stars): model.json 0.790 MB, routebook.bin 8.719 MB, stars.bin 6.394 MB; total 15.902 MB
+export-web: NOTE star_version 1 — the browser reads only the exported stars; words outside the catalog get no identity (train with --star_version 2 for a model whose new words, labels and numbers are read in the browser)
+  world SearchScreeningEvent: manifest.json 0.00 MB, model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB
+  typer: kept rows 56376 of 65536; typer.json 38.1 kB, typer.bin 2762.4 kB; re-loaded export reproduces the in-memory typer's sentence kinds on 0.990 of 200 dev_rep utterances
+  reading.json: refusal threshold 0.8128 (pooled; per world AddToPlaylist 0.736, BookRestaurant 0.821, GetWeather 0.776, PlayMusic 0.727, RateBook 0.470, SearchCreativeWork 0.828, SearchScreeningEvent 0.790); total 114.1 MB in logs/export/snips_demo_seed2
+# post-launch guard (slots 8): MemAvailable 90 s after the start 100 GB

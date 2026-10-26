@@ -1,0 +1,170 @@
+{
+ "sop": "040d44e",
+ "decoder": "presence_by_kind",
+ "spans": "kind_run",
+ "models": "r81",
+ "condition": "ood_intents",
+ "seed": 1,
+ "signals": {
+  "residual": {
+   "auroc": {
+    "ood:dev_rep": 0.8851666666666667,
+    "ood:test": 0.9013249999999999
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.944567539442037,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.08,
+     "test:in_domain": 0.011666666666666667,
+     "ood:test": 0.12
+    },
+    "0.02": {
+     "threshold": 0.7597865647725289,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.03333333333333333,
+     "ood:dev_rep": 0.34,
+     "test:in_domain": 0.023333333333333334,
+     "ood:test": 0.27
+    },
+    "0.05": {
+     "threshold": 0.6801736110006783,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.05,
+     "ood:dev_rep": 0.48,
+     "test:in_domain": 0.028333333333333332,
+     "ood:test": 0.41
+    }
+   }
+  },
+  "anchor": {
+   "auroc": {
+    "ood:dev_rep": 0.8904000000000001,
+    "ood:test": 0.9041833333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.02": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.05": {
+     "threshold": 0.9802500000000001,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.03333333333333333,
+     "ood:dev_rep": 0.1,
+     "test:in_domain": 0.02666666666666667,
+     "ood:test": 0.17
+    }
+   }
+  },
+  "max": {
+   "auroc": {
+    "ood:dev_rep": 0.8851666666666667,
+    "ood:test": 0.9120083333333334
+   },
+   "points": {
+    "0.01": {
+     "threshold": 1.0,
+     "fr_dev_cal": 0.0,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0,
+     "ood:test": 0.0
+    },
+    "0.02": {
+     "threshold": 1.0,
+     "fr_dev_cal": 0.0,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0,
+     "ood:test": 0.0
+    },
+    "0.05": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.02666666666666667,
+     "dev_rep:in_domain": 0.023333333333333334,
+     "ood:dev_rep": 0.26,
+     "test:in_domain": 0.02,
+     "ood:test": 0.2
+    }
+   }
+  },
+  "residual_all": {
+   "auroc": {
+    "ood:dev_rep": 0.8809666666666667,
+    "ood:test": 0.81825
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.97005,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.0033333333333333335,
+     "ood:dev_rep": 0.2,
+     "test:in_domain": 0.0033333333333333335,
+     "ood:test": 0.1
+    },
+    "0.02": {
+     "threshold": 0.9601999999999998,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.01,
+     "ood:dev_rep": 0.32,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.19
+    },
+    "0.05": {
+     "threshold": 0.9202500000000001,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.02666666666666667,
+     "ood:dev_rep": 0.46,
+     "test:in_domain": 0.04,
+     "ood:test": 0.4
+    }
+   }
+  },
+  "anchor_z_all": {
+   "auroc": {
+    "ood:dev_rep": 0.8872,
+    "ood:test": 0.9087333333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 4.645595137376666,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.03
+    },
+    "0.02": {
+     "threshold": 4.241394758979446,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.08,
+     "test:in_domain": 0.011666666666666667,
+     "ood:test": 0.1
+    },
+    "0.05": {
+     "threshold": 3.110140283229804,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.04,
+     "ood:dev_rep": 0.38,
+     "test:in_domain": 0.03333333333333333,
+     "ood:test": 0.33
+    }
+   }
+  }
+ }
+}

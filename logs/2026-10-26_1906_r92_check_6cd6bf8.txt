@@ -1,0 +1,15 @@
+# 2026-10-26T19:06:26+01:00  commit=6cd6bf8  cmd: python3 eval/r92_check.py --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_60f861b --stage logs/export/r92_reading_copies --condition ood_intents --seed 1  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 98 GB; slot logs/.run.lock.4 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 11184 training utterances (train accuracy 0.985); 68 kinds over 12162 words; 2424869 typer weights
+r92_check: sop @ 60f861b; condition ood_intents; seed 1; reading copies in logs/export/r92_reading_copies/ood_intents_seed1; frame keys {'candidates': 'sentence', 'undecided_adjacent': True, 'residual': 'explained', 'presence_query': True, 'presence_by_kind': True}; refusal {'presence_by_kind': False}
+  refusal threshold (pooled dev_cal 2%): 0.7823 (R90: line A's 0.7479); per world AddToPlaylist 0.759, BookRestaurant 0.679, PlayMusic 0.749, RateBook 0.557, SearchCreativeWork 0.998, SearchScreeningEvent 0.475
+  dev_rep:in_domain: dispatch 0.963 (R90 0.963) | span F1 0.870 (R90 0.870) | refused 0.020 (R90 0.020; per-world thresholds 0.043) | abstains 0.333 (R90 0.337)
+  ood:dev_rep: dispatch nan (R90 nan) | span F1 0.186 (R90 0.186) | refused 0.460 (R90 0.460; per-world thresholds 0.500) | abstains 0.660 (R90 0.740)
+  test:in_domain: dispatch 0.967 (R90 0.967) | span F1 0.852 (R90 0.854) | refused 0.022 (R90 0.018; per-world thresholds 0.035) | abstains 0.397 (R90 0.397)
+  ood:test: dispatch nan (R90 nan) | span F1 0.221 (R90 0.222) | refused 0.460 (R90 0.530; per-world thresholds 0.570) | abstains 0.820 (R90 0.860)
+  AUROC ood:dev_rep: 0.929
+  AUROC ood:test: 0.935
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] saved R81 models, reading copies only [x] thresholds on the dev calibration half (rule 25) [x] compared with R90 item 1 [x] sop version named
+# post-launch guard (slots 8): MemAvailable 90 s after the start 101 GB

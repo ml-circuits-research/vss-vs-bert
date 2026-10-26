@@ -1,0 +1,7 @@
+# 2026-10-26T14:49:37+01:00  commit=ba2a6a4  cmd: python3 eval/r80_dispatch.py --models r81 --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_82585ea --condition base --seed 0  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 114 GB; slot logs/.run.lock of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+r80_dispatch: models r81; sop @ 7ce5c50 (residual explained); condition base; seed 0; worlds ['AddToPlaylist', 'BookRestaurant', 'GetWeather', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; sets dev_rep 350, dev_rep:new_slot_values 96, dev_rep:unseen_template 174, test 700, test:new_slot_values 207, test:unseen_template 402
+  world AddToPlaylist: core roles ['intent', 'playlist']; threshold 0.765; calibration medians residual 0.369 anchor 0.396 structure 0.318 min slot margin 0.116; anchor != structure on 1.000 of the calibration rows
+  world BookRestaurant: core roles ['intent']; threshold 0.644; calibration medians residual 0.399 anchor 0.382 structure 0.382 min slot margin 0.105; anchor != structure on 0.000 of the calibration rows

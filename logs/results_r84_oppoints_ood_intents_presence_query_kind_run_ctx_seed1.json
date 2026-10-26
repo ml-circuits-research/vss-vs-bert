@@ -1,0 +1,170 @@
+{
+ "sop": "4a0eba8",
+ "decoder": "presence_query",
+ "spans": "kind_run",
+ "models": "r81",
+ "condition": "ood_intents",
+ "seed": 1,
+ "signals": {
+  "residual": {
+   "auroc": {
+    "ood:dev_rep": 0.9414,
+    "ood:test": 0.9384833333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.7598973811731385,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.016666666666666666,
+     "ood:dev_rep": 0.44,
+     "test:in_domain": 0.016666666666666666,
+     "ood:test": 0.46
+    },
+    "0.02": {
+     "threshold": 0.7478750597145691,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.02,
+     "ood:dev_rep": 0.46,
+     "test:in_domain": 0.018333333333333333,
+     "ood:test": 0.53
+    },
+    "0.05": {
+     "threshold": 0.6427933805447257,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.05333333333333334,
+     "ood:dev_rep": 0.72,
+     "test:in_domain": 0.03166666666666667,
+     "ood:test": 0.68
+    }
+   }
+  },
+  "anchor": {
+   "auroc": {
+    "ood:dev_rep": 0.8904000000000001,
+    "ood:test": 0.9041833333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.02": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.05": {
+     "threshold": 0.9802500000000001,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.03333333333333333,
+     "ood:dev_rep": 0.1,
+     "test:in_domain": 0.02666666666666667,
+     "ood:test": 0.17
+    }
+   }
+  },
+  "max": {
+   "auroc": {
+    "ood:dev_rep": 0.9035333333333333,
+    "ood:test": 0.9118666666666666
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.99505,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.0033333333333333335,
+     "ood:dev_rep": 0.24,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.25
+    },
+    "0.02": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.0033333333333333335,
+     "ood:dev_rep": 0.24,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.25
+    },
+    "0.05": {
+     "threshold": 0.99,
+     "fr_dev_cal": 0.03666666666666667,
+     "dev_rep:in_domain": 0.023333333333333334,
+     "ood:dev_rep": 0.26,
+     "test:in_domain": 0.02,
+     "ood:test": 0.3
+    }
+   }
+  },
+  "residual_all": {
+   "auroc": {
+    "ood:dev_rep": 0.8941333333333333,
+    "ood:test": 0.834275
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.95,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.18,
+     "test:in_domain": 0.005,
+     "ood:test": 0.14
+    },
+    "0.02": {
+     "threshold": 0.935,
+     "fr_dev_cal": 0.013333333333333334,
+     "dev_rep:in_domain": 0.0033333333333333335,
+     "ood:dev_rep": 0.28,
+     "test:in_domain": 0.01,
+     "ood:test": 0.26
+    },
+    "0.05": {
+     "threshold": 0.9,
+     "fr_dev_cal": 0.043333333333333335,
+     "dev_rep:in_domain": 0.02,
+     "ood:dev_rep": 0.38,
+     "test:in_domain": 0.03833333333333333,
+     "ood:test": 0.38
+    }
+   }
+  },
+  "anchor_z_all": {
+   "auroc": {
+    "ood:dev_rep": 0.8872,
+    "ood:test": 0.9087333333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 4.645595137376666,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.03
+    },
+    "0.02": {
+     "threshold": 4.241394758979446,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.08,
+     "test:in_domain": 0.011666666666666667,
+     "ood:test": 0.1
+    },
+    "0.05": {
+     "threshold": 3.110140283229804,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.04,
+     "ood:dev_rep": 0.38,
+     "test:in_domain": 0.03333333333333333,
+     "ood:test": 0.33
+    }
+   }
+  }
+ }
+}

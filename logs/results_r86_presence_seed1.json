@@ -1,0 +1,2322 @@
+{
+ "sop": "82585ea",
+ "seed": 1,
+ "worlds": {
+  "BookRestaurant": {
+   "admitted": {
+    "city": {
+     "kinds": [
+      "S:artist",
+      "S:city",
+      "S:country",
+      "S:entity_name",
+      "S:geographic_poi",
+      "S:location_name",
+      "S:movie_name",
+      "S:object_location_type",
+      "S:object_name",
+      "S:party_size_description",
+      "S:playlist",
+      "S:poi",
+      "S:rating_unit",
+      "S:restaurant_name",
+      "S:state",
+      "S:timeRange"
+     ],
+     "head_kinds": []
+    },
+    "country": {
+     "kinds": [
+      "S:city",
+      "S:country",
+      "S:object_name",
+      "S:state"
+     ],
+     "head_kinds": []
+    },
+    "cuisine": {
+     "kinds": [
+      "S:artist",
+      "S:country",
+      "S:cuisine",
+      "S:object_name",
+      "S:playlist",
+      "S:restaurant_type",
+      "S:served_dish"
+     ],
+     "head_kinds": []
+    },
+    "facility": {
+     "kinds": [
+      "S:facility"
+     ],
+     "head_kinds": []
+    },
+    "party_size_description": {
+     "kinds": [
+      "S:artist",
+      "S:city",
+      "S:entity_name",
+      "S:location_name",
+      "S:object_name",
+      "S:party_size_description",
+      "S:playlist",
+      "w:i"
+     ],
+     "head_kinds": []
+    },
+    "party_size_number": {
+     "kinds": [
+      "S:best_rating",
+      "S:party_size_number",
+      "S:rating_value"
+     ],
+     "head_kinds": []
+    },
+    "poi": {
+     "kinds": [
+      "O",
+      "S:artist",
+      "S:city",
+      "S:country",
+      "S:current_location",
+      "S:entity_name",
+      "S:geographic_poi",
+      "S:object_location_type",
+      "S:object_name",
+      "S:poi",
+      "S:restaurant_name",
+      "S:restaurant_type",
+      "S:spatial_relation"
+     ],
+     "head_kinds": []
+    },
+    "restaurant_name": {
+     "kinds": [
+      "O",
+      "S:artist",
+      "S:city",
+      "S:country",
+      "S:entity_name",
+      "S:facility",
+      "S:geographic_poi",
+      "S:location_name",
+      "S:movie_name",
+      "S:object_location_type",
+      "S:object_name",
+      "S:party_size_description",
+      "S:playlist",
+      "S:poi",
+      "S:rating_value",
+      "S:restaurant_name",
+      "S:restaurant_type",
+      "S:served_dish",
+      "S:state"
+     ],
+     "head_kinds": []
+    },
+    "restaurant_type": {
+     "kinds": [
+      "S:object_location_type",
+      "S:restaurant_type"
+     ],
+     "head_kinds": []
+    },
+    "served_dish": {
+     "kinds": [
+      "O",
+      "S:artist",
+      "S:country",
+      "S:cuisine",
+      "S:entity_name",
+      "S:object_name",
+      "S:playlist",
+      "S:restaurant_name",
+      "S:restaurant_type",
+      "S:served_dish"
+     ],
+     "head_kinds": []
+    },
+    "sort": {
+     "kinds": [
+      "O",
+      "S:sort"
+     ],
+     "head_kinds": []
+    },
+    "spatial_relation": {
+     "kinds": [
+      "S:spatial_relation",
+      "w:by"
+     ],
+     "head_kinds": []
+    },
+    "state": {
+     "kinds": [
+      "O",
+      "S:country",
+      "S:playlist",
+      "S:service",
+      "S:state",
+      "w:in",
+      "w:me"
+     ],
+     "head_kinds": []
+    },
+    "timeRange": {
+     "kinds": [
+      "S:best_rating",
+      "S:condition_description",
+      "S:object_name",
+      "S:party_size_number",
+      "S:playlist",
+      "S:rating_value",
+      "S:restaurant_type",
+      "S:timeRange"
+     ],
+     "head_kinds": []
+    }
+   },
+   "presence": {
+    "city": {
+     "n_present": 56,
+     "n_absent": 144,
+     "mean_present": 0.5046472671749583,
+     "mean_absent": 0.18580033233811344,
+     "separation": 0.3188469348368449,
+     "threshold": 0.2810034114391815,
+     "balanced_acc": 0.8913690476190477
+    },
+    "country": {
+     "n_present": 42,
+     "n_absent": 158,
+     "mean_present": 0.5450179706326788,
+     "mean_absent": 0.158516474051276,
+     "separation": 0.38650149658140276,
+     "threshold": 0.27486634069737115,
+     "balanced_acc": 0.9136528028933093
+    },
+    "cuisine": {
+     "n_present": 21,
+     "n_absent": 179,
+     "mean_present": 0.5314314824389301,
+     "mean_absent": 0.02632683219829521,
+     "separation": 0.5051046502406349,
+     "threshold": 0.17254056883191887,
+     "balanced_acc": 0.9916201117318435
+    },
+    "facility": {
+     "n_present": 14,
+     "n_absent": 186,
+     "mean_present": 0.4933804081096836,
+     "mean_absent": -0.046018264968029195,
+     "separation": 0.5393986730777128,
+     "threshold": 0.12263369749506775,
+     "balanced_acc": 0.9919354838709677
+    },
+    "party_size_description": {
+     "n_present": 32,
+     "n_absent": 168,
+     "mean_present": 0.7149661134636168,
+     "mean_absent": 0.1059007678225192,
+     "separation": 0.6090653456410976,
+     "threshold": 0.38514353937393403,
+     "balanced_acc": 0.9970238095238095
+    },
+    "party_size_number": {
+     "n_present": 101,
+     "n_absent": 99,
+     "mean_present": 0.8390949438128047,
+     "mean_absent": 0.16314625970364954,
+     "separation": 0.6759486841091551,
+     "threshold": 0.4465552978550671,
+     "balanced_acc": 0.9601960196019601
+    },
+    "poi": {
+     "n_present": 17,
+     "n_absent": 183,
+     "mean_present": 0.7368627068044917,
+     "mean_absent": 0.09636613081236031,
+     "separation": 0.6404965759921314,
+     "threshold": 0.29758156692037563,
+     "balanced_acc": 0.9384442301510768
+    },
+    "restaurant_name": {
+     "n_present": 39,
+     "n_absent": 161,
+     "mean_present": 0.866342538359261,
+     "mean_absent": -0.036759282440869505,
+     "separation": 0.9031018208001305,
+     "threshold": 0.2680183437666095,
+     "balanced_acc": 1.0
+    },
+    "restaurant_type": {
+     "n_present": 137,
+     "n_absent": 63,
+     "mean_present": 0.9077476491480466,
+     "mean_absent": 0.1152899429304215,
+     "separation": 0.7924577062176251,
+     "threshold": 0.6065076751284215,
+     "balanced_acc": 0.9927007299270073
+    },
+    "served_dish": {
+     "n_present": 36,
+     "n_absent": 164,
+     "mean_present": 0.6931915361613555,
+     "mean_absent": 0.12240729060558564,
+     "separation": 0.5707842455557699,
+     "threshold": 0.2825806214182931,
+     "balanced_acc": 0.9817073170731707
+    },
+    "sort": {
+     "n_present": 18,
+     "n_absent": 182,
+     "mean_present": 0.6500363976473567,
+     "mean_absent": 0.050168763767427745,
+     "separation": 0.5998676338799289,
+     "threshold": 0.1541045563257576,
+     "balanced_acc": 0.9752747252747253
+    },
+    "spatial_relation": {
+     "n_present": 36,
+     "n_absent": 164,
+     "mean_present": 0.5658316769534549,
+     "mean_absent": -0.02185239468581573,
+     "separation": 0.5876840716392706,
+     "threshold": 0.09654611559813095,
+     "balanced_acc": 0.9908536585365854
+    },
+    "state": {
+     "n_present": 50,
+     "n_absent": 150,
+     "mean_present": 0.5357393040189828,
+     "mean_absent": 0.12291554564981595,
+     "separation": 0.4128237583691669,
+     "threshold": 0.2636534621638456,
+     "balanced_acc": 0.9433333333333334
+    },
+    "timeRange": {
+     "n_present": 76,
+     "n_absent": 124,
+     "mean_present": 0.6704864878258071,
+     "mean_absent": 0.1219282543144413,
+     "separation": 0.5485582335113658,
+     "threshold": 0.2574328695184316,
+     "balanced_acc": 0.9535229202037352
+    }
+   },
+   "summary": {
+    "n_false_fills": 69,
+    "share_sibling_word": 0.6956521739130435,
+    "share_sibling_kind_admitted_by_sibling": 1.0,
+    "share_no_gold_question": 0.30434782608695654,
+    "n_misses": 58,
+    "misses_kind_admitted": 0.9827586206896551,
+    "false_fill_pairs": [
+     [
+      "state <- None",
+      7
+     ],
+     [
+      "city <- restaurant_name",
+      5
+     ],
+     [
+      "sort <- None",
+      4
+     ],
+     [
+      "timeRange <- party_size_number",
+      4
+     ],
+     [
+      "city <- country",
+      3
+     ],
+     [
+      "restaurant_type <- restaurant_name",
+      3
+     ],
+     [
+      "served_dish <- None",
+      3
+     ],
+     [
+      "country <- city",
+      3
+     ],
+     [
+      "timeRange <- restaurant_name",
+      2
+     ],
+     [
+      "poi <- None",
+      2
+     ],
+     [
+      "state <- timeRange",
+      2
+     ],
+     [
+      "country <- state",
+      2
+     ],
+     [
+      "poi <- city",
+      2
+     ],
+     [
+      "city <- state",
+      2
+     ],
+     [
+      "poi <- spatial_relation",
+      2
+     ]
+    ],
+    "miss_by_question": [
+     [
+      "timeRange",
+      10
+     ],
+     [
+      "state",
+      9
+     ],
+     [
+      "city",
+      8
+     ],
+     [
+      "country",
+      6
+     ],
+     [
+      "restaurant_type",
+      5
+     ],
+     [
+      "spatial_relation",
+      5
+     ],
+     [
+      "restaurant_name",
+      5
+     ],
+     [
+      "party_size_number",
+      3
+     ],
+     [
+      "poi",
+      2
+     ],
+     [
+      "party_size_description",
+      2
+     ],
+     [
+      "served_dish",
+      2
+     ],
+     [
+      "cuisine",
+      1
+     ]
+    ]
+   },
+   "false_fills": [
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.28559980557532916,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "word": "montenegro",
+     "sibling": "country",
+     "kind": "S:country",
+     "lex_kind": "S:country",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.28169087913102525,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "restaurant_name",
+     "word": "restaurant",
+     "sibling": "restaurant_type",
+     "kind": "S:restaurant_type",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5497117712804822,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "city",
+     "word": "city",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4515222345803736,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "restaurant_type",
+     "word": "tavern",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.64608113430567,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "timeRange",
+     "word": "tavern",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.27839394667736056,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "served_dish",
+     "word": "gastropub",
+     "sibling": "restaurant_type",
+     "kind": "S:restaurant_type",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.41195483370292973,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "state",
+     "word": "north",
+     "sibling": "city",
+     "kind": "S:city",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3594973911869882,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "word": ";",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.2923126474820936,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "poi",
+     "word": "confirm",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.32548684232271075,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "restaurant_name",
+     "word": "please",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.7344550322808586,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "served_dish",
+     "word": "need",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.4262628565837888,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "sort",
+     "word": "reservation",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3194205298075422,
+     "thr": 0.1541045563257576
+    },
+    {
+     "q": "timeRange",
+     "word": ";",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.35373574316430434,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "served_dish",
+     "word": "naomi's",
+     "sibling": "poi",
+     "kind": "S:artist",
+     "lex_kind": "S:artist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.29295890488691134,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "city",
+     "word": "thirteen",
+     "sibling": "timeRange",
+     "kind": "S:timeRange",
+     "lex_kind": "S:timeRange",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3795094775695688,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "served_dish",
+     "word": "eat",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3097591005452162,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": "timeRange",
+     "kind": "S:timeRange",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.2695927946187884,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "country",
+     "word": "nunez",
+     "sibling": "city",
+     "kind": "S:state",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.28380633550008905,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "city",
+     "word": "somalia",
+     "sibling": "country",
+     "kind": "S:country",
+     "lex_kind": "S:country",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5126218061095654,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3346242581101389,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "timeRange",
+     "word": "4",
+     "sibling": "party_size_number",
+     "kind": "S:party_size_number",
+     "lex_kind": "S:rating_value",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.31439384443911894,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "city",
+     "word": "breadline",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.9832102295789508,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "country",
+     "word": "minnesota",
+     "sibling": "state",
+     "kind": "S:state",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.47703772998135363,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "timeRange",
+     "word": "9",
+     "sibling": "party_size_number",
+     "kind": "S:party_size_number",
+     "lex_kind": "S:party_size_number",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5291636346540207,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "cuisine",
+     "word": "tea",
+     "sibling": "restaurant_type",
+     "kind": "S:restaurant_type",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.2009120645576752,
+     "thr": 0.17254056883191887
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.2790692588152165,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "poi",
+     "word": "merit",
+     "sibling": "city",
+     "kind": "S:city",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.460649915819622,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "sort",
+     "word": "spot",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.1617132933222496,
+     "thr": 0.1541045563257576
+    },
+    {
+     "q": "timeRange",
+     "word": "1",
+     "sibling": "party_size_number",
+     "kind": "S:party_size_number",
+     "lex_kind": "S:rating_value",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4160519022640877,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": "party_size_description",
+     "kind": "S:party_size_description",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.2661994252360183,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "word": "san",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3771734247986254,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "country",
+     "word": "moorpark",
+     "sibling": "city",
+     "kind": "S:city",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5270928214926612,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "spatial_relation",
+     "word": "by",
+     "sibling": null,
+     "kind": "w:by",
+     "lex_kind": "w:by",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.2506567842026718,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "city",
+     "word": "tupelo",
+     "sibling": "restaurant_name",
+     "kind": "S:playlist",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.41701681601415036,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "cuisine",
+     "word": "cafe",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.19455463783779348,
+     "thr": 0.17254056883191887
+    },
+    {
+     "q": "poi",
+     "word": "people",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3354674661360431,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "restaurant_type",
+     "word": "cafe",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.8638339565318013,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "served_dish",
+     "word": "people",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3867748720998119,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "timeRange",
+     "word": "bar",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_type",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.2825148777848348,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "restaurant_type",
+     "word": "restaurant",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_type",
+     "lex_kind": "S:restaurant_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7438968133830492,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "served_dish",
+     "word": "chicken",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:served_dish",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7948192540669955,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "cuisine",
+     "word": "fry",
+     "sibling": "served_dish",
+     "kind": "S:served_dish",
+     "lex_kind": "S:served_dish",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.18702217352224657,
+     "thr": 0.17254056883191887
+    },
+    {
+     "q": "city",
+     "word": "wi",
+     "sibling": "state",
+     "kind": "S:state",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.2911154769638144,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "city",
+     "word": "mh",
+     "sibling": "state",
+     "kind": "S:state",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.45533237635600987,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "country",
+     "word": "mh",
+     "sibling": "state",
+     "kind": "S:state",
+     "lex_kind": "S:state",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.28091415401155795,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "country",
+     "word": "urbank",
+     "sibling": "city",
+     "kind": "S:city",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.6472695183949555,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "party_size_description",
+     "word": "i",
+     "sibling": null,
+     "kind": "w:i",
+     "lex_kind": "w:i",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.5091789436201377,
+     "thr": 0.38514353937393403
+    },
+    {
+     "q": "poi",
+     "word": "urbank",
+     "sibling": "city",
+     "kind": "S:city",
+     "lex_kind": "S:city",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4057142192250033,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "sort",
+     "word": "table",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.3865950827130094,
+     "thr": 0.1541045563257576
+    },
+    {
+     "q": "city",
+     "word": "yankee",
+     "sibling": "restaurant_name",
+     "kind": "S:restaurant_name",
+     "lex_kind": "S:restaurant_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.46007959580254837,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "state",
+     "word": "like",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.38872009018300163,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "word": "bouvet",
+     "sibling": "country",
+     "kind": "S:country",
+     "lex_kind": "S:country",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.32535168639859774,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.2879394295867969,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "country",
+     "word": "veronica",
+     "sibling": "party_size_description",
+     "kind": "S:object_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.29010933690847446,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": "timeRange",
+     "kind": "S:timeRange",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.26366768834024906,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "country",
+     "word": "smoked",
+     "sibling": "restaurant_name",
+     "kind": "S:object_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 2.024265908585151,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "party_size_description",
+     "word": "peters",
+     "sibling": "restaurant_name",
+     "kind": "S:object_name",
+     "lex_kind": "S:artist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.8945194194641855,
+     "thr": 0.38514353937393403
+    },
+    {
+     "q": "poi",
+     "word": "near",
+     "sibling": "spatial_relation",
+     "kind": "S:spatial_relation",
+     "lex_kind": "S:spatial_relation",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.8457311279938953,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "sort",
+     "word": "famous",
+     "sibling": "restaurant_name",
+     "kind": "S:object_name",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.22015213965528319,
+     "thr": 0.1541045563257576
+    },
+    {
+     "q": "restaurant_name",
+     "word": "step",
+     "sibling": "poi",
+     "kind": "S:poi",
+     "lex_kind": "S:party_size_description",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.40320794503946383,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "state",
+     "word": "mother's",
+     "sibling": "poi",
+     "kind": "S:poi",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3040522637542193,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "poi",
+     "word": "same",
+     "sibling": "spatial_relation",
+     "kind": "S:spatial_relation",
+     "lex_kind": "S:spatial_relation",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3642845342966279,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "sort",
+     "word": "table",
+     "sibling": null,
+     "kind": "O",
+     "lex_kind": "O",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.276659987544672,
+     "thr": 0.1541045563257576
+    },
+    {
+     "q": "timeRange",
+     "word": "ten",
+     "sibling": "party_size_number",
+     "kind": "S:party_size_number",
+     "lex_kind": "S:party_size_number",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.27015585689859994,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "timeRange",
+     "word": "thurmont",
+     "sibling": "city",
+     "kind": "S:timeRange",
+     "lex_kind": "S:timeRange",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.45710564223331746,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.6367776639499588,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "restaurant_name",
+     "word": "campus",
+     "sibling": "poi",
+     "kind": "S:poi",
+     "lex_kind": "S:poi",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5420252738307687,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "state",
+     "word": "in",
+     "sibling": null,
+     "kind": "w:in",
+     "lex_kind": "w:in",
+     "kind_admitted_by_sibling": null,
+     "ratio": 0.42818210402695134,
+     "thr": 0.2636534621638456
+    }
+   ],
+   "misses": [
+    {
+     "q": "state",
+     "gold_word": "ma",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.1993027477239484,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "country",
+     "gold_word": "montenegro",
+     "kind": "S:country",
+     "kind_admitted": true,
+     "ratio": 0.240897642489826,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "restaurant_type",
+     "gold_word": "restaurant",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.4848829922932956,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "poi",
+     "gold_word": "reading",
+     "kind": "O",
+     "kind_admitted": true,
+     "ratio": 0.12178011894821453,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearby",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.07474132021583209,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "party_size_description",
+     "gold_word": "nieces",
+     "kind": "S:party_size_description",
+     "kind_admitted": true,
+     "ratio": 0.3303957787834068,
+     "thr": 0.38514353937393403
+    },
+    {
+     "q": "restaurant_type",
+     "gold_word": "restaurant",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.33906243653063933,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "served_dish",
+     "gold_word": "seafood",
+     "kind": "S:served_dish",
+     "kind_admitted": true,
+     "ratio": 0.07326356670431039,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "day",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.25185640131531045,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "restaurant_name",
+     "gold_word": "tavern",
+     "kind": "S:restaurant_name",
+     "kind_admitted": true,
+     "ratio": 0.2653398348291747,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "state",
+     "gold_word": "mp",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.2213047845088869,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "now",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.23299062414825497,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "a.m",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.23425948508388653,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "state",
+     "gold_word": "mn",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.059868857090428024,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "gold_word": "nunez",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.2762344915753276,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "served_dish",
+     "gold_word": "noodle",
+     "kind": "S:movie_name",
+     "kind_admitted": false,
+     "ratio": 0.2676808823875382,
+     "thr": 0.2825806214182931
+    },
+    {
+     "q": "country",
+     "gold_word": "somalia",
+     "kind": "S:country",
+     "kind_admitted": true,
+     "ratio": 0.25150826035064144,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "city",
+     "gold_word": "buckholts",
+     "kind": "S:city",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "party_size_number",
+     "gold_word": "9",
+     "kind": "S:party_size_number",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.4465552978550671
+    },
+    {
+     "q": "restaurant_name",
+     "gold_word": "station",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "state",
+     "gold_word": "washington",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "now",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "friday",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.24218058777759743,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "poi",
+     "gold_word": "brooklawn",
+     "kind": "S:poi",
+     "kind_admitted": true,
+     "ratio": 0.14247246913033856,
+     "thr": 0.29758156692037563
+    },
+    {
+     "q": "city",
+     "gold_word": "smithville",
+     "kind": "S:city",
+     "kind_admitted": true,
+     "ratio": 0.1994389136535181,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "city",
+     "gold_word": "buckner",
+     "kind": "S:city",
+     "kind_admitted": true,
+     "ratio": 0.18331475310020273,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "weeks",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.17527802505687415,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearby",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.05895571304172452,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "state",
+     "gold_word": "id",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.22203368779355256,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "country",
+     "gold_word": "martinique",
+     "kind": "S:country",
+     "kind_admitted": true,
+     "ratio": 0.2493871815378884,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "restaurant_name",
+     "gold_word": "restaurant",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.03693352552060236,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "city",
+     "gold_word": "cokeville",
+     "kind": "S:city",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "restaurant_name",
+     "gold_word": "world",
+     "kind": "S:restaurant_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "state",
+     "gold_word": "mi",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "party_size_number",
+     "gold_word": "one",
+     "kind": "S:party_size_number",
+     "kind_admitted": true,
+     "ratio": 0.38789303522285157,
+     "thr": 0.4465552978550671
+    },
+    {
+     "q": "state",
+     "gold_word": "la",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.15126192855407333,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "state",
+     "gold_word": "wi",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.1863651149689699,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "cuisine",
+     "gold_word": "souvlaki",
+     "kind": "S:cuisine",
+     "kind_admitted": true,
+     "ratio": 0.06617506858657655,
+     "thr": 0.17254056883191887
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "pm",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.22597660060997676,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "restaurant_type",
+     "gold_word": "pizzeria",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.5522929653296111,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "restaurant_name",
+     "gold_word": "diner",
+     "kind": "S:restaurant_name",
+     "kind_admitted": true,
+     "ratio": 0.17789535151062558,
+     "thr": 0.2680183437666095
+    },
+    {
+     "q": "country",
+     "gold_word": "republic",
+     "kind": "S:country",
+     "kind_admitted": true,
+     "ratio": 0.20923332682898885,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "restaurant_type",
+     "gold_word": "taverna",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.5733787802846135,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "party_size_description",
+     "gold_word": "veronica",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.3513235052881521,
+     "thr": 0.38514353937393403
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "days",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.01762828765232349,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "state",
+     "gold_word": "ohio",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.2164015874690112,
+     "thr": 0.2636534621638456
+    },
+    {
+     "q": "city",
+     "gold_word": "oakfield",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": -1.9635015876941735,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "near",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": -0.9678183351441473,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "country",
+     "gold_word": "\u00e5land",
+     "kind": "S:country",
+     "kind_admitted": true,
+     "ratio": 0.17578175970423582,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "city",
+     "gold_word": "wagstaff",
+     "kind": "S:city",
+     "kind_admitted": true,
+     "ratio": 0.2691665874919565,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "city",
+     "gold_word": "thurmont",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.19775395854075434,
+     "thr": 0.2810034114391815
+    },
+    {
+     "q": "party_size_number",
+     "gold_word": "5",
+     "kind": "S:party_size_number",
+     "kind_admitted": true,
+     "ratio": 0.43564576670930244,
+     "thr": 0.4465552978550671
+    },
+    {
+     "q": "restaurant_type",
+     "gold_word": "churrascaria",
+     "kind": "S:restaurant_type",
+     "kind_admitted": true,
+     "ratio": 0.4073208604542362,
+     "thr": 0.6065076751284215
+    },
+    {
+     "q": "country",
+     "gold_word": "islands",
+     "kind": "S:state",
+     "kind_admitted": true,
+     "ratio": 0.24044260463668132,
+     "thr": 0.27486634069737115
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearby",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.016978273896730338,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "year",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.15687542078042443,
+     "thr": 0.2574328695184316
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearby",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": -0.008728288586014456,
+     "thr": 0.09654611559813095
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "months",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.10518377915568623,
+     "thr": 0.2574328695184316
+    }
+   ]
+  },
+  "SearchScreeningEvent": {
+   "admitted": {
+    "location_name": {
+     "kinds": [
+      "S:location_name",
+      "S:object_location_type"
+     ],
+     "head_kinds": []
+    },
+    "movie_name": {
+     "kinds": [
+      "O",
+      "S:album",
+      "S:artist",
+      "S:city",
+      "S:condition_description",
+      "S:country",
+      "S:current_location",
+      "S:entity_name",
+      "S:facility",
+      "S:geographic_poi",
+      "S:location_name",
+      "S:movie_name",
+      "S:music_item",
+      "S:object_location_type",
+      "S:object_name",
+      "S:object_type",
+      "S:party_size_description",
+      "S:party_size_number",
+      "S:playlist",
+      "S:poi",
+      "S:rating_unit",
+      "S:rating_value",
+      "S:restaurant_name",
+      "S:served_dish",
+      "S:sort",
+      "S:spatial_relation",
+      "S:state",
+      "S:timeRange",
+      "S:track",
+      "S:year",
+      "w:book",
+      "w:it",
+      "w:me",
+      "w:on",
+      "w:out"
+     ],
+     "head_kinds": []
+    },
+    "movie_type": {
+     "kinds": [
+      "S:movie_type",
+      "S:object_type"
+     ],
+     "head_kinds": []
+    },
+    "object_location_type": {
+     "kinds": [
+      "S:object_location_type"
+     ],
+     "head_kinds": []
+    },
+    "object_type": {
+     "kinds": [
+      "S:object_type"
+     ],
+     "head_kinds": []
+    },
+    "spatial_relation": {
+     "kinds": [
+      "S:current_location",
+      "S:spatial_relation",
+      "w:by"
+     ],
+     "head_kinds": []
+    },
+    "timeRange": {
+     "kinds": [
+      "S:object_name",
+      "S:party_size_number",
+      "S:playlist",
+      "S:rating_value",
+      "S:restaurant_type",
+      "S:timeRange"
+     ],
+     "head_kinds": []
+    }
+   },
+   "presence": {
+    "location_name": {
+     "n_present": 60,
+     "n_absent": 140,
+     "mean_present": 1.0882643127139293,
+     "mean_absent": 0.3167421813518668,
+     "separation": 0.7715221313620625,
+     "threshold": 0.45052995336907486,
+     "balanced_acc": 0.9785714285714286
+    },
+    "movie_name": {
+     "n_present": 88,
+     "n_absent": 112,
+     "mean_present": 3.628307494527149,
+     "mean_absent": 0.020487362345184508,
+     "separation": 3.6078201321819643,
+     "threshold": 0.5605115713653942,
+     "balanced_acc": 0.9671266233766234
+    },
+    "movie_type": {
+     "n_present": 65,
+     "n_absent": 135,
+     "mean_present": 0.9137257459288107,
+     "mean_absent": 0.1588028782058479,
+     "separation": 0.7549228677229628,
+     "threshold": 0.3458763156514024,
+     "balanced_acc": 0.9663817663817664
+    },
+    "object_location_type": {
+     "n_present": 54,
+     "n_absent": 146,
+     "mean_present": 3.4712188882904433,
+     "mean_absent": 0.06465916304558468,
+     "separation": 3.4065597252448585,
+     "threshold": 0.47549427367265806,
+     "balanced_acc": 0.9931506849315068
+    },
+    "object_type": {
+     "n_present": 75,
+     "n_absent": 125,
+     "mean_present": 1.265355670204102,
+     "mean_absent": 0.2967762557398296,
+     "separation": 0.9685794144642724,
+     "threshold": 0.6257347799397968,
+     "balanced_acc": 0.9813333333333334
+    },
+    "spatial_relation": {
+     "n_present": 63,
+     "n_absent": 137,
+     "mean_present": 0.8873795748980756,
+     "mean_absent": -0.09576037070279707,
+     "separation": 0.9831399456008727,
+     "threshold": 0.3943857180204625,
+     "balanced_acc": 0.9774649519175067
+    },
+    "timeRange": {
+     "n_present": 31,
+     "n_absent": 169,
+     "mean_present": 0.8774183892641226,
+     "mean_absent": 0.346375624999063,
+     "separation": 0.5310427642650597,
+     "threshold": 0.3390933571723849,
+     "balanced_acc": 0.9381561366673029
+    }
+   },
+   "summary": {
+    "n_false_fills": 28,
+    "share_sibling_word": 1.0,
+    "share_sibling_kind_admitted_by_sibling": 1.0,
+    "share_no_gold_question": 0.0,
+    "n_misses": 29,
+    "misses_kind_admitted": 1.0,
+    "false_fill_pairs": [
+     [
+      "timeRange <- movie_name",
+      13
+     ],
+     [
+      "movie_type <- object_type",
+      6
+     ],
+     [
+      "movie_type <- object_location_type",
+      3
+     ],
+     [
+      "object_type <- object_location_type",
+      2
+     ],
+     [
+      "location_name <- movie_name",
+      2
+     ],
+     [
+      "movie_name <- object_location_type",
+      1
+     ],
+     [
+      "location_name <- object_location_type",
+      1
+     ]
+    ],
+    "miss_by_question": [
+     [
+      "movie_name",
+      15
+     ],
+     [
+      "object_location_type",
+      4
+     ],
+     [
+      "object_type",
+      3
+     ],
+     [
+      "spatial_relation",
+      3
+     ],
+     [
+      "timeRange",
+      3
+     ],
+     [
+      "location_name",
+      1
+     ]
+    ]
+   },
+   "false_fills": [
+    {
+     "q": "timeRange",
+     "word": "portrait",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.33927585900405577,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 11.255171947642037,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "object_type",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 56.264414275319766,
+     "thr": 0.6257347799397968
+    },
+    {
+     "q": "timeRange",
+     "word": "web",
+     "sibling": "movie_name",
+     "kind": "O",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.9125787467404747,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "timeRange",
+     "word": "dream",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 13.529011496045214,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "timeRange",
+     "word": "wonderful",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.3534363655180158,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.6387723992566237,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "object_type",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7905649588002108,
+     "thr": 0.6257347799397968
+    },
+    {
+     "q": "timeRange",
+     "word": "still",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.6145386429504254,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "location_name",
+     "word": "general",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:location_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.8596753881110673,
+     "thr": 0.45052995336907486
+    },
+    {
+     "q": "timeRange",
+     "word": "american",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4984201455303648,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.38775962489423815,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4867771833209633,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "movie_name",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7789234822448202,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "movie_type",
+     "word": "times",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.4686256855808568,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "timeRange",
+     "word": "young",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.6309513186796613,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "location_name",
+     "word": "great",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:location_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7129431496964421,
+     "thr": 0.45052995336907486
+    },
+    {
+     "q": "timeRange",
+     "word": "gladiators",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.607362865065516,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.4372069603726443,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "location_name",
+     "word": "house",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_location_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.6253989612116415,
+     "thr": 0.45052995336907486
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.48397337095233334,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_location_type",
+     "kind": "S:object_location_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.2224468225864866,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "timeRange",
+     "word": "sexy",
+     "sibling": "movie_name",
+     "kind": "S:object_name",
+     "lex_kind": "S:playlist",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.2226712722310318,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_type",
+     "word": "movie",
+     "sibling": "object_type",
+     "kind": "S:object_type",
+     "lex_kind": "S:object_type",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.5393323584256559,
+     "thr": 0.3458763156514024
+    },
+    {
+     "q": "timeRange",
+     "word": "canteen",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:timeRange",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.7328980477712667,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "timeRange",
+     "word": "gingerbread",
+     "sibling": "movie_name",
+     "kind": "S:object_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 0.8932230377855708,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "timeRange",
+     "word": "spirit",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.0354779366033529,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "timeRange",
+     "word": "miss",
+     "sibling": "movie_name",
+     "kind": "S:movie_name",
+     "lex_kind": "S:object_name",
+     "kind_admitted_by_sibling": true,
+     "ratio": 1.7014710935444948,
+     "thr": 0.3390933571723849
+    }
+   ],
+   "misses": [
+    {
+     "q": "movie_name",
+     "gold_word": "time",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_location_type",
+     "gold_word": "cinema",
+     "kind": "S:object_location_type",
+     "kind_admitted": true,
+     "ratio": 0.4527690051830511,
+     "thr": 0.47549427367265806
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "rockers",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_type",
+     "gold_word": "schedule",
+     "kind": "S:object_type",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.6257347799397968
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "shines",
+     "kind": "S:movie_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_location_type",
+     "gold_word": "house",
+     "kind": "S:object_location_type",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.47549427367265806
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "closest",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.3943857180204625
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "town",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "dinner",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.3082663618053751,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "revisited",
+     "kind": "O",
+     "kind_admitted": true,
+     "ratio": 0.5156282222957852,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "box",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_type",
+     "gold_word": "schedule",
+     "kind": "S:object_type",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.6257347799397968
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "boycott",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.5149819014610868,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "location_name",
+     "gold_word": "entertainment",
+     "kind": "S:location_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.45052995336907486
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "alive",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "lunch",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.2754181598825936,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearby",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.2650984519711717,
+     "thr": 0.3943857180204625
+    },
+    {
+     "q": "spatial_relation",
+     "gold_word": "nearest",
+     "kind": "S:spatial_relation",
+     "kind_admitted": true,
+     "ratio": 0.36046977738745073,
+     "thr": 0.3943857180204625
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "chamber",
+     "kind": "S:movie_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "do",
+     "kind": "O",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "timeRange",
+     "gold_word": "pm",
+     "kind": "S:timeRange",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.3390933571723849
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "robbery",
+     "kind": "S:movie_name",
+     "kind_admitted": true,
+     "ratio": 0.49253669648401893,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "outcast",
+     "kind": "O",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "gildersleeve",
+     "kind": "S:movie_name",
+     "kind_admitted": true,
+     "ratio": 0.3964632508400691,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_location_type",
+     "gold_word": "house",
+     "kind": "S:object_location_type",
+     "kind_admitted": true,
+     "ratio": 0.21071781666110398,
+     "thr": 0.47549427367265806
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "movie",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_type",
+     "gold_word": "times",
+     "kind": "S:object_type",
+     "kind_admitted": true,
+     "ratio": 0.2934503183577272,
+     "thr": 0.6257347799397968
+    },
+    {
+     "q": "movie_name",
+     "gold_word": "2",
+     "kind": "S:object_name",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.5605115713653942
+    },
+    {
+     "q": "object_location_type",
+     "gold_word": "cinema",
+     "kind": "S:object_location_type",
+     "kind_admitted": true,
+     "ratio": 0.0,
+     "thr": 0.47549427367265806
+    }
+   ]
+  }
+ }
+}

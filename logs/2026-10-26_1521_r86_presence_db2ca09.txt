@@ -1,0 +1,82 @@
+# 2026-10-26T15:21:10+01:00  commit=db2ca09  cmd: python3 eval/r86_presence.py --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_82585ea --seed 2  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 113 GB; slot logs/.run.lock of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+r86_presence: models r81; sop @ 82585ea; seed 2; worlds BookRestaurant,SearchScreeningEvent
+== BookRestaurant: admitted kinds per question (kinds | head_kinds); a kind admitted by several questions is shared
+   city                     kinds ['S:artist', 'S:city', 'S:country', 'S:entity_name', 'S:geographic_poi', 'S:location_name', 'S:movie_name', 'S:object_location_type', 'S:object_name', 'S:party_size_description', 'S:playlist', 'S:poi', 'S:rating_unit', 'S:restaurant_name', 'S:state', 'S:timeRange'] | head [] | shared with another question: ['S:artist', 'S:city', 'S:country', 'S:entity_name', 'S:geographic_poi', 'S:location_name', 'S:movie_name', 'S:object_location_type', 'S:object_name', 'S:party_size_description', 'S:playlist', 'S:poi', 'S:restaurant_name', 'S:state', 'S:timeRange']
+   country                  kinds ['S:city', 'S:country', 'S:object_name', 'S:state'] | head [] | shared with another question: ['S:city', 'S:country', 'S:object_name', 'S:state']
+   cuisine                  kinds ['S:artist', 'S:country', 'S:cuisine', 'S:object_name', 'S:playlist', 'S:restaurant_type', 'S:served_dish'] | head [] | shared with another question: ['S:artist', 'S:country', 'S:cuisine', 'S:object_name', 'S:playlist', 'S:restaurant_type', 'S:served_dish']
+   facility                 kinds ['S:facility'] | head [] | shared with another question: ['S:facility']
+   party_size_description   kinds ['S:artist', 'S:city', 'S:entity_name', 'S:location_name', 'S:object_name', 'S:party_size_description', 'S:playlist', 'w:i'] | head [] | shared with another question: ['S:artist', 'S:city', 'S:entity_name', 'S:location_name', 'S:object_name', 'S:party_size_description', 'S:playlist']
+   party_size_number        kinds ['S:best_rating', 'S:party_size_number', 'S:rating_value'] | head [] | shared with another question: ['S:best_rating', 'S:party_size_number', 'S:rating_value']
+   poi                      kinds ['O', 'S:artist', 'S:city', 'S:country', 'S:current_location', 'S:entity_name', 'S:geographic_poi', 'S:object_location_type', 'S:object_name', 'S:poi', 'S:restaurant_name', 'S:restaurant_type', 'S:spatial_relation'] | head [] | shared with another question: ['O', 'S:artist', 'S:city', 'S:country', 'S:entity_name', 'S:geographic_poi', 'S:object_location_type', 'S:object_name', 'S:poi', 'S:restaurant_name', 'S:restaurant_type', 'S:spatial_relation']
+   restaurant_name          kinds ['O', 'S:artist', 'S:city', 'S:country', 'S:entity_name', 'S:facility', 'S:geographic_poi', 'S:location_name', 'S:movie_name', 'S:object_location_type', 'S:object_name', 'S:party_size_description', 'S:playlist', 'S:poi', 'S:rating_value', 'S:restaurant_name', 'S:restaurant_type', 'S:served_dish', 'S:state'] | head [] | shared with another question: ['O', 'S:artist', 'S:city', 'S:country', 'S:entity_name', 'S:facility', 'S:geographic_poi', 'S:location_name', 'S:movie_name', 'S:object_location_type', 'S:object_name', 'S:party_size_description', 'S:playlist', 'S:poi', 'S:rating_value', 'S:restaurant_name', 'S:restaurant_type', 'S:served_dish', 'S:state']
+   restaurant_type          kinds ['S:object_location_type', 'S:restaurant_type'] | head [] | shared with another question: ['S:object_location_type', 'S:restaurant_type']
+   served_dish              kinds ['O', 'S:artist', 'S:country', 'S:cuisine', 'S:entity_name', 'S:object_name', 'S:playlist', 'S:restaurant_name', 'S:restaurant_type', 'S:served_dish'] | head [] | shared with another question: ['O', 'S:artist', 'S:country', 'S:cuisine', 'S:entity_name', 'S:object_name', 'S:playlist', 'S:restaurant_name', 'S:restaurant_type', 'S:served_dish']
+   sort                     kinds ['O', 'S:sort'] | head [] | shared with another question: ['O']
+   spatial_relation         kinds ['S:spatial_relation', 'w:by'] | head [] | shared with another question: ['S:spatial_relation']
+   state                    kinds ['O', 'S:country', 'S:playlist', 'S:service', 'S:state', 'w:in', 'w:me'] | head [] | shared with another question: ['O', 'S:country', 'S:playlist', 'S:state']
+   timeRange                kinds ['S:best_rating', 'S:condition_description', 'S:object_name', 'S:party_size_number', 'S:playlist', 'S:rating_value', 'S:restaurant_type', 'S:timeRange'] | head [] | shared with another question: ['S:best_rating', 'S:object_name', 'S:party_size_number', 'S:playlist', 'S:rating_value', 'S:restaurant_type', 'S:timeRange']
+   presence city                     present  56 mean 0.640 | absent 144 mean 0.208 | separation +0.433 | threshold 0.269 balanced acc 0.881
+   presence country                  present  42 mean 0.653 | absent 158 mean 0.113 | separation +0.540 | threshold 0.271 balanced acc 0.978
+   presence cuisine                  present  21 mean 0.361 | absent 179 mean -0.047 | separation +0.408 | threshold 0.083 balanced acc 0.972
+   presence facility                 present  14 mean 0.668 | absent 186 mean 0.091 | separation +0.576 | threshold 0.276 balanced acc 0.995
+   presence party_size_description   present  32 mean 0.846 | absent 168 mean 0.089 | separation +0.757 | threshold 0.410 balanced acc 0.981
+   presence party_size_number        present 101 mean 1.440 | absent  99 mean 0.231 | separation +1.209 | threshold 0.631 balanced acc 0.970
+   presence poi                      present  17 mean 0.944 | absent 183 mean 0.162 | separation +0.783 | threshold 0.309 balanced acc 0.984
+   presence restaurant_name          present  39 mean 0.997 | absent 161 mean 0.136 | separation +0.860 | threshold 0.473 balanced acc 0.997
+   presence restaurant_type          present 137 mean 1.054 | absent  63 mean 0.188 | separation +0.865 | threshold 0.707 balanced acc 0.977
+   presence served_dish              present  36 mean 0.779 | absent 164 mean 0.070 | separation +0.709 | threshold 0.277 balanced acc 0.997
+   presence sort                     present  18 mean 0.815 | absent 182 mean 0.078 | separation +0.737 | threshold 0.375 balanced acc 0.969
+   presence spatial_relation         present  36 mean 0.666 | absent 164 mean 0.085 | separation +0.581 | threshold 0.228 balanced acc 0.963
+   presence state                    present  50 mean 0.798 | absent 150 mean 0.376 | separation +0.422 | threshold 0.459 balanced acc 0.893
+   presence timeRange                present  76 mean 0.865 | absent 124 mean 0.292 | separation +0.573 | threshold 0.385 balanced acc 0.980
+   (a) test 100 utterances: false fills 88; the filled word belongs to a sibling gold question in 0.784 (its typer kind admitted by that sibling too: 0.957); to no gold question 0.216; misses 57 (gold word's kind admitted by the question: 0.965)
+   false fill (question <- the word's gold question): [('cuisine <- restaurant_type', 15), ('state <- None', 14), ('city <- restaurant_name', 6), ('poi <- restaurant_type', 4), ('cuisine <- restaurant_name', 4), ('city <- country', 4), ('city <- timeRange', 4), ('served_dish <- None', 2), ('country <- restaurant_name', 2), ('country <- state', 2), ('timeRange <- party_size_number', 2), ('poi <- restaurant_name', 2), ('state <- country', 2), ('country <- city', 2), ('timeRange <- restaurant_type', 2)]
+   misses by question: [('timeRange', 10), ('city', 9), ('state', 6), ('country', 5), ('restaurant_name', 5), ('spatial_relation', 4), ('party_size_number', 4), ('cuisine', 3), ('restaurant_type', 3), ('sort', 3), ('served_dish', 2), ('poi', 1), ('party_size_description', 1), ('facility', 1)]
+     false fill cuisine: 'restaurant' (gold question restaurant_type, typer kind S:restaurant_type, lexicon S:restaurant_type; ratio 0.088 vs threshold 0.083)
+     false fill poi: 'restaurant' (gold question restaurant_type, typer kind S:restaurant_type, lexicon S:restaurant_type; ratio 0.354 vs threshold 0.309)
+     false fill state: 'would' (gold question None, typer kind O, lexicon O; ratio 0.519 vs threshold 0.459)
+     false fill cuisine: 'oyster' (gold question restaurant_type, typer kind S:restaurant_type, lexicon S:restaurant_type; ratio 0.159 vs threshold 0.083)
+     false fill state: 'in' (gold question None, typer kind w:in, lexicon w:in; ratio 0.513 vs threshold 0.459)
+     false fill restaurant_name: 'restaurant' (gold question restaurant_type, typer kind S:restaurant_type, lexicon S:restaurant_type; ratio 0.967 vs threshold 0.473)
+     false fill city: 'city' (gold question restaurant_name, typer kind S:restaurant_name, lexicon S:city; ratio 0.361 vs threshold 0.269)
+     false fill cuisine: 'tavern' (gold question restaurant_name, typer kind S:restaurant_name, lexicon S:restaurant_type; ratio 0.157 vs threshold 0.083)
+     false fill cuisine: 'bistro' (gold question restaurant_type, typer kind S:restaurant_type, lexicon S:restaurant_type; ratio 0.108 vs threshold 0.083)
+     false fill city: 'tanzania' (gold question country, typer kind S:country, lexicon S:country; ratio 0.292 vs threshold 0.269)
+     false fill cuisine: 'tanzania' (gold question country, typer kind S:country, lexicon S:country; ratio 0.170 vs threshold 0.083)
+     false fill state: 'table' (gold question None, typer kind O, lexicon O; ratio 0.468 vs threshold 0.459)
+== SearchScreeningEvent: admitted kinds per question (kinds | head_kinds); a kind admitted by several questions is shared
+   location_name            kinds ['S:location_name', 'S:object_location_type'] | head [] | shared with another question: ['S:location_name', 'S:object_location_type']
+   movie_name               kinds ['O', 'S:album', 'S:artist', 'S:city', 'S:condition_description', 'S:country', 'S:current_location', 'S:entity_name', 'S:facility', 'S:geographic_poi', 'S:location_name', 'S:movie_name', 'S:music_item', 'S:object_location_type', 'S:object_name', 'S:object_type', 'S:party_size_description', 'S:party_size_number', 'S:playlist', 'S:poi', 'S:rating_unit', 'S:rating_value', 'S:restaurant_name', 'S:served_dish', 'S:sort', 'S:spatial_relation', 'S:state', 'S:timeRange', 'S:track', 'S:year', 'w:book', 'w:it', 'w:me', 'w:on', 'w:out'] | head [] | shared with another question: ['S:current_location', 'S:location_name', 'S:object_location_type', 'S:object_name', 'S:object_type', 'S:party_size_number', 'S:playlist', 'S:rating_value', 'S:spatial_relation', 'S:timeRange']
+   movie_type               kinds ['S:movie_type', 'S:object_type'] | head [] | shared with another question: ['S:object_type']
+   object_location_type     kinds ['S:object_location_type'] | head [] | shared with another question: ['S:object_location_type']
+   object_type              kinds ['S:object_type'] | head [] | shared with another question: ['S:object_type']
+   spatial_relation         kinds ['S:current_location', 'S:spatial_relation', 'w:by'] | head [] | shared with another question: ['S:current_location', 'S:spatial_relation']
+   timeRange                kinds ['S:object_name', 'S:party_size_number', 'S:playlist', 'S:rating_value', 'S:restaurant_type', 'S:timeRange'] | head [] | shared with another question: ['S:object_name', 'S:party_size_number', 'S:playlist', 'S:rating_value', 'S:timeRange']
+   presence location_name            present  60 mean 0.907 | absent 140 mean 0.168 | separation +0.739 | threshold 0.420 balanced acc 0.982
+   presence movie_name               present  88 mean 2.189 | absent 112 mean 0.050 | separation +2.139 | threshold 0.510 balanced acc 0.977
+   presence movie_type               present  65 mean 0.791 | absent 135 mean -0.017 | separation +0.808 | threshold 0.192 balanced acc 0.985
+   presence object_location_type     present  54 mean 1.313 | absent 146 mean 0.052 | separation +1.261 | threshold 0.432 balanced acc 0.990
+   presence object_type              present  75 mean 1.081 | absent 125 mean 0.285 | separation +0.796 | threshold 0.659 balanced acc 0.971
+   presence spatial_relation         present  63 mean 0.847 | absent 137 mean 0.137 | separation +0.710 | threshold 0.393 balanced acc 0.974
+   presence timeRange                present  31 mean 1.698 | absent 169 mean 0.106 | separation +1.592 | threshold 0.286 balanced acc 0.969
+   (a) test 100 utterances: false fills 24; the filled word belongs to a sibling gold question in 1.000 (its typer kind admitted by that sibling too: 1.000); to no gold question 0.000; misses 25 (gold word's kind admitted by the question: 1.000)
+   false fill (question <- the word's gold question): [('timeRange <- movie_name', 8), ('movie_type <- object_type', 8), ('movie_type <- object_location_type', 2), ('object_type <- object_location_type', 2), ('location_name <- movie_name', 2), ('movie_name <- spatial_relation', 1), ('location_name <- object_location_type', 1)]
+   misses by question: [('movie_name', 13), ('object_location_type', 4), ('spatial_relation', 3), ('object_type', 2), ('timeRange', 2), ('location_name', 1)]
+     false fill timeRange: 'portrait' (gold question movie_name, typer kind S:movie_name, lexicon S:object_name; ratio 0.589 vs threshold 0.286)
+     false fill movie_type: 'movie' (gold question object_location_type, typer kind S:object_location_type, lexicon S:object_type; ratio 0.450 vs threshold 0.192)
+     false fill object_type: 'movie' (gold question object_location_type, typer kind S:object_location_type, lexicon S:object_type; ratio 3.077 vs threshold 0.659)
+     false fill timeRange: 'web' (gold question movie_name, typer kind O, lexicon S:object_name; ratio 0.327 vs threshold 0.286)
+     false fill object_type: 'movie' (gold question object_location_type, typer kind S:object_location_type, lexicon S:object_type; ratio 0.859 vs threshold 0.659)
+     false fill timeRange: 'dream' (gold question movie_name, typer kind S:movie_name, lexicon S:object_name; ratio 0.402 vs threshold 0.286)
+     false fill movie_type: 'movie' (gold question object_location_type, typer kind S:object_location_type, lexicon S:object_type; ratio 0.323 vs threshold 0.192)
+     false fill location_name: 'general' (gold question movie_name, typer kind S:movie_name, lexicon S:location_name; ratio 0.614 vs threshold 0.420)
+     false fill movie_type: 'movie' (gold question object_type, typer kind S:object_type, lexicon S:object_type; ratio 0.332 vs threshold 0.192)
+     false fill movie_type: 'movie' (gold question object_type, typer kind S:object_type, lexicon S:object_type; ratio 0.450 vs threshold 0.192)
+     false fill movie_name: 'nearest' (gold question spatial_relation, typer kind S:spatial_relation, lexicon S:spatial_relation; ratio 0.603 vs threshold 0.510)
+     false fill movie_type: 'times' (gold question object_type, typer kind S:object_type, lexicon S:object_type; ratio 0.456 vs threshold 0.192)
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] saved R81 models, no training [x] oracle world (the readout alone) [x] calibration rows = the world's own training rows [x] sop version named
+# post-launch guard (slots 8): MemAvailable 90 s after the start 114 GB

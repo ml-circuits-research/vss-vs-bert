@@ -1,0 +1,189 @@
+{
+ "sop": "7ce5c50",
+ "label": "7ce5c50",
+ "seed": 2,
+ "worlds": {
+  "AddToPlaylist": {
+   "core_roles": [
+    "playlist"
+   ],
+   "n_questions": 5,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.0,
+    "of_which_incomplete_clause": 0.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 0.7801875915335428,
+    "p98_graded_only": 0.7801875915335428
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.0,
+    "of_which_incomplete_clause": 0.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 0.8748867516771769,
+    "p98_graded_only": 0.8748867516771769
+   }
+  },
+  "BookRestaurant": {
+   "core_roles": [
+    "restaurant_type"
+   ],
+   "n_questions": 14,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.335,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8720337751410648
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.8842857142857142,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.004846526655896607,
+    "graded_only_share_1": 0.004285714285714286,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.9266136772236929
+   }
+  },
+  "GetWeather": {
+   "core_roles": [
+    "timeRange"
+   ],
+   "n_questions": 9,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.525,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8368237109293775
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.5985714285714285,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.00477326968973747,
+    "graded_only_share_1": 0.002857142857142857,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.9093110184415342
+   }
+  },
+  "PlayMusic": {
+   "core_roles": [
+    "artist"
+   ],
+   "n_questions": 9,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.355,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8206290942605307
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.45571428571428574,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.003134796238244514,
+    "graded_only_share_1": 0.0014285714285714286,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8772003004065827
+   }
+  },
+  "RateBook": {
+   "core_roles": [
+    "rating_value"
+   ],
+   "n_questions": 7,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.0,
+    "of_which_incomplete_clause": 0.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 0.5254131636721576,
+    "p98_graded_only": 0.5254131636721576
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.7714285714285715,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.001851851851851852,
+    "graded_only_share_1": 0.0014285714285714286,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8959944754817952
+   }
+  },
+  "SearchCreativeWork": {
+   "core_roles": [
+    "object_name"
+   ],
+   "n_questions": 2,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.0,
+    "of_which_incomplete_clause": 0.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 0.9159720950239929,
+    "p98_graded_only": 0.9159720950239929
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.0,
+    "of_which_incomplete_clause": 0.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 0.9248586234568538,
+    "p98_graded_only": 0.9248586234568538
+   }
+  },
+  "SearchScreeningEvent": {
+   "core_roles": [
+    "movie_name"
+   ],
+   "n_questions": 7,
+   "own_training_200": {
+    "n": 200,
+    "share_res_1": 0.26,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.0,
+    "graded_only_share_1": 0.0,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.73820438334331
+   },
+   "test_all": {
+    "n": 700,
+    "share_res_1": 0.36428571428571427,
+    "of_which_incomplete_clause": 1.0,
+    "of_which_shape_not_ok": 0.0,
+    "of_which_graded_1": 0.00392156862745098,
+    "graded_only_share_1": 0.0014285714285714286,
+    "p98_clause": 1.0,
+    "p98_graded_only": 0.8955640303924817
+   }
+  }
+ }
+}

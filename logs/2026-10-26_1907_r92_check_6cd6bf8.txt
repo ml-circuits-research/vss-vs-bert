@@ -1,0 +1,15 @@
+# 2026-10-26T19:07:28+01:00  commit=6cd6bf8  cmd: python3 eval/r92_check.py --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_60f861b --stage logs/export/r92_reading_copies --condition base --seed 2  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 101 GB; slot logs/.run.lock.5 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+r92_check: sop @ 60f861b; condition base; seed 2; reading copies in logs/export/r92_reading_copies/base_seed2; frame keys {'candidates': 'sentence', 'undecided_adjacent': True, 'residual': 'explained', 'presence_query': True, 'presence_by_kind': True}; refusal {'presence_by_kind': False}
+  refusal threshold (pooled dev_cal 2%): 0.8290 (R90: line A's 0.8128); per world AddToPlaylist 0.739, BookRestaurant 0.821, GetWeather 0.782, PlayMusic 0.769, RateBook 0.551, SearchCreativeWork 0.997, SearchScreeningEvent 0.790
+  dev_rep: dispatch 0.966 (R90 0.966) | span F1 0.894 (R90 0.894) | refused 0.020 (R90 0.009; per-world thresholds 0.026) | abstains 0.297 (R90 0.291)
+  dev_rep:new_slot_values: dispatch 0.969 (R90 0.969) | span F1 0.850 (R90 0.850) | refused 0.021 (R90 0.010; per-world thresholds 0.021) | abstains 0.312 (R90 0.312)
+  dev_rep:unseen_template: dispatch 0.960 (R90 0.960) | span F1 0.888 (R90 0.888) | refused 0.023 (R90 0.011; per-world thresholds 0.029) | abstains 0.345 (R90 0.339)
+  test: dispatch 0.970 (R90 0.970) | span F1 0.893 (R90 0.893) | refused 0.029 (R90 0.011; per-world thresholds 0.031) | abstains 0.289 (R90 0.291)
+  test:new_slot_values: dispatch 0.966 (R90 0.966) | span F1 0.862 (R90 0.862) | refused 0.029 (R90 0.010; per-world thresholds 0.034) | abstains 0.324 (R90 0.338)
+# post-launch guard (slots 8): MemAvailable 90 s after the start 113 GB
+  test:unseen_template: dispatch 0.953 (R90 0.953) | span F1 0.882 (R90 0.882) | refused 0.040 (R90 0.020; per-world thresholds 0.042) | abstains 0.328 (R90 0.333)
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] saved R81 models, reading copies only [x] thresholds on the dev calibration half (rule 25) [x] compared with R90 item 1 [x] sop version named

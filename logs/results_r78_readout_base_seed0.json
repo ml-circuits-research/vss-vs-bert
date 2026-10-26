@@ -1,0 +1,2550 @@
+{
+ "sop": "82585ea",
+ "models": "r81",
+ "condition": "base",
+ "seed": 0,
+ "worlds": {
+  "AddToPlaylist": {
+   "need_signals": {
+    "vorder": {
+     "fires": true,
+     "reason": "44 training rows (2.4%) fill two roles with the same kind; in 44 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "the most frequent absolute position of a core role's head covers only 19% of the rows: the order is not rigid"
+    }
+   },
+   "same_kind_pairs_share": 0.023887079261672096,
+   "order_dependent_share": 0.023887079261672096,
+   "rigid_order_min": 0.19218241042345277,
+   "competition_by_question": {
+    "music_item": 0.0047789725209080045,
+    "playlist": 0.023887079261672096,
+    "artist": 0.005698005698005698,
+    "playlist_owner": 0.0009560229445506692,
+    "entity_name": 0.06172839506172839
+   },
+   "train_occurrences": {
+    "music_item": 837,
+    "playlist": 1842,
+    "artist": 702,
+    "playlist_owner": 1046,
+    "entity_name": 567
+   }
+  },
+  "BookRestaurant": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "27 training rows (1.4%) fill two roles with the same kind; in 27 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "no core roles"
+    }
+   },
+   "same_kind_pairs_share": 0.014415376401494928,
+   "order_dependent_share": 0.014415376401494928,
+   "rigid_order_min": null,
+   "competition_by_question": {
+    "restaurant_name": 0.031545741324921134,
+    "restaurant_type": 0.005451713395638629,
+    "state": 0.002053388090349076,
+    "timeRange": 0.00625,
+    "spatial_relation": 0.020066889632107024,
+    "poi": 0.06474820143884892,
+    "served_dish": 0.011538461538461539,
+    "party_size_number": 0.0030706243602865915,
+    "country": 0.005917159763313609,
+    "city": 0.010330578512396695,
+    "sort": 0.010416666666666666,
+    "cuisine": 0.004975124378109453,
+    "facility": 0.0,
+    "party_size_description": 0.003355704697986577
+   },
+   "train_occurrences": {
+    "restaurant_name": 317,
+    "restaurant_type": 1284,
+    "state": 487,
+    "timeRange": 640,
+    "spatial_relation": 299,
+    "poi": 139,
+    "served_dish": 260,
+    "party_size_number": 977,
+    "country": 338,
+    "city": 484,
+    "sort": 192,
+    "cuisine": 201,
+    "facility": 151,
+    "party_size_description": 298
+   }
+  },
+  "GetWeather": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "3 training rows (0.2%) fill two roles with the same kind; in 3 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "no core roles"
+    }
+   },
+   "same_kind_pairs_share": 0.0015789473684210526,
+   "order_dependent_share": 0.0015789473684210526,
+   "rigid_order_min": null,
+   "competition_by_question": {
+    "timeRange": 0.0,
+    "geographic_poi": 0.0035587188612099642,
+    "condition_description": 0.0,
+    "spatial_relation": 0.005128205128205128,
+    "current_location": 0.0,
+    "condition_temperature": 0.0,
+    "state": 0.0,
+    "city": 0.0025,
+    "country": 0.0042643923240938165
+   },
+   "train_occurrences": {
+    "timeRange": 992,
+    "geographic_poi": 281,
+    "condition_description": 426,
+    "spatial_relation": 195,
+    "current_location": 259,
+    "condition_temperature": 449,
+    "state": 468,
+    "city": 800,
+    "country": 469
+   }
+  },
+  "PlayMusic": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "14 training rows (0.7%) fill two roles with the same kind; in 14 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "no core roles"
+    }
+   },
+   "same_kind_pairs_share": 0.007368421052631579,
+   "order_dependent_share": 0.007368421052631579,
+   "rigid_order_min": null,
+   "competition_by_question": {
+    "music_item": 0.0,
+    "track": 0.029556650246305417,
+    "artist": 0.007123775601068566,
+    "service": 0.008287292817679558,
+    "year": 0.0,
+    "album": 0.012121212121212121,
+    "sort": 0.014970059880239521,
+    "playlist": 0.0072992700729927005,
+    "genre": 0.0
+   },
+   "train_occurrences": {
+    "music_item": 744,
+    "track": 203,
+    "artist": 1123,
+    "service": 724,
+    "year": 604,
+    "album": 165,
+    "sort": 334,
+    "playlist": 137,
+    "genre": 135
+   }
+  },
+  "RateBook": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "3 training rows (0.2%) fill two roles with the same kind; in 3 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "the most frequent absolute position of a core role's head covers only 22% of the rows: the order is not rigid"
+    }
+   },
+   "same_kind_pairs_share": 0.0016163793103448276,
+   "order_dependent_share": 0.0016163793103448276,
+   "rigid_order_min": 0.21982758620689655,
+   "competition_by_question": {
+    "object_name": 0.003246753246753247,
+    "rating_value": 0.0010775862068965517,
+    "best_rating": 0.0,
+    "rating_unit": 0.0009416195856873823,
+    "object_select": 0.0,
+    "object_type": 0.0,
+    "object_part_of_series_type": 0.0
+   },
+   "train_occurrences": {
+    "object_name": 924,
+    "rating_value": 1856,
+    "best_rating": 994,
+    "rating_unit": 1062,
+    "object_select": 937,
+    "object_type": 908,
+    "object_part_of_series_type": 289
+   }
+  },
+  "SearchCreativeWork": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "11 training rows (0.6%) fill two roles with the same kind; in 11 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "the most frequent absolute position of a core role's head covers only 17% of the rows: the order is not rigid"
+    }
+   },
+   "same_kind_pairs_share": 0.005933117583603021,
+   "order_dependent_share": 0.005933117583603021,
+   "rigid_order_min": 0.16774541531823084,
+   "competition_by_question": {
+    "object_type": 0.007930785868781542,
+    "object_name": 0.005933117583603021
+   },
+   "train_occurrences": {
+    "object_type": 1387,
+    "object_name": 1854
+   }
+  },
+  "SearchScreeningEvent": {
+   "need_signals": {
+    "vorder": {
+     "fires": false,
+     "reason": "4 training rows (0.2%) fill two roles with the same kind; in 4 of them neither word is cued, so only the order relative to the verb separates them"
+    },
+    "pos": {
+     "fires": false,
+     "reason": "no core roles"
+    }
+   },
+   "same_kind_pairs_share": 0.002151694459386767,
+   "order_dependent_share": 0.002151694459386767,
+   "rigid_order_min": null,
+   "competition_by_question": {
+    "object_type": 0.0013698630136986301,
+    "location_name": 0.0,
+    "movie_name": 0.0038910505836575876,
+    "object_location_type": 0.002242152466367713,
+    "timeRange": 0.007905138339920948,
+    "movie_type": 0.0015037593984962407,
+    "spatial_relation": 0.0
+   },
+   "train_occurrences": {
+    "object_type": 730,
+    "location_name": 559,
+    "movie_name": 771,
+    "object_location_type": 446,
+    "timeRange": 253,
+    "movie_type": 665,
+    "spatial_relation": 658
+   }
+  }
+ },
+ "sets": {
+  "test": {
+   "AddToPlaylist": {
+    "n": 100,
+    "dispatch": 1.0,
+    "f1_typer": 0.8673835125448028,
+    "f1_reader_dispatched": 0.8713235294117648,
+    "f1_reader_oracle": 0.8713235294117648,
+    "questions": {
+     "playlist": {
+      "gold": 100,
+      "read": 100,
+      "right_head": 91,
+      "typer_tp": 92,
+      "typer_np": 100,
+      "n_gold_spans": 100,
+      "orac_tp": 88,
+      "orac_np": 93,
+      "wrong_head": 9,
+      "f1_typer": 0.92,
+      "f1_reader_oracle": 0.9119170984455959,
+      "competition": 0.023887079261672096
+     },
+     "playlist_owner": {
+      "gold": 54,
+      "read": 53,
+      "right_head": 52,
+      "typer_tp": 53,
+      "typer_np": 53,
+      "n_gold_spans": 54,
+      "orac_tp": 52,
+      "orac_np": 52,
+      "missed": 2,
+      "false_fill": 1,
+      "f1_typer": 0.9906542056074766,
+      "f1_reader_oracle": 0.9811320754716981,
+      "competition": 0.0009560229445506692
+     },
+     "artist": {
+      "gold": 46,
+      "read": 49,
+      "typer_tp": 39,
+      "typer_np": 46,
+      "n_gold_spans": 46,
+      "orac_tp": 39,
+      "orac_np": 49,
+      "right_head": 40,
+      "missed": 4,
+      "false_fill": 7,
+      "wrong_head": 2,
+      "f1_typer": 0.8478260869565217,
+      "f1_reader_oracle": 0.8210526315789474,
+      "competition": 0.005698005698005698
+     },
+     "entity_name": {
+      "gold": 18,
+      "read": 21,
+      "typer_tp": 3,
+      "typer_np": 16,
+      "n_gold_spans": 18,
+      "orac_tp": 3,
+      "orac_np": 18,
+      "wrong_head": 5,
+      "false_fill": 9,
+      "right_head": 7,
+      "missed": 6,
+      "f1_typer": 0.17647058823529413,
+      "f1_reader_oracle": 0.16666666666666666,
+      "competition": 0.06172839506172839
+     },
+     "music_item": {
+      "gold": 55,
+      "read": 60,
+      "right_head": 55,
+      "typer_tp": 55,
+      "typer_np": 58,
+      "n_gold_spans": 55,
+      "orac_tp": 55,
+      "orac_np": 59,
+      "false_fill": 5,
+      "f1_typer": 0.9734513274336283,
+      "f1_reader_oracle": 0.9649122807017544,
+      "competition": 0.0047789725209080045
+     }
+    },
+    "unplaced_top": [
+     [
+      "playlist",
+      81
+     ],
+     [
+      "this",
+      23
+     ],
+     [
+      "onto",
+      11
+     ],
+     [
+      "is",
+      8
+     ],
+     [
+      "put",
+      8
+     ],
+     [
+      "you",
+      8
+     ],
+     [
+      "please",
+      5
+     ],
+     [
+      "like",
+      4
+     ],
+     [
+      "music",
+      4
+     ],
+     [
+      "in",
+      4
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "BookRestaurant": {
+    "n": 100,
+    "dispatch": 0.98,
+    "f1_typer": 0.9211746522411128,
+    "f1_reader_dispatched": 0.7296849087893863,
+    "f1_reader_oracle": 0.7308970099667774,
+    "questions": {
+     "cuisine": {
+      "gold": 11,
+      "read": 16,
+      "typer_tp": 11,
+      "typer_np": 11,
+      "n_gold_spans": 11,
+      "orac_tp": 9,
+      "orac_np": 13,
+      "right_head": 7,
+      "wrong_head": 3,
+      "false_fill": 6,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.75,
+      "competition": 0.004975124378109453
+     },
+     "spatial_relation": {
+      "gold": 19,
+      "read": 15,
+      "typer_tp": 18,
+      "typer_np": 19,
+      "n_gold_spans": 19,
+      "orac_tp": 12,
+      "orac_np": 14,
+      "right_head": 13,
+      "missed": 5,
+      "false_fill": 1,
+      "wrong_head": 1,
+      "f1_typer": 0.9473684210526315,
+      "f1_reader_oracle": 0.7272727272727273,
+      "competition": 0.020066889632107024
+     },
+     "party_size_description": {
+      "gold": 13,
+      "read": 12,
+      "right_head": 12,
+      "typer_tp": 12,
+      "typer_np": 12,
+      "n_gold_spans": 13,
+      "orac_tp": 9,
+      "orac_np": 11,
+      "missed": 1,
+      "f1_typer": 0.96,
+      "f1_reader_oracle": 0.75,
+      "competition": 0.003355704697986577
+     },
+     "country": {
+      "gold": 20,
+      "read": 22,
+      "typer_tp": 18,
+      "typer_np": 20,
+      "n_gold_spans": 20,
+      "orac_tp": 15,
+      "orac_np": 19,
+      "right_head": 15,
+      "missed": 3,
+      "wrong_head": 2,
+      "false_fill": 5,
+      "f1_typer": 0.9,
+      "f1_reader_oracle": 0.7692307692307693,
+      "competition": 0.005917159763313609
+     },
+     "sort": {
+      "gold": 9,
+      "read": 10,
+      "typer_tp": 9,
+      "typer_np": 9,
+      "n_gold_spans": 9,
+      "orac_tp": 8,
+      "orac_np": 8,
+      "right_head": 8,
+      "missed": 1,
+      "false_fill": 2,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9411764705882353,
+      "competition": 0.010416666666666666
+     },
+     "timeRange": {
+      "gold": 34,
+      "read": 32,
+      "typer_tp": 32,
+      "typer_np": 35,
+      "n_gold_spans": 34,
+      "orac_tp": 15,
+      "orac_np": 16,
+      "missed": 9,
+      "false_fill": 7,
+      "right_head": 23,
+      "wrong_head": 2,
+      "f1_typer": 0.927536231884058,
+      "f1_reader_oracle": 0.6,
+      "competition": 0.00625
+     },
+     "city": {
+      "gold": 33,
+      "read": 36,
+      "typer_tp": 28,
+      "typer_np": 29,
+      "n_gold_spans": 33,
+      "orac_tp": 19,
+      "orac_np": 36,
+      "right_head": 17,
+      "wrong_head": 4,
+      "false_fill": 15,
+      "missed": 12,
+      "f1_typer": 0.9032258064516129,
+      "f1_reader_oracle": 0.5507246376811594,
+      "competition": 0.010330578512396695
+     },
+     "restaurant_name": {
+      "gold": 20,
+      "read": 19,
+      "typer_tp": 15,
+      "typer_np": 19,
+      "n_gold_spans": 20,
+      "orac_tp": 6,
+      "orac_np": 13,
+      "false_fill": 6,
+      "right_head": 11,
+      "missed": 7,
+      "wrong_head": 2,
+      "f1_typer": 0.7692307692307693,
+      "f1_reader_oracle": 0.36363636363636365,
+      "competition": 0.031545741324921134
+     },
+     "served_dish": {
+      "gold": 5,
+      "read": 8,
+      "typer_tp": 4,
+      "typer_np": 5,
+      "n_gold_spans": 5,
+      "orac_tp": 2,
+      "orac_np": 5,
+      "missed": 2,
+      "false_fill": 5,
+      "wrong_head": 1,
+      "right_head": 2,
+      "f1_typer": 0.8,
+      "f1_reader_oracle": 0.4,
+      "competition": 0.011538461538461539
+     },
+     "party_size_number": {
+      "gold": 57,
+      "read": 54,
+      "typer_tp": 57,
+      "typer_np": 57,
+      "n_gold_spans": 57,
+      "orac_tp": 52,
+      "orac_np": 54,
+      "right_head": 52,
+      "missed": 4,
+      "wrong_head": 1,
+      "false_fill": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9369369369369369,
+      "competition": 0.0030706243602865915
+     },
+     "restaurant_type": {
+      "gold": 62,
+      "read": 61,
+      "typer_tp": 59,
+      "typer_np": 64,
+      "n_gold_spans": 62,
+      "orac_tp": 53,
+      "orac_np": 58,
+      "right_head": 54,
+      "missed": 4,
+      "false_fill": 3,
+      "wrong_head": 4,
+      "f1_typer": 0.9365079365079365,
+      "f1_reader_oracle": 0.8833333333333333,
+      "competition": 0.005451713395638629
+     },
+     "facility": {
+      "gold": 7,
+      "read": 7,
+      "typer_tp": 7,
+      "typer_np": 7,
+      "n_gold_spans": 7,
+      "orac_tp": 7,
+      "orac_np": 7,
+      "right_head": 7,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "poi": {
+      "gold": 6,
+      "read": 9,
+      "typer_tp": 3,
+      "typer_np": 5,
+      "n_gold_spans": 6,
+      "orac_tp": 1,
+      "orac_np": 7,
+      "missed": 2,
+      "right_head": 4,
+      "false_fill": 5,
+      "f1_typer": 0.5454545454545454,
+      "f1_reader_oracle": 0.15384615384615385,
+      "competition": 0.06474820143884892
+     },
+     "state": {
+      "gold": 25,
+      "read": 24,
+      "typer_tp": 25,
+      "typer_np": 28,
+      "n_gold_spans": 25,
+      "orac_tp": 12,
+      "orac_np": 20,
+      "missed": 9,
+      "false_fill": 8,
+      "right_head": 15,
+      "wrong_head": 1,
+      "f1_typer": 0.9433962264150944,
+      "f1_reader_oracle": 0.5333333333333333,
+      "competition": 0.002053388090349076
+     }
+    },
+    "unplaced_top": [
+     [
+      "in",
+      68
+     ],
+     [
+      "i",
+      35
+     ],
+     [
+      "people",
+      29
+     ],
+     [
+      "reservation",
+      26
+     ],
+     [
+      "table",
+      19
+     ],
+     [
+      "and",
+      13
+     ],
+     [
+      "me",
+      13
+     ],
+     [
+      "spot",
+      12
+     ],
+     [
+      "my",
+      8
+     ],
+     [
+      "an",
+      6
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "GetWeather": {
+    "n": 100,
+    "dispatch": 0.95,
+    "f1_typer": 0.9008264462809917,
+    "f1_reader_dispatched": 0.8608695652173914,
+    "f1_reader_oracle": 0.8650963597430407,
+    "questions": {
+     "geographic_poi": {
+      "gold": 16,
+      "read": 19,
+      "typer_tp": 14,
+      "typer_np": 16,
+      "n_gold_spans": 16,
+      "orac_tp": 13,
+      "orac_np": 17,
+      "right_head": 15,
+      "false_fill": 4,
+      "missed": 1,
+      "f1_typer": 0.875,
+      "f1_reader_oracle": 0.7878787878787878,
+      "competition": 0.0035587188612099642
+     },
+     "spatial_relation": {
+      "gold": 14,
+      "read": 7,
+      "right_head": 6,
+      "typer_tp": 13,
+      "typer_np": 13,
+      "n_gold_spans": 14,
+      "orac_tp": 6,
+      "orac_np": 7,
+      "missed": 7,
+      "wrong_head": 1,
+      "f1_typer": 0.9629629629629629,
+      "f1_reader_oracle": 0.5714285714285714,
+      "competition": 0.005128205128205128
+     },
+     "timeRange": {
+      "gold": 64,
+      "read": 62,
+      "typer_tp": 60,
+      "typer_np": 65,
+      "n_gold_spans": 64,
+      "orac_tp": 56,
+      "orac_np": 59,
+      "right_head": 57,
+      "wrong_head": 4,
+      "false_fill": 1,
+      "missed": 3,
+      "f1_typer": 0.9302325581395349,
+      "f1_reader_oracle": 0.9105691056910569,
+      "competition": 0.0
+     },
+     "current_location": {
+      "gold": 17,
+      "read": 18,
+      "right_head": 17,
+      "typer_tp": 17,
+      "typer_np": 17,
+      "n_gold_spans": 17,
+      "orac_tp": 17,
+      "orac_np": 18,
+      "false_fill": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9714285714285714,
+      "competition": 0.0
+     },
+     "country": {
+      "gold": 24,
+      "read": 27,
+      "typer_tp": 20,
+      "typer_np": 23,
+      "n_gold_spans": 24,
+      "orac_tp": 20,
+      "orac_np": 26,
+      "right_head": 19,
+      "wrong_head": 3,
+      "false_fill": 5,
+      "missed": 2,
+      "f1_typer": 0.851063829787234,
+      "f1_reader_oracle": 0.8,
+      "competition": 0.0042643923240938165
+     },
+     "city": {
+      "gold": 38,
+      "read": 35,
+      "typer_tp": 31,
+      "typer_np": 35,
+      "n_gold_spans": 38,
+      "orac_tp": 30,
+      "orac_np": 35,
+      "right_head": 29,
+      "missed": 7,
+      "false_fill": 4,
+      "wrong_head": 2,
+      "f1_typer": 0.8493150684931506,
+      "f1_reader_oracle": 0.821917808219178,
+      "competition": 0.0025
+     },
+     "condition_description": {
+      "gold": 22,
+      "read": 18,
+      "typer_tp": 20,
+      "typer_np": 20,
+      "n_gold_spans": 22,
+      "orac_tp": 18,
+      "orac_np": 18,
+      "right_head": 18,
+      "missed": 4,
+      "f1_typer": 0.9523809523809523,
+      "f1_reader_oracle": 0.9,
+      "competition": 0.0
+     },
+     "condition_temperature": {
+      "gold": 21,
+      "read": 21,
+      "typer_tp": 20,
+      "typer_np": 20,
+      "n_gold_spans": 21,
+      "orac_tp": 21,
+      "orac_np": 21,
+      "right_head": 21,
+      "f1_typer": 0.975609756097561,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "state": {
+      "gold": 26,
+      "read": 32,
+      "typer_tp": 23,
+      "typer_np": 25,
+      "n_gold_spans": 26,
+      "orac_tp": 21,
+      "orac_np": 24,
+      "false_fill": 8,
+      "right_head": 24,
+      "missed": 2,
+      "f1_typer": 0.9019607843137255,
+      "f1_reader_oracle": 0.84,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "in",
+      69
+     ],
+     [
+      "forecast",
+      30
+     ],
+     [
+      "from",
+      12
+     ],
+     [
+      "and",
+      10
+     ],
+     [
+      "what's",
+      8
+     ],
+     [
+      "me",
+      7
+     ],
+     [
+      "national",
+      7
+     ],
+     [
+      "there",
+      6
+     ],
+     [
+      "state",
+      5
+     ],
+     [
+      "tell",
+      5
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "PlayMusic": {
+    "n": 100,
+    "dispatch": 0.96,
+    "f1_typer": 0.8019559902200489,
+    "f1_reader_dispatched": 0.7658536585365854,
+    "f1_reader_oracle": 0.7737226277372263,
+    "questions": {
+     "playlist": {
+      "gold": 9,
+      "read": 17,
+      "false_fill": 10,
+      "typer_tp": 4,
+      "typer_np": 7,
+      "n_gold_spans": 9,
+      "orac_tp": 1,
+      "orac_np": 9,
+      "right_head": 4,
+      "missed": 2,
+      "wrong_head": 3,
+      "f1_typer": 0.5,
+      "f1_reader_oracle": 0.1111111111111111,
+      "competition": 0.0072992700729927005
+     },
+     "sort": {
+      "gold": 17,
+      "read": 23,
+      "false_fill": 9,
+      "typer_tp": 12,
+      "typer_np": 13,
+      "n_gold_spans": 17,
+      "orac_tp": 13,
+      "orac_np": 15,
+      "right_head": 12,
+      "wrong_head": 2,
+      "missed": 3,
+      "f1_typer": 0.8,
+      "f1_reader_oracle": 0.8125,
+      "competition": 0.014970059880239521
+     },
+     "artist": {
+      "gold": 63,
+      "read": 65,
+      "right_head": 54,
+      "typer_tp": 55,
+      "typer_np": 67,
+      "n_gold_spans": 63,
+      "orac_tp": 52,
+      "orac_np": 61,
+      "missed": 6,
+      "wrong_head": 3,
+      "false_fill": 8,
+      "f1_typer": 0.8461538461538461,
+      "f1_reader_oracle": 0.8387096774193549,
+      "competition": 0.007123775601068566
+     },
+     "service": {
+      "gold": 39,
+      "read": 41,
+      "typer_tp": 38,
+      "typer_np": 38,
+      "n_gold_spans": 39,
+      "orac_tp": 38,
+      "orac_np": 41,
+      "right_head": 37,
+      "wrong_head": 2,
+      "false_fill": 2,
+      "f1_typer": 0.987012987012987,
+      "f1_reader_oracle": 0.95,
+      "competition": 0.008287292817679558
+     },
+     "track": {
+      "gold": 6,
+      "read": 18,
+      "false_fill": 15,
+      "typer_tp": 2,
+      "typer_np": 7,
+      "n_gold_spans": 6,
+      "orac_tp": 2,
+      "orac_np": 7,
+      "wrong_head": 2,
+      "missed": 3,
+      "right_head": 1,
+      "f1_typer": 0.3076923076923077,
+      "f1_reader_oracle": 0.3076923076923077,
+      "competition": 0.029556650246305417
+     },
+     "music_item": {
+      "gold": 31,
+      "read": 29,
+      "typer_tp": 28,
+      "typer_np": 28,
+      "n_gold_spans": 31,
+      "orac_tp": 27,
+      "orac_np": 28,
+      "right_head": 27,
+      "missed": 3,
+      "wrong_head": 1,
+      "false_fill": 1,
+      "f1_typer": 0.9491525423728814,
+      "f1_reader_oracle": 0.9152542372881356,
+      "competition": 0.0
+     },
+     "album": {
+      "gold": 13,
+      "read": 11,
+      "right_head": 3,
+      "typer_tp": 0,
+      "typer_np": 1,
+      "n_gold_spans": 13,
+      "orac_tp": 0,
+      "orac_np": 11,
+      "missed": 8,
+      "false_fill": 6,
+      "wrong_head": 2,
+      "f1_typer": 0.0,
+      "f1_reader_oracle": 0.0,
+      "competition": 0.012121212121212121
+     },
+     "year": {
+      "gold": 25,
+      "read": 28,
+      "typer_tp": 25,
+      "typer_np": 25,
+      "n_gold_spans": 25,
+      "orac_tp": 25,
+      "orac_np": 25,
+      "right_head": 25,
+      "false_fill": 3,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "genre": {
+      "gold": 3,
+      "read": 12,
+      "typer_tp": 0,
+      "typer_np": 1,
+      "n_gold_spans": 3,
+      "orac_tp": 1,
+      "orac_np": 8,
+      "false_fill": 10,
+      "wrong_head": 1,
+      "right_head": 1,
+      "missed": 1,
+      "f1_typer": 0.0,
+      "f1_reader_oracle": 0.18181818181818182,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "music",
+      18
+     ],
+     [
+      "please",
+      11
+     ],
+     [
+      "something",
+      10
+     ],
+     [
+      "hear",
+      9
+     ],
+     [
+      "i",
+      9
+     ],
+     [
+      "some",
+      8
+     ],
+     [
+      "and",
+      5
+     ],
+     [
+      "last",
+      4
+     ],
+     [
+      "an",
+      4
+     ],
+     [
+      "groove",
+      3
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "RateBook": {
+    "n": 100,
+    "dispatch": 0.99,
+    "f1_typer": 0.9645776566757494,
+    "f1_reader_dispatched": 0.9617486338797814,
+    "f1_reader_oracle": 0.9631650750341064,
+    "questions": {
+     "rating_unit": {
+      "gold": 61,
+      "read": 61,
+      "right_head": 61,
+      "typer_tp": 61,
+      "typer_np": 61,
+      "n_gold_spans": 61,
+      "orac_tp": 61,
+      "orac_np": 61,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0009416195856873823
+     },
+     "object_name": {
+      "gold": 51,
+      "read": 52,
+      "typer_tp": 41,
+      "typer_np": 49,
+      "n_gold_spans": 51,
+      "orac_tp": 43,
+      "orac_np": 52,
+      "right_head": 39,
+      "wrong_head": 12,
+      "false_fill": 1,
+      "f1_typer": 0.82,
+      "f1_reader_oracle": 0.8349514563106796,
+      "competition": 0.003246753246753247
+     },
+     "best_rating": {
+      "gold": 51,
+      "read": 51,
+      "right_head": 51,
+      "typer_tp": 51,
+      "typer_np": 51,
+      "n_gold_spans": 51,
+      "orac_tp": 51,
+      "orac_np": 51,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "object_select": {
+      "gold": 49,
+      "read": 48,
+      "right_head": 48,
+      "typer_tp": 46,
+      "typer_np": 48,
+      "n_gold_spans": 49,
+      "orac_tp": 46,
+      "orac_np": 48,
+      "missed": 1,
+      "f1_typer": 0.9484536082474226,
+      "f1_reader_oracle": 0.9484536082474226,
+      "competition": 0.0
+     },
+     "rating_value": {
+      "gold": 100,
+      "read": 100,
+      "right_head": 100,
+      "typer_tp": 100,
+      "typer_np": 100,
+      "n_gold_spans": 100,
+      "orac_tp": 100,
+      "orac_np": 100,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0010775862068965517
+     },
+     "object_type": {
+      "gold": 40,
+      "read": 42,
+      "right_head": 40,
+      "typer_tp": 40,
+      "typer_np": 40,
+      "n_gold_spans": 40,
+      "orac_tp": 40,
+      "orac_np": 42,
+      "false_fill": 2,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.975609756097561,
+      "competition": 0.0
+     },
+     "object_part_of_series_type": {
+      "gold": 15,
+      "read": 13,
+      "typer_tp": 15,
+      "typer_np": 15,
+      "n_gold_spans": 15,
+      "orac_tp": 12,
+      "orac_np": 12,
+      "right_head": 13,
+      "missed": 2,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8888888888888888,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "out",
+      42
+     ],
+     [
+      "rating",
+      11
+     ],
+     [
+      ":",
+      5
+     ],
+     [
+      "and",
+      5
+     ],
+     [
+      "score",
+      2
+     ],
+     [
+      "this",
+      2
+     ],
+     [
+      "wilco",
+      2
+     ],
+     [
+      "learning",
+      2
+     ],
+     [
+      "how",
+      2
+     ],
+     [
+      "twist",
+      1
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "SearchCreativeWork": {
+    "n": 100,
+    "dispatch": 0.97,
+    "f1_typer": 0.7665706051873199,
+    "f1_reader_dispatched": 0.7492625368731562,
+    "f1_reader_oracle": 0.7602339181286549,
+    "questions": {
+     "object_name": {
+      "gold": 100,
+      "read": 100,
+      "wrong_head": 29,
+      "typer_tp": 65,
+      "typer_np": 99,
+      "n_gold_spans": 100,
+      "orac_tp": 61,
+      "orac_np": 100,
+      "right_head": 71,
+      "f1_typer": 0.6532663316582915,
+      "f1_reader_oracle": 0.61,
+      "competition": 0.005933117583603021
+     },
+     "object_type": {
+      "gold": 73,
+      "read": 77,
+      "right_head": 71,
+      "typer_tp": 68,
+      "typer_np": 68,
+      "n_gold_spans": 73,
+      "orac_tp": 69,
+      "orac_np": 69,
+      "false_fill": 6,
+      "missed": 2,
+      "f1_typer": 0.9645390070921985,
+      "f1_reader_oracle": 0.971830985915493,
+      "competition": 0.007930785868781542
+     }
+    },
+    "unplaced_top": [
+     [
+      "the",
+      113
+     ],
+     [
+      "me",
+      41
+     ],
+     [
+      "please",
+      40
+     ],
+     [
+      "you",
+      24
+     ],
+     [
+      "look",
+      17
+     ],
+     [
+      "search",
+      17
+     ],
+     [
+      "of",
+      14
+     ],
+     [
+      "work",
+      13
+     ],
+     [
+      "tv",
+      12
+     ],
+     [
+      "get",
+      11
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "SearchScreeningEvent": {
+    "n": 100,
+    "dispatch": 0.89,
+    "f1_typer": 0.8794326241134752,
+    "f1_reader_dispatched": 0.7665847665847666,
+    "f1_reader_oracle": 0.7898734177215189,
+    "questions": {
+     "spatial_relation": {
+      "gold": 35,
+      "read": 31,
+      "typer_tp": 34,
+      "typer_np": 36,
+      "n_gold_spans": 35,
+      "orac_tp": 28,
+      "orac_np": 29,
+      "right_head": 31,
+      "missed": 4,
+      "f1_typer": 0.9577464788732394,
+      "f1_reader_oracle": 0.875,
+      "competition": 0.0
+     },
+     "location_name": {
+      "gold": 29,
+      "read": 32,
+      "typer_tp": 28,
+      "typer_np": 28,
+      "n_gold_spans": 29,
+      "orac_tp": 28,
+      "orac_np": 32,
+      "false_fill": 4,
+      "right_head": 28,
+      "missed": 1,
+      "f1_typer": 0.9824561403508771,
+      "f1_reader_oracle": 0.9180327868852459,
+      "competition": 0.0
+     },
+     "timeRange": {
+      "gold": 12,
+      "read": 21,
+      "false_fill": 12,
+      "typer_tp": 11,
+      "typer_np": 11,
+      "n_gold_spans": 12,
+      "orac_tp": 8,
+      "orac_np": 11,
+      "right_head": 9,
+      "missed": 3,
+      "f1_typer": 0.9565217391304348,
+      "f1_reader_oracle": 0.6956521739130435,
+      "competition": 0.007905138339920948
+     },
+     "object_type": {
+      "gold": 43,
+      "read": 40,
+      "typer_tp": 41,
+      "typer_np": 41,
+      "n_gold_spans": 43,
+      "orac_tp": 34,
+      "orac_np": 34,
+      "right_head": 39,
+      "missed": 3,
+      "wrong_head": 1,
+      "f1_typer": 0.9761904761904762,
+      "f1_reader_oracle": 0.8831168831168831,
+      "competition": 0.0013698630136986301
+     },
+     "movie_type": {
+      "gold": 24,
+      "read": 28,
+      "typer_tp": 24,
+      "typer_np": 24,
+      "n_gold_spans": 24,
+      "orac_tp": 23,
+      "orac_np": 28,
+      "right_head": 23,
+      "false_fill": 5,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8846153846153846,
+      "competition": 0.0015037593984962407
+     },
+     "movie_name": {
+      "gold": 49,
+      "read": 36,
+      "right_head": 24,
+      "typer_tp": 28,
+      "typer_np": 38,
+      "n_gold_spans": 49,
+      "orac_tp": 21,
+      "orac_np": 35,
+      "missed": 15,
+      "wrong_head": 10,
+      "false_fill": 2,
+      "f1_typer": 0.6436781609195402,
+      "f1_reader_oracle": 0.5,
+      "competition": 0.0038910505836575876
+     },
+     "object_location_type": {
+      "gold": 20,
+      "read": 15,
+      "typer_tp": 20,
+      "typer_np": 20,
+      "n_gold_spans": 20,
+      "orac_tp": 14,
+      "orac_np": 14,
+      "right_head": 15,
+      "missed": 5,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8235294117647058,
+      "competition": 0.002242152466367713
+     }
+    },
+    "unplaced_top": [
+     [
+      "movie",
+      37
+     ],
+     [
+      "playing",
+      20
+     ],
+     [
+      "are",
+      15
+     ],
+     [
+      "showing",
+      14
+     ],
+     [
+      "see",
+      13
+     ],
+     [
+      "me",
+      11
+     ],
+     [
+      "animated",
+      9
+     ],
+     [
+      "close",
+      7
+     ],
+     [
+      "need",
+      5
+     ],
+     [
+      ":",
+      4
+     ]
+    ],
+    "presence_queries": {}
+   }
+  },
+  "dev_rep": {
+   "AddToPlaylist": {
+    "n": 50,
+    "dispatch": 1.0,
+    "f1_typer": 0.8571428571428571,
+    "f1_reader_dispatched": 0.8581818181818183,
+    "f1_reader_oracle": 0.8581818181818183,
+    "questions": {
+     "playlist": {
+      "gold": 50,
+      "read": 50,
+      "right_head": 47,
+      "typer_tp": 42,
+      "typer_np": 49,
+      "n_gold_spans": 50,
+      "orac_tp": 39,
+      "orac_np": 43,
+      "wrong_head": 3,
+      "f1_typer": 0.8484848484848485,
+      "f1_reader_oracle": 0.8387096774193549,
+      "competition": 0.023887079261672096
+     },
+     "playlist_owner": {
+      "gold": 32,
+      "read": 32,
+      "right_head": 32,
+      "typer_tp": 31,
+      "typer_np": 31,
+      "n_gold_spans": 32,
+      "orac_tp": 32,
+      "orac_np": 32,
+      "f1_typer": 0.9841269841269841,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0009560229445506692
+     },
+     "artist": {
+      "gold": 20,
+      "read": 28,
+      "right_head": 20,
+      "typer_tp": 19,
+      "typer_np": 25,
+      "n_gold_spans": 20,
+      "orac_tp": 20,
+      "orac_np": 28,
+      "false_fill": 8,
+      "f1_typer": 0.8444444444444444,
+      "f1_reader_oracle": 0.8333333333333334,
+      "competition": 0.005698005698005698
+     },
+     "entity_name": {
+      "gold": 16,
+      "read": 10,
+      "typer_tp": 6,
+      "typer_np": 9,
+      "n_gold_spans": 16,
+      "orac_tp": 5,
+      "orac_np": 10,
+      "right_head": 3,
+      "missed": 6,
+      "wrong_head": 7,
+      "f1_typer": 0.48,
+      "f1_reader_oracle": 0.38461538461538464,
+      "competition": 0.06172839506172839
+     },
+     "music_item": {
+      "gold": 22,
+      "read": 22,
+      "typer_tp": 22,
+      "typer_np": 22,
+      "n_gold_spans": 22,
+      "orac_tp": 22,
+      "orac_np": 22,
+      "right_head": 22,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0047789725209080045
+     }
+    },
+    "unplaced_top": [
+     [
+      "playlist",
+      32
+     ],
+     [
+      "this",
+      12
+     ],
+     [
+      "is",
+      5
+     ],
+     [
+      "in",
+      4
+     ],
+     [
+      "put",
+      3
+     ],
+     [
+      "women",
+      3
+     ],
+     [
+      "pop",
+      3
+     ],
+     [
+      "i",
+      3
+     ],
+     [
+      "want",
+      3
+     ],
+     [
+      "garrix",
+      2
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "BookRestaurant": {
+    "n": 50,
+    "dispatch": 1.0,
+    "f1_typer": 0.9003021148036255,
+    "f1_reader_dispatched": 0.7484276729559748,
+    "f1_reader_oracle": 0.7484276729559748,
+    "questions": {
+     "cuisine": {
+      "gold": 5,
+      "read": 9,
+      "right_head": 3,
+      "typer_tp": 4,
+      "typer_np": 4,
+      "n_gold_spans": 5,
+      "orac_tp": 3,
+      "orac_np": 7,
+      "false_fill": 6,
+      "missed": 2,
+      "f1_typer": 0.8888888888888888,
+      "f1_reader_oracle": 0.5,
+      "competition": 0.004975124378109453
+     },
+     "spatial_relation": {
+      "gold": 9,
+      "read": 7,
+      "typer_tp": 8,
+      "typer_np": 8,
+      "n_gold_spans": 9,
+      "orac_tp": 6,
+      "orac_np": 6,
+      "right_head": 7,
+      "missed": 2,
+      "f1_typer": 0.9411764705882353,
+      "f1_reader_oracle": 0.8,
+      "competition": 0.020066889632107024
+     },
+     "party_size_description": {
+      "gold": 13,
+      "read": 11,
+      "wrong_head": 2,
+      "typer_tp": 13,
+      "typer_np": 13,
+      "n_gold_spans": 13,
+      "orac_tp": 5,
+      "orac_np": 6,
+      "right_head": 8,
+      "false_fill": 1,
+      "missed": 3,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.5263157894736842,
+      "competition": 0.003355704697986577
+     },
+     "country": {
+      "gold": 9,
+      "read": 8,
+      "typer_tp": 9,
+      "typer_np": 10,
+      "n_gold_spans": 9,
+      "orac_tp": 7,
+      "orac_np": 7,
+      "missed": 1,
+      "right_head": 6,
+      "wrong_head": 2,
+      "f1_typer": 0.9473684210526315,
+      "f1_reader_oracle": 0.875,
+      "competition": 0.005917159763313609
+     },
+     "sort": {
+      "gold": 4,
+      "read": 6,
+      "typer_tp": 4,
+      "typer_np": 4,
+      "n_gold_spans": 4,
+      "orac_tp": 4,
+      "orac_np": 6,
+      "right_head": 4,
+      "false_fill": 2,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8,
+      "competition": 0.010416666666666666
+     },
+     "timeRange": {
+      "gold": 18,
+      "read": 20,
+      "typer_tp": 17,
+      "typer_np": 19,
+      "n_gold_spans": 18,
+      "orac_tp": 12,
+      "orac_np": 13,
+      "right_head": 13,
+      "wrong_head": 4,
+      "missed": 1,
+      "false_fill": 3,
+      "f1_typer": 0.918918918918919,
+      "f1_reader_oracle": 0.7741935483870968,
+      "competition": 0.00625
+     },
+     "city": {
+      "gold": 15,
+      "read": 21,
+      "typer_tp": 12,
+      "typer_np": 14,
+      "n_gold_spans": 15,
+      "orac_tp": 11,
+      "orac_np": 21,
+      "right_head": 10,
+      "false_fill": 9,
+      "missed": 3,
+      "wrong_head": 2,
+      "f1_typer": 0.8275862068965517,
+      "f1_reader_oracle": 0.6111111111111112,
+      "competition": 0.010330578512396695
+     },
+     "restaurant_name": {
+      "gold": 12,
+      "read": 9,
+      "typer_tp": 7,
+      "typer_np": 8,
+      "n_gold_spans": 12,
+      "orac_tp": 6,
+      "orac_np": 7,
+      "missed": 3,
+      "right_head": 7,
+      "wrong_head": 2,
+      "f1_typer": 0.7,
+      "f1_reader_oracle": 0.631578947368421,
+      "competition": 0.031545741324921134
+     },
+     "served_dish": {
+      "gold": 6,
+      "read": 11,
+      "typer_tp": 5,
+      "typer_np": 6,
+      "n_gold_spans": 6,
+      "orac_tp": 3,
+      "orac_np": 8,
+      "false_fill": 6,
+      "right_head": 4,
+      "wrong_head": 1,
+      "missed": 1,
+      "f1_typer": 0.8333333333333334,
+      "f1_reader_oracle": 0.42857142857142855,
+      "competition": 0.011538461538461539
+     },
+     "party_size_number": {
+      "gold": 24,
+      "read": 23,
+      "typer_tp": 24,
+      "typer_np": 25,
+      "n_gold_spans": 24,
+      "orac_tp": 20,
+      "orac_np": 22,
+      "false_fill": 1,
+      "missed": 2,
+      "right_head": 20,
+      "wrong_head": 2,
+      "f1_typer": 0.9795918367346939,
+      "f1_reader_oracle": 0.8695652173913043,
+      "competition": 0.0030706243602865915
+     },
+     "restaurant_type": {
+      "gold": 29,
+      "read": 30,
+      "right_head": 29,
+      "typer_tp": 29,
+      "typer_np": 30,
+      "n_gold_spans": 29,
+      "orac_tp": 29,
+      "orac_np": 30,
+      "false_fill": 1,
+      "f1_typer": 0.9830508474576272,
+      "f1_reader_oracle": 0.9830508474576272,
+      "competition": 0.005451713395638629
+     },
+     "facility": {
+      "gold": 3,
+      "read": 2,
+      "typer_tp": 3,
+      "typer_np": 3,
+      "n_gold_spans": 3,
+      "orac_tp": 2,
+      "orac_np": 2,
+      "right_head": 2,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8,
+      "competition": 0.0
+     },
+     "poi": {
+      "gold": 2,
+      "read": 5,
+      "typer_tp": 1,
+      "typer_np": 2,
+      "n_gold_spans": 2,
+      "orac_tp": 0,
+      "orac_np": 4,
+      "false_fill": 4,
+      "right_head": 1,
+      "missed": 1,
+      "f1_typer": 0.5,
+      "f1_reader_oracle": 0.0,
+      "competition": 0.06474820143884892
+     },
+     "state": {
+      "gold": 15,
+      "read": 18,
+      "right_head": 12,
+      "typer_tp": 13,
+      "typer_np": 15,
+      "n_gold_spans": 15,
+      "orac_tp": 11,
+      "orac_np": 15,
+      "false_fill": 5,
+      "missed": 2,
+      "wrong_head": 1,
+      "f1_typer": 0.8666666666666667,
+      "f1_reader_oracle": 0.7333333333333333,
+      "competition": 0.002053388090349076
+     }
+    },
+    "unplaced_top": [
+     [
+      "in",
+      35
+     ],
+     [
+      "and",
+      16
+     ],
+     [
+      "i",
+      14
+     ],
+     [
+      "me",
+      9
+     ],
+     [
+      "table",
+      9
+     ],
+     [
+      "need",
+      6
+     ],
+     [
+      "that",
+      5
+     ],
+     [
+      "spot",
+      5
+     ],
+     [
+      "people",
+      5
+     ],
+     [
+      "reservation",
+      5
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "GetWeather": {
+    "n": 50,
+    "dispatch": 0.92,
+    "f1_typer": 0.8806584362139918,
+    "f1_reader_dispatched": 0.8403361344537815,
+    "f1_reader_oracle": 0.8583333333333333,
+    "questions": {
+     "geographic_poi": {
+      "gold": 3,
+      "read": 5,
+      "typer_tp": 3,
+      "typer_np": 3,
+      "n_gold_spans": 3,
+      "orac_tp": 3,
+      "orac_np": 4,
+      "right_head": 3,
+      "false_fill": 2,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8571428571428571,
+      "competition": 0.0035587188612099642
+     },
+     "spatial_relation": {
+      "gold": 7,
+      "read": 6,
+      "typer_tp": 5,
+      "typer_np": 6,
+      "n_gold_spans": 7,
+      "orac_tp": 3,
+      "orac_np": 6,
+      "missed": 3,
+      "false_fill": 2,
+      "right_head": 4,
+      "f1_typer": 0.7692307692307693,
+      "f1_reader_oracle": 0.46153846153846156,
+      "competition": 0.005128205128205128
+     },
+     "timeRange": {
+      "gold": 27,
+      "read": 26,
+      "typer_tp": 23,
+      "typer_np": 25,
+      "n_gold_spans": 27,
+      "orac_tp": 22,
+      "orac_np": 23,
+      "right_head": 24,
+      "missed": 2,
+      "wrong_head": 1,
+      "false_fill": 1,
+      "f1_typer": 0.8846153846153846,
+      "f1_reader_oracle": 0.88,
+      "competition": 0.0
+     },
+     "current_location": {
+      "gold": 8,
+      "read": 9,
+      "typer_tp": 7,
+      "typer_np": 7,
+      "n_gold_spans": 8,
+      "orac_tp": 7,
+      "orac_np": 8,
+      "right_head": 8,
+      "false_fill": 1,
+      "f1_typer": 0.9333333333333333,
+      "f1_reader_oracle": 0.875,
+      "competition": 0.0
+     },
+     "country": {
+      "gold": 14,
+      "read": 17,
+      "typer_tp": 13,
+      "typer_np": 15,
+      "n_gold_spans": 14,
+      "orac_tp": 14,
+      "orac_np": 17,
+      "right_head": 14,
+      "false_fill": 3,
+      "f1_typer": 0.896551724137931,
+      "f1_reader_oracle": 0.9032258064516129,
+      "competition": 0.0042643923240938165
+     },
+     "city": {
+      "gold": 28,
+      "read": 23,
+      "right_head": 19,
+      "typer_tp": 22,
+      "typer_np": 22,
+      "n_gold_spans": 28,
+      "orac_tp": 21,
+      "orac_np": 23,
+      "wrong_head": 3,
+      "missed": 6,
+      "false_fill": 1,
+      "f1_typer": 0.88,
+      "f1_reader_oracle": 0.8235294117647058,
+      "competition": 0.0025
+     },
+     "condition_description": {
+      "gold": 13,
+      "read": 13,
+      "typer_tp": 13,
+      "typer_np": 13,
+      "n_gold_spans": 13,
+      "orac_tp": 13,
+      "orac_np": 13,
+      "right_head": 13,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "condition_temperature": {
+      "gold": 10,
+      "read": 10,
+      "typer_tp": 9,
+      "typer_np": 9,
+      "n_gold_spans": 10,
+      "orac_tp": 10,
+      "orac_np": 10,
+      "right_head": 10,
+      "f1_typer": 0.9473684210526315,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "state": {
+      "gold": 13,
+      "read": 18,
+      "typer_tp": 12,
+      "typer_np": 13,
+      "n_gold_spans": 13,
+      "orac_tp": 10,
+      "orac_np": 13,
+      "right_head": 11,
+      "false_fill": 7,
+      "missed": 2,
+      "f1_typer": 0.9230769230769231,
+      "f1_reader_oracle": 0.7692307692307693,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "in",
+      39
+     ],
+     [
+      "forecast",
+      13
+     ],
+     [
+      "what's",
+      10
+     ],
+     [
+      "from",
+      5
+     ],
+     [
+      "how",
+      4
+     ],
+     [
+      "1",
+      4
+     ],
+     [
+      "there",
+      4
+     ],
+     [
+      "me",
+      4
+     ],
+     [
+      "going",
+      4
+     ],
+     [
+      "national",
+      3
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "PlayMusic": {
+    "n": 50,
+    "dispatch": 0.98,
+    "f1_typer": 0.8773584905660378,
+    "f1_reader_dispatched": 0.8041237113402062,
+    "f1_reader_oracle": 0.8080808080808081,
+    "questions": {
+     "playlist": {
+      "gold": 7,
+      "read": 5,
+      "right_head": 4,
+      "typer_tp": 5,
+      "typer_np": 5,
+      "n_gold_spans": 7,
+      "orac_tp": 2,
+      "orac_np": 2,
+      "false_fill": 1,
+      "missed": 3,
+      "f1_typer": 0.8333333333333334,
+      "f1_reader_oracle": 0.4444444444444444,
+      "competition": 0.0072992700729927005
+     },
+     "sort": {
+      "gold": 7,
+      "read": 7,
+      "false_fill": 1,
+      "typer_tp": 7,
+      "typer_np": 7,
+      "n_gold_spans": 7,
+      "orac_tp": 6,
+      "orac_np": 6,
+      "missed": 1,
+      "right_head": 5,
+      "wrong_head": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9230769230769231,
+      "competition": 0.014970059880239521
+     },
+     "artist": {
+      "gold": 28,
+      "read": 26,
+      "typer_tp": 26,
+      "typer_np": 30,
+      "n_gold_spans": 28,
+      "orac_tp": 24,
+      "orac_np": 26,
+      "false_fill": 1,
+      "right_head": 24,
+      "missed": 3,
+      "wrong_head": 1,
+      "f1_typer": 0.896551724137931,
+      "f1_reader_oracle": 0.8888888888888888,
+      "competition": 0.007123775601068566
+     },
+     "service": {
+      "gold": 20,
+      "read": 19,
+      "typer_tp": 20,
+      "typer_np": 20,
+      "n_gold_spans": 20,
+      "orac_tp": 17,
+      "orac_np": 19,
+      "right_head": 19,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8717948717948718,
+      "competition": 0.008287292817679558
+     },
+     "track": {
+      "gold": 3,
+      "read": 4,
+      "typer_tp": 0,
+      "typer_np": 2,
+      "n_gold_spans": 3,
+      "orac_tp": 0,
+      "orac_np": 2,
+      "missed": 1,
+      "false_fill": 2,
+      "right_head": 2,
+      "f1_typer": 0.0,
+      "f1_reader_oracle": 0.0,
+      "competition": 0.029556650246305417
+     },
+     "music_item": {
+      "gold": 17,
+      "read": 15,
+      "false_fill": 2,
+      "typer_tp": 15,
+      "typer_np": 15,
+      "n_gold_spans": 17,
+      "orac_tp": 12,
+      "orac_np": 14,
+      "right_head": 13,
+      "missed": 4,
+      "f1_typer": 0.9375,
+      "f1_reader_oracle": 0.7741935483870968,
+      "competition": 0.0
+     },
+     "album": {
+      "gold": 6,
+      "read": 4,
+      "typer_tp": 3,
+      "typer_np": 4,
+      "n_gold_spans": 6,
+      "orac_tp": 2,
+      "orac_np": 4,
+      "false_fill": 2,
+      "missed": 4,
+      "right_head": 2,
+      "f1_typer": 0.6,
+      "f1_reader_oracle": 0.4,
+      "competition": 0.012121212121212121
+     },
+     "year": {
+      "gold": 15,
+      "read": 15,
+      "false_fill": 1,
+      "typer_tp": 15,
+      "typer_np": 15,
+      "n_gold_spans": 15,
+      "orac_tp": 14,
+      "orac_np": 14,
+      "right_head": 14,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9655172413793104,
+      "competition": 0.0
+     },
+     "genre": {
+      "gold": 3,
+      "read": 6,
+      "typer_tp": 2,
+      "typer_np": 3,
+      "n_gold_spans": 3,
+      "orac_tp": 3,
+      "orac_np": 5,
+      "false_fill": 3,
+      "right_head": 3,
+      "f1_typer": 0.6666666666666666,
+      "f1_reader_oracle": 0.75,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "music",
+      14
+     ],
+     [
+      "some",
+      10
+     ],
+     [
+      "me",
+      6
+     ],
+     [
+      "and",
+      5
+     ],
+     [
+      "open",
+      4
+     ],
+     [
+      "tunes",
+      3
+     ],
+     [
+      "i",
+      2
+     ],
+     [
+      "hear",
+      2
+     ],
+     [
+      "google",
+      2
+     ],
+     [
+      "goodbye",
+      2
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "RateBook": {
+    "n": 50,
+    "dispatch": 0.96,
+    "f1_typer": 0.9396325459317585,
+    "f1_reader_dispatched": 0.9268292682926829,
+    "f1_reader_oracle": 0.9411764705882354,
+    "questions": {
+     "rating_unit": {
+      "gold": 28,
+      "read": 28,
+      "typer_tp": 28,
+      "typer_np": 28,
+      "n_gold_spans": 28,
+      "orac_tp": 28,
+      "orac_np": 28,
+      "right_head": 28,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0009416195856873823
+     },
+     "object_name": {
+      "gold": 23,
+      "read": 22,
+      "typer_tp": 14,
+      "typer_np": 22,
+      "n_gold_spans": 23,
+      "orac_tp": 14,
+      "orac_np": 22,
+      "right_head": 16,
+      "missed": 1,
+      "wrong_head": 6,
+      "f1_typer": 0.6222222222222222,
+      "f1_reader_oracle": 0.6222222222222222,
+      "competition": 0.003246753246753247
+     },
+     "best_rating": {
+      "gold": 30,
+      "read": 30,
+      "typer_tp": 30,
+      "typer_np": 30,
+      "n_gold_spans": 30,
+      "orac_tp": 30,
+      "orac_np": 30,
+      "right_head": 30,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "object_select": {
+      "gold": 27,
+      "read": 27,
+      "right_head": 27,
+      "typer_tp": 27,
+      "typer_np": 27,
+      "n_gold_spans": 27,
+      "orac_tp": 27,
+      "orac_np": 27,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "rating_value": {
+      "gold": 50,
+      "read": 50,
+      "right_head": 49,
+      "typer_tp": 50,
+      "typer_np": 50,
+      "n_gold_spans": 50,
+      "orac_tp": 48,
+      "orac_np": 48,
+      "wrong_head": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9795918367346939,
+      "competition": 0.0010775862068965517
+     },
+     "object_type": {
+      "gold": 20,
+      "read": 22,
+      "right_head": 19,
+      "typer_tp": 20,
+      "typer_np": 21,
+      "n_gold_spans": 20,
+      "orac_tp": 20,
+      "orac_np": 21,
+      "false_fill": 2,
+      "wrong_head": 1,
+      "f1_typer": 0.975609756097561,
+      "f1_reader_oracle": 0.975609756097561,
+      "competition": 0.0
+     },
+     "object_part_of_series_type": {
+      "gold": 11,
+      "read": 9,
+      "typer_tp": 10,
+      "typer_np": 10,
+      "n_gold_spans": 11,
+      "orac_tp": 9,
+      "orac_np": 9,
+      "right_head": 9,
+      "missed": 2,
+      "f1_typer": 0.9523809523809523,
+      "f1_reader_oracle": 0.9,
+      "competition": 0.0
+     }
+    },
+    "unplaced_top": [
+     [
+      "out",
+      18
+     ],
+     [
+      "i",
+      14
+     ],
+     [
+      "and",
+      8
+     ],
+     [
+      "rating",
+      7
+     ],
+     [
+      "gets",
+      3
+     ],
+     [
+      "best",
+      2
+     ],
+     [
+      "my",
+      2
+     ],
+     [
+      "would",
+      2
+     ],
+     [
+      ":",
+      2
+     ],
+     [
+      "am",
+      2
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "SearchCreativeWork": {
+    "n": 50,
+    "dispatch": 0.96,
+    "f1_typer": 0.8156424581005587,
+    "f1_reader_dispatched": 0.761904761904762,
+    "f1_reader_oracle": 0.7738095238095237,
+    "questions": {
+     "object_name": {
+      "gold": 50,
+      "read": 50,
+      "wrong_head": 13,
+      "typer_tp": 35,
+      "typer_np": 48,
+      "n_gold_spans": 50,
+      "orac_tp": 36,
+      "orac_np": 50,
+      "right_head": 37,
+      "f1_typer": 0.7142857142857143,
+      "f1_reader_oracle": 0.72,
+      "competition": 0.005933117583603021
+     },
+     "object_type": {
+      "gold": 38,
+      "read": 31,
+      "right_head": 29,
+      "typer_tp": 38,
+      "typer_np": 38,
+      "n_gold_spans": 38,
+      "orac_tp": 29,
+      "orac_np": 30,
+      "wrong_head": 1,
+      "missed": 8,
+      "false_fill": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8529411764705882,
+      "competition": 0.007930785868781542
+     }
+    },
+    "unplaced_top": [
+     [
+      "the",
+      42
+     ],
+     [
+      "a",
+      13
+     ],
+     [
+      "of",
+      11
+     ],
+     [
+      "called",
+      11
+     ],
+     [
+      "me",
+      9
+     ],
+     [
+      "tv",
+      8
+     ],
+     [
+      "show",
+      6
+     ],
+     [
+      "saga",
+      4
+     ],
+     [
+      ":",
+      4
+     ],
+     [
+      "where",
+      4
+     ]
+    ],
+    "presence_queries": {}
+   },
+   "SearchScreeningEvent": {
+    "n": 50,
+    "dispatch": 0.94,
+    "f1_typer": 0.8878504672897196,
+    "f1_reader_dispatched": 0.8653846153846154,
+    "f1_reader_oracle": 0.8823529411764707,
+    "questions": {
+     "spatial_relation": {
+      "gold": 17,
+      "read": 16,
+      "typer_tp": 17,
+      "typer_np": 17,
+      "n_gold_spans": 17,
+      "orac_tp": 16,
+      "orac_np": 16,
+      "right_head": 16,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.9696969696969697,
+      "competition": 0.0
+     },
+     "location_name": {
+      "gold": 15,
+      "read": 15,
+      "typer_tp": 15,
+      "typer_np": 15,
+      "n_gold_spans": 15,
+      "orac_tp": 15,
+      "orac_np": 15,
+      "right_head": 15,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 1.0,
+      "competition": 0.0
+     },
+     "timeRange": {
+      "gold": 4,
+      "read": 8,
+      "typer_tp": 4,
+      "typer_np": 4,
+      "n_gold_spans": 4,
+      "orac_tp": 4,
+      "orac_np": 5,
+      "right_head": 4,
+      "false_fill": 4,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8888888888888888,
+      "competition": 0.007905138339920948
+     },
+     "object_type": {
+      "gold": 22,
+      "read": 24,
+      "typer_tp": 21,
+      "typer_np": 22,
+      "n_gold_spans": 22,
+      "orac_tp": 21,
+      "orac_np": 22,
+      "right_head": 22,
+      "false_fill": 2,
+      "f1_typer": 0.9545454545454546,
+      "f1_reader_oracle": 0.9545454545454546,
+      "competition": 0.0013698630136986301
+     },
+     "movie_type": {
+      "gold": 18,
+      "read": 19,
+      "typer_tp": 18,
+      "typer_np": 18,
+      "n_gold_spans": 18,
+      "orac_tp": 17,
+      "orac_np": 19,
+      "right_head": 17,
+      "false_fill": 2,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.918918918918919,
+      "competition": 0.0015037593984962407
+     },
+     "movie_name": {
+      "gold": 16,
+      "read": 14,
+      "right_head": 10,
+      "typer_tp": 8,
+      "typer_np": 16,
+      "n_gold_spans": 16,
+      "orac_tp": 8,
+      "orac_np": 14,
+      "wrong_head": 3,
+      "missed": 3,
+      "false_fill": 1,
+      "f1_typer": 0.5,
+      "f1_reader_oracle": 0.5333333333333333,
+      "competition": 0.0038910505836575876
+     },
+     "object_location_type": {
+      "gold": 12,
+      "read": 11,
+      "typer_tp": 12,
+      "typer_np": 12,
+      "n_gold_spans": 12,
+      "orac_tp": 9,
+      "orac_np": 9,
+      "right_head": 11,
+      "missed": 1,
+      "f1_typer": 1.0,
+      "f1_reader_oracle": 0.8571428571428571,
+      "competition": 0.002242152466367713
+     }
+    },
+    "unplaced_top": [
+     [
+      "movie",
+      26
+     ],
+     [
+      "playing",
+      13
+     ],
+     [
+      "are",
+      10
+     ],
+     [
+      "me",
+      9
+     ],
+     [
+      "showing",
+      5
+     ],
+     [
+      "time",
+      4
+     ],
+     [
+      "animated",
+      4
+     ],
+     [
+      "that",
+      4
+     ],
+     [
+      "when",
+      3
+     ],
+     [
+      "see",
+      3
+     ]
+    ],
+    "presence_queries": {}
+   }
+  }
+ }
+}

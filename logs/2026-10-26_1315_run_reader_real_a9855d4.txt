@@ -1,0 +1,157 @@
+# 2026-10-26T13:15:35+01:00  commit=a9855d4  cmd: python3 vss/run_reader_real.py --dataset snips --sizes full --seeds 1 --seed_start 2 --test --epochs 10 --kinds typer --worlds per_intent --world_kinds all --dispatch residual --D 512 --intent_anchor --negatives  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 62 GB; slot logs/.run.lock.5 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_real: main repository e531283; dataset snips / condition base; device cuda; D 512; batch 32; lr 0.02; sizes ['full'], epochs {'full': 10}; seeds 1; train 13084, dev calibration 350; eval dev_rep 350, dev_rep:new_slot_values 96, dev_rep:unseen_template 174, test 700, test:new_slot_values 207, test:unseen_template 402
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+[R72] 7 worlds (one per intent): ['AddToPlaylist', 'BookRestaurant', 'GetWeather', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; D 512; routes path + chainL + bigram; decoder: sop @ 82585ea (residual explained)
+[R79] seed 2 world AddToPlaylist: core roles ['intent', 'playlist'], structure anchor core roles
+[train] seed 2: 1842 NEGATIVE examples among the 3684 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3684 training rows x 10 epoch(s) -> 36840 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: please add this rex griffin tune to the steampunk playlist
+[trace] tokens/kinds: please/O add/w:add this/w:this rex/S:artist griffin/S:artist tune/S:music_item to/w:to the/w:the steampunk/S:playlist playlist/w:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "griffin"], "intent": ["word", "AddToPlaylist"], "music_item": ["word", "tune"], "playlist": ["word", "steampunk"]}, "scope": null, "shape": "ok", "speakers": []}
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/sop/train.py:466: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
+[trace] target |S_world| = 65.47 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 1.65 GB | torch alloc 0.47 GB reserved 0.55 GB | MemAvailable 60.0 GB
+# post-launch guard (slots 8): MemAvailable 90 s after the start 51 GB
+[train seed 2] step 500 sent 16000/36840 loss -0.818 (371s) | RSS 2.76 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 45.8 GB
+[train seed 2] step 1000 sent 32000/36840 loss -0.856 (753s) | RSS 2.76 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 43.9 GB
+[train seed 2] end: RSS 2.75 GB | torch alloc 0.73 GB reserved 0.82 GB | MemAvailable 39.5 GB (870s)
+[export] numpy reader vs torch states: max relative difference 6.58e-08 (float32 phases in the route book)
+[R81] seed 2 world AddToPlaylist: 1842 positives, 1842 negatives; training 954.9 s (concurrent)
+[R72] seed 2 world AddToPlaylist: 1842 training utterances, 5 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world BookRestaurant: core roles ['intent'], structure anchor core roles
+[train] seed 2: 1873 NEGATIVE examples among the 3746 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3746 training rows x 10 epoch(s) -> 37460 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: find a game called an aerial joy ride .
+[trace] tokens/kinds: find/w:find a/w:a game/S:object_type called/O an/O aerial/S:object_name joy/S:object_name ride/S:playlist ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "BookRestaurant"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 30.59 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.37 GB | torch alloc 0.54 GB reserved 0.82 GB | MemAvailable 40.1 GB
+[train seed 2] step 500 sent 16000/37460 loss -0.783 (523s) | RSS 3.37 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 35.1 GB
+[train seed 2] step 1000 sent 32000/37460 loss -0.850 (1057s) | RSS 3.37 GB | torch alloc 0.73 GB reserved 3.39 GB | MemAvailable 35.1 GB
+[train seed 2] end: RSS 3.37 GB | torch alloc 0.73 GB reserved 0.78 GB | MemAvailable 39.4 GB (1254s)
+[export] numpy reader vs torch states: max relative difference 6.29e-08 (float32 phases in the route book)
+[R81] seed 2 world BookRestaurant: 1873 positives, 1873 negatives; training 1279.3 s (concurrent)
+[R72] seed 2 world BookRestaurant: 1873 training utterances, 14 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world GetWeather: core roles ['intent'], structure anchor core roles
+[train] seed 2: 1900 NEGATIVE examples among the 3800 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3800 training rows x 10 epoch(s) -> 38000 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: what will the weather be like in nickelsville
+[trace] tokens/kinds: what/w:what will/w:will the/w:the weather/w:weather be/w:be like/O in/w:in nickelsville/S:city
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"city": ["word", "nickelsville"], "intent": ["word", "GetWeather"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 47.03 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.70 GB | torch alloc 0.53 GB reserved 0.79 GB | MemAvailable 38.8 GB
+[train seed 2] step 500 sent 16000/38000 loss -0.897 (367s) | RSS 3.70 GB | torch alloc 0.73 GB reserved 2.23 GB | MemAvailable 36.1 GB
+[train seed 2] step 1000 sent 32000/38000 loss -0.876 (744s) | RSS 3.70 GB | torch alloc 0.73 GB reserved 2.23 GB | MemAvailable 38.0 GB
+[train seed 2] end: RSS 3.70 GB | torch alloc 0.73 GB reserved 0.78 GB | MemAvailable 37.9 GB (898s)
+[export] numpy reader vs torch states: max relative difference 5.68e-08 (float32 phases in the route book)
+[R81] seed 2 world GetWeather: 1900 positives, 1900 negatives; training 926.0 s (concurrent)
+[R72] seed 2 world GetWeather: 1900 training utterances, 9 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world PlayMusic: core roles ['intent'], structure anchor core roles
+[train] seed 2: 1900 NEGATIVE examples among the 3800 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3800 training rows x 10 epoch(s) -> 38000 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: play the most popular 1956 record .
+[trace] tokens/kinds: play/w:play the/w:the most/S:sort popular/S:sort 1956/S:year record/S:music_item ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "PlayMusic"], "music_item": ["word", "record"], "sort": ["word", "popular"], "year": ["word", "1956"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 61.91 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.52 GB | torch alloc 0.53 GB reserved 0.79 GB | MemAvailable 38.3 GB
+[train seed 2] step 500 sent 16000/38000 loss -0.903 (311s) | RSS 3.52 GB | torch alloc 0.73 GB reserved 2.23 GB | MemAvailable 38.2 GB
+[train seed 2] step 1000 sent 32000/38000 loss -0.850 (643s) | RSS 3.52 GB | torch alloc 0.73 GB reserved 2.23 GB | MemAvailable 37.5 GB
+[train seed 2] end: RSS 3.52 GB | torch alloc 0.73 GB reserved 0.80 GB | MemAvailable 40.1 GB (775s)
+[export] numpy reader vs torch states: max relative difference 6.88e-08 (float32 phases in the route book)
+[R81] seed 2 world PlayMusic: 1900 positives, 1900 negatives; training 811.5 s (concurrent)
+[R72] seed 2 world PlayMusic: 1900 training utterances, 9 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world RateBook: core roles ['intent', 'rating_value'], structure anchor core roles
+[train] seed 2: 1856 NEGATIVE examples among the 3712 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3712 training rows x 10 epoch(s) -> 37120 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: i want to give think like a freak one stars
+[trace] tokens/kinds: i/w:i want/w:want to/w:to give/w:give think/O like/O a/w:a freak/S:object_name one/S:rating_value stars/S:rating_unit
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "RateBook"], "object_name": ["word", "freak"], "rating_unit": ["word", "stars"], "rating_value": ["word", "one"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 62.61 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.72 GB | torch alloc 0.53 GB reserved 0.80 GB | MemAvailable 38.8 GB
+[train seed 2] step 500 sent 16000/37120 loss -0.850 (336s) | RSS 3.72 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 35.8 GB
+[train seed 2] step 1000 sent 32000/37120 loss -0.878 (666s) | RSS 3.72 GB | torch alloc 0.73 GB reserved 3.33 GB | MemAvailable 38.1 GB
+[train seed 2] end: RSS 3.72 GB | torch alloc 0.73 GB reserved 0.78 GB | MemAvailable 39.6 GB (766s)
+[export] numpy reader vs torch states: max relative difference 7.95e-08 (float32 phases in the route book)
+[R81] seed 2 world RateBook: 1856 positives, 1856 negatives; training 780.6 s (concurrent)
+[R72] seed 2 world RateBook: 1856 training utterances, 7 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world SearchCreativeWork: core roles ['intent', 'object_name'], structure anchor core roles
+[train] seed 2: 1854 NEGATIVE examples among the 3708 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3708 training rows x 10 epoch(s) -> 37080 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: will there be a snowstorm at my current place ?
+[trace] tokens/kinds: will/w:will there/O be/w:be a/w:a snowstorm/S:condition_description at/w:at my/S:playlist_owner current/S:object_select place/O ?/w:?
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "SearchCreativeWork"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 32.79 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.64 GB | torch alloc 0.53 GB reserved 0.79 GB | MemAvailable 37.4 GB
+[train seed 2] step 500 sent 16000/37080 loss -0.776 (244s) | RSS 3.64 GB | torch alloc 0.73 GB reserved 3.35 GB | MemAvailable 63.9 GB
+[train seed 2] step 1000 sent 32000/37080 loss -0.832 (429s) | RSS 3.64 GB | torch alloc 0.73 GB reserved 3.35 GB | MemAvailable 74.0 GB
+[train seed 2] end: RSS 3.64 GB | torch alloc 0.73 GB reserved 0.80 GB | MemAvailable 80.6 GB (472s)
+[export] numpy reader vs torch states: max relative difference 4.19e-08 (float32 phases in the route book)
+[R81] seed 2 world SearchCreativeWork: 1854 positives, 1854 negatives; training 553.9 s (concurrent)
+[R72] seed 2 world SearchCreativeWork: 1854 training utterances, 2 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[R79] seed 2 world SearchScreeningEvent: core roles ['intent'], structure anchor core roles
+[train] seed 2: 1859 NEGATIVE examples among the 3718 training rows (target = minus the anchor state; R81)
+[train] seed 2: 3718 training rows x 10 epoch(s) -> 37180 steps' sentences; D=512; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: what films and movie times are close by
+[trace] tokens/kinds: what/w:what films/S:movie_type and/S:party_size_description movie/S:object_type times/S:object_type are/O close/S:spatial_relation by/w:by
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "SearchScreeningEvent"], "movie_type": ["word", "films"], "object_type": ["word", "times"], "spatial_relation": ["word", "by"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 64.06 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.74 GB | torch alloc 0.53 GB reserved 0.80 GB | MemAvailable 80.1 GB
+[train seed 2] step 500 sent 16000/37180 loss -0.850 (100s) | RSS 3.74 GB | torch alloc 0.73 GB reserved 2.58 GB | MemAvailable 93.6 GB
+[train seed 2] step 1000 sent 32000/37180 loss -0.876 (156s) | RSS 3.74 GB | torch alloc 0.73 GB reserved 2.64 GB | MemAvailable 99.2 GB
+[train seed 2] end: RSS 3.74 GB | torch alloc 0.73 GB reserved 0.78 GB | MemAvailable 101.6 GB (165s)
+[export] numpy reader vs torch states: max relative difference 6.59e-08 (float32 phases in the route book)
+[R81] seed 2 world SearchScreeningEvent: 1859 positives, 1859 negatives; training 173.5 s (concurrent)
+[R72] seed 2 world SearchScreeningEvent: 1859 training utterances, 7 slot questions, 74 kinds, 8.72 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep (n 350): FULL 0.280 intent 0.403 slot heads 0.395 | frame tau 0.075: coverage 0.18 confident-wrong 0.063 | intent abstain 0.766 | span F1 0.524
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep:new_slot_values (n 96): FULL 0.208 intent 0.406 slot heads 0.352 new-value heads 0.320 (n 100) | frame tau 0.075: coverage 0.16 confident-wrong 0.094 | intent abstain 0.750 | span F1 0.463
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | dev_rep:unseen_template (n 174): FULL 0.224 intent 0.368 slot heads 0.340 | frame tau 0.075: coverage 0.14 confident-wrong 0.069 | intent abstain 0.805 | span F1 0.474
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test (n 700): FULL 0.247 intent 0.379 slot heads 0.391 | frame tau 0.075: coverage 0.15 confident-wrong 0.044 | intent abstain 0.753 | span F1 0.503
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test:new_slot_values (n 207): FULL 0.198 intent 0.367 slot heads 0.345 new-value heads 0.279 (n 219) | frame tau 0.075: coverage 0.13 confident-wrong 0.048 | intent abstain 0.783 | span F1 0.438
+  seed 2 size full VSS, one world per intent + intent anchor + negatives, residual dispatch (R81) | test:unseen_template (n 402): FULL 0.192 intent 0.353 slot heads 0.340 | frame tau 0.075: coverage 0.15 confident-wrong 0.070 | intent abstain 0.739 | span F1 0.439
+  seed 2: rejected by every world {'dev_rep': 0.002857142857142857, 'dev_rep:new_slot_values': 0.0, 'dev_rep:unseen_template': 0.005747126436781609, 'test': 0.0, 'test:new_slot_values': 0.0, 'test:unseen_template': 0.0}; by the residual alone {'dev_rep': 0.002857142857142857, 'dev_rep:new_slot_values': 0.0, 'dev_rep:unseen_template': 0.005747126436781609, 'test': 0.0, 'test:new_slot_values': 0.0, 'test:unseen_template': 0.0}; by status {'dev_rep': 0.5371428571428571, 'dev_rep:new_slot_values': 0.6666666666666666, 'dev_rep:unseen_template': 0.6551724137931034, 'test': 0.5285714285714286, 'test:new_slot_values': 0.642512077294686, 'test:unseen_template': 0.6318407960199005}; chosen frame abstains {'dev_rep': 0.7571428571428571, 'dev_rep:new_slot_values': 0.8229166666666666, 'dev_rep:unseen_template': 0.8045977011494253, 'test': 0.7885714285714286, 'test:new_slot_values': 0.8695652173913043, 'test:unseen_template': 0.8482587064676617}; cost 61.02 M phases (7 readers, D 512) + 2.69 M typer weights; 16.1 ms per utterance for all worlds
+
+== VSS, one world per intent + dispatcher (R72): snips / base / size full: mean ± std over 1 seeds [per seed] ==
+  dev_rep (n 350): FULL 0.280±0.000 [0.280] | intent 0.403±0.000 [0.403] | slot heads 0.395±0.000 [0.395]
+      frame coverage 0.183±0.000 [0.183] confident-wrong 0.063±0.000 [0.063] | intent abstain 0.766±0.000 [0.766] | absent read absent 0.993±0.000 [0.993] | span F1 0.524±0.000 [0.524]
+  dev_rep:new_slot_values (n 96): FULL 0.208±0.000 [0.208] | intent 0.406±0.000 [0.406] | slot heads 0.352±0.000 [0.352] | new-value heads 0.320±0.000 [0.320]
+      frame coverage 0.156±0.000 [0.156] confident-wrong 0.094±0.000 [0.094] | intent abstain 0.750±0.000 [0.750] | absent read absent 0.992±0.000 [0.992] | span F1 0.463±0.000 [0.463]
+  dev_rep:unseen_template (n 174): FULL 0.224±0.000 [0.224] | intent 0.368±0.000 [0.368] | slot heads 0.340±0.000 [0.340]
+      frame coverage 0.138±0.000 [0.138] confident-wrong 0.069±0.000 [0.069] | intent abstain 0.805±0.000 [0.805] | absent read absent 0.993±0.000 [0.993] | span F1 0.474±0.000 [0.474]
+  test (n 700): FULL 0.247±0.000 [0.247] | intent 0.379±0.000 [0.379] | slot heads 0.391±0.000 [0.391]
+      frame coverage 0.153±0.000 [0.153] confident-wrong 0.044±0.000 [0.044] | intent abstain 0.753±0.000 [0.753] | absent read absent 0.991±0.000 [0.991] | span F1 0.503±0.000 [0.503]
+  test:new_slot_values (n 207): FULL 0.198±0.000 [0.198] | intent 0.367±0.000 [0.367] | slot heads 0.345±0.000 [0.345] | new-value heads 0.279±0.000 [0.279]
+      frame coverage 0.126±0.000 [0.126] confident-wrong 0.048±0.000 [0.048] | intent abstain 0.783±0.000 [0.783] | absent read absent 0.990±0.000 [0.990] | span F1 0.438±0.000 [0.438]
+  test:unseen_template (n 402): FULL 0.192±0.000 [0.192] | intent 0.353±0.000 [0.353] | slot heads 0.340±0.000 [0.340]
+      frame coverage 0.154±0.000 [0.154] confident-wrong 0.070±0.000 [0.070] | intent abstain 0.739±0.000 [0.739] | absent read absent 0.990±0.000 [0.990] | span F1 0.439±0.000 [0.439]
+  written interpretation: INSTRUCTIONS_REAL_2026-10-24.md table R7 (the axes and what each outcome will be said to mean)
+  rejected_by_status, dev_rep: 0.537 [0.537]
+  rejected_by_status, dev_rep:new_slot_values: 0.667 [0.667]
+  rejected_by_status, dev_rep:unseen_template: 0.655 [0.655]
+  rejected_by_status, test: 0.529 [0.529]
+  rejected_by_status, test:new_slot_values: 0.643 [0.643]
+  rejected_by_status, test:unseen_template: 0.632 [0.632]
+  chosen_abstains, dev_rep: 0.757 [0.757]
+  chosen_abstains, dev_rep:new_slot_values: 0.823 [0.823]
+  chosen_abstains, dev_rep:unseen_template: 0.805 [0.805]
+  chosen_abstains, test: 0.789 [0.789]
+  chosen_abstains, test:new_slot_values: 0.870 [0.870]
+  chosen_abstains, test:unseen_template: 0.848 [0.848]
+  rejected by every world, dev_rep: 0.003 ± 0.000 [0.003]
+  rejected by every world, dev_rep:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by every world, dev_rep:unseen_template: 0.006 ± 0.000 [0.006]
+  rejected by every world, test: 0.000 ± 0.000 [0.000]
+  rejected by every world, test:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by every world, test:unseen_template: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), dev_rep: 0.003 ± 0.000 [0.003]
+  rejected by the residual of every world (status ignored), dev_rep:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), dev_rep:unseen_template: 0.006 ± 0.000 [0.006]
+  rejected by the residual of every world (status ignored), test: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), test:new_slot_values: 0.000 ± 0.000 [0.000]
+  rejected by the residual of every world (status ignored), test:unseen_template: 0.000 ± 0.000 [0.000]
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] worlds from the training annotation only [x] thresholds on the dev calibration half [x] three routes only (R73)

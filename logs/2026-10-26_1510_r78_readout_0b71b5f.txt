@@ -1,0 +1,135 @@
+# 2026-10-26T15:10:18+01:00  commit=0b71b5f  cmd: python3 eval/r78_readout.py --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_82585ea --seed 1  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 112 GB; slot logs/.run.lock.2 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+r78_readout: models r81; sop @ 82585ea; condition base; seed 1; worlds ['AddToPlaylist', 'BookRestaurant', 'GetWeather', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']
+  world AddToPlaylist: vorder need FIRES (2.4% rows with same-kind pairs, 2.4% order-dependent); pos need no (rigid min 0.19218241042345277)
+  world BookRestaurant: vorder need no (1.4% rows with same-kind pairs, 1.4% order-dependent); pos need no (rigid min None)
+  world GetWeather: vorder need no (0.2% rows with same-kind pairs, 0.2% order-dependent); pos need no (rigid min None)
+  world PlayMusic: vorder need no (0.7% rows with same-kind pairs, 0.7% order-dependent); pos need no (rigid min None)
+  world RateBook: vorder need no (0.2% rows with same-kind pairs, 0.2% order-dependent); pos need no (rigid min 0.21982758620689655)
+  world SearchCreativeWork: vorder need no (0.6% rows with same-kind pairs, 0.6% order-dependent); pos need no (rigid min 0.16774541531823084)
+  world SearchScreeningEvent: vorder need no (0.2% rows with same-kind pairs, 0.2% order-dependent); pos need no (rigid min None)
+  [test] AddToPlaylist          n 100: dispatch 1.000 | span F1 typer 0.867, typer + reader (dispatched) 0.869, (oracle world) 0.869 | unplaced [('playlist', 81), ('this', 21), ('onto', 11), ('is', 8), ('put', 8)]
+      playlist                     gold 100: F1 typer 0.920 reader 0.892 (-0.028) | right head 91, wrong head 9, missed 0, false fill 0 | same-kind competition 0.02
+      music_item                   gold  55: F1 typer 0.973 reader 0.973 (+0.000) | right head 55, wrong head 0, missed 0, false fill 4 | same-kind competition 0.00
+      playlist_owner               gold  54: F1 typer 0.991 reader 0.971 (-0.019) | right head 51, wrong head 0, missed 3, false fill 5 | same-kind competition 0.00
+      artist                       gold  46: F1 typer 0.848 reader 0.821 (-0.027) | right head 38, wrong head 3, missed 5, false fill 8 | same-kind competition 0.01
+      entity_name                  gold  18: F1 typer 0.176 reader 0.229 (+0.052) | right head 7, wrong head 4, missed 7, false fill 9 | same-kind competition 0.06
+  [test] BookRestaurant         n 100: dispatch 0.980 | span F1 typer 0.921, typer + reader (dispatched) 0.765, (oracle world) 0.762 | unplaced [('in', 59), ('i', 34), ('people', 29), ('reservation', 25), ('table', 19)]
+      restaurant_type              gold  62: F1 typer 0.937 reader 0.908 (-0.029) | right head 54, wrong head 3, missed 5, false fill 3 | same-kind competition 0.01
+      party_size_number            gold  57: F1 typer 1.000 reader 0.973 (-0.027) | right head 54, wrong head 0, missed 3, false fill 0 | same-kind competition 0.00
+      timeRange                    gold  34: F1 typer 0.928 reader 0.724 (-0.203) | right head 21, wrong head 3, missed 10, false fill 8 | same-kind competition 0.01
+      city                         gold  33: F1 typer 0.903 reader 0.657 (-0.246) | right head 21, wrong head 4, missed 8, false fill 12 | same-kind competition 0.01
+      state                        gold  25: F1 typer 0.943 reader 0.522 (-0.422) | right head 16, wrong head 0, missed 9, false fill 12 | same-kind competition 0.00
+      country                      gold  20: F1 typer 0.900 reader 0.649 (-0.251) | right head 13, wrong head 1, missed 6, false fill 7 | same-kind competition 0.01
+      restaurant_name              gold  20: F1 typer 0.769 reader 0.471 (-0.299) | right head 10, wrong head 5, missed 5, false fill 4 | same-kind competition 0.03
+      spatial_relation             gold  19: F1 typer 0.947 reader 0.727 (-0.220) | right head 11, wrong head 3, missed 5, false fill 1 | same-kind competition 0.02
+      party_size_description       gold  13: F1 typer 0.960 reader 0.720 (-0.240) | right head 10, wrong head 1, missed 2, false fill 2 | same-kind competition 0.00
+      cuisine                      gold  11: F1 typer 1.000 reader 0.833 (-0.167) | right head 8, wrong head 2, missed 1, false fill 3 | same-kind competition 0.00
+      sort                         gold   9: F1 typer 1.000 reader 0.857 (-0.143) | right head 9, wrong head 0, missed 0, false fill 5 | same-kind competition 0.01
+      facility                     gold   7: F1 typer 1.000 reader 1.000 (+0.000) | right head 7, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      poi                          gold   6: F1 typer 0.545 reader 0.286 (-0.260) | right head 4, wrong head 0, missed 2, false fill 6 | same-kind competition 0.06
+      served_dish                  gold   5: F1 typer 0.800 reader 0.364 (-0.436) | right head 2, wrong head 1, missed 2, false fill 6 | same-kind competition 0.01
+  [test] GetWeather             n 100: dispatch 0.940 | span F1 typer 0.901, typer + reader (dispatched) 0.855, (oracle world) 0.866 | unplaced [('in', 67), ('forecast', 31), ('from', 12), ('and', 10), ("what's", 8)]
+      timeRange                    gold  64: F1 typer 0.930 reader 0.912 (-0.018) | right head 59, wrong head 3, missed 2, false fill 1 | same-kind competition 0.00
+      city                         gold  38: F1 typer 0.849 reader 0.822 (-0.027) | right head 30, wrong head 1, missed 7, false fill 4 | same-kind competition 0.00
+      state                        gold  26: F1 typer 0.902 reader 0.815 (-0.087) | right head 24, wrong head 1, missed 1, false fill 8 | same-kind competition 0.00
+      country                      gold  24: F1 typer 0.851 reader 0.776 (-0.076) | right head 19, wrong head 0, missed 5, false fill 11 | same-kind competition 0.00
+      condition_description        gold  22: F1 typer 0.952 reader 0.952 (+0.000) | right head 20, wrong head 0, missed 2, false fill 0 | same-kind competition 0.00
+      condition_temperature        gold  21: F1 typer 0.976 reader 1.000 (+0.024) | right head 21, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      current_location             gold  17: F1 typer 1.000 reader 1.000 (+0.000) | right head 17, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      geographic_poi               gold  16: F1 typer 0.875 reader 0.733 (-0.142) | right head 12, wrong head 1, missed 3, false fill 3 | same-kind competition 0.00
+      spatial_relation             gold  14: F1 typer 0.963 reader 0.636 (-0.327) | right head 7, wrong head 2, missed 5, false fill 0 | same-kind competition 0.01
+  [test] PlayMusic              n 100: dispatch 0.950 | span F1 typer 0.802, typer + reader (dispatched) 0.752, (oracle world) 0.760 | unplaced [('music', 18), ('please', 12), ('something', 11), ('i', 9), ('hear', 8)]
+      artist                       gold  63: F1 typer 0.846 reader 0.800 (-0.046) | right head 51, wrong head 4, missed 8, false fill 9 | same-kind competition 0.01
+      service                      gold  39: F1 typer 0.987 reader 0.950 (-0.037) | right head 39, wrong head 0, missed 0, false fill 2 | same-kind competition 0.01
+      music_item                   gold  31: F1 typer 0.949 reader 0.867 (-0.082) | right head 28, wrong head 1, missed 2, false fill 5 | same-kind competition 0.00
+      year                         gold  25: F1 typer 1.000 reader 0.980 (-0.020) | right head 25, wrong head 0, missed 0, false fill 4 | same-kind competition 0.00
+      sort                         gold  17: F1 typer 0.800 reader 0.688 (-0.113) | right head 11, wrong head 1, missed 5, false fill 11 | same-kind competition 0.01
+      album                        gold  13: F1 typer 0.000 reader 0.065 (+0.065) | right head 1, wrong head 2, missed 10, false fill 15 | same-kind competition 0.01
+      playlist                     gold   9: F1 typer 0.500 reader 0.267 (-0.233) | right head 2, wrong head 2, missed 5, false fill 5 | same-kind competition 0.01
+      track                        gold   6: F1 typer 0.308 reader 0.400 (+0.092) | right head 3, wrong head 0, missed 3, false fill 6 | same-kind competition 0.03
+      genre                        gold   3: F1 typer 0.000 reader 0.333 (+0.333) | right head 1, wrong head 1, missed 1, false fill 5 | same-kind competition 0.00
+  [test] RateBook               n 100: dispatch 0.990 | span F1 typer 0.965, typer + reader (dispatched) 0.942, (oracle world) 0.944 | unplaced [('out', 42), ('rating', 11), (':', 5), ('and', 5), ('this', 3)]
+      rating_value                 gold 100: F1 typer 1.000 reader 0.985 (-0.015) | right head 100, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      rating_unit                  gold  61: F1 typer 1.000 reader 0.992 (-0.008) | right head 61, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      object_name                  gold  51: F1 typer 0.820 reader 0.757 (-0.063) | right head 35, wrong head 16, missed 0, false fill 1 | same-kind competition 0.00
+      best_rating                  gold  51: F1 typer 1.000 reader 1.000 (+0.000) | right head 51, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      object_select                gold  49: F1 typer 0.948 reader 0.938 (-0.011) | right head 47, wrong head 0, missed 2, false fill 0 | same-kind competition 0.00
+      object_type                  gold  40: F1 typer 1.000 reader 0.963 (-0.037) | right head 40, wrong head 0, missed 0, false fill 2 | same-kind competition 0.00
+      object_part_of_series_type   gold  15: F1 typer 1.000 reader 0.889 (-0.111) | right head 13, wrong head 0, missed 2, false fill 0 | same-kind competition 0.00
+  [test] SearchCreativeWork     n 100: dispatch 0.990 | span F1 typer 0.767, typer + reader (dispatched) 0.743, (oracle world) 0.755 | unplaced [('the', 115), ('me', 41), ('please', 40), ('you', 24), ('search', 18)]
+      object_name                  gold 100: F1 typer 0.653 reader 0.620 (-0.033) | right head 72, wrong head 28, missed 0, false fill 0 | same-kind competition 0.01
+      object_type                  gold  73: F1 typer 0.965 reader 0.950 (-0.015) | right head 69, wrong head 1, missed 3, false fill 9 | same-kind competition 0.01
+  [test] SearchScreeningEvent   n 100: dispatch 0.900 | span F1 typer 0.879, typer + reader (dispatched) 0.777, (oracle world) 0.797 | unplaced [('movie', 31), ('playing', 21), ('are', 15), ('showing', 14), ('see', 13)]
+      movie_name                   gold  49: F1 typer 0.644 reader 0.561 (-0.083) | right head 25, wrong head 9, missed 15, false fill 1 | same-kind competition 0.00
+      object_type                  gold  43: F1 typer 0.976 reader 0.868 (-0.108) | right head 39, wrong head 1, missed 3, false fill 2 | same-kind competition 0.00
+      spatial_relation             gold  35: F1 typer 0.958 reader 0.909 (-0.049) | right head 32, wrong head 0, missed 3, false fill 0 | same-kind competition 0.00
+      location_name                gold  29: F1 typer 0.982 reader 0.933 (-0.049) | right head 28, wrong head 0, missed 1, false fill 3 | same-kind competition 0.00
+      movie_type                   gold  24: F1 typer 1.000 reader 0.842 (-0.158) | right head 24, wrong head 0, missed 0, false fill 9 | same-kind competition 0.00
+      object_location_type         gold  20: F1 typer 1.000 reader 0.710 (-0.290) | right head 16, wrong head 0, missed 4, false fill 0 | same-kind competition 0.00
+      timeRange                    gold  12: F1 typer 0.957 reader 0.727 (-0.229) | right head 9, wrong head 0, missed 3, false fill 13 | same-kind competition 0.01
+  [dev_rep] AddToPlaylist          n  50: dispatch 0.980 | span F1 typer 0.857, typer + reader (dispatched) 0.869, (oracle world) 0.870 | unplaced [('playlist', 32), ('this', 12), ('is', 5), ('in', 4), ('put', 3)]
+      playlist                     gold  50: F1 typer 0.848 reader 0.863 (+0.015) | right head 46, wrong head 4, missed 0, false fill 0 | same-kind competition 0.02
+      playlist_owner               gold  32: F1 typer 0.984 reader 1.000 (+0.016) | right head 32, wrong head 0, missed 0, false fill 3 | same-kind competition 0.00
+      music_item                   gold  22: F1 typer 1.000 reader 1.000 (+0.000) | right head 22, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      artist                       gold  20: F1 typer 0.844 reader 0.833 (-0.011) | right head 18, wrong head 2, missed 0, false fill 8 | same-kind competition 0.01
+      entity_name                  gold  16: F1 typer 0.480 reader 0.400 (-0.080) | right head 4, wrong head 6, missed 6, false fill 0 | same-kind competition 0.06
+  [dev_rep] BookRestaurant         n  50: dispatch 0.980 | span F1 typer 0.900, typer + reader (dispatched) 0.766, (oracle world) 0.768 | unplaced [('in', 33), ('i', 15), ('and', 13), ('table', 12), ('me', 8)]
+      restaurant_type              gold  29: F1 typer 0.983 reader 0.929 (-0.054) | right head 28, wrong head 0, missed 1, false fill 1 | same-kind competition 0.01
+      party_size_number            gold  24: F1 typer 0.980 reader 0.870 (-0.110) | right head 20, wrong head 1, missed 3, false fill 1 | same-kind competition 0.00
+      timeRange                    gold  18: F1 typer 0.919 reader 0.848 (-0.070) | right head 15, wrong head 2, missed 1, false fill 0 | same-kind competition 0.01
+      city                         gold  15: F1 typer 0.828 reader 0.541 (-0.287) | right head 7, wrong head 4, missed 4, false fill 11 | same-kind competition 0.01
+      state                        gold  15: F1 typer 0.867 reader 0.759 (-0.108) | right head 13, wrong head 1, missed 1, false fill 6 | same-kind competition 0.00
+      party_size_description       gold  13: F1 typer 1.000 reader 0.762 (-0.238) | right head 8, wrong head 2, missed 3, false fill 2 | same-kind competition 0.00
+      restaurant_name              gold  12: F1 typer 0.700 reader 0.556 (-0.144) | right head 8, wrong head 2, missed 2, false fill 0 | same-kind competition 0.03
+      spatial_relation             gold   9: F1 typer 0.941 reader 0.875 (-0.066) | right head 7, wrong head 0, missed 2, false fill 0 | same-kind competition 0.02
+      country                      gold   9: F1 typer 0.947 reader 0.889 (-0.058) | right head 6, wrong head 2, missed 1, false fill 3 | same-kind competition 0.01
+      served_dish                  gold   6: F1 typer 0.833 reader 0.615 (-0.218) | right head 3, wrong head 1, missed 2, false fill 6 | same-kind competition 0.01
+      cuisine                      gold   5: F1 typer 0.889 reader 0.667 (-0.222) | right head 3, wrong head 0, missed 2, false fill 3 | same-kind competition 0.00
+      sort                         gold   4: F1 typer 1.000 reader 0.750 (-0.250) | right head 3, wrong head 0, missed 1, false fill 2 | same-kind competition 0.01
+      facility                     gold   3: F1 typer 1.000 reader 0.800 (-0.200) | right head 2, wrong head 0, missed 1, false fill 0 | same-kind competition 0.00
+      poi                          gold   2: F1 typer 0.500 reader 0.000 (-0.500) | right head 0, wrong head 0, missed 2, false fill 4 | same-kind competition 0.06
+  [dev_rep] GetWeather             n  50: dispatch 0.940 | span F1 typer 0.881, typer + reader (dispatched) 0.843, (oracle world) 0.867 | unplaced [('in', 42), ('forecast', 13), ("what's", 10), ('from', 6), ('how', 4)]
+      city                         gold  28: F1 typer 0.880 reader 0.800 (-0.080) | right head 19, wrong head 2, missed 7, false fill 1 | same-kind competition 0.00
+      timeRange                    gold  27: F1 typer 0.885 reader 0.923 (+0.038) | right head 22, wrong head 3, missed 2, false fill 0 | same-kind competition 0.00
+      country                      gold  14: F1 typer 0.897 reader 0.903 (+0.007) | right head 14, wrong head 0, missed 0, false fill 5 | same-kind competition 0.00
+      condition_description        gold  13: F1 typer 1.000 reader 1.000 (+0.000) | right head 13, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      state                        gold  13: F1 typer 0.923 reader 0.818 (-0.105) | right head 11, wrong head 0, missed 2, false fill 2 | same-kind competition 0.00
+      condition_temperature        gold  10: F1 typer 0.947 reader 1.000 (+0.053) | right head 10, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      current_location             gold   8: F1 typer 0.933 reader 0.875 (-0.058) | right head 8, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      spatial_relation             gold   7: F1 typer 0.769 reader 0.615 (-0.154) | right head 5, wrong head 0, missed 2, false fill 1 | same-kind competition 0.01
+      geographic_poi               gold   3: F1 typer 1.000 reader 0.600 (-0.400) | right head 3, wrong head 0, missed 0, false fill 7 | same-kind competition 0.00
+  [dev_rep] PlayMusic              n  50: dispatch 1.000 | span F1 typer 0.877, typer + reader (dispatched) 0.794, (oracle world) 0.794 | unplaced [('music', 14), ('some', 10), ('me', 6), ('and', 5), ('open', 3)]
+      artist                       gold  28: F1 typer 0.897 reader 0.889 (-0.008) | right head 24, wrong head 2, missed 2, false fill 1 | same-kind competition 0.01
+      service                      gold  20: F1 typer 1.000 reader 0.842 (-0.158) | right head 18, wrong head 0, missed 2, false fill 0 | same-kind competition 0.01
+      music_item                   gold  17: F1 typer 0.938 reader 0.812 (-0.125) | right head 13, wrong head 0, missed 4, false fill 2 | same-kind competition 0.00
+      year                         gold  15: F1 typer 1.000 reader 0.929 (-0.071) | right head 13, wrong head 0, missed 2, false fill 1 | same-kind competition 0.00
+      playlist                     gold   7: F1 typer 0.833 reader 0.444 (-0.389) | right head 4, wrong head 0, missed 3, false fill 0 | same-kind competition 0.01
+      sort                         gold   7: F1 typer 1.000 reader 0.800 (-0.200) | right head 5, wrong head 1, missed 1, false fill 5 | same-kind competition 0.01
+      album                        gold   6: F1 typer 0.600 reader 0.400 (-0.200) | right head 3, wrong head 1, missed 2, false fill 0 | same-kind competition 0.01
+      track                        gold   3: F1 typer 0.000 reader 0.000 (+0.000) | right head 2, wrong head 0, missed 1, false fill 1 | same-kind competition 0.03
+      genre                        gold   3: F1 typer 0.667 reader 0.750 (+0.083) | right head 3, wrong head 0, missed 0, false fill 2 | same-kind competition 0.00
+  [dev_rep] RateBook               n  50: dispatch 0.960 | span F1 typer 0.940, typer + reader (dispatched) 0.908, (oracle world) 0.922 | unplaced [('out', 18), ('i', 13), ('and', 8), ('rating', 7), ('gets', 3)]
+      rating_value                 gold  50: F1 typer 1.000 reader 0.980 (-0.020) | right head 50, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      best_rating                  gold  30: F1 typer 1.000 reader 1.000 (+0.000) | right head 30, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      rating_unit                  gold  28: F1 typer 1.000 reader 1.000 (+0.000) | right head 28, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      object_select                gold  27: F1 typer 1.000 reader 1.000 (+0.000) | right head 27, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      object_name                  gold  23: F1 typer 0.622 reader 0.455 (-0.168) | right head 15, wrong head 6, missed 2, false fill 0 | same-kind competition 0.00
+      object_type                  gold  20: F1 typer 0.976 reader 0.976 (+0.000) | right head 20, wrong head 0, missed 0, false fill 1 | same-kind competition 0.00
+      object_part_of_series_type   gold  11: F1 typer 0.952 reader 0.900 (-0.052) | right head 10, wrong head 0, missed 1, false fill 0 | same-kind competition 0.00
+  [dev_rep] SearchCreativeWork     n  50: dispatch 0.960 | span F1 typer 0.816, typer + reader (dispatched) 0.765, (oracle world) 0.776 | unplaced [('the', 42), ('a', 13), ('of', 11), ('called', 11), ('me', 9)]
+      object_name                  gold  50: F1 typer 0.714 reader 0.740 (+0.026) | right head 36, wrong head 14, missed 0, false fill 0 | same-kind competition 0.01
+      object_type                  gold  38: F1 typer 1.000 reader 0.829 (-0.171) | right head 31, wrong head 1, missed 6, false fill 3 | same-kind competition 0.01
+  [dev_rep] SearchScreeningEvent   n  50: dispatch 0.940 | span F1 typer 0.888, typer + reader (dispatched) 0.856, (oracle world) 0.873 | unplaced [('movie', 26), ('playing', 13), ('are', 10), ('me', 9), ('showing', 5)]
+      object_type                  gold  22: F1 typer 0.955 reader 0.955 (+0.000) | right head 22, wrong head 0, missed 0, false fill 1 | same-kind competition 0.00
+      movie_type                   gold  18: F1 typer 1.000 reader 0.919 (-0.081) | right head 17, wrong head 0, missed 1, false fill 2 | same-kind competition 0.00
+      spatial_relation             gold  17: F1 typer 1.000 reader 0.970 (-0.030) | right head 16, wrong head 0, missed 1, false fill 0 | same-kind competition 0.00
+      movie_name                   gold  16: F1 typer 0.500 reader 0.467 (-0.033) | right head 10, wrong head 3, missed 3, false fill 1 | same-kind competition 0.00
+      location_name                gold  15: F1 typer 1.000 reader 1.000 (+0.000) | right head 15, wrong head 0, missed 0, false fill 0 | same-kind competition 0.00
+      object_location_type         gold  12: F1 typer 1.000 reader 0.857 (-0.143) | right head 11, wrong head 0, missed 1, false fill 0 | same-kind competition 0.00
+      timeRange                    gold   4: F1 typer 1.000 reader 0.889 (-0.111) | right head 4, wrong head 0, missed 0, false fill 4 | same-kind competition 0.01
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] saved models, no training [x] the same utterances for the typer and the reader [x] oracle and dispatched worlds apart [x] sop version named
+# post-launch guard (slots 8): MemAvailable 90 s after the start 112 GB

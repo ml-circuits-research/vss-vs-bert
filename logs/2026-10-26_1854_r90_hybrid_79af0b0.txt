@@ -1,0 +1,15 @@
+# 2026-10-26T18:54:41+01:00  commit=79af0b0  cmd: python3 eval/r90_hybrid.py --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_040d44e --condition ood_intents --seed 2  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 113 GB; slot logs/.run.lock.2 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 11184 training utterances (train accuracy 0.985); 68 kinds over 12162 words; 2424869 typer weights
+r90_hybrid: sop @ 040d44e; condition ood_intents; seed 2; worlds ['AddToPlaylist', 'BookRestaurant', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; dispatch anchor percentile; frame line C; refusal line A's residual at the dev_cal 2% threshold
+  dev_rep:in_domain (n 300): dispatch intent 0.960 | span F1 (frame C) 0.868 | refused by line A's residual 0.017 (second line, line C's own residual at its 2% threshold: 0.017) | chosen frame (C) abstains 0.373
+  ood:dev_rep (n 50): dispatch intent nan | span F1 (frame C) 0.166 | refused by line A's residual 0.380 (second line, line C's own residual at its 2% threshold: 0.180) | chosen frame (C) abstains 0.720
+  test:in_domain (n 600): dispatch intent 0.958 | span F1 (frame C) 0.851 | refused by line A's residual 0.017 (second line, line C's own residual at its 2% threshold: 0.012) | chosen frame (C) abstains 0.400
+  ood:test (n 100): dispatch intent nan | span F1 (frame C) 0.185 | refused by line A's residual 0.410 (second line, line C's own residual at its 2% threshold: 0.270) | chosen frame (C) abstains 0.830
+  AUROC held-out vs in-domain, ood:dev_rep: line A's residual 0.934, line C's residual 0.886
+  AUROC held-out vs in-domain, ood:test: line A's residual 0.920, line C's residual 0.914
+  threshold (line A's residual, dev_cal 2%): 0.7774 (dev_cal FR 0.020); anchor choice differs between the A and C reader sets on 0 utterances
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [ ] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] saved R81 models, no training [x] threshold on the dev calibration half only (rule 25) [x] the anchor's choice checked equal in both reader sets [x] sop version named
+# post-launch guard (slots 8): MemAvailable 90 s after the start 114 GB

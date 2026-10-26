@@ -1,0 +1,183 @@
+{
+ "sop": "82585ea",
+ "models": "r81",
+ "condition": "base",
+ "seed": 1,
+ "signals": {
+  "residual": {
+   "auroc": {},
+   "points": {
+    "0.01": {
+     "threshold": 0.9324407388619346,
+     "fr_dev_cal": 0.011428571428571429,
+     "dev_rep": 0.008571428571428572,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.011494252873563218,
+     "test": 0.0,
+     "test:new_slot_values": 0.0,
+     "test:unseen_template": 0.0
+    },
+    "0.02": {
+     "threshold": 0.8962851382497268,
+     "fr_dev_cal": 0.02,
+     "dev_rep": 0.011428571428571429,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.011494252873563218,
+     "test": 0.004285714285714286,
+     "test:new_slot_values": 0.004830917874396135,
+     "test:unseen_template": 0.007462686567164179
+    },
+    "0.05": {
+     "threshold": 0.7567117867249982,
+     "fr_dev_cal": 0.05142857142857143,
+     "dev_rep": 0.04285714285714286,
+     "dev_rep:new_slot_values": 0.020833333333333332,
+     "dev_rep:unseen_template": 0.04597701149425287,
+     "test": 0.04428571428571428,
+     "test:new_slot_values": 0.04830917874396135,
+     "test:unseen_template": 0.06218905472636816
+    }
+   }
+  },
+  "anchor": {
+   "auroc": {},
+   "points": {
+    "0.01": {
+     "threshold": 1.0,
+     "fr_dev_cal": 0.0,
+     "dev_rep": 0.0,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.0,
+     "test": 0.0,
+     "test:new_slot_values": 0.0,
+     "test:unseen_template": 0.0
+    },
+    "0.02": {
+     "threshold": 0.9950999999999999,
+     "fr_dev_cal": 0.02,
+     "dev_rep": 0.005714285714285714,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.011494252873563218,
+     "test": 0.004285714285714286,
+     "test:new_slot_values": 0.00966183574879227,
+     "test:unseen_template": 0.004975124378109453
+    },
+    "0.05": {
+     "threshold": 0.985,
+     "fr_dev_cal": 0.045714285714285714,
+     "dev_rep": 0.03142857142857143,
+     "dev_rep:new_slot_values": 0.020833333333333332,
+     "dev_rep:unseen_template": 0.05747126436781609,
+     "test": 0.04285714285714286,
+     "test:new_slot_values": 0.05314009661835749,
+     "test:unseen_template": 0.05970149253731343
+    }
+   }
+  },
+  "max": {
+   "auroc": {},
+   "points": {
+    "0.01": {
+     "threshold": 1.0,
+     "fr_dev_cal": 0.0,
+     "dev_rep": 0.0,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.0,
+     "test": 0.0,
+     "test:new_slot_values": 0.0,
+     "test:unseen_template": 0.0
+    },
+    "0.02": {
+     "threshold": 1.0,
+     "fr_dev_cal": 0.0,
+     "dev_rep": 0.0,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.0,
+     "test": 0.0,
+     "test:new_slot_values": 0.0,
+     "test:unseen_template": 0.0
+    },
+    "0.05": {
+     "threshold": 0.99,
+     "fr_dev_cal": 0.04857142857142857,
+     "dev_rep": 0.037142857142857144,
+     "dev_rep:new_slot_values": 0.03125,
+     "dev_rep:unseen_template": 0.05747126436781609,
+     "test": 0.04,
+     "test:new_slot_values": 0.05314009661835749,
+     "test:unseen_template": 0.05472636815920398
+    }
+   }
+  },
+  "residual_all": {
+   "auroc": {},
+   "points": {
+    "0.01": {
+     "threshold": 0.8976499999999998,
+     "fr_dev_cal": 0.011428571428571429,
+     "dev_rep": 0.02,
+     "dev_rep:new_slot_values": 0.041666666666666664,
+     "dev_rep:unseen_template": 0.028735632183908046,
+     "test": 0.014285714285714285,
+     "test:new_slot_values": 0.014492753623188406,
+     "test:unseen_template": 0.01990049751243781
+    },
+    "0.02": {
+     "threshold": 0.8451999999999998,
+     "fr_dev_cal": 0.02,
+     "dev_rep": 0.03142857142857143,
+     "dev_rep:new_slot_values": 0.052083333333333336,
+     "dev_rep:unseen_template": 0.05172413793103448,
+     "test": 0.03428571428571429,
+     "test:new_slot_values": 0.028985507246376812,
+     "test:unseen_template": 0.04975124378109453
+    },
+    "0.05": {
+     "threshold": 0.805,
+     "fr_dev_cal": 0.04857142857142857,
+     "dev_rep": 0.045714285714285714,
+     "dev_rep:new_slot_values": 0.0625,
+     "dev_rep:unseen_template": 0.06321839080459771,
+     "test": 0.05,
+     "test:new_slot_values": 0.03864734299516908,
+     "test:unseen_template": 0.06716417910447761
+    }
+   }
+  },
+  "anchor_z_all": {
+   "auroc": {},
+   "points": {
+    "0.01": {
+     "threshold": 5.935610833393058,
+     "fr_dev_cal": 0.011428571428571429,
+     "dev_rep": 0.002857142857142857,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.005747126436781609,
+     "test": 0.004285714285714286,
+     "test:new_slot_values": 0.004830917874396135,
+     "test:unseen_template": 0.0024875621890547263
+    },
+    "0.02": {
+     "threshold": 5.414206988940291,
+     "fr_dev_cal": 0.02,
+     "dev_rep": 0.005714285714285714,
+     "dev_rep:new_slot_values": 0.0,
+     "dev_rep:unseen_template": 0.011494252873563218,
+     "test": 0.005714285714285714,
+     "test:new_slot_values": 0.00966183574879227,
+     "test:unseen_template": 0.004975124378109453
+    },
+    "0.05": {
+     "threshold": 3.2848047974482046,
+     "fr_dev_cal": 0.05142857142857143,
+     "dev_rep": 0.03428571428571429,
+     "dev_rep:new_slot_values": 0.020833333333333332,
+     "dev_rep:unseen_template": 0.05747126436781609,
+     "test": 0.04285714285714286,
+     "test:new_slot_values": 0.05314009661835749,
+     "test:unseen_template": 0.05721393034825871
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,170 @@
+{
+ "sop": "de11429",
+ "decoder": "contract",
+ "spans": "kind_run",
+ "models": "r81",
+ "condition": "ood_intents",
+ "seed": 1,
+ "signals": {
+  "residual": {
+   "auroc": {
+    "ood:dev_rep": 0.9350666666666667,
+    "ood:test": 0.9510333333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.8556288395562484,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.16,
+     "test:in_domain": 0.011666666666666667,
+     "ood:test": 0.17
+    },
+    "0.02": {
+     "threshold": 0.8210823249415379,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.24,
+     "test:in_domain": 0.013333333333333334,
+     "ood:test": 0.24
+    },
+    "0.05": {
+     "threshold": 0.747867873250325,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.043333333333333335,
+     "ood:dev_rep": 0.5,
+     "test:in_domain": 0.03,
+     "ood:test": 0.48
+    }
+   }
+  },
+  "anchor": {
+   "auroc": {
+    "ood:dev_rep": 0.8904000000000001,
+    "ood:test": 0.9041833333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.02": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.0,
+     "test:in_domain": 0.0016666666666666668,
+     "ood:test": 0.0
+    },
+    "0.05": {
+     "threshold": 0.9802500000000001,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.03333333333333333,
+     "ood:dev_rep": 0.1,
+     "test:in_domain": 0.02666666666666667,
+     "ood:test": 0.17
+    }
+   }
+  },
+  "max": {
+   "auroc": {
+    "ood:dev_rep": 0.8838,
+    "ood:test": 0.9044833333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.99505,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.005,
+     "ood:test": 0.07
+    },
+    "0.02": {
+     "threshold": 0.995,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.0,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.005,
+     "ood:test": 0.07
+    },
+    "0.05": {
+     "threshold": 0.99,
+     "fr_dev_cal": 0.03666666666666667,
+     "dev_rep:in_domain": 0.02,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.018333333333333333,
+     "ood:test": 0.1
+    }
+   }
+  },
+  "residual_all": {
+   "auroc": {
+    "ood:dev_rep": 0.9134333333333333,
+    "ood:test": 0.88475
+   },
+   "points": {
+    "0.01": {
+     "threshold": 0.9,
+     "fr_dev_cal": 0.006666666666666667,
+     "dev_rep:in_domain": 0.006666666666666667,
+     "ood:dev_rep": 0.1,
+     "test:in_domain": 0.008333333333333333,
+     "ood:test": 0.17
+    },
+    "0.02": {
+     "threshold": 0.8700999999999999,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.02,
+     "ood:dev_rep": 0.28,
+     "test:in_domain": 0.018333333333333333,
+     "ood:test": 0.29
+    },
+    "0.05": {
+     "threshold": 0.8060000000000003,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.043333333333333335,
+     "ood:dev_rep": 0.5,
+     "test:in_domain": 0.05333333333333334,
+     "ood:test": 0.43
+    }
+   }
+  },
+  "anchor_z_all": {
+   "auroc": {
+    "ood:dev_rep": 0.8872,
+    "ood:test": 0.9087333333333333
+   },
+   "points": {
+    "0.01": {
+     "threshold": 4.645595137376666,
+     "fr_dev_cal": 0.01,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.06,
+     "test:in_domain": 0.006666666666666667,
+     "ood:test": 0.03
+    },
+    "0.02": {
+     "threshold": 4.241394758979446,
+     "fr_dev_cal": 0.02,
+     "dev_rep:in_domain": 0.013333333333333334,
+     "ood:dev_rep": 0.08,
+     "test:in_domain": 0.011666666666666667,
+     "ood:test": 0.1
+    },
+    "0.05": {
+     "threshold": 3.110140283229804,
+     "fr_dev_cal": 0.05,
+     "dev_rep:in_domain": 0.04,
+     "ood:dev_rep": 0.38,
+     "test:in_domain": 0.03333333333333333,
+     "ood:test": 0.33
+    }
+   }
+  }
+ }
+}

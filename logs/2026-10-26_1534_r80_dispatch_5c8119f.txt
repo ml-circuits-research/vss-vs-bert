@@ -1,0 +1,24 @@
+# 2026-10-26T15:34:31+01:00  commit=5c8119f  cmd: python3 eval/r80_dispatch.py --models r81 --sop_dir /tmp/claude-1000/-home-salboaie-work-ml-circuits-research-vss-vs-bert/d562dc69-73e5-42c4-bcbf-044ac519d1bd/scratchpad/sop_de11429 --decoder contract --spans kind_run --condition ood_intents --seed 1  (guard: mem fraction 0.113, min available 16 GB, max 6 h; MemAvailable at start 108 GB; slot logs/.run.lock.2 of 8)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 11% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+kinds (typer, R71): fitted on 11184 training utterances (train accuracy 0.985); 68 kinds over 12162 words; 2424869 typer weights
+r80_dispatch: models r81; sop @ de11429 (residual explained); condition ood_intents; seed 1; worlds ['AddToPlaylist', 'BookRestaurant', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; sets dev_rep:in_domain 300, ood:dev_rep 50, test:in_domain 600, ood:test 100
+  world AddToPlaylist: core roles ['intent', 'playlist']; threshold 0.699; calibration medians residual 0.332 anchor 0.394 structure 0.311 min slot margin 0.000; anchor != structure on 1.000 of the calibration rows
+  world BookRestaurant: core roles ['intent']; threshold 0.603; calibration medians residual 0.357 anchor 0.425 structure 0.425 min slot margin 0.000; anchor != structure on 0.000 of the calibration rows
+  world PlayMusic: core roles ['intent']; threshold 0.667; calibration medians residual 0.300 anchor 0.422 structure 0.422 min slot margin 0.102; anchor != structure on 0.000 of the calibration rows
+  world RateBook: core roles ['intent', 'rating_value']; threshold 0.518; calibration medians residual 0.248 anchor 0.319 structure 0.290 min slot margin 0.132; anchor != structure on 1.000 of the calibration rows
+  world SearchCreativeWork: core roles ['intent', 'object_name']; threshold 0.926; calibration medians residual 0.559 anchor 0.407 structure 0.307 min slot margin 0.000; anchor != structure on 1.000 of the calibration rows
+  world SearchScreeningEvent: core roles ['intent']; threshold 0.727; calibration medians residual 0.299 anchor 0.383 structure 0.383 min slot margin 0.106; anchor != structure on 0.000 of the calibration rows
+  seed 1 size full VSS, one world per intent + intent anchor + negatives, dispatch residual_raw (R80 rules, saved R81 models) | dev_rep:in_domain (n 300): FULL 0.400 intent 0.533 slot heads 0.525 | frame tau 0.079: coverage 0.18 confident-wrong 0.040 | intent abstain 0.707
+  seed 1 size full VSS, one world per intent + intent anchor + negatives, dispatch residual_raw (R80 rules, saved R81 models) | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.089 | frame tau 0.079: coverage 0.18 confident-wrong 0.180 | intent abstain 0.720
+  seed 1 size full VSS, one world per intent + intent anchor + negatives, dispatch residual_raw (R80 rules, saved R81 models) | test:in_domain (n 600): FULL 0.347 intent 0.535 slot heads 0.514 | frame tau 0.079: coverage 0.18 confident-wrong 0.042 | intent abstain 0.672
+  seed 1 size full VSS, one world per intent + intent anchor + negatives, dispatch residual_raw (R80 rules, saved R81 models) | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.095 | frame tau 0.079: coverage 0.09 confident-wrong 0.090 | intent abstain 0.810
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/r80_dispatch.py", line 145, in <module>
+    print(f"  [{rule}] " + "; ".join(f"{k}: intent {row['sets'][k]['intent']:.3f} span F1 {row['spans'][k]['f1']:.3f} rejected {rej[k]:.3f} (anchor pct < 0.02: {rej_a[k]:.3f}) chosen frame abstains {row['chosen_abstains'][k]:.3f} with a presence query {row['share_with_presence_query'][k]:.3f}" for k in ev)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/eval/r80_dispatch.py", line 145, in <genexpr>
+    print(f"  [{rule}] " + "; ".join(f"{k}: intent {row['sets'][k]['intent']:.3f} span F1 {row['spans'][k]['f1']:.3f} rejected {rej[k]:.3f} (anchor pct < 0.02: {rej_a[k]:.3f}) chosen frame abstains {row['chosen_abstains'][k]:.3f} with a presence query {row['share_with_presence_query'][k]:.3f}" for k in ev)
+                                                                                           ~~~~~~~~~~~~^^^
+TypeError: string indices must be integers, not 'str'
+# post-launch guard (slots 8): MemAvailable 90 s after the start 113 GB
