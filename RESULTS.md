@@ -2545,3 +2545,23 @@ on the selection rows at large, not on the pairs its need signal names. The run'
 0.397), span F1 0.530 (0.520). Since this run, sop/activate.py (2f3806f, SOURCE 6c735f9) makes the acceptance a paired test; responses.md
 says nothing about it for this row, so seeds 1-2 run under the pinned 82585ea rule (launched); whether the paired test would change seed
 0's verdict cannot be computed from the run (the trial models are temporary).
+
+## R90 item 1: the demo reading as dispatch / frame / refusal (DECLARED 2026-10-26, before the run; eval/r90_hybrid.py; re-score, no training)
+
+R83 paragraph. What fails: line C (the best frame, span F1 0.892) refuses held-out intents worse than line A (0.267 vs 0.460 at 2% FR).
+Where the cause is (R90, to be stated in the paper): presence_by_kind fills a question for any word of its unique kind, so in the wrong
+world a foreign utterance's words are "explained" and the explained residual loses its charge; line A's residual keeps it. What is
+changed: nothing is trained; one reading uses three parts: dispatch by the anchor percentile; frame = line C's reading of the chosen
+world; refusal = line A's explained residual of the chosen world above its dev-calibrated 2% threshold. sop @ 040d44e for both reader
+sets (line A there is 4a0eba8's reading: the only change between the two versions is the presence_by_kind key, off for line A). Saved
+R81 models, seeds 0-2, conditions base and ood_intents. Checks: the anchor's choice is the same in both reader sets; line A's threshold
+equals eval/r84_oppoints.py's. Expected (R90): refusal about 0.460 held-out at < 2% false rejection, span F1 0.892, dispatch 0.966; if
+the refusal differs from line A's own number, say why. Results logs/results_r90_hybrid_<condition>_seed<s>.json. A 30-item smoke test
+(seed 0, ood_intents; not a result) found the anchor's choice identical in both reader sets.
+
+run.sh: R90 item 3 approved a fix of the post-launch guard (write only to the current run's log). Checked before changing it: run.sh
+already sets the log name ($out) before the launch and the guard's tee writes to that file; the "# post-launch guard (slots 6)" line in
+logs/2026-10-26_0953_ / _0955_run_reader_real_8594fc9.txt is the guard's own line of those runs, written 90 s after their start, after
+the logs had been committed (the runs failed at once on an argparse error); the 16:29 modification time came from a git pull with
+--autostash, which re-writes modified tracked files. No change to run.sh is needed; it is not edited. The two logs stay restored to their
+committed text.
