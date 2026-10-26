@@ -2068,3 +2068,25 @@ rejection under 0.05: met (0.002). The anchor removed the failure mechanism of R
 frame-incomplete clause) and moved dispatch from 0.595 to 0.731, but the per-intent vote by the explained residual stays below the
 one-world reader on this data. By R79's rule, dispatch < 0.9 would send R78 (1) to the one-world configuration; R80 (answer to Q34)
 puts that on HOLD until R80's calibrated-dispatch row is measured. R78 (1) was NOT started.
+
+## R80: calibrated dispatch on the saved R79 models (DECLARED 2026-10-26, before the run; eval/r80_dispatch.py, code at the commit after this section's)
+
+CPU only, no reader retrained: the R79 per-world models of seeds 0-2, both conditions (six processes, OMP_NUM_THREADS 3, nice 10), read
+through sop @ 7ce5c50 (residual explained); the typer re-fitted as R79 fitted it (seed 0, training annotation) and its lexicon checked
+equal to every world's saved kinds.tsv (the script stops otherwise). Per world and utterance: (a) the explained residual, (b) the
+`intent` anchor role's cleanup score (top cosine of the world's single intent symbol after unbinding the role) and the structure score
+(mean top over the core roles; they coincide in the worlds whose only core role is `intent`, and differ in AddToPlaylist, RateBook and
+SearchCreativeWork, whose core also holds playlist / rating_value / object_name), (c) the min slot margin; each as its percentile in the
+world's own calibration distribution (the first 200 of its training utterances, the rows of R79's thresholds; percentile = share of
+calibration values strictly below). Rules, side by side: residual raw (= R79; the run must reproduce R79's intent accuracy exactly),
+residual percentile, anchor percentile (ties: raw anchor), anchor then residual (lexicographic: anchor percentile, then residual
+percentile, then raw residual), sum of the two percentile ranks (anchor pct - residual pct); since the structure score differs from the
+anchor, a structure-percentile rule is printed as a sixth line. Rejection unchanged (every world's residual above its R79 threshold);
+second line: every world's anchor percentile under 0.02. Per rule: dispatch intent, span F1 (typer + reader), held-out vs in-domain
+AUROC of the chosen world's residual (second line: of its anchor percentile). Results
+logs/results_real_snips_<condition>_reader_worlds_r80_<rule>_full_seed<s>.json. A 30-item smoke test (seed 0, ood_intents; not a
+result, outputs deleted) ran every rule.
+
+Written before the run (R80): the anchor rule should move dispatch intent well above 0.716 (R79 seed 0; R79 mean 0.731); if the anchor
+alone reaches >= 0.9, the per-intent configuration is kept with that rule for the demo and R78 (1) runs on it; otherwise option 2
+(one-vs-rest negatives in training) is declared next by the author, and option 3 stays the fallback. R78 (1) is on HOLD until then.
