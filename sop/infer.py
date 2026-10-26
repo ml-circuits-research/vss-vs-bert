@@ -273,6 +273,17 @@ class Reader:
         if presence == "all": present = True
         out["present"] = present
         if thr is not None and presence != "all": out["presence_margin"] = abs(ratio - thr)    # the PRESENCE margin (judgment 752853c §2)
+        if self.cfg.get("presence_by_kind") and presence != "all" and filt is not None:
+            # R88 (C): presence by kinds where a kind names one question. The kinds given (in context when token_kinds were passed) decide:
+            # a word of a kind that only this question admits -> present; no word of any admitted kind -> absent; words only of shared
+            # kinds -> the threshold as above. The decision is recorded in out["presence_rule"].
+            admitted = set(rs.get("head_kinds") or rs.get("kinds") or [])
+            others = {k for q, qs in self.schema["roles"].items() if q != r for k in (qs.get("head_kinds") or qs.get("kinds") or [])}
+            sk = {self.kind(w) for w in filt}
+            if admitted & sk & (admitted - others): out["present"], out["presence_rule"] = True, "unique kind present"; out.pop("presence_margin", None)
+            elif not (admitted & sk): out["present"], out["presence_rule"] = False, "no word of an admitted kind"; out.pop("presence_margin", None)
+            else: out["presence_rule"] = "threshold (shared kinds)"
+            present = out["present"]
         if not present: return out
         if rs["main"] == "entity":
             h, mg, top = self.best(Sn * key, self.cands(rs["head_kinds"], filt)); out["margins"][r] = mg
@@ -370,6 +381,7 @@ class Reader:
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
             if "member_ratios" in o: f["presence"][r + ".members"] = o["member_ratios"]
+            if "presence_rule" in o: f.setdefault("presence_rules", {})[r] = o["presence_rule"]
             if "presence_margin" in o:
                 given = o.get("present") and o.get("filler") is not None
                 if given or not self.cfg.get("presence_query"): f["margins"][r + ".presence"] = o["presence_margin"]
