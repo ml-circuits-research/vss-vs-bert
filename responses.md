@@ -1343,3 +1343,9 @@ budget if it fits, the architecture's own configuration:
 Written before: the per-world readers are expected to be smaller and their slot readout less crowded than the single world's; the
 dispatch may lose a little intent accuracy against the closed-value intent role. Whatever the numbers, both configurations (one world,
 7 worlds) are reported side by side. If the budget runs out, item 4 has priority over item 2's vorder variant.
+
+## R73 (drop the verb-order route from the SNIPS rows; 2026-10-26 09:15)
+
+Do not add `vorder` to any SNIPS row (R71 item 2 said "only if it runs without a change"; now: not at all). It addresses roles that
+appear without their usual cue word (clefts, the double object); on SNIPS the slots are separated by type, not by position around a
+verb, so it would add size and time for no expected gain. The three routes only, in R71 and R72.
