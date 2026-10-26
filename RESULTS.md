@@ -2671,3 +2671,41 @@ stated before the run: the refusal pass reads with the schema's admission sets, 
 The one-config refusal is line B's refusal (0.380 in R88), not line A's. The separation is unchanged (AUROC 0.926 vs 0.925); the
 residual's scale is not (the thresholds rise by 0.03-0.08), so the operating point moves. A refusal block that also restores the stored
 admission sets (or a schema carrying both) would be needed to reproduce line A; that is the author's (sop). The export waits for it.
+
+## R84 item 4 / R91: the demo export, measured (logs/2026-10-26_1859_export_demo_0cffd2e.txt; vss/export_demo.py; reading sop @ 040d44e, export-web and typer export by sop @ 25de418; MEASURED)
+
+Seed 2 (tie on dev dispatch 0.9657, best dev span F1 0.8941). Folder **logs/export/snips_demo_seed2/** on the DGX (untracked, not in
+git; 114.2 MB): worlds/<intent>/ for the seven base worlds (each model.json 0.79 MB, routebook.bin 8.72 MB, stars.bin 6.39 MB,
+manifest.json; 8-bit phases, D 512, star_version 1: export-web notes that words outside the catalog get no identity in the browser);
+typer/typer.json 38.1 kB and typer/typer.bin 2,762.4 kB (kept rows 56,376 of 65,536 hashed rows: 2.8 MB, NOT "well under 1 MB" as R91
+expected; the re-loaded export reproduces the in-memory typer's sentence kinds on 0.990 of 200 dev_rep utterances, not 1.000);
+reading.json (40 kB): dispatch = anchor percentile with each world's 200 calibration anchors; frame = line C's decoder keys and per-world
+admission sets; refusal = line A's keys, pooled dev_cal 2% threshold 0.8128 (R90 seed 2), per-world 98th percentiles as an unmeasured
+second field (AddToPlaylist 0.736, BookRestaurant 0.821, GetWeather 0.776, PlayMusic 0.727, RateBook 0.470, SearchCreativeWork 0.828,
+SearchScreeningEvent 0.790). This export carries R90's reading as TWO reader configurations (frame C, refusal A) described in
+reading.json over unmodified models; R92 then asked for one config per world with the refusal block, which is the export below.
+
+## Declared but not run (2026-10-26, R93 close of the day)
+
+- **R92 step 2, the single-config demo export** (one config per world with the `refusal` block, seed chosen, export-web, typer,
+  reading.json with per-world thresholds): NOT RUN. R92 step 1's check reproduced the frame but not the refusal (0.377 vs 0.460, cause:
+  the refusal pass uses the schema's (B) admission sets), and R93 stopped new launches. The reading copies the check wrote are kept
+  (logs/export/r92_reading_copies/).
+- **R78 (2)**, the held-out-intent refusal of the per-intent configuration as the q-formalisation row: not run as its own row (R90 item
+  1 measured the demo's refusal, 0.460 held-out at 0.016 false rejection, which is its content); open for tomorrow (R93).
+- **R86's D 1024 trial for BookRestaurant**: not run, by R86's own rule (no role's presence separation under 0.1).
+- **R85 under the paired test**: run (above); the per-world span-F1 readout of the vorder models (AddToPlaylist *_r85act*) was not run.
+- **The SGD-DST baseline** (R93's list): not declared yet.
+
+## Model and export folders on the DGX (2026-10-26 close; untracked; nothing deleted)
+
+| folder | contents | count | size |
+|---|---|---|---|
+| logs/worlds/real_snips_<condition>_intent_<I>_seed<s>/ | R75 per-intent worlds (no anchor) | 39 | 1.2 GB |
+| logs/worlds/real_snips_<condition>_intent_<I>_seed<s>_r79/ | R79 (intent anchor) | 39 | 1.2 GB |
+| logs/worlds/real_snips_<condition>_intent_<I>_seed<s>_r81/ | R81 (anchor + one-vs-rest negatives): the demo configuration | 39 | 1.2 GB |
+| logs/worlds/real_snips_base_intent_<I>_seed<s>_r85act/ | R85 activation, 82585ea rule (AddToPlaylist trained; the other six R81 copies) | 21 | 843 MB |
+| logs/worlds/real_snips_base_intent_<I>_seed<s>_r85act_paired/ | R85 under the paired test | 21 | 761 MB |
+| logs/worlds/real_snips_base_full/ | the one-world R71 configuration | 1 | 3.3 MB |
+| logs/export/snips_demo_seed2/ | the demo export of R84 item 4 / R91 (above) | 1 | 109 MB (114.2 MB in bytes) |
+| logs/export/r92_reading_copies/<condition>_seed<s>/ | R92 step 1's reading copies (one config per world) | 6 | 1.2 GB (base 221 MB, ood 161 MB each) |

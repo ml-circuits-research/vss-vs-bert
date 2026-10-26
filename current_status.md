@@ -1,5 +1,23 @@
 # current status (rewritten at every judgment point)
 
+## 2026-10-26 19:15 — close of the day (R93)
+
+SNIPS, per-intent configuration (seven worlds, intent anchor, one-vs-rest negatives; R81 models, seeds 0-2):
+- The demo reading (R90 item 1, MEASURED): dispatch by the anchor percentile 0.966 (one-world reader 0.977, BERT-tiny 0.985); frame =
+  R88 line C (in-context kinds, admission from them, presence by kinds, kind_run spans, presence queries) span F1 0.892 (typer alone
+  0.886; R81 0.824); refusal = line A's explained residual of the chosen world above its dev-calibrated 2% threshold: 0.460 of the
+  held-out intent refused at 0.016 in-domain false rejection.
+- Causes on record: R75's thresholds at 1.0 came from the frame-incomplete clause (Q33); the readout's losses were presence decisions
+  between sibling questions that admit each other's lexicon kinds (R86); presence by kinds closes most of them.
+- R85 (vorder on AddToPlaylist): need signal fired on one world; under the paired test the route is rejected on 2 of 3 seeds and wins
+  nothing on its marked rows.
+- R92 step 1: one config per world reproduces the frame but not the refusal (0.377: the refusal pass reads with (B)'s admission sets).
+- Export: logs/export/snips_demo_seed2/ (seed 2; 7 worlds via export-web, typer 2.8 MB, reading.json with R90's two-config reading);
+  the single-config export of R92 is declared, not run.
+
+Open for tomorrow (R93): R90 item 2's outcome (above: 1 of 3 accepted), the demo export with the single config (needs the refusal
+pass to read the stored admission sets), R78 (2) on the per-intent configuration, the SGD-DST baseline. Nothing runs.
+
 ## 2026-10-25 22:30 — JP 1 (the experiment stops here by the owner's rule R48)
 
 What was measured (RESULTS 'JP 1: synthesis' holds both tables, the confirmatory results, the regime statements and the limitations):

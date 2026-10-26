@@ -146,3 +146,16 @@ rows running (first attempt OOM under a 4% allocator cap, restarted). Files open
 R68 (B) measured within the hour: SNIPS full and ood_intents, the reader and BERT-tiny, 3 seeds (the reader's first attempt failed on
 a 4% allocator cap and was restarted). Not computed, stated in RESULTS: sentence-level span exact match, the reader's residual AUROC,
 BERT-tiny's Mahalanobis on SNIPS. R70: nothing else runs.
+
+## 2026-10-26 13:00-19:15 — SNIPS per-intent configuration, R79-R93 (experimental session)
+
+R79 (intent anchor) fixed R75's thresholds but left dispatch at 0.731; R80's anchor-percentile dispatch reached 0.863; R81's one-vs-rest
+negatives brought it to 0.966 (span F1 0.824, residual AUROC 0.941) and the configuration was kept for the demo. R84-R88: the refusal
+line is the chosen world's residual (0.183 at 2% FR); the readout's loss is in presence decisions caused by mutually admitted kinds
+(not interference, not same-kind competition); the typer's in-context kinds, admission from them, and presence by kinds (author's sop
+rules, re-scores of the saved models) bring span F1 to 0.892 (typer alone 0.886). R90: the demo reading = anchor dispatch, frame C,
+refusal by line A's residual: 0.460 held-out at 0.016 false rejection. R85: vorder accepted on 1 of 3 seeds under the paired test,
+never on its marked rows. R92's one-config check reproduced the frame, not the refusal. Failures of mine, recorded in RESULTS: the R87
+dispatch runs (a key collision in the result row), the first two R85 launches (negatives in the need-signal profile; the "command"
+placeholder's lexicon kind as a verb category). The demo export of seed 2 is in logs/export/snips_demo_seed2/ (not in git). Files
+opened: the SNIPS splits and the saved per-intent models; no test row was used to set a threshold. Nothing runs (R93).
