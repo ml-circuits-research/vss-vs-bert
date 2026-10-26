@@ -2298,3 +2298,18 @@ questions (BookRestaurant, 14), the opposite of R78's first suspect (few questio
 0.01 except SearchScreeningEvent, 0.772 vs 0.796). Unplaced words of the oracle reading are the intents' own cue words (playlist, in,
 forecast, movie, out, the), never filled by any question. The activation part (--activate auto) is on hold (coordinator, Q37): the
 per-intent legends declare no verb word, so the verb-order route would find no verb category.
+
+## R84 item 3: re-score of the R81 models with the current contract decoder (DECLARED 2026-10-26, before the run; eval/r80_dispatch.py --decoder)
+
+R83 paragraph. What fails: the chosen frame abstains often (R79, residual dispatch: 0.61 on test); the R84 item 2 readout puts the span
+loss in presence decisions. Where the cause is: the reader, a contract rule: with the paper decoder an ABSENT optional role whose
+presence margin is under tau enters the frame's margin, so the whole frame abstains (R82 rule 1, presence_query). What is changed:
+nothing is trained; the same saved R81 models, the same R80 rules, read through sop @ b467e4b (scratch copy of repo commit 3065560's
+sop/) with the contract rules of that version set in each reader's config at load (the models were written with decoder "paper"):
+candidates = sentence (also the sentence's verbs for a predicate; the per-intent worlds have none), undecided_adjacent, residual
+explained, presence_query. Lines: (A) sop @ 82585ea, decoder paper (the R81 reading, now with the chosen-frame abstention and presence
+queries recorded); (B) sop @ b467e4b, contract; (C) sop @ b467e4b, presence_query alone (second line, base only), to separate it from
+undecided_adjacent. Conditions base and ood_intents for A and B, seeds 0-2. Which number is expected to move (R84): the chosen-frame
+abstention down; dispatch and spans unchanged. Results logs/results_real_snips_<condition>_reader_worlds_r81r80[_contract |
+_presence_query]_<rule>_full_seed<s>.json. Seen before the run in a 40-item smoke test (seed 0, base, B; not a result): the chosen frame
+abstained on every dev_rep utterance under B, which the C line is there to explain.

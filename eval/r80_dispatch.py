@@ -20,7 +20,7 @@ Rejection: unchanged (every world's residual above its own R79 threshold, the 98
 world's anchor percentile under 0.02. Per rule: dispatch intent, span F1, held-out vs in-domain AUROC of the chosen world's residual (and,
 second line, of its anchor percentile). Writes logs/results_real_snips_<condition>_reader_worlds_r80_<rule>_full_seed<s>.json.
 Run: ./run.sh eval/r80_dispatch.py --condition base|ood_intents --seed S"""
-import argparse, json, os, sys, types
+import argparse, importlib, json, os, sys, types
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from vss import run_reader_real as rr
 from common import mainrepo, real_data as rd, report_real
@@ -36,6 +36,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only")
     ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)")
+    ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query"], help="R84 item 3: 'contract' = the sop version's contract rules set in each reader's config at load (the models were written with decoder paper); 'presence_query' = that rule alone")
     ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version the models were trained with (R82: the tree may hold a newer sop/)"); a = ap.parse_args()
     if a.sop_dir:   # loaded as 'sop_repo' before rr.load_sop_repo(), which then returns it
         import importlib, importlib.util
@@ -58,6 +59,8 @@ if __name__ == "__main__":
         leg = json.load(open(os.path.join(wd, "legend.json"))); rinv = {r["id"]: r["question"][5:] for r in leg["roles"] if r["question"].startswith("slot ")}
         all_types |= set(rinv.values())
         R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"
+        if a.decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3: the sop version's contract rules
+        elif a.decoder == "presence_query": R.cfg["presence_query"] = True                                          # second line: that rule alone
         assert "intent" in R.schema["core_roles"], f"world {I}: intent is not a core role"
         W[I] = {"R": R, "rinv": rinv, "train": [i for i in cond["train"] if items[i]["intent"] == I][:200]}
     rep_op = lambda R: np.conj(R.st.op("says.scope")) if "says" in R.legend.operators else 1.0
@@ -76,7 +79,7 @@ if __name__ == "__main__":
         mm = [float(v) for v in f.get("margins", {}).values()]
         sm = [float(f["margins"][r]) for r in R.schema["role_order"] if r != "intent" and r in f.get("margins", {})]
         return {"frame": fr, "status": info["status"], "residual": float(info["residual"]), "anchor": float(anchor), "structure": structure,
-                "min_margin": min(mm) if mm else 0.0, "min_slot_margin": min(sm) if sm else 0.0,
+                "min_margin": min(mm) if mm else 0.0, "min_slot_margin": min(sm) if sm else 0.0, "n_presence_queries": len(f.get("presence_queries", {})),
                 "margins": {rinv.get(r, r): float(f["margins"].get(r, 0.0)) for r in R.schema["role_order"] if r != "intent"}}
 
     cal = {}
@@ -111,7 +114,7 @@ if __name__ == "__main__":
         order = sorted(outs, key=lambda I: KEY[rule](outs[I])); b = outs[order[0]]
         fr = dict(b["frame"]); fr["intent"] = order[0]; mg = dict(b["margins"])
         mg["intent"] = (SCORE[rule](b) - SCORE[rule](outs[order[1]])) if len(order) > 1 else 1.0
-        return {"frame": fr, "margins": mg, "status": b["status"], "residual": b["residual"], "p_anchor": b["p_anc"],
+        return {"frame": fr, "margins": mg, "status": b["status"], "residual": b["residual"], "p_anchor": b["p_anc"], "chosen_abstains": b["status"] == "abstain", "n_presence_queries": b["n_presence_queries"],
                 "rejected_by_every_world": all(o["residual"] > cal[I]["thr"] for I, o in outs.items()),
                 "rejected_by_anchor_pct": all(o["p_anc"] < 0.02 for o in outs.values()),
                 "spans": rr.spans_by_typer(it["tokens"], fr, ty, T), "spans_typer_only": rr.spans_typer_only(it["tokens"], ty)}
@@ -130,11 +133,14 @@ if __name__ == "__main__":
         for k in [x for x in preds if x.startswith("ood:")]:
             ind = k.split(":", 1)[1] + ":in_domain"
             if ind in preds: auroc_anc[k] = report_real.auroc([x["p_anchor"] for x in preds[ind]], [x["p_anchor"] for x in preds[k]])
-        row = report_real.evaluate(f"VSS, one world per intent + intent anchor{' + negatives' if a.models == 'r81' else ''}, dispatch {rule} (R80 rules, saved {a.models.upper()} models)", f"reader_worlds_{'r80' if a.models == 'r79' else 'r81r80'}_{rule}", cond, a.seed, None, preds,
-                                   cond["dev_cal"], cal_p, sorted(all_types), extra={"rule": rule, "rejected_by_every_world": rej, "rejected_by_anchor_pct": rej_a,
+        row = report_real.evaluate(f"VSS, one world per intent + intent anchor{' + negatives' if a.models == 'r81' else ''}, dispatch {rule} (R80 rules, saved {a.models.upper()} models)", f"reader_worlds_{'r80' if a.models == 'r79' else 'r81r80'}{'' if a.decoder == 'paper' else '_' + a.decoder}_{rule}", cond, a.seed, None, preds,
+                                   cond["dev_cal"], cal_p, sorted(all_types), extra={"rule": rule, "decoder": a.decoder, "rejected_by_every_world": rej, "rejected_by_anchor_pct": rej_a,
+                                   "chosen_abstains": {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()},
+                                   "presence_queries_per_utterance": {k: float(np.mean([p["n_presence_queries"] for p in v])) for k, v in preds.items()},
+                                   "share_with_presence_query": {k: float(np.mean([p["n_presence_queries"] > 0 for p in v])) for k, v in preds.items()},
                                    "ood_auroc_anchor_pct": auroc_anc, "world_thresholds": {I: cal[I]["thr"] for I in W}, "sop": src, "models": f"{a.models.upper()} saved, seed {a.seed}"})
         summary[rule] = row
-        print(f"  [{rule}] " + "; ".join(f"{k}: intent {row['sets'][k]['intent']:.3f} span F1 {row['spans'][k]['f1']:.3f} rejected {rej[k]:.3f} (anchor pct < 0.02: {rej_a[k]:.3f})" for k in ev)
+        print(f"  [{rule}] " + "; ".join(f"{k}: intent {row['sets'][k]['intent']:.3f} span F1 {row['spans'][k]['f1']:.3f} rejected {rej[k]:.3f} (anchor pct < 0.02: {rej_a[k]:.3f}) chosen frame abstains {row['chosen_abstains'][k]:.3f} with a presence query {row['share_with_presence_query'][k]:.3f}" for k in ev)
               + "".join(f"; AUROC {k} residual {row['ood_auroc_residual'][k]:.3f} anchor pct {auroc_anc[k]:.3f}" for k in auroc_anc), flush=True)
     for k in ev:
         if k in r79["sets"]: print(f"  check: residual_raw reproduces the run's own residual dispatch ({a.models}) on {k}: intent {summary['residual_raw']['sets'][k]['intent']:.4f} vs the run {r79["sets"][k]["intent"]:.4f}")
