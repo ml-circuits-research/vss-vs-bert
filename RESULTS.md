@@ -1996,7 +1996,7 @@ readers 20.9 M phases (base; 16.1 M ood) + the typer 2.69 M; 18.7 ms per utteran
 SearchCreativeWork 3.8 / 3.8 / 0.0, SearchScreeningEvent 0.3 / 0.3 / 0.0; vorder's need signal FIRES on AddToPlaylist, BookRestaurant and
 SearchCreativeWork (against the expectation written in R74); not acted on (R73).
 
-## R75: one world per intent, fixed (every typer kind in every world; dispatch by the explained residual) (vss/run_reader_real.py --worlds per_intent --world_kinds all --dispatch residual --D 512; logs/2026-10-26_1012_ to _1017_run_reader_real_4668217.txt, one process per seed and condition; results logs/results_real_snips_*_reader_worlds_r75_full_seed{0,1,2}.json; MEASURED)
+## R75: one world per intent, fixed (every typer kind in every world; dispatch by the explained residual) (vss/run_reader_real.py --worlds per_intent --world_kinds all --dispatch residual --D 512; logs/2026-10-26_1012_run_reader_real_4668217.txt and _1013_ to _1017_run_reader_real_1f8379c.txt (the same code; 1f8379c changed RESULTS only), one process per seed and condition; results logs/results_real_snips_*_reader_worlds_r75_full_seed{0,1,2}.json; MEASURED)
 
 Seeds 0-2, both conditions, six concurrent processes (times are not cost numbers); D 512, 10 epochs, path + chainL + bigram; the typer
 kinds of R71 kept whole in every world's lexicon; read through sop @ 28db081 (every process imported that commit; sop/ was not pulled
