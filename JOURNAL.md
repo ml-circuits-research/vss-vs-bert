@@ -140,3 +140,9 @@ R68 (A), the depth-invariant tagger: X3 0.282 (one seed 0.988, four 0.00-0.30): 
 R69: the residual through sop @ c126cbe equals the transcription apart from the declared tolerance; the demo criterion for route b is
 met for the random and reference sources on all five claim seeds at a threshold of 0. R68 (B) SNIPS: BERT-tiny rows done; the reader's
 rows running (first attempt OOM under a 4% allocator cap, restarted). Files opened: none beyond the run outputs.
+
+## 2026-10-26 08:45 — the experiment closed (R70; experimental session)
+
+R68 (B) measured within the hour: SNIPS full and ood_intents, the reader and BERT-tiny, 3 seeds (the reader's first attempt failed on
+a 4% allocator cap and was restarted). Not computed, stated in RESULTS: sentence-level span exact match, the reader's residual AUROC,
+BERT-tiny's Mahalanobis on SNIPS. R70: nothing else runs.

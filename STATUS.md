@@ -48,3 +48,7 @@
 | legend growth, reader (R49) | VSS reader | MEASURED (0-4 and 5-9) | logs/2026-10-25_1908_ / _1934_reader_growth_*.txt | template 4 from 50 examples, 135 s alone, cell -> 1.000, no drop beyond std; level 3: 0 examples | |
 | LLM reference (R27 / R32 / R33) | claude-sonnet-5-5, 10-shot | MEASURED | logs/2026-10-25_1608_llm_reference_79fff34.txt | slot accuracy 0.95-1.00; depth-3 exact match 0.955; determinism 0.978; 2.33 USD | reference, not a baseline |
 | sop EQUAL checks (R58 item 1) | VSS reader | BLOCKED (Q29) | | | sop/ lacks the role / level vector table |
+| depth-invariant tagger (R68 A), basic world, seeds 5-9 | BERT-tiny tagger, one speaker label | MEASURED | logs/2026-10-26_0755_bert_spk_5ee98a1.txt | X3 0.282 ± 0.369; six-question exact match at depth 3 0.273; inner 0.957 | < 0.5: the example stands against this head |
+| SNIPS full (R68 B), 3 seeds | reader / BERT-tiny | MEASURED | logs/2026-10-26_0759_run_reader_real_c427a09.txt; _0753_bert_real_2fb27b8.txt | intent 0.976 / 0.985; slot F1 0.387 / 0.831 | the pretrained encoder above, as written |
+| SNIPS ood_intents (R68 B), 3 seeds | reader / BERT-tiny | MEASURED | logs/2026-10-26_0800_run_reader_real_c427a09.txt; _0755_bert_real_6abb05e.txt | intent-margin AUROC 0.951 / 0.982 | residual AUROC and Mahalanobis not computed |
+| refusal through the tool (R69) | reader + R46, explained residual | MEASURED | logs/2026-10-26_0813-0816_sop_check_8a49c06.txt | route b, claim set: random 0.984, reference 0.928 at 0.000 FR | demo criterion met for those sources (threshold 0) |

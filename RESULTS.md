@@ -1928,3 +1928,29 @@ random 0.982-0.986 and reference 0.914-0.948 of the out-of-world sentences at 0.
 1.000 in the transcription, was not re-scored through the tool). It is met by the same score without the route as well (1a + R46: the
 same rejection shares), and on the design set it is missed on seed 0 (reference 0.880). It rests on the threshold of 0: any sentence
 with an unexplained token or an unanswered question is rejected, every in-world sentence of this world being fully explained.
+
+## R68 (B): SNIPS, the reader and BERT-tiny (logs/2026-10-26_0759_ / _0800_run_reader_real_c427a09.txt, _0753_ / _0755_bert_real_*.txt; MEASURED)
+
+Frozen splits data/real/splits_snips.json; 3 seeds; full training set; the commands of the execution notes above (BERT-tiny lr 1e-4,
+10 epochs, no grid; the reader 10 epochs). Concurrent runs: times are not cost numbers. Primary metrics: intent accuracy and the
+conlleval-style slot F1 (span F1); the head-token frame exact match ("FULL") is secondary. **Sentence-level exact match with full spans
+is not computed by these scripts** (the scorer has the head-token frame only) and was not added within the hour.
+
+| test set (n) | metric | reader (24.5 M phases, 90.7 MB fp32 / 12.3 MB 4-bit) | BERT-tiny pretrained (4.4 M, 18 MB) |
+|---|---|---|---|
+| test (700) | intent accuracy | 0.976 ± 0.001 [0.977 0.976 0.976] | 0.985 ± 0.002 [0.983 0.987 0.986] |
+| test (700) | slot F1 (spans) | **0.387 ± 0.018** [0.408 0.363 0.390] | **0.831 ± 0.007** [0.838 0.834 0.821] |
+| test (700) | head-token frame exact (secondary) | 0.135 ± 0.020 | 0.715 ± 0.007 |
+| test: new slot values (207) | intent / slot F1 / new-value heads | 0.986 / 0.270 / 0.107 | 0.992 / 0.783 / 0.743 |
+| test: unseen templates (402) | intent / slot F1 | 0.964 / 0.342 | 0.975 / 0.805 |
+| ood_intents: in-domain test (600) | intent / slot F1 | 0.971 / 0.418 | 0.985 / 0.823 |
+| ood_intents: held-out intents, test (100) | AUROC in-domain vs held-out, intent margin [per seed] | 0.951 [0.944 0.957 0.951] | 0.982 [0.987 0.975 0.986] |
+| ood_intents: held-out intents, test (100) | rejected at the 2% FR threshold (frame margin, dev calibration half): confidently mapped | 0.027 (abstained otherwise; coverage 0.027) | 0.023 (coverage 0.023) |
+
+CPU cost (numpy, one sentence): the reader 5.0-9.1 ms per sentence (concurrent load). Reading, as R68 wrote it before the run: on SNIPS
+the pretrained encoder is above the reader, on intent slightly (0.985 vs 0.976) and on slots by far (span F1 0.831 vs 0.387); the
+reader reads heads and has no pretraining, and at 24.5 M phases on this vocabulary it is also LARGER than BERT-tiny here. On the
+held-out intents BERT-tiny's intent margin separates in- from out-of-domain better (AUROC 0.982 vs 0.951). Not computed within the
+hour, stated: the AUROC of the reader's residual (the scripts store the intent-margin AUROC only) and BERT-tiny's Mahalanobis score;
+the 2% threshold row above is the scripts' frame-margin rule. The ood_intents row is the q-formalisation row on real data as R68 wrote:
+both models leave nearly every held-out-intent sentence below their frame threshold (coverage 0.02-0.03).
