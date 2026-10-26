@@ -2480,3 +2480,55 @@ typer lexicon with the kind S:movie_name, so every S:movie_name word was a verb 
 test; coordinator, 2026-10-26): the event's verbs are the declared command verbs only (["add"]), and the run prints the route's verb kinds
 and aborts unless every one is w:<verb>. Seed 0 is re-run; seeds 1-2 only if seed 0 accepts. The folders *_r85act and the tag
 reader_worlds_r85act of this launch are overwritten by the re-run.
+
+## R87 and R88 lines A, B, C: measured (re-scores of the saved R81 models; logs 2026-10-26_1541_ to _1608_ (R87 relaunch, R88 A / B; index of command -> log in each log's header) and _1610_ to _1627_ (R88 C and the per-world span-F1 pass), r80_dispatch / r84_oppoints / r86_presence; code 76a62b0 (A / B, R87) and 13c1fec (C, per-world F1); sop @ de11429 (R87), 4a0eba8 (A, B), 040d44e (C); MEASURED)
+
+Anchor-percentile dispatch, seeds 0-2 [per seed]. "pq" = share of utterances carrying a presence query.
+
+| line | base test: dispatch | base span F1 [per seed] | head-frame exact | chosen frame abstains | pq | ood_intents in-domain: span F1 | abstains | residual AUROC held-out [per seed] | refusal at 2% FR (dev_cal thr): held-out / test FR |
+|---|---|---|---|---|---|---|---|---|---|
+| R81 (sop 82585ea, paper) | 0.966 | 0.824 ± 0.006 | 0.565 | 0.528 | 0.000 | 0.825 | 0.514 | 0.941 ± 0.004 | 0.183 / 0.008 |
+| R87 B: contract + kind_run (de11429) | 0.966 | 0.833 ± 0.002 | 0.587 | 0.653 | 0.236 | 0.829 | 0.637 | 0.942 ± 0.007 | 0.170 / 0.009 |
+| R87 C: presence_query + kind_run (de11429) | 0.966 | 0.824 | 0.565 | 0.433 | 0.236 | — | — | — | — |
+| R88 A: + in-context kinds (4a0eba8) | 0.966 | 0.826 ± 0.005 | 0.569 | 0.422 | 0.264 | 0.826 | 0.426 | 0.925 ± 0.009 | **0.460** / 0.016 |
+| R88 B: A + admission from in-context kinds | 0.966 | 0.870 ± 0.001 [0.869 0.871 0.869] | 0.636 | **0.299** | 0.366 | **0.859** | **0.332** | 0.926 ± 0.007 | 0.380 / 0.017 |
+| R88 C: B + presence_by_kind (040d44e) | 0.966 | **0.892 ± 0.001** [0.890 0.891 0.893] | **0.699** | 0.298 | 0.011 | 0.853 | 0.404 | 0.907 ± 0.006 | 0.267 / 0.017 |
+
+Refusal operating points (ood_intents, chosen world's residual, dev_cal thresholds, test) at 1% / 2% / 5%: R81 0.080 / 0.183 / 0.467;
+R87 B 0.080 / 0.170 / 0.460; A 0.353 / 0.460 / 0.660; B 0.060 / 0.380 / 0.650; C 0.040 / 0.267 / 0.427 (test false rejection 0.004-0.033
+throughout; base test false rejection at the 2% threshold: R81 0.007, A 0.015, B 0.027, C 0.025).
+
+Per world, base test (own world, the readout alone; mean over seeds): span F1 typer + reader / false fills / misses per seed.
+
+| world | typer alone | R81 | A | B | C |
+|---|---|---|---|---|---|
+| AddToPlaylist | 0.867 | 0.868 / 23 / 15 | 0.868 / 22 / 15 | 0.888 / 11 / 20 | 0.889 / 14 / 14 |
+| BookRestaurant | 0.921 | 0.731 / 74 / 58 | 0.735 / 68 / 61 | 0.847 / 6 / 64 | **0.911** / 12 / 20 |
+| GetWeather | 0.901 | 0.862 / 26 / 26 | 0.867 / 22 / 28 | 0.886 / 5 / 35 | **0.918** / 8 / 17 |
+| PlayMusic | 0.802 | 0.751 / 66 / 32 | 0.754 / 61 / 35 | 0.817 / 12 / 52 | **0.831** / 17 / 40 |
+| RateBook | 0.965 | 0.955 / 4 / 3 | 0.957 / 2 / 3 | 0.964 / 2 / 5 | **0.968** / 2 / 3 |
+| SearchCreativeWork | 0.767 | 0.763 / 7 / 2 | 0.760 / 9 / 2 | 0.773 / 0 / 11 | **0.779** / 0 / 9 |
+| SearchScreeningEvent | 0.879 | 0.796 / 25 / 29 | 0.805 / 10 / 33 | 0.864 / 0 / 36 | **0.912** / 1 / 17 |
+| all worlds (sum) | | 224 / 165 | 193 / 177 | 36 / 223 | 54 / 121 |
+
+Which rule decided presence under C (all questions, test utterances, seeds 0-2): "no word of an admitted kind" 10176, "unique kind
+present" 4647, "threshold (shared kinds)" 1077; the threshold still decides a large share only where kinds are shared: PlayMusic artist
+0.65 and genre 0.64, RateBook object_part_of_series_type 0.83, object_name 0.49, object_type 0.40, BookRestaurant city 0.29 and poi 0.29
+(per-question shares in logs/results_r86_presence_r88c_seed<s>.json).
+
+**Against the expectations.** R87 (line B, contract with kind_run): no longer abstains on every multi-word slot (0.821 -> 0.653) but its
+abstention is NOT at or below line C's (0.433): not met; dispatch unchanged and span F1 +0.009: met; the residual change moved the
+operating points within noise (2% held-out 0.183 -> 0.170). R88 A: sibling false fills fall by most of their share: NOT met (224 -> 193
+false fills; the sibling share of the remaining fills 0.80): context kinds in the candidates alone barely act while the admission sets
+stay wide; misses unchanged: met (165 -> 177). Unexpected: A's refusal at 2% rises to 0.460 (from 0.183) at 0.016 test FR. R88 B: false
+fills fall further: met (193 -> 36, -84%); misses rise: met as expected direction (177 -> 223); span F1 0.870 (+0.046). R88 C: misses
+with an admitted kind turn into fills: met (223 -> 121); per-world span F1 reaches or passes the typer alone in BookRestaurant (0.911 vs
+0.921), GetWeather (0.918 vs 0.901), PlayMusic (0.831 vs 0.802), RateBook, SearchCreativeWork, SearchScreeningEvent (0.912 vs 0.879) and
+AddToPlaylist (0.889 vs 0.867); overall 0.892 vs the typer's 0.886. Costs of C: refusal at 2% 0.267 (B 0.380, A 0.460), residual AUROC
+0.907, and on ood_intents in-domain C (0.853, abstention 0.404) is below B (0.859, 0.332).
+
+**Demo reading (R88: best in-domain span F1 at unchanged dispatch):** dispatch is unchanged in every line (0.966). On the base condition
+(the demo's seven worlds) line C is best (0.892 ± 0.001 vs B 0.870); on ood_intents' in-domain test line B is best (0.859 vs C 0.853).
+The demo exports the base worlds, so the reading by R88's rule is **line C** (sop @ 040d44e, presence_by_kind, presence_query,
+reader.spans kind_run, token_kinds = the typer's in-context kinds, admission sets from the in-context kinds >= 2%); stated with its
+costs: its refusal at 2% is lower (0.267 vs B 0.380 and A 0.460) and the ood_intents in-domain span F1 favours B by 0.006.
