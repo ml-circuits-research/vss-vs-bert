@@ -376,7 +376,9 @@ class Reader:
             f["lemma"] = lem; f["event"] = self.legend.event_of_lemma(lem); f["margins"]["event"] = mg
         else:
             f["event"] = sch.get("single_event") or next((self.legend.event_of_lemma(self.lemma(t)) for t in tokens if self.legend.event_of_lemma(self.lemma(t))), None)
+        taken = self.legend.event_roles.get(f.get("event")) if f.get("event") else None     # Q12 / D19: the roles the decided event takes
         for r in sch["role_order"]:
+            if taken is not None and r not in taken: f["presence"][r] = 0.0; continue            # not a role of this event: not read, no candidate
             o = self.read_role(Sn, K, r, core, filt, presence); f["presence"][r] = o["presence"]
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
@@ -393,6 +395,9 @@ class Reader:
                     f["margins"][r] = min(o["margins"].get(r, 1.0), o["presence_margin"])   # the role's margin = min(identity, presence)
                 if "det_best" in o: f.setdefault("det_best", {})[r] = o["det_best"]
         if filt is not None and self.cfg.get("candidates") == "sentence": self.one_to_one(Sn, K, core, f, filt, presence)
+        if self.cfg.get("presence_query") and f.get("event") in self.legend.event_required:        # Q12 / D19: a required role not given is asked for
+            for r in self.legend.event_required[f["event"]]:
+                if f["roles"].get(r) is None: f.setdefault("presence_queries", {})[r] = f["margins"].pop(r + ".presence", 0.0)
         st = self.legend.reader.get("scope_terms")
         if st: self.read_scope(Sn, K, core, f)
         if f["event"] is None: f["shape"] = "unknown"
@@ -577,7 +582,8 @@ class Reader:
     def frame_incomplete(self, f):
         """a frame that does not answer every always-present (core) question of the legend, or a speaker of its depth, explains nothing as a
         frame: the explained residual is then 1.0 (vss-vs-bert R42 / Q30; an optional role left 'not given' does not count)"""
-        if any(f["roles"].get(r) is None or self.head_of(f["roles"].get(r)) is None for r in self.schema.get("core_roles", [])): return True
+        req = self.legend.event_required.get(f.get("event"), self.schema.get("core_roles", [])) if f.get("event") else self.schema.get("core_roles", [])
+        if any(f["roles"].get(r) is None or self.head_of(f["roles"].get(r)) is None for r in req): return True
         return any(sp is None for sp in f.get("speakers", []))
 
     def residual_explained(self, S, addr, kept, tokens, placed):

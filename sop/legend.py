@@ -43,6 +43,11 @@ class Legend:
         self.raw = d; self.sha = sha256_file(path); self.version = d.get("version")
         self.roles = [r["id"] for r in d.get("roles", [])]; self.questions = {r["id"]: r.get("question", "") for r in d.get("roles", [])}
         self.events = {e["id"]: list(e.get("verbs", [])) for e in d.get("events", [])}
+        # per-event role sets (vss-demo Q12 / D19; a declaration, rule 20): events[].roles = the roles the event takes (default: every role),
+        # events[].required = the roles it cannot do without (default: the schema's core roles). The reader reads only the roles the
+        # decided event takes, and a required role left not given makes the frame incomplete.
+        self.event_roles = {e["id"]: list(e["roles"]) for e in d.get("events", []) if e.get("roles") is not None}
+        self.event_required = {e["id"]: list(e["required"]) for e in d.get("events", []) if e.get("required") is not None}
         self.operators = list(d.get("operators", [])); self.moods = list(d.get("moods", ["statement"]))
         self.reader = {**READER_DEFAULTS, **d.get("reader", {})}
         self.values = [(v["kind"], re.compile("^(?:" + v["pattern"] + ")$")) for v in d.get("values", [])]
@@ -79,6 +84,10 @@ class Legend:
             if ev in KNOWN_OPERATORS or ev in ("entity", "unknown", "verdict"): e.append(f"event id {ev!r} collides with a reserved wire type")
         for ev in self.raw.get("events", []):
             if not ev.get("verbs"): e.append(f"event {ev.get('id')!r} has no verbs (spec 6.1: an event without verbs is a legend inconsistency)")
+            for key in ("roles", "required"):
+                for r in ev.get(key) or []:
+                    if r not in self.roles: e.append(f"event {ev.get('id')!r}: {key} names {r!r}, not a role of the legend")
+            if ev.get("roles") is not None and any(r not in ev["roles"] for r in ev.get("required") or []): e.append(f"event {ev.get('id')!r}: a required role is not among its roles")
         for op in self.operators:
             if op not in KNOWN_OPERATORS: e.append(f"operator {op!r} is not one of {sorted(KNOWN_OPERATORS)}")
         return e
