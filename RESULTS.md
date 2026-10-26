@@ -2367,3 +2367,26 @@ spans unchanged; the explained residual of correct readings lower (the span word
 points slightly. Results ..._r81r80_contract_kind_run_<rule>_..., ..._r81r80_presence_query_kind_run_<rule>_..., and
 logs/results_r84_oppoints_<condition>_contract_kind_run_seed<s>.json. Line A and the b467e4b lines B / C of item 3 stay as declared
 (running now) and are reported with this cause.
+
+## R86 (a) and (b): measured (logs/2026-10-26_1519_r86_presence_fc68914.txt (seed 0), _1520_ (seed 1), _1521_r86_presence_db2ca09.txt (seed 2); code 3f0478d (later commits other files only); sop @ 82585ea; results logs/results_r86_presence_seed{0,1,2}.json; MEASURED)
+
+(a) **Admitted kinds overlap: holds.** False fills on test (100 utterances per world) [per seed]: BookRestaurant 64 / 69 / 88, of which
+the filled word belongs to a SIBLING gold question in 0.734 / 0.696 / 0.784 and that word's typer kind is admitted by the sibling too in
+1.000 / 1.000 / 0.957 (the rest: words of no gold question, 0.22-0.30, e.g. "state <- none"); SearchScreeningEvent 23 / 28 / 24, sibling
+words 0.913 / 1.000 / 1.000, kind admitted by the sibling 1.000. Most frequent pairs (filled question <- the word's gold question, seed
+0): BookRestaurant city <- timeRange 5, city <- restaurant_name 4, timeRange <- party_size_number 4, restaurant_type <- restaurant_name
+3, cuisine <- restaurant_name 3; SearchScreeningEvent timeRange <- movie_name 11, movie_type <- object_type 5, location_name <-
+movie_name 3. The admission sets are wide where false fills concentrate: BookRestaurant restaurant_name admits 19 kinds, city 16, poi 13,
+served_dish 10; SearchScreeningEvent movie_name 35, timeRange 6 (it admits S:object_name, the lexicon's majority kind of title words
+such as "ghost", "american", "young"). The mechanism: a role admits the LEXICON kinds of its training fillers, and the lexicon gives a
+word its majority kind over all intents, so the in-context kind (the typer's, e.g. S:movie_name) and the admitted lexicon kind
+(S:object_name) differ, and sibling questions admit each other's words. Misses: BookRestaurant 60 / 58 / 57, SearchScreeningEvent 32 /
+29 / 25; the gold word's kind is admitted by the question in 0.97-1.00, and in every miss the presence ratio is under the fitted
+threshold (the word is a candidate, the presence decision says absent).
+
+(b) **Interference at D 512: does not hold.** Presence ratio on the world's own 200 training utterances, separation mean present -
+mean absent (mean over seeds): BookRestaurant lowest city 0.360, state 0.435, country 0.485, cuisine 0.522, timeRange 0.534, the rest
+0.58-1.13; SearchScreeningEvent 0.80-2.39. No role is within 0.1; the fitted thresholds' balanced accuracy on these rows is >= 0.896
+(BookRestaurant city) and >= 0.946 (SearchScreeningEvent). By R86's rule the D 1024 trial is NOT run. The losses are in the WORLD's
+admitted kinds (overlap), with the presence decision deciding between sibling candidates; this is what R86's decoder rule "presence by
+kinds where a kind names one question" addresses (the author's, in sop source; to be run as a re-score line when announced).
