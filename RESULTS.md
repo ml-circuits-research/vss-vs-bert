@@ -2166,3 +2166,38 @@ Expectations written by R81 before the run: anchor dispatch >= 0.9 (one-world re
 the demo and R78 (1) runs on it); held-out rejection by the anchor line above R80's 0.28 at false rejection under 0.05; in-domain span F1
 not below R80's 0.802. If the anchor dispatch stays under 0.9: option 3 (the one-world intent as the gate, the per-world frame, refusal
 by the chosen world) is run as the last per-intent row, and the paper reports the per-intent vote as below the one-world reader.
+
+## R81: measured (training logs/2026-10-26_1311_ to _1316_run_reader_real_a9855d4.txt (base s0, ood s0, base s1, ood s1, base s2, ood s2), sop @ 82585ea in every process; readings with R80's rules logs/2026-10-26_1450_ to _1455_r80_dispatch_ba2a6a4.txt (--models r81 --sop_dir = sop/ of repo commit 07d7947, i.e. SOURCE 82585ea; the tree's sop/ had moved to b467e4b, R82); results logs/results_real_snips_*_reader_worlds_r81_full_seed*.json and *_reader_worlds_r81r80_<rule>_full_seed*.json; MEASURED)
+
+Stopped run, kept: logs/2026-10-26_1449_r80_dispatch_ba2a6a4.txt (base s0) was stopped after its first lines because the scratch copy of
+sop/ had been extracted from repo commit 82585ea, whose sop code is identical to 07d7947's but whose SOURCE file reads 7ce5c50 (SOURCE
+names the previous sync); it was relaunched from the 07d7947 copy so the printed version is right. Check passed: the residual_raw rule
+reproduces the run's own residual dispatch exactly on every set, seed and condition. Every world trained with as many negatives as
+positives (1842-1900); every world threshold below 1.0 (max 0.943).
+
+| rule (R81 models) | test intent [per seed] | new slot values | unseen templates | test span F1 [per seed] | head-frame exact | ood_intents in-domain intent | in-domain span F1 | AUROC held-out vs in-domain, residual (test) [per seed] | AUROC, anchor pct (test) | AUROC residual (dev_rep) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| residual raw (check; the run's own dispatch) | 0.386 ± 0.008 [0.397 0.381 0.379] | 0.369 | 0.368 | 0.509 ± 0.008 | 0.253 | 0.423 | 0.540 | 0.799 ± 0.002 | 0.654 | 0.867 |
+| residual percentile | 0.323 ± 0.008 | 0.274 | 0.326 | 0.351 ± 0.004 | 0.209 | 0.341 | 0.372 | 0.747 ± 0.008 | 0.532 | 0.817 |
+| **anchor percentile (primary)** | **0.966 ± 0.003** [0.963 0.964 0.970] | 0.957 | 0.949 | **0.824 ± 0.006** [0.828 0.828 0.815] | 0.565 | **0.965** | **0.825** | **0.941 ± 0.004** [0.940 0.946 0.937] | 0.892 | 0.924 |
+| anchor, then residual | 0.960 ± 0.001 | 0.948 | 0.943 | 0.824 ± 0.006 | 0.565 | 0.962 | 0.824 | 0.940 ± 0.003 | 0.892 | 0.925 |
+| sum of percentile ranks | 0.752 ± 0.005 | 0.720 | 0.711 | 0.703 ± 0.009 | 0.469 | 0.751 | 0.711 | 0.758 ± 0.011 | 0.807 | 0.824 |
+| structure percentile (sixth line) | 0.962 ± 0.004 | 0.961 | 0.944 | 0.825 ± 0.006 | 0.564 | 0.968 | 0.825 | 0.935 ± 0.004 | 0.891 | 0.917 |
+
+References: R80 (R79 models) anchor percentile 0.863, span F1 0.802, AUROC 0.849; one-world reader (R71) intent 0.977, residual AUROC
+0.933; typer-only span F1 0.886; BERT-tiny intent 0.985. Rejection (rule-independent), ood_intents test: every world's residual above
+its threshold: held-out 0.030 [0.030 0.030 0.030], in-domain false rejection 0.001; anchor line (every world's anchor percentile under
+0.02): held-out **0.120 ± 0.037** [0.110 0.170 0.080] (dev_rep 0.100), in-domain false rejection 0.030 ± 0.005 (dev_rep 0.034; base test
+0.056). The negatives made the residual a worse dispatcher (0.731 -> 0.386: the foreign-world states are pushed away from the anchor, not
+from the slot readout) and the anchor a much better one.
+
+Training time per world with negatives (2x rows; six concurrent processes on a shared machine, load average ~120 from other sessions;
+not cost numbers): 174-1279 s per world, 5118-5687 s per seed for all worlds; R79 without negatives: 939-1086 s per seed for all worlds
+(no per-world time printed; about 134-155 s per world). The ratio (~5.3x) exceeds the 2x of the rows; the share due to machine load is
+not separable from these runs.
+
+**Against R81's expectations written before the run.** Anchor dispatch >= 0.9: met (0.966 ± 0.003, every seed 0.963-0.970; in-domain
+on ood_intents 0.965); it also passes 0.95, so by R81 the configuration is kept for the demo and R78 (1) runs on it. Held-out rejection
+by the anchor line above R80's 0.28 at false rejection < 0.05: NOT met (0.120 at 0.030; it fell from 0.280); the threshold-free
+separation improved instead (anchor-percentile AUROC 0.622 -> 0.892, residual AUROC of the chosen world 0.849 -> 0.941, above the
+one-world 0.933). In-domain span F1 not below 0.802: met (0.825 in-domain, 0.824 on base test; typer alone 0.886).
