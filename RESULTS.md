@@ -2040,3 +2040,31 @@ Expectations written by R79 before the run: (1) the no-anchor warning appears fo
 0.775; (6) held-out-intent rejection above 0, in-domain false rejection under 0.05. If dispatch intent stays under 0.9 with the anchor in
 place, the per-intent vote is reported as below the one-world reader on this data and R78 (1) is run on the one-world configuration
 instead.
+
+## R79: measured (logs/2026-10-26_1145_ (base s0), _1146_ (ood s0), _1147_ (base s1), _1148_ (ood s1), _1149_ (base s2), _1150_run_reader_real_dd1da21.txt (ood s2); code dd1da21 = 0f8fcbc plus RESULTS only; results logs/results_real_snips_*_reader_worlds_r79_full_seed{0,1,2}.json; MEASURED)
+
+Six concurrent processes (OMP_NUM_THREADS 3, nice 10; times are not cost numbers); every process printed decoder sop @ 7ce5c50; all 42
+worlds (7 x 3 seeds base, 6 x 3 ood_intents) have `intent` among their core roles and none printed the no-anchor warning. World folders
+logs/worlds/real_snips_<condition>_intent_<intent>_seed<s>_r79/model_seed (untracked; R75's folders kept).
+
+| set | dispatch (intent) accuracy [per seed] | span F1 (typer + reader) [per seed] | typer only | head-frame exact | rejected by every world's residual | by status (second line) | chosen frame abstains |
+|---|---|---|---|---|---|---|---|
+| test (700) | 0.731 ± 0.012 [0.716 0.734 0.744] | 0.720 ± 0.007 [0.711 0.726 0.724] | 0.886 | 0.462 | 0.004 | 0.234 | 0.610 |
+| new slot values (207) | 0.729 ± 0.024 [0.710 0.715 0.763] | 0.699 | 0.858 | 0.406 | 0.003 | 0.304 | 0.678 |
+| unseen templates (402) | 0.750 ± 0.017 [0.726 0.759 0.764] | 0.710 | 0.876 | 0.419 | 0.007 | 0.276 | 0.672 |
+| ood_intents, in-domain test (600) | 0.737 ± 0.002 [0.740 0.735 0.737] | 0.713 ± 0.003 | 0.870 | 0.447 | **0.002 (false rejection)** | 0.272 | 0.613 |
+| ood_intents, held-out intents (100) | — | — | — | — | **0.020** [0.020 0.020 0.020] | 0.437 | 0.897 |
+
+Held-out vs in-domain AUROC of the chosen world's explained residual, test: **0.747 ± 0.019** [0.721 0.754 0.766] (dev_rep: 0.771 ±
+0.031 [0.732 0.776 0.807]); of the dispatch margin: 0.660 ± 0.019 (dev_rep 0.680). World thresholds: every one below 1.0 in every seed
+and condition (range 0.465-0.945; SearchCreativeWork the highest, 0.93-0.95; RateBook the lowest, 0.47-0.49). Size: 7 readers 61.0 M
+phases (44.3 M on ood_intents, 6 readers) + typer 2.69 M; 16-54 ms per utterance for all worlds (concurrent).
+
+**Against R79's expectations written before the run.** (1) no warning for any world: met. (2) every threshold below 1.0: met. (3)
+chosen-frame abstention far below 0.6: NOT met (0.610 on test, 0.613 in-domain; R75 0.667). (4) dispatch intent well above 0.595:
+met in direction (0.731, +0.14), but under 0.9 and far under the one-world 0.977. (5) residual AUROC above 0.775: NOT met (test
+0.747; dev_rep 0.771). (6) held-out rejection above 0: met only nominally (0.020 on test = 2 of 100, 0.000 on dev_rep); in-domain false
+rejection under 0.05: met (0.002). The anchor removed the failure mechanism of R75 (Q33 diagnostic: every 1.0 residual came from the
+frame-incomplete clause) and moved dispatch from 0.595 to 0.731, but the per-intent vote by the explained residual stays below the
+one-world reader on this data. By R79's rule, dispatch < 0.9 would send R78 (1) to the one-world configuration; R80 (answer to Q34)
+puts that on HOLD until R80's calibrated-dispatch row is measured. R78 (1) was NOT started.
