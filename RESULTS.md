@@ -1895,3 +1895,8 @@ Reading, as R68 wrote it before the run: X3 = 0.282 < 0.5, so **the example also
 and levels by order, the tagger reaches the third level on one seed of five (0.988) and on the others tags at most two speakers in most
 depth-3 sentences (the level count equals X3's accuracy: the third speaker is left untagged); its inner frame stays at 0.957 and its
 confident error at depth 3 is 0.127 against the reader's 0.001 on the same seeds.
+
+**R68 (B), the reader's first attempt failed (logs/2026-10-26_0751_run_reader_real_2fb27b8.txt base, _0754_run_reader_real_6abb05e.txt
+ood_intents):** torch.OutOfMemoryError at the first training step: launched with VSA_SLOTS=22, run.sh capped each process's allocator at
+0.9 / 22 = 4% of the memory (about 5 GB), too small for the reader's chain tensors on SNIPS sentences (95 GB were free). Restarted with
+VSA_SLOTS=4 (22%, about 27 GB per process), the same commands (logs/2026-10-26_0759_ / _0800_run_reader_real_c427a09.txt).

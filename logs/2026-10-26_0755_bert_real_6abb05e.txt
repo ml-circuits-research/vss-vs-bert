@@ -1,0 +1,104 @@
+# 2026-10-26T07:55:05+01:00  commit=6abb05e  cmd: python3 models/bert_real.py --dataset snips --condition ood_intents --model google/bert_uncased_L-2_H-128_A-2 --test --seeds 3 --lrs 1e-4 --epochs 10  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 113 GB; slot logs/.run.lock.3 of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+bert_real: google/bert_uncased_L-2_H-128_A-2 pretrained; main repository e531283; dataset snips / condition ood_intents; device cuda; sizes ['full']; seeds 3; grid lr [0.0001] x epochs [10]; train 11184, dev calibration 300; eval dev_rep:in_domain 300, ood:dev_rep 50, test:in_domain 600, ood:test 100
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame; BIO + intent + nested heads, applied recursively; selection and thresholds on the dev calibration half; test only with --test
+  size full: 11184 utterances, 11184 intent nodes; 35 slot types, 6 intents; chance: intent 1/6 = 0.167, majority 0.170
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 8410.60it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  size full seed 0 lr=0.0001 epochs=10 (42s, 4.4M params) calibration-half FULL 0.727
+  => size full chosen config: lr=0.0001, epochs=10 (FULL head frame on the dev calibration half, seed 0)
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained | dev_rep:in_domain (n 300): FULL 0.683 intent 0.983 slot heads 0.870 | frame tau 0.581: coverage 0.54 confident-wrong 0.037 | intent abstain 0.000 | span F1 0.814
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.407 | frame tau 0.581: coverage 0.10 confident-wrong 0.100 | intent abstain 0.000 | span F1 0.367
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained | test:in_domain (n 600): FULL 0.698 intent 0.985 slot heads 0.872 | frame tau 0.581: coverage 0.53 confident-wrong 0.048 | intent abstain 0.000 | span F1 0.825
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.438 | frame tau 0.581: coverage 0.01 confident-wrong 0.010 | intent abstain 0.000 | span F1 0.348
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | dev_rep:in_domain (n 300): FULL 0.683 intent 0.983 slot heads 0.870 | frame tau 0.692: coverage 0.54 confident-wrong 0.040 | intent abstain 0.000 | span F1 0.814
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.407 | frame tau 0.692: coverage 0.10 confident-wrong 0.100 | intent abstain 0.000 | span F1 0.367
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | test:in_domain (n 600): FULL 0.698 intent 0.985 slot heads 0.872 | frame tau 0.692: coverage 0.52 confident-wrong 0.047 | intent abstain 0.000 | span F1 0.825
+  seed 0 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.438 | frame tau 0.692: coverage 0.01 confident-wrong 0.010 | intent abstain 0.000 | span F1 0.348
+  seed 0 size full: temperatures intent 1.08 tags 0.84; cost 4.4M params, 18 MB, 23.2 ms/sentence on CPU
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 13840.25it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+# post-launch guard (slots 22): MemAvailable 90 s after the start 112 GB
+  size full seed 1 lr=0.0001 epochs=10 (43s, 4.4M params) calibration-half FULL 0.733
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained | dev_rep:in_domain (n 300): FULL 0.697 intent 0.987 slot heads 0.869 | frame tau 0.550: coverage 0.58 confident-wrong 0.073 | intent abstain 0.000 | span F1 0.817
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.341 | frame tau 0.550: coverage 0.06 confident-wrong 0.060 | intent abstain 0.000 | span F1 0.311
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained | test:in_domain (n 600): FULL 0.690 intent 0.987 slot heads 0.869 | frame tau 0.550: coverage 0.55 confident-wrong 0.067 | intent abstain 0.000 | span F1 0.822
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.393 | frame tau 0.550: coverage 0.03 confident-wrong 0.030 | intent abstain 0.000 | span F1 0.317
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | dev_rep:in_domain (n 300): FULL 0.697 intent 0.987 slot heads 0.869 | frame tau 0.636: coverage 0.57 confident-wrong 0.070 | intent abstain 0.000 | span F1 0.817
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.341 | frame tau 0.636: coverage 0.04 confident-wrong 0.040 | intent abstain 0.000 | span F1 0.311
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | test:in_domain (n 600): FULL 0.690 intent 0.987 slot heads 0.869 | frame tau 0.636: coverage 0.56 confident-wrong 0.073 | intent abstain 0.000 | span F1 0.822
+  seed 1 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.393 | frame tau 0.636: coverage 0.02 confident-wrong 0.020 | intent abstain 0.000 | span F1 0.317
+  seed 1 size full: temperatures intent 1.13 tags 0.84; cost 4.4M params, 18 MB, 18.8 ms/sentence on CPU
+Loading weights:   0%|          | 0/39 [00:00<?, ?it/s]Loading weights: 100%|██████████| 39/39 [00:00<00:00, 10438.25it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/bert_uncased_L-2_H-128_A-2
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  size full seed 2 lr=0.0001 epochs=10 (45s, 4.4M params) calibration-half FULL 0.707
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained | dev_rep:in_domain (n 300): FULL 0.700 intent 0.990 slot heads 0.876 | frame tau 0.486: coverage 0.61 confident-wrong 0.050 | intent abstain 0.000 | span F1 0.827
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.333 | frame tau 0.486: coverage 0.02 confident-wrong 0.020 | intent abstain 0.000 | span F1 0.299
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained | test:in_domain (n 600): FULL 0.695 intent 0.983 slot heads 0.862 | frame tau 0.486: coverage 0.58 confident-wrong 0.068 | intent abstain 0.000 | span F1 0.822
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.388 | frame tau 0.486: coverage 0.04 confident-wrong 0.040 | intent abstain 0.000 | span F1 0.335
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | dev_rep:in_domain (n 300): FULL 0.700 intent 0.990 slot heads 0.876 | frame tau 0.607: coverage 0.60 confident-wrong 0.053 | intent abstain 0.000 | span F1 0.827
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.333 | frame tau 0.607: coverage 0.02 confident-wrong 0.020 | intent abstain 0.000 | span F1 0.299
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | test:in_domain (n 600): FULL 0.695 intent 0.983 slot heads 0.862 | frame tau 0.607: coverage 0.57 confident-wrong 0.067 | intent abstain 0.000 | span F1 0.822
+  seed 2 size full google/bert_uncased_L-2_H-128_A-2 pretrained [temperature] | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.388 | frame tau 0.607: coverage 0.04 confident-wrong 0.040 | intent abstain 0.000 | span F1 0.335
+  seed 2 size full: temperatures intent 1.19 tags 0.84; cost 4.4M params, 18 MB, 19.5 ms/sentence on CPU
+
+== google/bert_uncased_L-2_H-128_A-2 pretrained: snips / ood_intents / size full: mean ± std over 3 seeds [per seed] ==
+  dev_rep:in_domain (n 300): FULL 0.693±0.007 [0.683 0.697 0.700] | intent 0.987±0.003 [0.983 0.987 0.990] | slot heads 0.871±0.003 [0.870 0.869 0.876]
+      frame coverage 0.574±0.029 [0.537 0.580 0.607] confident-wrong 0.053±0.015 [0.037 0.073 0.050] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.994±0.000 [0.993 0.994 0.994] | span F1 0.819±0.006 [0.814 0.817 0.827]
+  ood:dev_rep (n 50): FULL 0.000±0.000 [0.000 0.000 0.000] | intent 0.000±0.000 [0.000 0.000 0.000] | slot heads 0.360±0.033 [0.407 0.341 0.333]
+      frame coverage 0.060±0.033 [0.100 0.060 0.020] confident-wrong 0.060±0.033 [0.100 0.060 0.020] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.956±0.002 [0.957 0.957 0.953] | span F1 0.326±0.030 [0.367 0.311 0.299]
+  test:in_domain (n 600): FULL 0.694±0.003 [0.698 0.690 0.695] | intent 0.985±0.001 [0.985 0.987 0.983] | slot heads 0.868±0.004 [0.872 0.869 0.862]
+      frame coverage 0.552±0.024 [0.527 0.545 0.583] confident-wrong 0.061±0.009 [0.048 0.067 0.068] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.994±0.000 [0.994 0.994 0.994] | span F1 0.823±0.002 [0.825 0.822 0.822]
+  ood:test (n 100): FULL 0.000±0.000 [0.000 0.000 0.000] | intent 0.000±0.000 [0.000 0.000 0.000] | slot heads 0.406±0.022 [0.438 0.393 0.388]
+      frame coverage 0.027±0.012 [0.010 0.030 0.040] confident-wrong 0.027±0.012 [0.010 0.030 0.040] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.950±0.001 [0.950 0.951 0.949] | span F1 0.333±0.013 [0.348 0.317 0.335]
+  written interpretation: INSTRUCTIONS_REAL_2026-10-24.md table R7 (the axes and what each outcome will be said to mean)
+
+== google/bert_uncased_L-2_H-128_A-2 pretrained: snips / ood_intents / size full [temperature]: mean ± std over 3 seeds [per seed] ==
+  dev_rep:in_domain (n 300): FULL 0.693±0.007 [0.683 0.697 0.700] | intent 0.987±0.003 [0.983 0.987 0.990] | slot heads 0.871±0.003 [0.870 0.869 0.876]
+      frame coverage 0.570±0.023 [0.540 0.573 0.597] confident-wrong 0.054±0.012 [0.040 0.070 0.053] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.994±0.000 [0.993 0.994 0.994] | span F1 0.819±0.006 [0.814 0.817 0.827]
+  ood:dev_rep (n 50): FULL 0.000±0.000 [0.000 0.000 0.000] | intent 0.000±0.000 [0.000 0.000 0.000] | slot heads 0.360±0.033 [0.407 0.341 0.333]
+      frame coverage 0.053±0.034 [0.100 0.040 0.020] confident-wrong 0.053±0.034 [0.100 0.040 0.020] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.956±0.002 [0.957 0.957 0.953] | span F1 0.326±0.030 [0.367 0.311 0.299]
+  test:in_domain (n 600): FULL 0.694±0.003 [0.698 0.690 0.695] | intent 0.985±0.001 [0.985 0.987 0.983] | slot heads 0.868±0.004 [0.872 0.869 0.862]
+      frame coverage 0.551±0.021 [0.523 0.557 0.573] confident-wrong 0.062±0.011 [0.047 0.073 0.067] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.994±0.000 [0.994 0.994 0.994] | span F1 0.823±0.002 [0.825 0.822 0.822]
+  ood:test (n 100): FULL 0.000±0.000 [0.000 0.000 0.000] | intent 0.000±0.000 [0.000 0.000 0.000] | slot heads 0.406±0.022 [0.438 0.393 0.388]
+      frame coverage 0.023±0.012 [0.010 0.020 0.040] confident-wrong 0.023±0.012 [0.010 0.020 0.040] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.950±0.001 [0.950 0.951 0.949] | span F1 0.333±0.013 [0.348 0.317 0.335]
+  written interpretation: INSTRUCTIONS_REAL_2026-10-24.md table R7 (the axes and what each outcome will be said to mean)
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] the reader's scorer and rows [x] grid fixed in advance, chosen on seed 0 on the calibration half [x] test only with --test

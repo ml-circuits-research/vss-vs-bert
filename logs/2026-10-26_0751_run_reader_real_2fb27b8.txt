@@ -1,0 +1,37 @@
+# 2026-10-26T07:51:59+01:00  commit=2fb27b8  cmd: python3 vss/run_reader_real.py --dataset snips --sizes full --seeds 3 --test --save_model --epochs 10  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_real: main repository e531283; dataset snips / condition base; device cuda; D 1024; batch 32; lr 0.02; sizes ['full'], epochs {'full': 10}; seeds 3; train 13084, dev calibration 350; eval dev_rep 350, dev_rep:new_slot_values 96, dev_rep:unseen_template 174, test 700, test:new_slot_values 207, test:unseen_template 402
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test
+kinds: 13084 training utterances only for the frequencies and the skip-gram; vocabulary 12162 (train + dev + test, as v12); 703 words never in training (cluster)
+chance (size full): intent 1/7 = 0.143, majority intent 0.145; a slot head: 1 / (the utterance's tokens of the role's kinds)
+[world] /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_full: legend sha256:fd4d0006eca9..., roles 40 (intent + 39 slot types), intents 7, kinds 88; rows train 13084, calibration_dev 350
+[train] seed 0: 13084 training rows x 10 epoch(s) -> 130840 steps' sentences; D=1024; kinds 89; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: when was the soundtrack for those were the days – the best of leningrad cowboys published ?
+[trace] tokens/kinds: when/C41 was/C41 the/w:the soundtrack/C38 for/w:for those/C10 were/C45 the/w:the days/C0 –/C21 the/w:the best/C4 of/w:of leningrad/C22 cowboys/C22 published/C47 ?/w:?
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "SearchCreativeWork"], "object_name": ["word", "cowboys"], "object_type": ["word", "soundtrack"]}, "scope": null, "shape": "ok", "speakers": []}
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/tool/sop/train.py:445: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
+[trace] target |S_world| = 79.23 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 5.76 GB | torch alloc 2.50 GB reserved 2.55 GB | MemAvailable 107.3 GB
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/vss/run_reader_real.py", line 307, in <module>
+    R, ex = strain.train_one(ns, legend, rows, splits, schema, seed, md, os.path.join(wd, "runs"))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/tool/sop/train.py", line 449, in train_one
+    trainer.train_loop(tm, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/trainer.py", line 37, in train_loop
+    sl = slice(i, i + batch); S = model.states(cats[sl], ids[sl], mask[sl]); t = tgt[sl]
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/tool/sop/train.py", line 382, in states
+    T = int(mask.sum(1).max().item()); return self.m.states(cats[:, :T], ids[:, :T], mask[:, :T])
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v8_gates.py", line 85, in states
+    EL = E(th[self.iL[cats.unsqueeze(1), cats.unsqueeze(2)]])               # B x T(k) x T(q) x D : L[c_q, c_k]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/experiment/v8_gates.py", line 62, in <lambda>
+    E = lambda ph: torch.polar(torch.ones_like(ph), ph)
+                               ^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 308.00 MiB. GPU 0 has a total capacity of 119.63 GiB of which 95.52 GiB is free. Including non-PyTorch memory, this process has 5.10 GiB memory in use. 4.90 GiB allowed; Of the allocated memory 4.84 GiB is allocated by PyTorch, and 46.02 MiB is reserved by PyTorch but unallocated.
+# post-launch guard (slots 22): MemAvailable 90 s after the start 113 GB
