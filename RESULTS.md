@@ -2635,3 +2635,39 @@ Stated before the run, from the config itself: it differs from R90's two reader 
 sentence and undecided_adjacent (with kind_run) to line C's keys, (ii) the refusal pass reads with (B)'s admission sets in the schema,
 whereas line A read with the stored admission sets (the schema is shared by both passes); line B's refusal at 2% was 0.380, line A's
 0.460, so the check may not reproduce the refusal; any difference is reported with this cause. A 40-item smoke test is not a result.
+
+## R90 item 2: R85 under the paired acceptance test, measured (logs/2026-10-26_1856_run_reader_real_0fac77e.txt (seed 0), _1857_ (seed 1), _1858_run_reader_real_a944dff.txt (seed 2); sop @ 25de418; route verb kinds ['w:add'] in every seed; MEASURED)
+
+The trials are identical to the 82585ea runs (same FULL numbers: the training is deterministic and unchanged); only the decision differs.
+
+| seed | discordant selection rows: wins / losses of + vorder (noise 2 sqrt(w + l)) | marked rows (wins / losses) | splits (wins / losses) | paired verdict | 82585ea rule |
+|---|---|---|---|---|---|
+| 0 | 17 / 7 (9.8): net +10 | 0 / 0 (4 rows, all misread by both) | calibration_dev +4/-3, train +13/-4 | **accepted** | accepted |
+| 1 | 12 / 9 (9.2): net +3 | 0 / 0 (2 rows) | calibration_dev +2/-4, train +10/-5 | **rejected** | rejected |
+| 2 | 18 / 11 (10.8): net +7 | 0 / 0 (5 rows) | calibration_dev +5/-2, train +13/-9 | **rejected** | accepted |
+
+**Against the expectation (R90: rejected).** Under the paired test the route is rejected on seeds 1 and 2 and accepted on seed 0 (net
++10 discordant rows against a noise of 9.8, i.e. just beyond it); on the rows its need signal marks it wins nothing in any seed (0 of
+2-5 same-kind-competition selection rows are read right with or without it). Reported as R85 states it: **the need signal fired on one
+world (AddToPlaylist, 2.4% of its rows); the route is rejected on 2 of 3 seeds under the paired test, and where accepted (seed 0) its
+gain is not on the marked rows**; the diagnostic in every seed: the same-kind competition rows are misread by every bundle ("a question is
+missing from the legend or this world should be split"). The R81 per-intent configuration stays without vorder for the demo.
+
+## R92 step 1: measured (logs/2026-10-26_1903_ to _1908_r92_check_6cd6bf8.txt; sop @ 60f861b; reading copies in logs/export/r92_reading_copies/; results logs/results_r92_check_<condition>_seed<s>.json; MEASURED)
+
+| set | dispatch: one config / R90 | span F1: one config / R90 | chosen frame abstains: one config / R90 | refused (pooled dev_cal 2% threshold): one config / R90 | refused with per-world thresholds |
+|---|---|---|---|---|---|
+| base test | 0.966 / 0.966 | 0.892 / 0.892 | 0.297 / 0.298 | 0.027 / 0.015 (false) | 0.030 (false) |
+| ood_intents in-domain test | 0.965 / 0.965 | 0.853 / 0.853 | 0.403 / 0.404 | 0.017 / 0.016 (false) | 0.027 (false) |
+| ood_intents held-out (test) | — | — | 0.817 / 0.847 | **0.377 ± 0.059** [0.330 0.460 0.340] / **0.460** | 0.427 |
+| ood_intents held-out (dev_rep) | — | — | 0.620 / 0.707 | 0.353 / 0.380 | 0.427 |
+
+AUROC of the refusal residual held-out vs in-domain (test): 0.926 (R90's line A 0.925). Refusal thresholds (pooled): base 0.878 / 0.823
+/ 0.829, ood_intents 0.859 / 0.782 / 0.846 (R90's line A: 0.807 / 0.778 / 0.813 and 0.780 / 0.748 / 0.777).
+
+**Check: the frame reproduces R90 (dispatch, span F1 and abstention equal to the third decimal: candidates sentence and
+undecided_adjacent with kind_run change nothing here); the refusal does NOT** (0.377 vs 0.460 held-out at the same 2% target). Cause, as
+stated before the run: the refusal pass reads with the schema's admission sets, which are now (B)'s; line A read with the stored sets.
+The one-config refusal is line B's refusal (0.380 in R88), not line A's. The separation is unchanged (AUROC 0.926 vs 0.925); the
+residual's scale is not (the thresholds rise by 0.03-0.08), so the operating point moves. A refusal block that also restores the stored
+admission sets (or a schema carrying both) would be needed to reproduce line A; that is the author's (sop). The export waits for it.
