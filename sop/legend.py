@@ -20,6 +20,9 @@ READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_d
                    "rel_emitters": None, "full_excludes": [], "gates_given": None, "level_openers": None,
                    "value_identity": "last_token", "closed_values": None, "table_roles": None, "set_roles": None, "value_terms": False,
                    "no_sense_share": None, "codes": None, "content_kinds": None,
+                   # "kind_run": a filler is the maximal run of its (typer) kind around the decoded head (real data, multi-word slots); the
+                   # run's words are explained by the filler and are never 'adjacent competitors' of the adjacency rule (Q38 / R87)
+                   "spans": "token",
                    # "lemma": every token is deposited and read by the identity of its lexicon lemma (kinds.tsv third column), so that the
                    # surface forms of several languages map to the one canonical value of the legend (roșie, red -> red); vss-demo addition
                    "identity": "token"}

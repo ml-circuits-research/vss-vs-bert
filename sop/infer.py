@@ -360,8 +360,9 @@ class Reader:
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
             if "member_ratios" in o: f["presence"][r + ".members"] = o["member_ratios"]
             if "presence_margin" in o:
-                if o.get("present") or not self.cfg.get("presence_query"): f["margins"][r + ".presence"] = o["presence_margin"]
-                elif o["presence_margin"] < self.tau: f.setdefault("presence_queries", {})[r] = o["presence_margin"]   # D14 item 1: an absent role near its threshold is a query, not an abstention of the frame
+                given = o.get("present") and o.get("filler") is not None
+                if given or not self.cfg.get("presence_query"): f["margins"][r + ".presence"] = o["presence_margin"]
+                elif o["presence_margin"] < self.tau or o.get("present"): f.setdefault("presence_queries", {})[r] = o["presence_margin"]   # D14 item 1 / Q38: a role not given (absent near its threshold, or present with no admissible word) is a presence query, not an abstention of the frame
             if o.get("present") and o.get("filler") is not None:
                 f["roles"][r] = o["filler"]; f["margins"].update(o["margins"])
                 if "presence_margin" in o:
@@ -584,8 +585,10 @@ class Reader:
             rs = self.schema["roles"].get(r) or {}; kinds = set(rs.get("head_kinds") or rs.get("kinds") or [])
             head = ws[0]; i = pos.get(head)
             if i is None: continue
+            run = self.legend.reader.get("spans") == "kind_run"
             for j in (i - 1, i + 1):
                 if j in unplaced and self.kind(tokens[j]) in kinds and tokens[j] != head:
+                    if run and self.kind(tokens[j]) == self.kind(head): continue          # the same run (a multi-word span), not a competitor (Q38)
                     out[r] = (head, tokens[j]); break
         return out
 
@@ -604,6 +607,16 @@ class Reader:
         estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
         f = self.read(S, tokens, filt, force, force_depth, estimator, presence, table) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
+        if f["shape"] == "ok" and self.legend.reader.get("spans") == "kind_run":      # Q38 / R87: multi-word fillers: a filler is the run of its kind around the head
+            kinds_seq = [self.kind(t) for t in tokens]
+            for fl in f["roles"].values():
+                for w in world.filler_words(fl):
+                    for i, t in enumerate(tokens):
+                        if t == w and str(kinds_seq[i]).startswith("S:"):
+                            a = b = i
+                            while a > 0 and kinds_seq[a - 1] == kinds_seq[i]: a -= 1
+                            while b + 1 < len(tokens) and kinds_seq[b + 1] == kinds_seq[i]: b += 1
+                            placed |= set(tokens[a:b + 1])
         if placed and f.get("lemma") is None and f.get("event"):         # no predicate role: the event is explained by its FIRST verb only;
             ev = next((t for t in tokens if self.legend.event_of_lemma(self.lemma(t)) == f["event"]), None)   # a second verb stays content
             if ev is not None: placed = placed | {ev}                   # the frame does not explain (vss-vs-bert Q32)
