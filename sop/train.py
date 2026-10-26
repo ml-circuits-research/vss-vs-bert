@@ -70,7 +70,10 @@ def load_rows(world_dir, legend, force=False):
                 f["lemma"] = comp.lemma_for(f["event"], toks, set())
             tl = w.get("_table"); table = [x.text for x in tl.atoms if x.kind == "word"] if tl is not None else None
             rows.append({"table": table, "id": f"{rel}#{w.id}", "file": rel, "text": text, "tokens": toks, "wire": w, "by": by, "frame": f, "template": w.value("_template"),
-                         "depth": len(f["speakers"]), "source": w.value("_source", "?")})
+                         "depth": len(f["speakers"]), "source": w.value("_source", "?"),
+                         # R81: a NEGATIVE example (`_negative=true`): a sentence of another world, written with the anchor role only; its
+                         # target is MINUS the compiled state, so training pushes the state away from this world's anchor (one-vs-rest)
+                         "negative": str(w.value("_negative", "")).lower() == "true"})
     return rows, errors, files
 
 
@@ -432,7 +435,9 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
         for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
     if a.max_train: order = order[:a.max_train]
     sents = [list(train[i]["tokens"]) for i in order]
-    targets = np.array([comp.wire(train[i]["wire"], train[i]["by"], train[i]["tokens"]) for i in order])
+    targets = np.array([comp.wire(train[i]["wire"], train[i]["by"], train[i]["tokens"]) * (-1.0 if train[i].get("negative") else 1.0) for i in order])
+    n_neg = sum(1 for r in train if r.get("negative"))
+    if n_neg: print(f"[train] seed {seed}: {n_neg} NEGATIVE examples among the {len(train)} training rows (target = minus the anchor state; R81)")
     print(f"[train] seed {seed}: {len(train)} training rows x {a.epochs} epoch(s) -> {len(sents)} steps' sentences; D={a.D}; kinds {len(set(wk.values()))}; "
           f"vocab {len(shim.vocab)}; predicate lemma not found in {comp.missing_lemma} targets", flush=True)
     ident = (lambda w: legend.lemma_of(w)) if legend.reader.get("identity") == "lemma" else (lambda w: w)   # reader.identity (legend.py)
@@ -493,7 +498,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     print(f"[export] numpy reader vs torch states: max relative difference {worst:.2e} (float32 phases in the route book)", flush=True)
     assert worst < 1e-3, "numpy inference does not reproduce the trained model"
     # calibration rows (rule 25): a sample of the TRAINING split, never the scored rows
-    cal_rows = [train[i] for i in sorted(np.random.default_rng(1234 + seed).choice(len(train), min(a.n_cal, len(train)), replace=False))]
+    pos = [r for r in train if not r.get("negative")]      # calibration rows: never a negative example
+    cal_rows = [pos[i] for i in sorted(np.random.default_rng(1234 + seed).choice(len(pos), min(a.n_cal, len(pos)), replace=False))]
     def calibrate(crow):
         """thresholds = midpoints of the mean present / absent ratios on the given calibration rows (read with the gold structure)"""
         stats = collections.defaultdict(lambda: {"present": [], "absent": []})
@@ -626,7 +632,7 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
         out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words, modes=a.eval_modes)}
         if a.candidate_sets == "both":
             out[s]["experiment candidates"] = evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words, modes=a.eval_modes)
-    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); rd._eval_alt_th = None; trs = by.get("train", [])
+    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); rd._eval_alt_th = None; trs = [r for r in by.get("train", []) if not r.get("negative")]
     out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words, modes=a.eval_modes)}
     return out
 
@@ -827,7 +833,7 @@ def main(argv=None):
     for r in rows: texts[r["split"]].append(r["text"])
     with open(os.path.join(a.run_dir, "splits.json"), "w") as f: json.dump({"definitions": defs, "rows": splits, "texts": texts}, f, indent=1)
     print(f"[splits] written to {os.path.join(a.run_dir, 'splits.json')} before training: " + ", ".join(f"{k} {len(v)}" for k, v in sorted(splits.items())))
-    train_rows = [r for r in rows if r["split"] == "train"]; schema = build_schema(train_rows, legend)
+    train_rows = [r for r in rows if r["split"] == "train" and not r.get("negative")]; schema = build_schema(train_rows, legend)   # the schema from the positive rows
     schema["content_kinds"] = sorted(content_kinds_of(train_rows, legend))
     print(f"[schema] roles {schema['role_order']} (core {schema['core_roles']}), max depth {schema['max_depth']}, event negation {schema['neg_event']}")
     lexical, ranks = lexical_baseline(train_rows, legend, schema); bag = bag_baseline(train_rows, legend, schema)
