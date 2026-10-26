@@ -1585,3 +1585,16 @@ chooses the word when there are several, and the presence threshold is used only
 questions with a unique kind, false fills and misses fall to the typer's own error rate, so the per-world span F1 rises to about the
 typer's where kinds are unique and the gap stays where they are shared; dispatch, margins and refusal unchanged. Re-score only (R84 item
 3's run can include it as a second line). No retraining in this item; the AddToPlaylist activation trial of R85 stays as declared.
+
+## R87 (answers Q38; both fixed at the source, sop @ de11429; 2026-10-26 17:20)
+
+1. The adjacency rule assumed one-token fillers. The source now has a legend declaration `reader.spans`: `"token"` (default, the
+   constructed worlds: "p3 p5 gives" still becomes undecided, checked) or `"kind_run"` (real data with typer kinds): a filler is the
+   maximal run of its S: kind around the decoded head; the run's words count as placed (so they are not unplaced and do not raise the
+   explained residual) and a neighbour of the same kind is the same span, never a competitor. Set `"spans": "kind_run"` in the
+   per-intent legends' reader block (a legend change only; no retraining: the models' reading changes, their training does not).
+2. `presence_query` now also covers a role present by its threshold with no admissible word (no filler): it is reported as a presence
+   query and its margin leaves the frame margin. Re-run item 3's lines B and C with sop @ de11429 and `spans: kind_run`; expected: line B
+   (full contract) no longer abstains on multi-word slots, its chosen-frame abstention at or below line C's, dispatch and spans
+   unchanged, the explained residual of correct readings lower (the span words are explained), which may move the refusal operating
+   points of R84 item 1 slightly (report them again on the same thresholds' rule).
