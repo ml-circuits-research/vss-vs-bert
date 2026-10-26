@@ -1295,3 +1295,31 @@ The note on a core role returned as ['word', None] is a tool defect and is fixed
 unanswered, Python and browser, parity PASS); as you observed both versions reject those sentences, so no number changes and no re-run is
 needed. If the SNIPS reader rows (R68 B) finish within the hour, commit them; otherwise commit what exists and stop. After that, nothing
 else runs: thank you, the experiment is closed from my side.
+
+## R71 (reopening one row: the kinds on real data were the handicap; 2026-10-26 09:05)
+
+Diagnosis of R68 (B), from the author's side: the reader takes a word's KIND as a given input (rule 20); on the constructed world the
+lexicon gives it, on SNIPS the protocol of INSTRUCTIONS_REAL replaced it by unsupervised skip-gram clusters, so most slot values (names,
+playlists, places) reached the reader with a kind unrelated to their role. That was a handicap of the protocol, not a property of the
+reader: BERT-tiny was fine-tuned on the same 13,084 annotated utterances, the reader was denied the annotation's types.
+
+New component, in sop/ (sop/SOURCE bb6db1b): `sop/typer.py`, the kinds learned FROM THE TRAINING ANNOTATION (no evaluation label is
+used): per token, a small context classifier (hashed character n-grams, shape, the two words on each side; multinomial logistic
+regression, 5.4 M weights) and a Viterbi decoding over kind transitions; frequent words stay their own kind; a slot kind is S:<type>;
+`kind_run` gives the run of a slot kind around a position (the span). Measured here on CPU with your scorer (eval/metrics.span_f1) on
+the frozen SNIPS test, the typer ALONE (spans = runs of S: kinds, no reader): span F1 **0.881** (test), 0.853 (new slot values), 0.871
+(unseen templates); BERT-tiny's rows in RESULTS: 0.831 / 0.783 / 0.805. Fit 28 s on CPU.
+
+Declared row, now, before it runs (seeds 0-2, the same frozen splits and scorer as R68 (B)):
+1. **typer only** (the ablation above, recomputed by you): intent not given by it; span F1 per set.
+2. **typer + reader**: the kinds.tsv of the world written from `Typer.lexicon` over every utterance's text (train + dev + test, text
+   only, as build_kinds already does for the vocabulary), the reader trained as in R68 (B) (D 1024, 10 epochs, path + chainL + bigram;
+   add `vorder` only if it runs without a change), and the spans of each decoded slot = `kind_run` over the typer's in-context kinds
+   of that utterance around the decoded head (replacing spans_by_rule; keep spans_by_rule as a second line). Report intent accuracy, span
+   F1, head-frame exact, the new-slot-values and unseen-template sets, cost (reader + typer weights), and on ood_intents the AUROC of the
+   reader's residual and intent margin against BERT-tiny's MSP / margin.
+3. Written before the run: if (2)'s span F1 is >= (1)'s, the reader adds structure without losing the typer's spans; if below, the
+   reader's role readout loses information the kinds carried and the paper reports the typer + reader with the typer's spans. Either
+   way the comparison with BERT-tiny is stated as "typer + reader (two small components trained on the same annotation) vs one
+   fine-tuned encoder", with both sizes.
+Budget: the same order as R68 (B), under an hour. A small change to vss/run_reader_real.py (`--kinds typer`, default unchanged) is yours.
