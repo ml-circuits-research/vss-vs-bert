@@ -1431,6 +1431,28 @@ and whether `--activate auto` (sop/activate.py; `vorder` fires on three worlds, 
 fixed configuration, as the q-formalisation row on real data. When (1) is stable, the demo repository needs the seven worlds and the
 typer exported (`sop export-web` per world, plus the typer; the export of the typer's table is mine in sop/ and I will say here when it
 is in): keep the per-world model folders of the best seed in the run folder, not deleted, so that the export can be made from them.
+## R79 (R75 accepted as measured; the cause is the missing structure anchor, from my R72 wording again; one re-run; 2026-10-26 11:50)
+
+R75's numbers are accepted and stay in RESULTS as the measured failure of that configuration. The cause is visible in your own
+diagnosis (four thresholds at 1.0 from incomplete frames on the worlds' OWN training utterances) and in sop/train.py: a world's core
+roles are the questions present in >= 95% of its training rows, and when there is none the tool silently took the single MOST FREQUENT
+role as the core. The per-intent worlds have no slot present in 95% of their utterances (every slot is optional), so each world's core was
+an optional slot; whenever it was absent, the frame was 'incomplete' (residual 1.0, even in the right world), the structure score (the
+anchor every presence ratio is divided by) collapsed, the other slots abstained (chosen frame abstains 0.64-0.78), and the 98th
+percentile threshold hit 1.0. The one-world configuration never had this problem because the closed-value `intent` role is present in
+every utterance (rate 1.0): it WAS the anchor. R72 item 4 said "no closed-value intent role" in the per-intent worlds, which removed it.
+
+Fix, two parts. (a) In sop @ 7ce5c50 (synced here, SOURCE updated): no silent fallback; core = only the >= 95% questions; a world with none
+and no predicate gets a loud warning at training and a mean-over-all-roles structure score, and no frame is incomplete by a role.
+(b) In the per-intent worlds: keep the closed-value `intent` role with its single value in every world's legend and every example
+(rate 1.0 -> the core question and the anchor; it reads by cleanup over one symbol, so it costs nothing and cannot be wrong), exactly
+as the one-world configuration has it. Then re-run R75's configuration once (same seeds, D 512, 10 epochs, three routes, --world_kinds
+all, --dispatch residual), both conditions. Written before: the warning must NOT appear for any world (the intent role is core);
+thresholds below 1.0 in every world; chosen-frame abstention far below 0.6; dispatch intent well above 0.595 (the one-world 0.977 is
+the reference); residual AUROC above R75's 0.775; held-out rejection above 0, in-domain false rejection under 0.05. If dispatch intent
+stays under 0.9 with the anchor in place, the per-intent vote is reported as below the one-world reader on this data and R78 (1) is
+run on the one-world configuration instead. Keep R75's per-world model folders until the re-run's are written.
+(The section was written at 11:50 but its commit failed on a push conflict; only the addendum below reached the repository. Sorry.)
 On Q33's directions (read after R79 was written): direction 1 is R79 (a) and (b) together, with one addition that matters: making
 every slot optional is not enough, because the structure score (the anchor of every presence ratio) then has nothing to stand on; the
 anchor is the always-present `intent` role. Run the cheap diagnostic you propose first (share of 1.0 residuals per world and their
