@@ -342,8 +342,12 @@ def per_intent(cond, a, kinds, ty, T, ev):
             # (w:<verb>): the route marks verb CATEGORIES, and a verb of kind O would make every O word a verb; only in the retrained worlds
             vb = [w for w in R85_VERBS.get(I, []) if kI.get(w) == "w:" + w] if (a.declare_verbs and retrain) else []
             if a.declare_verbs and retrain: print(f"[R85] seed {seed} world {I}: command verbs declared {vb}; left out (kind not their own): {[(w, kI.get(w)) for w in R85_VERBS.get(I, []) if w not in vb]}", flush=True)
+            if vb:   # R85 (coordinator, 2026-10-26): the event's verbs are the declared command verbs only (the placeholder "command" has a lexicon kind, S:movie_name);
+                     # the route's verb kinds = the kinds of the declared verbs: abort unless every one is w:<verb>
+                vk = sorted({kI[w] for w in vb if w in kI}); print(f"[R85] seed {seed} world {I}: the route's verb kinds will be {vk}", flush=True)
+                if any(k not in {"w:" + w for w in vb} for k in vk): raise SystemExit(f"[R85] world {I}: verb kinds {vk} are not all w:<verb>: aborted")
             anchor = a.intent_anchor and "intent" not in rmap.values()   # R79 (b): the closed-value intent role, one value, in every example (rate 1.0: the core question)
-            legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"] + vb}], "operators": [],
+            legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": vb or ["command"]}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
                       "reader": dict({"predicate_role": False, "occupancy_marker": True, "definite_dets": [], "no_sense_share": 1.0}, **({"closed_values": {"intent": [I]}} if anchor else {}))}
             if os.path.exists(wd): shutil.rmtree(wd)
