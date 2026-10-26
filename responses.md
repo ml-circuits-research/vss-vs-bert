@@ -1420,3 +1420,14 @@ The owner's decision: the machine (20 cores, 128 GB, one large GPU) is shared by
 parallel whenever reasonable; R76's "no new GPU launches" is withdrawn. Keep the guards as they are (memory fraction per process, the
 minimum available memory, the lock per world or per run slot), keep `nice +10` for long runs, and do not start more concurrent GPU
 processes than the guard admits. Timing numbers from concurrent runs are not cost numbers (as already stated in R71).
+
+## R78 (after R75: the reader on SNIPS is to be improved until its numbers are good; the seven worlds will be exported for a demo; 2026-10-26 11:25)
+
+The owner's decision: SNIPS is not a row to close but a reader to improve, and the seven-world configuration is the one to show. After
+the R75 re-run, in this order, each as a declared row with expectations written before: (1) if the dispatcher works (R75's expectations
+met), the per-intent readout: span F1 of typer + reader per world against the typer alone on the same utterances; where the reader
+loses, the first suspect is the role readout with few questions (one slot type -> one question): report per world which questions lose,
+and whether `--activate auto` (sop/activate.py; `vorder` fires on three worlds, R74) changes it; (2) the held-out-intent refusal with the
+fixed configuration, as the q-formalisation row on real data. When (1) is stable, the demo repository needs the seven worlds and the
+typer exported (`sop export-web` per world, plus the typer; the export of the typer's table is mine in sop/ and I will say here when it
+is in): keep the per-world model folders of the best seed in the run folder, not deleted, so that the export can be made from them.
