@@ -327,7 +327,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
             tr = [i for i in cond["train"] if items[i]["intent"] == I]; cal = [i for i in cond["dev_cal"] if items[i]["intent"] == I]
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
-            kI = {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}
+            kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
             wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}")
             legend = {"version": 1, "roles": [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
@@ -364,7 +364,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
             z = np.load(os.path.join(md, "routebook.npz")); np_ = int(sum(z[k].size for k in ("path", "bg0", "bg", "A", "L", "logits"))); nparam += np_
             RR = SR.infer.Reader(md); RR.cfg["residual"] = "explained"
             s0 = items[tr[0]]["tokens"]; d0 = float(np.linalg.norm(R.chart(s0)[0] - RR.chart(s0)[0]) / max(1e-9, np.linalg.norm(R.chart(s0)[0])))
-            worlds[I] = {"R": RR, "rinv": rinv, "rates": span_rates(cond, tr), "types": types_, "cal": cal, "params": np_}
+            worlds[I] = {"R": RR, "rinv": rinv, "rates": span_rates(cond, tr), "types": types_, "cal": cal, "train": tr, "params": np_}
             print(f"[R72] seed {seed} world {I}: {len(tr)} training utterances, {len(types_)} slot questions, {len(set(kI.values()))} kinds, {np_ / 1e6:.2f} M phases; chart of sop/ vs the pinned tool: relative difference {d0:.1e}", flush=True)
         t_train = time.time() - t0
         def read_all(it):
@@ -381,16 +381,21 @@ def per_intent(cond, a, kinds, ty, T, ev):
             return outs
         thr = {}
         for I, W in worlds.items():
-            res = [read_all(items[i])[I]["residual"] for i in W["cal"][:200]]; thr[I] = float(np.quantile(res, 0.98)) if res else 1.0
+            if a.dispatch == "residual":   # R75: the 98th percentile of the world's residual on ITS OWN training utterances (200, fixed order), read with the full lexicon
+                res = [float(W["R"].formalize(" ".join(items[i]["tokens"]), 0, SR.infer.idgen("e"), filt=set(items[i]["tokens"]))[2]["residual"]) for i in W["train"][:200]]
+            else: res = [read_all(items[i])[I]["residual"] for i in W["cal"][:200]]
+            thr[I] = float(np.quantile(res, 0.98)) if res else 1.0
         def predict_w(ids):
             out = []
             for i in ids:
-                it = items[i]; outs = read_all(it); order = sorted(outs, key=lambda I: (rank(outs[I]["status"]), outs[I]["residual"], -outs[I]["min_margin"]))
+                it = items[i]; outs = read_all(it); order = sorted(outs, key=(lambda I: (outs[I]["residual"], -outs[I]["min_margin"])) if a.dispatch == "residual" else (lambda I: (rank(outs[I]["status"]), outs[I]["residual"], -outs[I]["min_margin"])))
                 b = outs[order[0]]; fr = dict(b["frame"]); fr["intent"] = order[0]; mg = dict(b["margins"])
                 mg["intent"] = (outs[order[1]]["residual"] - b["residual"]) if len(order) > 1 else 1.0
                 rej = all(o["status"] != "ok" or o["residual"] > thr[I] for I, o in outs.items())
                 rej_res = all(o["residual"] > thr[I] for I, o in outs.items())          # second line: the residual alone, status ignored
-                p = {"frame": fr, "margins": mg, "status": b["status"], "residual": b["residual"], "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_res,
+                if a.dispatch == "residual": rej, rej_status = rej_res, all(o["status"] != "ok" for o in outs.values())   # R75: the residual first, status a second line
+                else: rej_status = rej
+                p = {"frame": fr, "margins": mg, "status": b["status"], "residual": b["residual"], "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_res, "rejected_by_status": rej_status, "chosen_abstains": b["status"] == "abstain",
                      "spans": spans_by_typer(it["tokens"], fr, ty, T), "spans_by_rule": spans_by_rule(it["tokens"], fr, worlds[order[0]]["rates"]), "spans_typer_only": spans_typer_only(it["tokens"], ty)}
                 out.append(p)
             return out
@@ -398,12 +403,15 @@ def per_intent(cond, a, kinds, ty, T, ev):
         sub = (ev.get("dev_rep") or next(iter(ev.values())))[:a.cost_n]; t1 = time.time(); predict_w(sub); ms_ = 1000 * (time.time() - t1) / max(1, len(sub))
         rej = {k: float(np.mean([p["rejected_by_every_world"] for p in v])) for k, v in preds.items()}
         rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
+        rej_s = {k: float(np.mean([p["rejected_by_status"] for p in v])) for k, v in preds.items()}; abst = {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()}
         cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
-        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)", "reader_worlds", cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
-                                   extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "world_thresholds": thr, "worlds": intents})
-        print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else "VSS, one world per intent, residual dispatch (R75)", "reader_worlds" if a.dispatch == "status" else "reader_worlds_r75", cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+                                   extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "rejected_by_status": rej_s, "chosen_abstains": abst, "world_thresholds": thr, "worlds": intents, "world_kinds": a.world_kinds, "dispatch": a.dispatch})
+        print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; by status {rej_s}; chosen frame abstains {abst}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
         allrows.append(row)
     report_real.summarize(allrows, "VSS, one world per intent + dispatcher (R72)")
+    for key in ("rejected_by_status", "chosen_abstains"):
+        for k in allrows[0].get(key, {}): print(f"  {key}, {k}: {np.mean([r[key][k] for r in allrows]):.3f} [{' '.join(f'{r[key][k]:.3f}' for r in allrows)}]")
     ms = lambda xs: f"{np.mean(xs):.3f} ± {np.std(xs):.3f} [{' '.join(f'{x:.3f}' for x in xs)}]"
     for k in allrows[0]["rejected_by_every_world"]: print(f"  rejected by every world, {k}: {ms([r['rejected_by_every_world'][k] for r in allrows])}")
     for k in allrows[0]["rejected_by_residual_alone"]: print(f"  rejected by the residual of every world (status ignored), {k}: {ms([r['rejected_by_residual_alone'][k] for r in allrows])}")
@@ -420,6 +428,8 @@ if __name__ == "__main__":
     ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="copy the seed-0 model/ folder of each size to logs/models/")
     ap.add_argument("--kinds", default="skipgram", choices=["skipgram", "typer"], help="R71: 'typer' = the kinds learned from the training annotation by sop/typer.py (default: the skip-gram clusters)")
     ap.add_argument("--worlds", default="one", choices=["one", "per_intent"], help="R72 item 4: one world per intent with the dispatcher (needs --kinds typer)")
+    ap.add_argument("--world_kinds", default="own", choices=["own", "all"], help="R75: 'all' keeps every typer kind in every per-intent world (default 'own' = R72 as run)")
+    ap.add_argument("--dispatch", default="status", choices=["status", "residual"], help="R75: 'residual' = dispatch by the explained residual, ties by the min margin; rejection by the residual (default = R72 as run)")
     ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
