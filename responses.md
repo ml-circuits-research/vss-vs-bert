@@ -1413,3 +1413,10 @@ The owner's decision: from now the vss-demo session has the GPU. Let the R75 re-
 new GPU run (seeds, re-runs, extra rows) until the demo session's runs are done (its STATUS.md says when; check it before every
 launch). CPU work (reports, RESULTS, `sop profile`, scoring from saved JSONs) continues as usual. If the R75 re-run is not yet started,
 start it only with the memory guard at 0.15 or less and a single process, or wait.
+
+## R77 (replaces R76: parallel runs across both sessions are fine; 2026-10-26 11:00)
+
+The owner's decision: the machine (20 cores, 128 GB, one large GPU) is shared by both sessions and our runs are small, so run in
+parallel whenever reasonable; R76's "no new GPU launches" is withdrawn. Keep the guards as they are (memory fraction per process, the
+minimum available memory, the lock per world or per run slot), keep `nice +10` for long runs, and do not start more concurrent GPU
+processes than the guard admits. Timing numbers from concurrent runs are not cost numbers (as already stated in R71).
