@@ -22,7 +22,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__)); REPO = os.path.dirname(os.path.dirname(HERE)); EXP = os.path.join(REPO, "experiment")
 
-from . import soplang, check as checkmod, world
+from . import soplang, check as checkmod, world, activate
 from .legend import Legend, tokenize
 
 UNKNOWN_KIND = "unknown"
@@ -470,6 +470,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     cfg = {"world": a.world_name, "D": a.D, "seed": seed, "star_version": getattr(a, "star_version", 1), "language": a.language, "legend_sha256": legend.sha, "legend_version": legend.version,
            "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": list(a.code_list),
            "gate_init": "closed", "depth_estimator": a.depth_estimator, "presence_readout": "decided", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
+           "decoder": getattr(a, "decoder", "contract"), **activate.DECODERS[getattr(a, "decoder", "contract")],      # the contract rules (activate.py, class 1)
+           "activation": getattr(a, "activation_report", None),
            "thresholds": {"tau": a.tau, "tau_source": "stated (the repository's v16 value), not fitted on any rows", "no_sense_share": 0.5,
                           "no_sense_source": "stated", "no_fit_residual": 0.9, "no_fit_source": "stated (dispatcher only, spec section 9)",
                           "presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None, "set_member": {}}}
@@ -773,6 +775,13 @@ def main(argv=None):
     ap.add_argument("--identities", default="stars", help="'stars' (the tool's star function) or 'table:<vocab.json>': the per-seed draw of "
                     "experiment/v16_reference, np.random.default_rng(300 + seed) over that vocabulary (isolation run C)")
     ap.add_argument("--vary_stars", action="store_true", help="rule 6 / research reproduction: identities drawn per seed (star seed 'seed<k>'), as the repository scripts")
+    ap.add_argument("--decoder", default="contract", choices=sorted(activate.DECODERS), help="'contract' (default): the contract rules of q-formalisation on in the "
+                    "model (candidates from the sentence, one answer per word, undecided by adjacency, explained residual; activate.py class 1); "
+                    "'paper': the decoder of the frozen comparison rows (catalog candidates, compiled residual)")
+    ap.add_argument("--activate", default="off", choices=["off", "auto"], help="'auto': the structural routes are SELECTED from the nature of the world "
+                    "(activate.py: need signals on the training annotation, acceptance on selection rows the trials did not train on); the trials, "
+                    "numbers and decision go to config.json 'activation' and run_dir/activation.json. 'off' (default): reader.codes / --codes as declared")
+    ap.add_argument("--activate_eps", type=float, default=0.01, help="the tolerance of the acceptance test (FULL accuracy units)")
     a = ap.parse_args(argv)
     wd = os.path.abspath(a.world); a.world_name = os.path.basename(wd.rstrip("/"))
     legend = Legend(os.path.join(wd, "legend.json"))
@@ -815,6 +824,13 @@ def main(argv=None):
     print(f"[schema] roles {schema['role_order']} (core {schema['core_roles']}), max depth {schema['max_depth']}, event negation {schema['neg_event']}")
     lexical, ranks = lexical_baseline(train_rows, legend, schema); bag = bag_baseline(train_rows, legend, schema)
     seen_words = {w for r in train_rows for fl in r["frame"]["roles"].values() for w in world.filler_words(fl)} | {s for r in train_rows for s in r["frame"]["speakers"]}
+    a.activation_report = None
+    if a.activate == "auto" and not a.eval_only:
+        prof_codes, act = activate.select(a, legend, rows, splits, schema, train_one, evaluate, lexical, bag, seen_words, eps=a.activate_eps)
+        a.code_list = prof_codes; a.activation_report = act
+        with open(os.path.join(a.run_dir, "activation.json"), "w") as f: json.dump(act, f, indent=1)
+        with open(os.path.join(a.run_dir, "PROFILE.md"), "w") as f:
+            f.write(activate.profile_markdown(act["profile"], {c: (v["fires"], v["reason"]) for c, v in act["need_signals"].items()}, act["diagnostics"]))
     model_dir = os.path.abspath(a.out or os.path.join(wd, "model")); a.seeds_list = [a.seed + k for k in range(a.seeds)]
     metrics, extra = [], []
     if a.eval_only:     # re-score a saved model with the current reader code; no training, thresholds kept from its config (rule 25)

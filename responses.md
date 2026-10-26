@@ -1349,3 +1349,27 @@ dispatch may lose a little intent accuracy against the closed-value intent role.
 Do not add `vorder` to any SNIPS row (R71 item 2 said "only if it runs without a change"; now: not at all). It addresses roles that
 appear without their usual cue word (clefts, the double object); on SNIPS the slots are separated by type, not by position around a
 verb, so it would add size and time for no expected gain. The three routes only, in R71 and R72.
+
+## R74 (tool notice: the rules of a world are activated from its nature, not by hand; sop/activate.py; 2026-10-26 09:40)
+
+No new row and no re-run. A change of the shared tool, synced to `sop/` at this commit, which the SNIPS per-intent worlds (R72) can use
+at zero cost:
+1. **Decoder default.** `sop train` now writes the contract rules into `config.json` itself (`--decoder contract`, the default:
+   `candidates: sentence`, one-to-one, `undecided_adjacent`, `residual: explained`), which is exactly the "sop decoder" of R46 / R42 /
+   R54 that the reopened rows already use; `--decoder paper` writes none of them (the frozen rows' decoder). Nothing already measured
+   changes; a model trained from now on carries its decoder in its config, so a reader no longer depends on who sets the flags.
+2. **Routes by need and acceptance.** `sop train --activate auto` selects the structural routes (`vorder`, `pos`) per world: a need signal
+   on the training annotation (same-kind competition for `vorder`: two questions answered by words of one kind; rigid order for `pos`),
+   then trials trained without the selection rows (the calibration halves of the held-out formulations + a hashed tenth of the training
+   rows) and the acceptance rule applied by hand on 2026-10-25 (no selection split drops by more than eps = 0.01; the marked rows rise).
+   Trials and decision go to `config.json` (`activation`) and the run folder. `sop profile <world>` prints the need signals without any
+   training. The argument (two levels: worlds activated at inference by the dispatcher's vote on the residual; rules and routes activated
+   at training by the world's nature; contract rules / structural routes / diagnostics) is in the demo repository's
+   vision/ACTIVATION_rules_and_worlds_2026-10-26.md and summarised in `sop/README.md`.
+3. **For SNIPS (R72), one cheap line per world:** run `sop profile <world>` on each of the 7 per-intent worlds and put the 7 need-signal
+   lines in the report (same-kind competition share, order-dependent share, unknown-kind share). Written before: `vorder` is not
+   expected to fire on any of them (the slots of one intent differ by type), which is R73 measured instead of asserted. If it fires
+   somewhere, do not act on it in this round; report it.
+Checked before this notice on the three worlds of the demo repository (`sop profile`, no training): reference world 78.3% same-kind
+competition (0% without a cue), commands world 0%, quantifier world 100%; the first `--activate auto` run (reference world, seed 0, CPU)
+is cited in the sync commit's SOURCE.

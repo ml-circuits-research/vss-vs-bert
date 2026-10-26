@@ -6,6 +6,7 @@ cli.py — the `sop` command (spec 5).
   sop check     --legend <[name=]legend.json> [--legend ...] [--legends <dir>] <files...> [--json] [--force]
   sop diff      <a.sop> <b.sop> [--tau 0.05] [--model <dir>] [-o out.sop] [--force] [--json]
   sop stats     --model <dir> [--json]
+  sop profile   <world> [--seed 0] [--json]   (the nature of the world: need signals of the routes, diagnostics; activate.py)
   sop train     <world> [...]            (torch; see train.py)
   sop export    [--out dir] [--n N] ...  (the repository's three constructed worlds as world folders; tool/export_worlds.py)
   sop export-web --model <dir> --out <dir> [--bits 8|4|32]   (the files app/src/vss.js loads; export_web.py)
@@ -138,6 +139,25 @@ def cmd_stats(a):
     return 0
 
 
+def cmd_profile(a):
+    """sop profile <world>: activate.profile on the training split (the automatic splits of --seed), no torch needed"""
+    from . import activate
+    from .legend import Legend
+    from .train import load_rows, make_splits, build_schema
+    wd = os.path.abspath(a.world); legend = Legend(os.path.join(wd, "legend.json"))
+    if legend.errors: print("legend errors:\n  " + "\n  ".join(legend.errors), file=sys.stderr); return 1
+    rows, errors, _ = load_rows(wd, legend)
+    if errors: print("examples rejected by sop check:\n" + "\n".join(errors[:20]), file=sys.stderr); return 1
+    hp = os.path.join(wd, "split_hints.json"); hints = json.load(open(hp)) if os.path.exists(hp) else {}
+    make_splits(rows, legend, hints, a.seed, cal_forms=True)
+    train_rows = [r for r in rows if r["split"] == "train"]; schema = build_schema(train_rows, legend)
+    prof = activate.profile(rows, legend, schema); needs = activate.need_signals(prof); diags = activate.diagnostics(prof, [])
+    if a.json: print(json.dumps({"profile": {k: ({kk: vv for kk, vv in v.items() if kk != "rows"} if isinstance(v, dict) and "rows" in v else v) for k, v in prof.items()},
+                                 "need_signals": {c: {"fires": f, "reason": r} for c, (f, r) in needs.items()}, "diagnostics": diags}, indent=1))
+    else: sys.stdout.write(activate.profile_markdown(prof, needs, diags))
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="sop"); sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("formalize"); p.add_argument("--model", action="append", help="repeat for the dispatcher by fit (smallest relative _residual wins)")
@@ -152,6 +172,8 @@ def main(argv=None):
     p = sub.add_parser("diff"); p.add_argument("a"); p.add_argument("b"); p.add_argument("--tau", type=float); p.add_argument("--model"); p.add_argument("-o")
     p.add_argument("--force", action="store_true"); p.add_argument("--json", action="store_true")
     p = sub.add_parser("stats"); p.add_argument("--model", required=True); p.add_argument("--json", action="store_true")
+    p = sub.add_parser("profile", help="the nature of a world from its training rows: need signals of the candidate routes, diagnostics (no training)")
+    p.add_argument("world"); p.add_argument("--seed", type=int, default=0); p.add_argument("--json", action="store_true")
     sub.add_parser("train", add_help=False)
     if argv is None: argv = sys.argv[1:]
     if argv and argv[0] == "train":
@@ -164,7 +186,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "formalize" and not (a.model or a.worlds): ap.error("formalize needs --model <dir> (repeatable) or --worlds <DATA_ROOT>")
     try:
-        rc = {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a); sys.stdout.flush(); return rc
+        rc = {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats, "profile": cmd_profile}[a.cmd](a); sys.stdout.flush(); return rc
     except BrokenPipeError:
         os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); return 0
 
