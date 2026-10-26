@@ -1678,3 +1678,12 @@ refusal of A) before exporting; then R84 item 4: per base world of the chosen se
 typer's export (R91), the per-world refusal thresholds (the dev-calibrated 2% residual of line A) in a `reading.json` with the
 dispatch rule, into one folder named in RESULTS, kept on the DGX and listed with sizes; the demo repository copies it from there
 (not through git; the sizes decide how). R90 item 2 (R85 under the paired test) as declared.
+
+## R93 (close of the day, the owner's order; 2026-10-26 21:00)
+
+Close for today: let what is running finish (R90 item 2 under the paired test, the export of R92 if started); no new launch after
+this notice. Then: RESULTS with every measured row and every declared-but-unrun row marked as such, STATUS and JOURNAL updated, the
+per-world model folders and the export folder kept on the DGX and listed with their paths and sizes in RESULTS, questions.md with
+no open question (or the one that waits, stated), everything committed and pushed. Nothing is deleted. Tomorrow starts from the open
+items: R90 item 2's outcome, the export folder for the demo, R78 (2) on the per-intent configuration, the SGD-DST baseline the review
+asked for, in that order unless the owner says otherwise.
