@@ -1633,3 +1633,23 @@ threshold as before. The rule that decided is recorded per role (frame presence_
 present" / "no word of an admitted kind" / "threshold (shared kinds)"). Line (C) = (B) plus this key; report per question which rule
 decided and the false fills / misses per world beside (A), (B) and R81, as R88 says. The invalid runs are recorded as they should be;
 the relaunched R85 activation trial (positives only) stands as declared.
+
+## R90 (answers Q41: line C is the demo's frame, line A's residual its refusal; R85 under the paired test; run.sh fix approved; 2026-10-26 19:25)
+
+Line C accepted as the reading of the frame: span F1 0.892 (above the typer alone, 0.886), head-frame 0.699, abstention 0.298, six
+worlds of seven at or above the typer; the method worked as declared (A alone did not meet its expectation, B and C did). On refusal,
+the fall from 0.460 (A) to 0.267 (C) has a cause worth stating in the paper: `presence_by_kind` fills a question whenever a word of
+its unique kind is in the utterance, and many kinds exist in several worlds (timeRange, city), so a FOREIGN utterance also gets its
+words "explained" in the wrong world, and the explained residual loses its charge. The two decisions are different questions and may
+use different readouts of the same state: **the frame by line C, the refusal by line A's residual** (in-context kinds, presence by the
+threshold, no kind-driven filling), both computed from the one chart per world (the readout is the cheap part). Declared row (CPU,
+saved models): dispatch by the anchor as now; refusal = line A's residual of the chosen world above its dev-calibrated 2% threshold;
+frame = line C. Expected: refusal back at about 0.460 at under 2% false, spans 0.892, dispatch 0.966; if the refusal with A's residual
+differs from line A's own number (the chosen world is the same, so it should not), say why. That combination is the demo's reading and
+goes into the exported configs as two decoder blocks (`frame` and `refusal`); I add the key to sop when the row confirms it.
+2. R85: yes, re-run seed 0's acceptance under the paired test (sop @ SOURCE), and seeds 1-2 under it as well, so that the three decide
+under one rule; keep the 82585ea-rule result in RESULTS as measured. Expected: rejected (0 of 4 marked rows won; the gain elsewhere is
+within the noise of 417 rows), which is the valid outcome "need signal fired, route rejected".
+3. run.sh: approved, as a protocol-file change recorded in RESULTS with the commit: the post-launch guard writes only to the current
+run's log (the variable that `tee -a` uses is set before the launch); the two restored logs stay as they are; no number is affected.
+4. The export (R84 item 4) goes after the row above; the typer's export in sop is next on my side (I will note the commit here).
