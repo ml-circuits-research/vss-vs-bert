@@ -34,15 +34,16 @@ def pct(cal, x):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only"); a = ap.parse_args()
+    ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only")
+    ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)"); a = ap.parse_args()
     SR = rr.load_sop_repo(); src = open(os.path.join(mainrepo.ROOT, "sop", "SOURCE")).read().strip()[:7]
     cond = rd.load_condition("snips", a.condition); items = cond["items"]; intents = sorted({items[i]["intent"] for i in cond["train"]})
     kinds, ty, T = rr.build_kinds_typer(cond, types.SimpleNamespace(n_freq=a.n_freq))
     ev = report_real.eval_sets(cond, True, a.max_eval)
-    print(f"r80_dispatch: sop @ {src} (residual explained); condition {a.condition}; seed {a.seed}; worlds {intents}; sets " + ", ".join(f"{k} {len(v)}" for k, v in ev.items()))
+    print(f"r80_dispatch: models {a.models}; sop @ {src} (residual explained); condition {a.condition}; seed {a.seed}; worlds {intents}; sets " + ", ".join(f"{k} {len(v)}" for k, v in ev.items()))
     W = {}; all_types = set()
     for I in intents:
-        wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_snips_{a.condition}_intent_{I}_seed{a.seed}_r79")
+        wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_snips_{a.condition}_intent_{I}_seed{a.seed}_{a.models}")
         saved = {}
         for line in open(os.path.join(wd, "kinds.tsv")):
             if line.startswith("#") or not line.strip(): continue
@@ -112,7 +113,7 @@ if __name__ == "__main__":
 
     reads = {k: [all_worlds(items[i]) for i in ids] for k, ids in ev.items()}
     reads_cal = [all_worlds(items[i]) for i in cond["dev_cal"]]
-    r79 = json.load(open(os.path.join(mainrepo.ROOT, "logs", f"results_real_snips_{a.condition}_reader_worlds_r79_full_seed{a.seed}.json")))
+    r79 = json.load(open(os.path.join(mainrepo.ROOT, "logs", f"results_real_snips_{a.condition}_reader_worlds_{a.models}_full_seed{a.seed}.json")))
     ms = lambda xs: f"{np.mean(xs):.3f}"
     summary = {}
     for rule in rules:
@@ -124,12 +125,12 @@ if __name__ == "__main__":
         for k in [x for x in preds if x.startswith("ood:")]:
             ind = k.split(":", 1)[1] + ":in_domain"
             if ind in preds: auroc_anc[k] = report_real.auroc([x["p_anchor"] for x in preds[ind]], [x["p_anchor"] for x in preds[k]])
-        row = report_real.evaluate(f"VSS, one world per intent + intent anchor, dispatch {rule} (R80, saved R79 models)", f"reader_worlds_r80_{rule}", cond, a.seed, None, preds,
+        row = report_real.evaluate(f"VSS, one world per intent + intent anchor{' + negatives' if a.models == 'r81' else ''}, dispatch {rule} (R80 rules, saved {a.models.upper()} models)", f"reader_worlds_{'r80' if a.models == 'r79' else 'r81r80'}_{rule}", cond, a.seed, None, preds,
                                    cond["dev_cal"], cal_p, sorted(all_types), extra={"rule": rule, "rejected_by_every_world": rej, "rejected_by_anchor_pct": rej_a,
-                                   "ood_auroc_anchor_pct": auroc_anc, "world_thresholds": {I: cal[I]["thr"] for I in W}, "sop": src, "models": "R79 saved, seed %d" % a.seed})
+                                   "ood_auroc_anchor_pct": auroc_anc, "world_thresholds": {I: cal[I]["thr"] for I in W}, "sop": src, "models": f"{a.models.upper()} saved, seed {a.seed}"})
         summary[rule] = row
         print(f"  [{rule}] " + "; ".join(f"{k}: intent {row['sets'][k]['intent']:.3f} span F1 {row['spans'][k]['f1']:.3f} rejected {rej[k]:.3f} (anchor pct < 0.02: {rej_a[k]:.3f})" for k in ev)
               + "".join(f"; AUROC {k} residual {row['ood_auroc_residual'][k]:.3f} anchor pct {auroc_anc[k]:.3f}" for k in auroc_anc), flush=True)
     for k in ev:
-        if k in r79["sets"]: print(f"  check: residual_raw reproduces R79 on {k}: intent {summary['residual_raw']['sets'][k]['intent']:.4f} vs R79 {r79['sets'][k]['intent']:.4f}")
+        if k in r79["sets"]: print(f"  check: residual_raw reproduces the run's own residual dispatch ({a.models}) on {k}: intent {summary['residual_raw']['sets'][k]['intent']:.4f} vs the run {r79["sets"][k]["intent"]:.4f}")
     metrics.checklist(1, "[x] saved R79 models, no reader retrained [x] percentiles on each world's own 200 training rows (rule 25) [x] rejection unchanged, anchor line second [x] R79's rule reproduced")

@@ -328,7 +328,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
             kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
-            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r79" if a.intent_anchor else ""))   # R79: own folders; R75's are kept
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
             anchor = a.intent_anchor and "intent" not in rmap.values()   # R79 (b): the closed-value intent role, one value, in every example (rate 1.0: the core question)
             legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
@@ -340,32 +340,40 @@ def per_intent(cond, a, kinds, ty, T, ev):
                 f.write(f"# word\tkind: the typer's kinds (R71), slot kinds of other intents mapped to O (R72 world {I})\n")
                 for w in sorted(kI): f.write(f"{w}\t{kI[w]}\n")
             json.dump({"name": os.path.basename(wd), "language": "en", "description": f"{a.dataset}: the intent {I}", "version": 1}, open(os.path.join(wd, "world.json"), "w"), indent=1)
-            for fname, ids_ in (("train.sop", tr), ("calibration.sop", cal)):
+            neg = []
+            if a.negatives:   # R81: the OTHER intents' training utterances, as many as the positives, sampled with the seed; anchor role only, _negative=true
+                others = [i for i in cond["train"] if items[i]["intent"] != I]
+                neg = [others[j] for j in sorted(np.random.default_rng(seed).choice(len(others), min(len(tr), len(others)), replace=False))]
+            for fname, ids_ in (("train.sop", tr), ("calibration.sop", cal)) + ((("negatives.sop", neg),) if neg else ()):
                 doc = soplang.Doc(directives=[("world", os.path.basename(wd), None), ("legend", sha, None), ("generated", "vss/run_reader_real.py --worlds per_intent (R72)", None)]); g = idgen()
                 for i in ids_:
                     it = items[i]; w = soplang.Wire(next(g), "command"); w.set("_text", " ".join(it["tokens"])); w.set("_item", it["id"]); seen = set()
                     if anchor: w.set("intent", I)
+                    if fname == "negatives.sop": w.set("_negative", "true"); doc.wires.append(w); continue
                     for sl in sorted(it["tree"]["slots"], key=lambda s_: s_["start"]):
                         r = rmap[sl["type"]]
                         if r in seen: continue
                         seen.add(r); w.set(r, it["tokens"][sl["end"] - 1])
                     doc.wires.append(w)
                 with open(os.path.join(wd, "examples", fname), "w") as f: f.write(soplang.write(doc))
-            L = Legend(os.path.join(wd, "legend.json"))
+            L = importlib.import_module("sop_repo.legend").Legend(os.path.join(wd, "legend.json")) if a.negatives else Legend(os.path.join(wd, "legend.json"))   # R81: the tool of sop @ SOURCE end to end
             if L.errors: raise SystemExit(f"legend errors ({I}): " + "; ".join(L.errors))
-            rows, errors, _ = strain.load_rows(wd, L)
+            TR = importlib.import_module("sop_repo.train") if a.negatives else strain
+            rows, errors, _ = TR.load_rows(wd, L)
             if errors: raise SystemExit(f"examples rejected ({I}):\n" + "\n".join(errors[:10]))
             tset, cset = set(tr), set(cal); splits = collections.defaultdict(list)
             for r in rows:
-                iid = r["wire"].value("_item"); r["split"] = "train" if iid in tset else ("calibration_dev" if iid in cset else "unused"); splits[r["split"]].append(r["id"])
-            trr = [r for r in rows if r["split"] == "train"]
+                iid = r["wire"].value("_item"); r["split"] = "train" if iid in tset or r.get("negative") else ("calibration_dev" if iid in cset else "unused"); splits[r["split"]].append(r["id"])
+            trr = [r for r in rows if r["split"] == "train" and not r.get("negative")]   # the schema from the positive rows only (R81)
             bs = importlib.import_module("sop_repo.train").build_schema if a.intent_anchor else strain.build_schema   # R79 (a): the schema of sop @ SOURCE (no silent anchor; it warns)
             schema = fix_schema(bs(trr, L)); schema["content_kinds"] = sorted(strain.content_kinds_of(trr, L))
             if a.intent_anchor: print(f"[R79] seed {seed} world {I}: core roles {schema['core_roles']}, structure anchor {schema.get('structure_anchor')}", flush=True)
             ns = types.SimpleNamespace(D=a.D, star_seed=f"seed{seed}", identities="stars", device=a.device, length_buckets=True, epochs=int(a.epochs.split(",")[-1]), batch=a.batch, shuffle=True,
                                        max_train=0, code_list=["path", "chainL", "bigram"], no_ckpt=True, resume=False, log_every=500, lr=a.lr, n_cal=a.n_cal, tau=0.05,
                                        world_name=os.path.basename(wd), language="en", commit=mainrepo.check_pinned(), depth_estimator="kinds", threshold_rule="fit", store_presence_ratios=False)
-            md = os.path.join(wd, "model_seed"); R, ex = strain.train_one(ns, L, rows, splits, schema, seed, md, os.path.join(wd, "runs"))
+            if a.negatives: ns.decoder = "paper"   # R81: inference unchanged from R79 (no contract keys in config.json)
+            md = os.path.join(wd, "model_seed"); tw = time.time(); R, ex = TR.train_one(ns, L, rows, splits, schema, seed, md, os.path.join(wd, "runs")); tw = time.time() - tw
+            print(f"[R81] seed {seed} world {I}: {len(tr)} positives, {sum(1 for r in rows if r.get('negative'))} negatives; training {tw:.1f} s (concurrent)", flush=True)
             z = np.load(os.path.join(md, "routebook.npz")); np_ = int(sum(z[k].size for k in ("path", "bg0", "bg", "A", "L", "logits"))); nparam += np_
             RR = SR.infer.Reader(md); RR.cfg["residual"] = "explained"
             s0 = items[tr[0]]["tokens"]; d0 = float(np.linalg.norm(R.chart(s0)[0] - RR.chart(s0)[0]) / max(1e-9, np.linalg.norm(R.chart(s0)[0])))
@@ -410,7 +418,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
         rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
         rej_s = {k: float(np.mean([p["rejected_by_status"] for p in v])) for k, v in preds.items()}; abst = {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()}
         cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
-        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor + negatives, residual dispatch (R81)" if a.negatives else "VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r81" if a.negatives else "reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
                                    extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "rejected_by_status": rej_s, "chosen_abstains": abst, "world_thresholds": thr, "worlds": intents, "world_kinds": a.world_kinds, "dispatch": a.dispatch})
         print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; by status {rej_s}; chosen frame abstains {abst}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
         allrows.append(row)
@@ -436,8 +444,10 @@ if __name__ == "__main__":
     ap.add_argument("--world_kinds", default="own", choices=["own", "all"], help="R75: 'all' keeps every typer kind in every per-intent world (default 'own' = R72 as run)")
     ap.add_argument("--dispatch", default="status", choices=["status", "residual"], help="R75: 'residual' = dispatch by the explained residual, ties by the min margin; rejection by the residual (default = R72 as run)")
     ap.add_argument("--intent_anchor", action="store_true", help="R79: keep the closed-value intent role (one value) in every per-intent world and example; schema by sop @ SOURCE")
+    ap.add_argument("--negatives", action="store_true", help="R81: one-vs-rest negatives (other intents' training utterances, balanced, anchor role only, _negative=true); trained by sop @ SOURCE; needs --intent_anchor")
     ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
+    assert not a.negatives or a.intent_anchor, "--negatives needs --intent_anchor (R81)"
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
     if a.max_train: cond["train_order"] = cond["train_order"][:a.max_train]; keep = set(cond["train_order"]); cond["train"] = [i for i in cond["train"] if i in keep]
     sizes = a.sizes.split(",") if a.condition == "base" else ["full"]; eps = dict(zip(a.sizes.split(","), [int(x) for x in a.epochs.split(",")]))
