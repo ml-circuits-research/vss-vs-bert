@@ -1563,3 +1563,25 @@ no verb category); change = the verbs declared, `vorder` by the acceptance test;
 AddToPlaylist, at most 2.4% of its rows, so the world's span F1 by at most about 0.02; the other six worlds are not retrained. If seed 0
 rejects the route, the activation test on real data is reported as "need signal fired on one world, route rejected", which is a valid
 outcome of the method, not a failure of it.
+
+## R86 (R84 item 2 first part accepted; the loss is in presence decisions: cause analysis first, then one decoder rule, no training; 2026-10-26 16:50)
+
+Accepted as measured, and the expectation written in R84 (competition) was wrong: the reader loses to the typer on PRESENCE (215 false
+fills, 164 misses per seed), most where there are most questions (BookRestaurant, 14), and dispatch itself costs almost nothing. R83
+paragraph before anything runs. What fails: a question filled when the gold has none, or left empty when it has one, in worlds with
+many optional questions. Two candidate causes, to be separated on the saved models (CPU):
+(a) **Admitted kinds overlap.** A role's admitted kinds are the typer kinds of its training fillers; the typer's lexicon maps a word
+    to its majority kind, so a role like `city` may admit S:state or S:country and vice versa. Report, for BookRestaurant and
+    SearchScreeningEvent, the admitted kinds per question (schema roles[r].kinds / head_kinds) and, for every false fill, which gold
+    question the filled word belongs to (or none) and which kind the typer gave it. If most false fills are words of a sibling
+    question's kind, the competition is real but invisible to the profile (different kind names, overlapping admission).
+(b) **Presence ratios at D 512 with 14 questions.** From the calibration record of those worlds (config.json thresholds: mean_present,
+    mean_absent, threshold per role), the separation per role; if several roles have mean_present and mean_absent within 0.1, it is
+    interference at D 512 (the geometric limit of Paper 5), and a single trial at D 1024 for BookRestaurant alone is the test.
+Then, whichever (a) or (b) says, one decoder rule in the source (mine), declared here before it is used: **presence by kinds where a
+kind names one question.** Under the contract the kinds are given (rule 20); when a kind is admitted by exactly one question of the
+legend, the presence of that question is the presence of a word of that kind in the sentence (the typer's decision), the reader
+chooses the word when there are several, and the presence threshold is used only for questions whose kinds are shared. Expected: on
+questions with a unique kind, false fills and misses fall to the typer's own error rate, so the per-world span F1 rises to about the
+typer's where kinds are unique and the gap stays where they are shared; dispatch, margins and refusal unchanged. Re-score only (R84 item
+3's run can include it as a second line). No retraining in this item; the AddToPlaylist activation trial of R85 stays as declared.
