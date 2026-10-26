@@ -61,11 +61,17 @@ def load_typer():
     import importlib.util
     spec = importlib.util.spec_from_file_location("sop_typer_r71", os.path.join(mainrepo.ROOT, "sop", "typer.py")); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
+SOP_DIR = None   # --sop_dir: a directory holding the 'sop' package of a named version (R82: the tree's sop/ may be newer than a row's)
+
+def sop_source():
+    return open(os.path.join(SOP_DIR or mainrepo.ROOT, "sop", "SOURCE")).read().strip()[:7]
+
 def load_sop_repo():
     """this repository's sop/ (the reader's single implementation since R58) as the package 'sop_repo', beside the pinned tool"""
     import importlib.util
     if "sop_repo" in sys.modules: return sys.modules["sop_repo"]
-    spec = importlib.util.spec_from_file_location("sop_repo", os.path.join(mainrepo.ROOT, "sop", "__init__.py"), submodule_search_locations=[os.path.join(mainrepo.ROOT, "sop")])
+    base = SOP_DIR or mainrepo.ROOT
+    spec = importlib.util.spec_from_file_location("sop_repo", os.path.join(base, "sop", "__init__.py"), submodule_search_locations=[os.path.join(base, "sop")])
     m = importlib.util.module_from_spec(spec); sys.modules["sop_repo"] = m; spec.loader.exec_module(m)
     import importlib; importlib.import_module("sop_repo.infer"); return m
 
@@ -319,7 +325,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
     intent is the chosen world. Rejection: every world rejects when each has a status other than ok or a residual above its own
     threshold (the 98% quantile of its residual on its own intent's dev calibration utterances, rule 25)."""
     SR = load_sop_repo(); items = cond["items"]; intents = sorted({items[i]["intent"] for i in cond["train"]})
-    print(f"[R72] {len(intents)} worlds (one per intent): {intents}; D {a.D}; routes path + chainL + bigram; decoder: sop @ {open(os.path.join(mainrepo.ROOT, 'sop', 'SOURCE')).read().strip()[:7]} (residual explained)")
+    print(f"[R72] {len(intents)} worlds (one per intent): {intents}; D {a.D}; routes path + chainL + bigram; decoder: sop @ {sop_source()} (residual explained)")
     rank = lambda st: {"ok": 0, "abstain": 1}.get(st, 2); allrows = []; all_types = set()
     for seed in range(a.seed_start, a.seed_start + a.seeds):
         worlds = {}; nparam = 0; t0 = time.time()
@@ -328,7 +334,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
             kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
-            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r84act" if a.activate == "auto" else "_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
             anchor = a.intent_anchor and "intent" not in rmap.values()   # R79 (b): the closed-value intent role, one value, in every example (rate 1.0: the core question)
             legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
@@ -372,7 +378,28 @@ def per_intent(cond, a, kinds, ty, T, ev):
                                        max_train=0, code_list=["path", "chainL", "bigram"], no_ckpt=True, resume=False, log_every=500, lr=a.lr, n_cal=a.n_cal, tau=0.05,
                                        world_name=os.path.basename(wd), language="en", commit=mainrepo.check_pinned(), depth_estimator="kinds", threshold_rule="fit", store_presence_ratios=False)
             if a.negatives: ns.decoder = "paper"   # R81: inference unchanged from R79 (no contract keys in config.json)
-            md = os.path.join(wd, "model_seed"); tw = time.time(); R, ex = TR.train_one(ns, L, rows, splits, schema, seed, md, os.path.join(wd, "runs")); tw = time.time() - tw
+            md = os.path.join(wd, "model_seed"); tw = time.time(); R = None
+            if a.activate == "auto":   # R84 item 2: the acceptance test of sop activate.py per world (need signal on the positive training rows)
+                ACT = importlib.import_module("sop_repo.activate"); ns.seed = seed; ns.tau = 0.05
+                needs = ACT.need_signals(ACT.profile(rows, L, schema)); fires = [c for c in ACT.CANDIDATE_CODES if needs[c][0]]
+                print(f"[R84] seed {seed} world {I}: need signals " + "; ".join(f"{c} {'FIRES' if needs[c][0] else 'no'} ({needs[c][1]})" for c in ACT.CANDIDATE_CODES), flush=True)
+                if not fires:   # no candidate: the R81 configuration exactly; its saved model is copied, not retrained (declared)
+                    src_md = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}_r81", "model_seed")
+                    shutil.copytree(src_md, md); R = SR.infer.Reader(md); print(f"[R84] seed {seed} world {I}: no candidate fires: the R81 model copied ({src_md})", flush=True)
+                else:
+                    if "vorder" in fires:   # the route's model: the reference V8 with set_vorder (sop/v8_gates_vorder_ref.py), in place of the pinned v8_gates
+                        spec = importlib.util.spec_from_file_location("v8_gates", os.path.join(SOP_DIR or mainrepo.ROOT, "sop", "v8_gates_vorder_ref.py"))
+                        v8r = importlib.util.module_from_spec(spec); spec.loader.exec_module(v8r); sys.modules["v8_gates"] = v8r
+                    trs = [r for r in rows if r["split"] == "train" and not r.get("negative")]
+                    lexical, _ = TR.lexical_baseline(trs, L, schema); bag = TR.bag_baseline(trs, L, schema)
+                    seen = {w for r in trs for fl in r["frame"]["roles"].values() for w in sworld.filler_words(fl)}
+                    ev_pos = lambda rd_, rows_, *x, **k: TR.evaluate(rd_, [r for r in rows_ if not r.get("negative")], *x, **k)   # negatives are never scored
+                    codes, act = ACT.select(ns, L, rows, splits, schema, TR.train_one, ev_pos, lexical, bag, seen, eps=0.01)
+                    ns.code_list = list(codes); ns.activation_report = act
+                    json.dump(act, open(os.path.join(wd, "activation.json"), "w"), indent=1, default=str)
+                    print(f"[R84] seed {seed} world {I}: accepted {act.get('accepted')}; codes {codes}", flush=True)
+            if R is None: R, ex = TR.train_one(ns, L, rows, splits, schema, seed, md, os.path.join(wd, "runs"))
+            tw = time.time() - tw
             print(f"[R81] seed {seed} world {I}: {len(tr)} positives, {sum(1 for r in rows if r.get('negative'))} negatives; training {tw:.1f} s (concurrent)", flush=True)
             z = np.load(os.path.join(md, "routebook.npz")); np_ = int(sum(z[k].size for k in ("path", "bg0", "bg", "A", "L", "logits"))); nparam += np_
             RR = SR.infer.Reader(md); RR.cfg["residual"] = "explained"
@@ -445,9 +472,13 @@ if __name__ == "__main__":
     ap.add_argument("--dispatch", default="status", choices=["status", "residual"], help="R75: 'residual' = dispatch by the explained residual, ties by the min margin; rejection by the residual (default = R72 as run)")
     ap.add_argument("--intent_anchor", action="store_true", help="R79: keep the closed-value intent role (one value) in every per-intent world and example; schema by sop @ SOURCE")
     ap.add_argument("--negatives", action="store_true", help="R81: one-vs-rest negatives (other intents' training utterances, balanced, anchor role only, _negative=true); trained by sop @ SOURCE; needs --intent_anchor")
+    ap.add_argument("--activate", default="off", choices=["off", "auto"], help="R84 item 2: sop activate.py's acceptance test per world (with --negatives); folders *_r84act")
+    ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version to train / read with (R82)")
     ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
     assert not a.negatives or a.intent_anchor, "--negatives needs --intent_anchor (R81)"
+    assert a.activate == "off" or a.negatives, "--activate auto is declared on the R81 configuration (--negatives)"
+    SOP_DIR = a.sop_dir
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
     if a.max_train: cond["train_order"] = cond["train_order"][:a.max_train]; keep = set(cond["train_order"]); cond["train"] = [i for i in cond["train"] if i in keep]
     sizes = a.sizes.split(",") if a.condition == "base" else ["full"]; eps = dict(zip(a.sizes.split(","), [int(x) for x in a.epochs.split(",")]))
