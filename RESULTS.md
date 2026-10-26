@@ -2090,3 +2090,29 @@ result, outputs deleted) ran every rule.
 Written before the run (R80): the anchor rule should move dispatch intent well above 0.716 (R79 seed 0; R79 mean 0.731); if the anchor
 alone reaches >= 0.9, the per-intent configuration is kept with that rule for the demo and R78 (1) runs on it; otherwise option 2
 (one-vs-rest negatives in training) is declared next by the author, and option 3 stays the fallback. R78 (1) is on HOLD until then.
+
+## Q33 diagnostic: the source of R75's 1.0 residuals (eval/q33_diag.py; saved R75 base models, no retraining; logs/2026-10-26_1129_q33_diag_43c95af.txt (sop 28db081, seed 0), _1145_q33_diag_dd1da21.txt (28db081, seed 1), _1241_q33_diag_a1c23a1.txt (28db081, seed 2), _1135_q33_diag_dd1da21.txt (sop 7ce5c50, seed 2); MEASURED)
+
+Read through sop @ 28db081 (the version R75 imported; extracted from repo commit 8594fc9 to a scratch directory), condition base, seeds
+0-2 [per seed]; 200 = the world's own first 200 training utterances (R75's threshold rows), test = all 700 test utterances. "Clause"
+= the share of the 1.0 residuals produced by the frame-incomplete clause (a core question unanswered); "graded only" = the explained
+residual with the clause ignored. In every world and seed, 100% of the 1.0 residuals come from the clause; none from a shape other
+than ok; the graded value itself is 1.0 on at most 0.5% of utterances.
+
+| world | core roles (R75 schema) | share 1.0, own 200 | of which clause | 98th pct (threshold) | graded only: share 1.0 | graded only: 98th pct | share 1.0, test | of which clause | graded only: share 1.0, test |
+|---|---|---|---|---|---|---|---|---|---|
+| AddToPlaylist | playlist | 0.000 0.000 0.000 | — | 0.751 0.771 0.780 | 0 | 0.751 0.771 0.780 | 0.000 | — | 0 |
+| BookRestaurant | restaurant_type | 0.280 0.320 0.335 | 1.000 | 1.000 1.000 1.000 | 0 | 0.846 0.831 0.872 | 0.890 0.886 0.884 | 1.000 | 0.004 |
+| GetWeather | timeRange | 0.525 0.515 0.525 | 1.000 | 1.000 1.000 1.000 | 0 | 0.841 0.859 0.837 | 0.573 0.604 0.599 | 1.000 | 0.003-0.004 |
+| PlayMusic | artist | 0.280 0.310 0.355 | 1.000 | 1.000 1.000 1.000 | 0 | 0.820 0.806 0.821 | 0.429 0.546 0.456 | 1.000 | 0.001 |
+| RateBook | rating_value | 0.000 0.000 0.000 | — | 0.516 0.627 0.525 | 0 | 0.516 0.627 0.525 | 0.771 0.771 0.771 | 1.000 | 0.001 |
+| SearchCreativeWork | object_name | 0.000 0.000 0.000 | — | 0.921 0.920 0.916 | 0 | 0.921 0.920 0.916 | 0.000 | — | 0 |
+| SearchScreeningEvent | movie_name | 0.315 0.370 0.260 | 1.000 | 1.000 1.000 1.000 | 0.005 0 0 | 0.717 0.791 0.738 | 0.330 0.347 0.364 | 1.000 | 0.001-0.003 |
+
+The core role of each R75 world was a single optional slot (the silent most-frequent-role fallback, R79): where it is under the 95%
+rate (BookRestaurant, GetWeather, PlayMusic, SearchScreeningEvent) 26-53% of the world's own training utterances leave it unanswered and
+the threshold is 1.0; RateBook's core (rating_value) is answered on its own utterances but missing on 77% of the test set (mostly
+other intents' utterances, which is the intended behaviour). With the clause ignored, every world's 98th percentile is 0.72-0.92.
+Second line, sop @ 7ce5c50 (seed 2): identical to 28db081 in every number (the core roles are stored in the saved schema, and the
+reading changes in 7ce5c50 do not touch these models' frames). This is the record of the cause that R79 fixed (R79 above: every
+threshold below 1.0 with the intent anchor).
