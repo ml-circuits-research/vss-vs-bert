@@ -35,8 +35,13 @@ def pct(cal, x):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only")
-    ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)"); a = ap.parse_args()
-    SR = rr.load_sop_repo(); src = open(os.path.join(mainrepo.ROOT, "sop", "SOURCE")).read().strip()[:7]
+    ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)")
+    ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version the models were trained with (R82: the tree may hold a newer sop/)"); a = ap.parse_args()
+    if a.sop_dir:   # loaded as 'sop_repo' before rr.load_sop_repo(), which then returns it
+        import importlib, importlib.util
+        spec = importlib.util.spec_from_file_location("sop_repo", os.path.join(a.sop_dir, "sop", "__init__.py"), submodule_search_locations=[os.path.join(a.sop_dir, "sop")])
+        m_ = importlib.util.module_from_spec(spec); sys.modules["sop_repo"] = m_; spec.loader.exec_module(m_); importlib.import_module("sop_repo.infer")
+    SR = rr.load_sop_repo(); src = open(os.path.join(a.sop_dir or mainrepo.ROOT, "sop", "SOURCE")).read().strip()[:7]
     cond = rd.load_condition("snips", a.condition); items = cond["items"]; intents = sorted({items[i]["intent"] for i in cond["train"]})
     kinds, ty, T = rr.build_kinds_typer(cond, types.SimpleNamespace(n_freq=a.n_freq))
     ev = report_real.eval_sets(cond, True, a.max_eval)
