@@ -36,7 +36,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only")
     ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)")
-    ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query"], help="R84 item 3: 'contract' = the sop version's contract rules set in each reader's config at load (the models were written with decoder paper); 'presence_query' = that rule alone")
+    ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query", "presence_by_kind"], help="R84 item 3: 'contract' = the sop version's contract rules set in each reader's config at load (the models were written with decoder paper); 'presence_query' = that rule alone")
     ap.add_argument("--token_kinds", default=None, choices=["typer"], help="R88: pass the typer's in-context kinds to the decoder (formalize token_kinds)")
     ap.add_argument("--admission", default="stored", choices=["stored", "ctx"], help="R88 (B): admission sets recomputed from the typer's in-context kinds")
     ap.add_argument("--spans", default=None, choices=["token", "kind_run"], help="R87: reader.spans of the legends, set at load")
@@ -64,6 +64,7 @@ if __name__ == "__main__":
         R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"
         if a.decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3: the sop version's contract rules
         elif a.decoder == "presence_query": R.cfg["presence_query"] = True                                          # second line: that rule alone
+        elif a.decoder == "presence_by_kind": R.cfg["presence_query"] = True; R.cfg["presence_by_kind"] = True     # R88 line C / R89
         if a.admission == "ctx":   # R88 (B): admission sets from the typer's in-context kinds of the training fillers (>= 2%), set at load
             adm_log[I] = wr.ctx_admission(R, rinv, cond, I, ty); print(f"  world {I}: admission recomputed from context kinds: " + "; ".join(f"{q} {len(o)} -> {len(n)}" for q, (o, n) in sorted(adm_log[I].items())), flush=True)
         if a.spans: R.legend.reader["spans"] = a.spans   # R87: the legend's reader.spans declaration, set at load (no retraining; the saved legends are not rewritten)

@@ -2454,3 +2454,18 @@ Expected to move (R88): false fills fall further; misses may rise by the typer's
 Results: ..._r81r80_presence_query_kind_run_ctx[_adm]_<rule>_..., logs/results_r86_presence_r88[a|b]_seed<s>.json,
 logs/results_r86_presence_r81all_seed<s>.json, logs/results_r84_oppoints_<condition>_presence_query_kind_run_ctx[_adm]_seed<s>.json.
 The demo's reading = the best line by in-domain span F1 at unchanged dispatch (R88).
+
+## R88 line C: presence by kinds (R89, sop @ 040d44e) (DECLARED 2026-10-26, before the run; re-score, no training)
+
+R83 paragraph. What fails: misses (164 per seed in R84 item 2; R86: in 97-100% of them the gold word's kind is admitted by the question
+and the presence ratio is under the fitted threshold, so the word is a candidate and the threshold says absent), and the false fills
+that remain after (A) / (B). Where the cause is: the reader, the presence decision by a calibrated ratio where the given kinds already
+decide. What is changed: (B) (in-context kinds, admission recomputed from them, presence_query, kind_run spans) plus the decoder key
+presence_by_kind (R89: a word of a kind that only this question admits makes the question present; no word of an admitted kind makes it
+absent; shared kinds fall back to the threshold; the deciding rule recorded per role), set at load in every reader; sop @ 040d44e
+(scratch copy of origin/main at 2c7e87c, SOURCE 040d44e; the tree was not pulled while jobs ran); the saved R81 models, no training.
+Expected to move (R88): the misses with the gold word's kind admitted turn into fills, so per-world span F1 approaches the typer's on
+questions with a unique kind; per question, which rule decided presence is reported. Readings as A / B (eval/r80_dispatch.py both
+conditions, eval/r84_oppoints.py, eval/r86_presence.py on the seven base worlds), seeds 0-2. Added before the run: eval/r86_presence.py
+now also reports each world's span F1 (its own world, typer + reader vs typer alone); it is run once more for the R81, A and B lines
+(identical readings, the new column only), so that the per-world span F1 of all four lines comes from the same code.

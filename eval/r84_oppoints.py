@@ -25,7 +25,7 @@ TARGETS = [0.01, 0.02, 0.05]
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sop_dir", required=True); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--token_kinds", default=None, choices=["typer"]); ap.add_argument("--admission", default="stored", choices=["stored", "ctx"]); ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only"); a = ap.parse_args()
+    ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query", "presence_by_kind"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--token_kinds", default=None, choices=["typer"]); ap.add_argument("--admission", default="stored", choices=["stored", "ctx"]); ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only"); a = ap.parse_args()
     SR, src = wr.load_sop(a.sop_dir)
     from vss import run_reader_real as rr
     cond = rd.load_condition("snips", a.condition); items = cond["items"]

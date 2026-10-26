@@ -19,7 +19,7 @@ import numpy as np
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sop_dir", required=True); ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--worlds", default="BookRestaurant,SearchScreeningEvent"); ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "presence_query"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--token_kinds", default=None, choices=["typer"]); ap.add_argument("--admission", default="stored", choices=["stored", "ctx"]); ap.add_argument("--tag", default=""); ap.add_argument("--n_freq", type=int, default=40); a = ap.parse_args()
+    ap.add_argument("--worlds", default="BookRestaurant,SearchScreeningEvent"); ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "presence_query", "presence_by_kind"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--token_kinds", default=None, choices=["typer"]); ap.add_argument("--admission", default="stored", choices=["stored", "ctx"]); ap.add_argument("--tag", default=""); ap.add_argument("--n_freq", type=int, default=40); a = ap.parse_args()
     SR, src = wr.load_sop(a.sop_dir)
     from vss import run_reader_real as rr
     cond = rd.load_condition("snips", "base"); items = cond["items"]
@@ -30,7 +30,9 @@ if __name__ == "__main__":
         wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_snips_base_intent_{I}_seed{a.seed}_{a.models}")
         leg = json.load(open(os.path.join(wd, "legend.json"))); rinv = {r["id"]: r["question"][5:] for r in leg["roles"] if r["question"].startswith("slot ")}; rmap = {v: k for k, v in rinv.items()}
         R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"; sch = R.schema
-        if a.decoder == "presence_query": R.cfg["presence_query"] = True          # R88 lines
+        if a.decoder in ("presence_query", "presence_by_kind"): R.cfg["presence_query"] = True          # R88 lines
+        if a.decoder == "presence_by_kind": R.cfg["presence_by_kind"] = True                                # R88 line C / R89
+        rules_by_q = collections.defaultdict(collections.Counter)                                            # which rule decided presence, per question (R89)
         if a.spans: R.legend.reader["spans"] = a.spans
         adm_new = wr.ctx_admission(R, rinv, cond, I, ty) if a.admission == "ctx" else None
         thr = json.load(open(os.path.join(wd, "model_seed", "config.json")))["thresholds"]["presence"]
@@ -45,6 +47,8 @@ if __name__ == "__main__":
         def read(toks):
             tk = {"token_kinds": dict(zip(toks, ty.sentence_kinds(toks)))} if a.token_kinds == "typer" else {}
             w, f, info = R.formalize(" ".join(toks), 0, SR.infer.idgen("e"), filt=set(toks), **tk); return f
+        def rules(f):
+            for r, rule in (f.get("presence_rules") or {}).items(): rules_by_q[rinv.get(r, r)][rule] += 1
         # (b) presence ratios on the calibration utterances
         own = [i for i in cond["train"] if items[i]["intent"] == I][:200]; st = collections.defaultdict(lambda: {"present": [], "absent": []})
         for i in own:
@@ -62,9 +66,11 @@ if __name__ == "__main__":
             print(f"   presence {q:24s} present {x['n_present']:3d} mean {mp if mp is not None else float('nan'):.3f} | absent {x['n_absent']:3d} mean {ma if ma is not None else float('nan'):.3f} | separation {x['separation'] if x['separation'] is not None else float('nan'):+.3f}"
                   f"{'  < 0.1' if x['separation'] is not None and x['separation'] < 0.1 else ''} | threshold {t if t is not None else float('nan'):.3f} balanced acc {ba if ba is not None else float('nan'):.3f}", flush=True)
         # (a) false fills and misses on the test utterances of this world (oracle world)
-        ids = [i for i in cond["eval"]["test"] if items[i]["intent"] == I]; ff, miss = [], []
+        ids = [i for i in cond["eval"]["test"] if items[i]["intent"] == I]; ff, miss = [], []; sp_g, sp_r, sp_t = [], [], []
         for i in ids:
-            it = items[i]; toks = it["tokens"]; f = read(toks); g = report_real.gold_flat(it); ks = ty.sentence_kinds(toks)
+            it = items[i]; toks = it["tokens"]; f = read(toks); g = report_real.gold_flat(it); ks = ty.sentence_kinds(toks); rules(f)
+            fr = {rinv[r]: fl[1] for r, fl in f["roles"].items() if r in rinv and fl is not None and fl[1] is not None}; fr["intent"] = I
+            sp_g.append(report_real.gold_spans(it)); sp_r.append(rr.spans_by_typer(toks, fr, ty, T)); sp_t.append(rr.spans_typer_only(toks, ty))
             owner = {}
             for (t_, s_, e_, _) in it["slots"]:
                 for j in range(s_, e_): owner.setdefault(j, t_)
@@ -78,6 +84,8 @@ if __name__ == "__main__":
                 if word is None and g.get(q) is not None:
                     js = [j for j, t in enumerate(toks) if t == g[q]]; k = ks[js[0]] if js else None
                     miss.append({"q": q, "gold_word": g[q], "kind": k, "kind_admitted": k in (set(adm[q]["kinds"]) | set(adm[q]["head_kinds"])), "ratio": float(f["presence"].get(r, 0.0)), "thr": thr.get(r)})
+        f1_reader = metrics.span_f1(sp_g, sp_r)["f1"]; f1_typer = metrics.span_f1(sp_g, sp_t)["f1"]
+        print(f"   span F1 on the world's test utterances (its own world, the readout alone): typer + reader {f1_reader:.3f}, typer alone {f1_typer:.3f}", flush=True)
         n = max(1, len(ff)); sibs = [x for x in ff if x["sibling"]]
         summ = {"n_false_fills": len(ff), "share_sibling_word": len(sibs) / n, "share_sibling_kind_admitted_by_sibling": sum(1 for x in sibs if x["kind_admitted_by_sibling"]) / max(1, len(sibs)),
                 "share_no_gold_question": sum(1 for x in ff if not x["sibling"]) / n, "n_misses": len(miss), "misses_kind_admitted": sum(1 for x in miss if x["kind_admitted"]) / max(1, len(miss)),
@@ -87,6 +95,7 @@ if __name__ == "__main__":
               f"misses {len(miss)} (gold word's kind admitted by the question: {summ['misses_kind_admitted']:.3f})", flush=True)
         print(f"   false fill (question <- the word's gold question): {summ['false_fill_pairs']}"); print(f"   misses by question: {summ['miss_by_question']}")
         for x in ff[:12]: print(f"     false fill {x['q']}: '{x['word']}' (gold question {x['sibling']}, typer kind {x['kind']}, lexicon {x['lex_kind']}; ratio {x['ratio']:.3f} vs threshold {x['thr'] if x['thr'] is not None else float('nan'):.3f})")
-        out["worlds"][I] = {"admitted": adm, "presence": sep, "summary": summ, "false_fills": ff, "misses": miss}
+        if rules_by_q: print(f"   presence decided by (test utterances, per question): " + "; ".join(f"{q}: {dict(c)}" for q, c in sorted(rules_by_q.items())), flush=True)
+        out["worlds"][I] = {"span_f1_reader": f1_reader, "span_f1_typer": f1_typer, "presence_rules": {q: dict(c) for q, c in rules_by_q.items()}, "admitted": adm, "presence": sep, "summary": summ, "false_fills": ff, "misses": miss}
     json.dump(out, open(os.path.join(mainrepo.ROOT, "logs", f"results_r86_presence{a.tag}_seed{a.seed}.json"), "w"), indent=1, default=str)
     metrics.checklist(1, "[x] saved R81 models, no training [x] oracle world (the readout alone) [x] calibration rows = the world's own training rows [x] sop version named")
