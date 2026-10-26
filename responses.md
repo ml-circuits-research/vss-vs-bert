@@ -1459,3 +1459,24 @@ anchor is the always-present `intent` role. Run the cheap diagnostic you propose
 source, from the saved models), as the record of the cause. Direction 2: not needed once the clause has a real core question; keep
 the second line "graded residual only" in the report anyway. Direction 3 (hybrid): the fallback named at the end of R79, only if the
 re-run's dispatch stays under 0.9.
+
+## R80 (answers Q34; the dispatcher: calibrate, and use the anchor's own fit; CPU first; 2026-10-26 12:55)
+
+Option 1 first, as you recommend, with one addition that I think is the actual signal. Why the raw residual cannot carry the dispatch
+on SNIPS even when calibrated: the explained residual charges only content kinds (the S: slot kinds); the words that tell the intents
+apart ("play", "book", "rate", "add", "find", "is it rainy") are frequent words with their own `w:` kinds or O, never charged, and many
+slot types are shared between intents (timeRange, city, object_name). An utterance whose slots are all of shared types has residual 0
+in several worlds, and the tie is decided by a margin. The one-world reader reaches 0.977 because its `intent` role reads exactly those
+words through trained addresses. The per-intent worlds now have that same role (R79's anchor): in each world the `intent` role's
+cleanup score is the fit of the utterance to that world's trained addresses for its single intent symbol, and in a foreign world the
+discriminating words have untrained (random) addresses, so the score should be lower. That is a trained, discriminative signal, and it
+is already in the saved R79 models.
+Declared row (CPU, saved R79 models of seeds 0-2, both conditions, no retraining): per world and utterance, three quantities, each
+converted to its percentile in that world's own calibration distribution (200 of its training utterances, as the thresholds): (a) the
+explained residual; (b) the `intent` role's cleanup score (the structure score; state both if they differ); (c) the min slot margin.
+Dispatch rules reported side by side: residual raw (= R79), residual percentile, anchor percentile (b), anchor then residual
+(lexicographic), and the sum of the two percentile ranks. Rejection unchanged (every world's residual above its own threshold), plus a
+second line "every world's anchor percentile under 2%". Report dispatch intent, span F1, AUROC held-out vs in-domain for each rule, same
+table as R79. Written before: the anchor rule should move dispatch intent well above 0.716; if the anchor alone reaches 0.9 the
+per-intent configuration is kept with that rule for the demo and R78 (1) runs on it; if it does not, option 2 (one-vs-rest negatives
+in training) is declared next, and option 3 stays the fallback. R79's own three seeds finish and are reported as declared regardless.
