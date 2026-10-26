@@ -2469,3 +2469,14 @@ questions with a unique kind; per question, which rule decided presence is repor
 conditions, eval/r84_oppoints.py, eval/r86_presence.py on the seven base worlds), seeds 0-2. Added before the run: eval/r86_presence.py
 now also reports each world's span F1 (its own world, typer + reader vs typer alone); it is run once more for the R81, A and B lines
 (identical readings, the new column only), so that the per-world span F1 of all four lines comes from the same code.
+
+## R85 seed 0, second launch (logs/2026-10-26_1541_run_reader_real_76a62b0.txt): INVALID as the declared test (not an acceptance)
+
+The need signal (positive rows) fired (44 rows, 2.4%) and activate.select accepted `vorder` (FULL on 417 selection rows 0.528 -> 0.563;
+calibration_dev 0.440 -> 0.460, train tenth 0.552 -> 0.591; on the 4 selection rows with same-kind competition 0/4 for both trials, i.e.
+the gain was on all selection rows, not on the rows the route is for). It is not the declared test: the route's verb kinds were
+['S:movie_name', 'w:add'], because the event's verbs were ["command", "add"] and the placeholder event verb "command" is a word of the
+typer lexicon with the kind S:movie_name, so every S:movie_name word was a verb category for the route. Fix (executes R85's declared
+test; coordinator, 2026-10-26): the event's verbs are the declared command verbs only (["add"]), and the run prints the route's verb kinds
+and aborts unless every one is w:<verb>. Seed 0 is re-run; seeds 1-2 only if seed 0 accepts. The folders *_r85act and the tag
+reader_worlds_r85act of this launch are overwritten by the re-run.
