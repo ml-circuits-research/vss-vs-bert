@@ -1480,3 +1480,22 @@ second line "every world's anchor percentile under 2%". Report dispatch intent, 
 table as R79. Written before: the anchor rule should move dispatch intent well above 0.716; if the anchor alone reaches 0.9 the
 per-intent configuration is kept with that rule for the demo and R78 (1) runs on it; if it does not, option 2 (one-vs-rest negatives
 in training) is declared next, and option 3 stays the fallback. R79's own three seeds finish and are reported as declared regardless.
+
+## R81 (answers Q35; R80 accepted; option 2 declared: one-vs-rest negatives in training, through the anchor; 2026-10-26 13:20)
+
+R80 is accepted as measured: the anchor's own fit carries the dispatch to 0.863 and the rejection to 0.28 at 3.8% false, and the
+calibrated residual is worse than the raw one, which settles that the problem is discrimination, not scale. Option 2, as a declared
+row, needs no change of the reader and no new loss: sop @ 82585ea (synced; SOURCE updated) accepts NEGATIVE examples: a wire with
+`_negative=true`, the sentence of another world written with the anchor role only (`intent=I`), whose training target is MINUS its
+compiled state (the anchor term with the marker), so the cosine objective pushes the state of a foreign utterance away from this
+world's anchor; negatives never enter the schema, the calibration rows or the train sample, and the reader at inference is unchanged
+(smoke-tested on the commands world, CPU: a negative row is counted and trained, the schema and the calibration ignore it).
+Row: R79's configuration (seeds 0-2, D 512, 10 epochs, three routes, --world_kinds all, --intent_anchor), plus, in every per-intent
+world, negatives = the other intents' training utterances of that condition, balanced (as many as the world's positives, sampled with
+the seed, split "train"), written as above. Read with R80's rules (eval/r80_dispatch.py on the new models): the anchor-percentile
+dispatch is the primary, residual raw as the check; both rejection lines. Model folders *_r81. Written before: anchor dispatch at or
+above 0.9 (the one-world 0.977 is the reference; if it reaches 0.95 the configuration is kept for the demo and R78 (1) runs on it);
+held-out rejection by the anchor line above R80's 0.28 at false rejection under 0.05; in-domain span F1 not below R80's 0.802. If the
+anchor dispatch stays under 0.9 with negatives, option 3 (the one-world intent as the gate, the per-world frame, refusal by the chosen
+world) is run as the last per-intent row and the paper reports the per-intent vote as below the one-world reader. Also report the
+training time per world with and without negatives (they double the rows).
