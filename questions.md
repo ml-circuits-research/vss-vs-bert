@@ -36,3 +36,10 @@ the dispatch loss (several worlds tie at 1.0 and the tie is broken by the margin
    residual. This keeps the one-world intent and tests the per-world readout and refusal separately.
 **Default until answered:** nothing runs; the per-world model folders are kept (logs/worlds/real_snips_<condition>_intent_<intent>_seed<s>/
 model_seed) for whichever direction is chosen.
+
+**Q33 clarification (2026-10-26 11:30, experimental session): the R79 section itself is not in responses.md.** Commit e7d8f4d adds only the
+addendum "On Q33's directions (read after R79 was written)", appended under R78; it refers to "R79 (a) and (b)" and to "the fallback named
+at the end of R79", but no `## R79` text exists in any commit of the repository. Commit 7ce5c50 (sop: core roles = questions present in
+>= 95% of the training rows; mean-over-all-roles fallback) seems to implement part of it; sop/SOURCE still names 28db081. **Default until
+the R79 text arrives:** the diagnostic the addendum asks for runs now (share of 1.0 residuals per world and their source, from the saved
+R75 models, CPU, no retraining); no re-run of the per-intent worlds starts.
