@@ -2589,3 +2589,24 @@ per-intent path does not use (it takes the pinned tool's content_kinds_of), so t
 0-2, AddToPlaylist only (the other six worlds copy their R81 models), --run_tag _paired (folders *_r85act_paired, tag
 reader_worlds_r85act_paired; the 82585ea runs are not overwritten). Expected (R90): rejected, i.e. "need signal fired on one world,
 route rejected".
+
+## R90 item 1: measured (logs/2026-10-26_1849_ to _1854_r90_hybrid_79af0b0.txt; sop @ 040d44e; results logs/results_r90_hybrid_<condition>_seed<s>.json; MEASURED)
+
+Dispatch by the anchor percentile, frame = line C, refusal = line A's residual of the chosen world above its dev_cal 2% threshold; seeds
+0-2 [per seed]. Checks: the anchor's choice is identical in the A and C reader sets on every utterance (0 mismatches); line A's thresholds
+equal eval/r84_oppoints.py's exactly (ood_intents 0.7804 / 0.7479 / 0.7774); realised dev_cal false rejection 0.020 in every seed.
+
+| set | dispatch intent [per seed] | span F1 (frame C) [per seed] | refused by line A's residual [per seed] | second line: line C's own residual, its 2% threshold | chosen frame (C) abstains |
+|---|---|---|---|---|---|
+| base test (700) | 0.966 ± 0.003 [0.963 0.964 0.970] | **0.892 ± 0.001** [0.890 0.891 0.893] | 0.015 ± 0.004 (false) | 0.025 | 0.298 |
+| base test, new slot values / unseen templates | 0.957 / 0.949 | 0.856 / 0.881 | 0.019 / 0.025 (false) | 0.027 / 0.029 | 0.349 / 0.327 |
+| ood_intents in-domain test (600) | 0.965 ± 0.005 | 0.853 ± 0.002 | **0.016 ± 0.003** (false) | 0.017 | 0.404 |
+| ood_intents held-out intent (100) | — | — | **0.460 ± 0.051** [0.440 0.530 0.410] | 0.267 | 0.847 |
+| ood_intents dev_rep held-out (50) | — | — | 0.380 ± 0.065 | 0.260 | 0.707 |
+
+AUROC held-out vs in-domain (test): line A's residual 0.925, line C's 0.907. Base thresholds (line A's residual, dev_cal 2%): 0.8068 /
+0.7782 / 0.8128.
+
+**Against R90's expectations: met.** Refusal 0.460 held-out at 0.016 in-domain false rejection (< 2%), equal to line A's own number
+(same residual, same thresholds, same chosen world); span F1 0.892; dispatch 0.966. The demo reading is therefore: dispatch = anchor
+percentile; frame = line C; refusal = line A's explained residual of the chosen world above its dev-calibrated 2% threshold.
