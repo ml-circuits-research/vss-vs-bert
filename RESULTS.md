@@ -1903,8 +1903,8 @@ ood_intents):** torch.OutOfMemoryError at the first training step: launched with
 VSA_SLOTS=4 (22%, about 27 GB per process), the same commands (logs/2026-10-26_0759_ / _0800_run_reader_real_c427a09.txt).
 
 **Decoder provenance, fourth re-check (R69; sop @ c126cbe: the event's first verb explained, a second verb content, residuals below 1e-4
-count as 0; eval/sop_check.py now takes the residual from Reader.formalize itself, verbs back to content kinds; logs/2026-10-26_0812_ to
-_0815_sop_check_c427a09.txt, results logs/results_sopcheck_*_demo_c126cbe_*):** accuracy rows equal on every axis and seed.
+count as 0; eval/sop_check.py now takes the residual from Reader.formalize itself, verbs back to content kinds; logs/2026-10-26_0813_ to
+_0816_sop_check_8a49c06.txt, results logs/results_sopcheck_*_demo_c126cbe_*):** accuracy rows equal on every axis and seed.
 
 | reader + R46 decoder, explained residual | AUROC (tool / transcription) | random rejected | reference rejected [per seed] | false rejection (tool / transcription) |
 |---|---|---|---|---|
