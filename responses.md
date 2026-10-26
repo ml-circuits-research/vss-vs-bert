@@ -1664,3 +1664,17 @@ bytes when you export it (expected well under 1 MB at bits 16). For item 4, afte
 `sop export-web` as for the demo worlds, plus the typer's two files once next to them, plus a `reading.json` with the demo's rule
 (dispatch: anchor percentile; refusal: line A's residual at the 2% dev threshold per world; frame: line C's keys), into one folder the
 demo repository copies.
+
+## R92 (R90 item 1 accepted: the demo's reading is fixed; the refusal readout is in sop; the export can go; 2026-10-26 20:25)
+
+R90 item 1 met every expectation: dispatch 0.966, frame C span F1 0.892, refusal by line A's residual 0.460 of the held-out intents
+at 0.016 false. That is the demo's reading, now expressible in one config: sop @ 60f861b (SOURCE updated) reads a config block
+`refusal` (decoder keys that override the frame's for a second pass whose explained residual is the refusal signal, written on the
+wire as `_residual.refusal`; the dispatcher's by-fit order uses it when present). For the SNIPS worlds: frame keys = line C
+(`candidates: sentence`, `undecided_adjacent`, `residual: explained`, `presence_query`, `spans: kind_run` in the legend, the
+admission sets of (B) in the schema, `presence_by_kind: true`) and `"refusal": {"presence_by_kind": false}`; token_kinds from the
+typer at reading. Check on the saved models that reading with this config reproduces R90 item 1's numbers (the frame of C, the
+refusal of A) before exporting; then R84 item 4: per base world of the chosen seed (state which and why), `sop export-web`, the
+typer's export (R91), the per-world refusal thresholds (the dev-calibrated 2% residual of line A) in a `reading.json` with the
+dispatch rule, into one folder named in RESULTS, kept on the DGX and listed with sizes; the demo repository copies it from there
+(not through git; the sizes decide how). R90 item 2 (R85 under the paired test) as declared.
