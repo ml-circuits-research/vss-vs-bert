@@ -21,7 +21,7 @@ def pct(cal, x):
 
 
 class Worlds:
-    def __init__(self, SR, cond, condition, seed, models, kinds=None):
+    def __init__(self, SR, cond, condition, seed, models, kinds=None, decoder="paper", spans=None):
         self.SR = SR; items = cond["items"]; self.items = items
         self.intents = sorted({items[i]["intent"] for i in cond["train"]}); self.W = {}
         for I in self.intents:
@@ -35,6 +35,9 @@ class Worlds:
                 if diff: raise SystemExit(f"world {I}: the re-fitted typer's lexicon differs from the saved kinds.tsv in {diff} words")
             leg = json.load(open(os.path.join(wd, "legend.json"))); rinv = {r["id"]: r["question"][5:] for r in leg["roles"] if r["question"].startswith("slot ")}
             R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"
+            if decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3 / R87
+            elif decoder == "presence_query": R.cfg["presence_query"] = True
+            if spans: R.legend.reader["spans"] = spans
             self.W[I] = {"R": R, "rinv": rinv, "dir": wd, "train": [i for i in cond["train"] if items[i]["intent"] == I][:200]}
         self.cal = {}
         for I, w in self.W.items():

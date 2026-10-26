@@ -2348,3 +2348,22 @@ false fill on test: the filled word, the gold question its span belongs to (or n
 the sibling admits that kind; misses by question; presence ratios on the world's own first 200 training utterances by gold present /
 absent, separation, the stored fitted threshold and its balanced accuracy. Results logs/results_r86_presence_seed<s>.json. A one-world
 smoke test (seed 0, SearchScreeningEvent) is not a result.
+
+## R87: item 3's lines B and C again with sop @ de11429 and reader.spans = kind_run, and R84 item 1's operating points again (DECLARED 2026-10-26, before the run; re-score, no training)
+
+R83 paragraph. What fails: under the full contract decoder (line B, sop @ b467e4b) the chosen frame abstains on nearly every utterance
+(40-item smoke test: every dev_rep utterance); checked by hand (four dev_rep utterances, both sop versions, four decoder settings): the
+cause is the contract rule undecided_adjacent on head-token readings of multi-word slots (the other words of the span are unplaced
+neighbours of an admitted kind, so every multi-word slot became an undecided query with margin 0), not a version mismatch; and
+presence_query left a role present by threshold but without a filler in the frame margin. Where the cause is: the reader, two contract
+rules, fixed at the source by the author (R87, sop @ de11429: legend reader.spans = "kind_run": a filler is the run of its S: kind around
+the head, the run's words are placed, a same-kind neighbour is the same span; presence_query covers present-without-filler). What is
+changed: nothing is trained; the saved R81 models, the same R80 rules; sop @ de11429 (scratch copy of repo commit bf8bb33's sop/); the
+legends' reader.spans = "kind_run" set at load in every reader (the saved legends are not rewritten; a legend change only, R87); line B
+= the full contract of that version, line C = presence_query alone; both conditions for B, base for C, seeds 0-2; then
+eval/r84_oppoints.py with line B's decoder and spans, both conditions, seeds 0-2, thresholds by the same rule (dev_cal quantiles).
+Expected to move (R87): line B no longer abstains on multi-word slots, its chosen-frame abstention at or below line C's; dispatch and
+spans unchanged; the explained residual of correct readings lower (the span words are explained), which may move the refusal operating
+points slightly. Results ..._r81r80_contract_kind_run_<rule>_..., ..._r81r80_presence_query_kind_run_<rule>_..., and
+logs/results_r84_oppoints_<condition>_contract_kind_run_seed<s>.json. Line A and the b467e4b lines B / C of item 3 stay as declared
+(running now) and are reported with this cause.

@@ -25,20 +25,20 @@ TARGETS = [0.01, 0.02, 0.05]
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sop_dir", required=True); ap.add_argument("--condition", required=True); ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--models", default="r81"); ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only"); a = ap.parse_args()
+    ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only"); a = ap.parse_args()
     SR, src = wr.load_sop(a.sop_dir)
     from vss import run_reader_real as rr
     cond = rd.load_condition("snips", a.condition); items = cond["items"]
     kinds, ty, T = rr.build_kinds_typer(cond, types.SimpleNamespace(n_freq=a.n_freq))
-    W = wr.Worlds(SR, cond, a.condition, a.seed, a.models, kinds)
+    W = wr.Worlds(SR, cond, a.condition, a.seed, a.models, kinds, a.decoder, a.spans)
     ev = report_real.eval_sets(cond, True, a.max_eval); cal_ids = cond["dev_cal"][:a.max_eval] if a.max_eval else cond["dev_cal"]
-    print(f"r84_oppoints: models {a.models}; sop @ {src}; condition {a.condition}; seed {a.seed}; worlds {W.intents}; dev_cal {len(cal_ids)}; sets " + ", ".join(f"{k} {len(v)}" for k, v in ev.items()))
+    print(f"r84_oppoints: models {a.models}; sop @ {src}; decoder {a.decoder}; spans {a.spans}; condition {a.condition}; seed {a.seed}; worlds {W.intents}; dev_cal {len(cal_ids)}; sets " + ", ".join(f"{k} {len(v)}" for k, v in ev.items()))
     def sig(i):
         outs = W.read_all(items[i]["tokens"]); I = W.dispatch_anchor(outs); o = outs[I]
         return {"chosen": I, "residual": o["residual"], "anchor": 1.0 - o["p_anc"], "max": max(o["p_res"], 1.0 - o["p_anc"]), "residual_all": min(x["p_res"] for x in outs.values()),
                 "anchor_z_all": min((W.cal[J]["anchor"].mean() - x["anchor"]) / max(1e-9, W.cal[J]["anchor"].std()) for J, x in outs.items())}
     cal = [sig(i) for i in cal_ids]; sets = {k: [sig(i) for i in ids] for k, ids in ev.items()}
-    out = {"sop": src, "models": a.models, "condition": a.condition, "seed": a.seed, "signals": {}}
+    out = {"sop": src, "decoder": a.decoder, "spans": a.spans, "models": a.models, "condition": a.condition, "seed": a.seed, "signals": {}}
     for s_ in SIGNALS:
         cs = np.array([x[s_] for x in cal]); res = {"auroc": {}, "points": {}}
         for k in [x for x in sets if x.startswith("ood:")]:
@@ -51,5 +51,5 @@ if __name__ == "__main__":
             print(f"  [{s_}] target FR {t:.0%}: threshold {thr:.4f} (dev_cal FR {pt['fr_dev_cal']:.3f}) | " + "; ".join(f"{k} refused {pt[k]:.3f}" for k in sets)
                   + "".join(f" | AUROC {k} {v:.3f}" for k, v in res["auroc"].items()), flush=True)
         out["signals"][s_] = res
-    json.dump(out, open(os.path.join(mainrepo.ROOT, "logs", f"results_r84_oppoints_{a.condition}_seed{a.seed}.json"), "w"), indent=1)
+    json.dump(out, open(os.path.join(mainrepo.ROOT, "logs", f"results_r84_oppoints_{a.condition}{'' if a.decoder == 'paper' else '_' + a.decoder}{'_' + a.spans if a.spans else ''}_seed{a.seed}.json"), "w"), indent=1)
     metrics.checklist(1, "[x] saved R81 models, no training [x] thresholds on the dev calibration half only (rule 25) [x] reported on test [x] sop version named")

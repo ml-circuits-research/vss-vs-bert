@@ -37,6 +37,7 @@ if __name__ == "__main__":
     ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only")
     ap.add_argument("--models", default="r79", choices=["r79", "r81"], help="R81: the models trained with one-vs-rest negatives (folders *_r81)")
     ap.add_argument("--decoder", default="paper", choices=["paper", "contract", "presence_query"], help="R84 item 3: 'contract' = the sop version's contract rules set in each reader's config at load (the models were written with decoder paper); 'presence_query' = that rule alone")
+    ap.add_argument("--spans", default=None, choices=["token", "kind_run"], help="R87: reader.spans of the legends, set at load")
     ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version the models were trained with (R82: the tree may hold a newer sop/)"); a = ap.parse_args()
     if a.sop_dir:   # loaded as 'sop_repo' before rr.load_sop_repo(), which then returns it
         import importlib, importlib.util
@@ -61,6 +62,7 @@ if __name__ == "__main__":
         R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"
         if a.decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3: the sop version's contract rules
         elif a.decoder == "presence_query": R.cfg["presence_query"] = True                                          # second line: that rule alone
+        if a.spans: R.legend.reader["spans"] = a.spans   # R87: the legend's reader.spans declaration, set at load (no retraining; the saved legends are not rewritten)
         assert "intent" in R.schema["core_roles"], f"world {I}: intent is not a core role"
         W[I] = {"R": R, "rinv": rinv, "train": [i for i in cond["train"] if items[i]["intent"] == I][:200]}
     rep_op = lambda R: np.conj(R.st.op("says.scope")) if "says" in R.legend.operators else 1.0
@@ -133,8 +135,8 @@ if __name__ == "__main__":
         for k in [x for x in preds if x.startswith("ood:")]:
             ind = k.split(":", 1)[1] + ":in_domain"
             if ind in preds: auroc_anc[k] = report_real.auroc([x["p_anchor"] for x in preds[ind]], [x["p_anchor"] for x in preds[k]])
-        row = report_real.evaluate(f"VSS, one world per intent + intent anchor{' + negatives' if a.models == 'r81' else ''}, dispatch {rule} (R80 rules, saved {a.models.upper()} models)", f"reader_worlds_{'r80' if a.models == 'r79' else 'r81r80'}{'' if a.decoder == 'paper' else '_' + a.decoder}_{rule}", cond, a.seed, None, preds,
-                                   cond["dev_cal"], cal_p, sorted(all_types), extra={"rule": rule, "decoder": a.decoder, "rejected_by_every_world": rej, "rejected_by_anchor_pct": rej_a,
+        row = report_real.evaluate(f"VSS, one world per intent + intent anchor{' + negatives' if a.models == 'r81' else ''}, dispatch {rule} (R80 rules, saved {a.models.upper()} models)", f"reader_worlds_{'r80' if a.models == 'r79' else 'r81r80'}{'' if a.decoder == 'paper' else '_' + a.decoder}{'_' + a.spans if a.spans else ''}_{rule}", cond, a.seed, None, preds,
+                                   cond["dev_cal"], cal_p, sorted(all_types), extra={"rule": rule, "decoder": a.decoder, "spans": a.spans, "rejected_by_every_world": rej, "rejected_by_anchor_pct": rej_a,
                                    "chosen_abstains": {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()},
                                    "presence_queries_per_utterance": {k: float(np.mean([p["n_presence_queries"] for p in v])) for k, v in preds.items()},
                                    "share_with_presence_query": {k: float(np.mean([p["n_presence_queries"] > 0 for p in v])) for k, v in preds.items()},
