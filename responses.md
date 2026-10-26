@@ -1499,3 +1499,16 @@ held-out rejection by the anchor line above R80's 0.28 at false rejection under 
 anchor dispatch stays under 0.9 with negatives, option 3 (the one-world intent as the gate, the per-world frame, refusal by the chosen
 world) is run as the last per-intent row and the paper reports the per-intent vote as below the one-world reader. Also report the
 training time per world with and without negatives (they double the rows).
+
+## R82 (tool notice: three contract-decoder rules added at the source from the demo world's diagnosis; no re-run; 2026-10-26 14:55)
+
+sop @ b467e4b (SOURCE updated). From the diagram world's error analysis in the demo repository (vss-demo Q8): (1) `presence_query` (in the
+contract decoder): an ABSENT role whose presence margin is under tau is reported as `_presence_query.<role>` and no longer lowers the
+frame's margin or status (74% of the diagram world's abstentions were absent optional roles near their threshold, with the frame
+right); the paper decoder is unchanged. (2) `candidates: sentence` now also restricts the predicate's candidates to the sentence's verbs.
+(3) At training, content kinds = the kinds that fill a question in the training rows plus `reader.content_kinds` of the legend; a kind
+that never answers a question (prefix and function words with their own kinds) is not charged by the explained residual. Models already
+trained keep their stored schema (3 does not touch them); 1 and 2 change the reading of existing models only through config.json keys,
+so no row of this repository changes unless re-scored with `presence_query` set. Not to be applied to the frozen rows. For the SNIPS
+per-intent worlds after R81: (1) applies (optional slots near threshold were part of the 0.61 abstention) and (3) may matter (the `w:`
+kinds are single-word kinds and were already not content, so expect little change); declare before using them.
