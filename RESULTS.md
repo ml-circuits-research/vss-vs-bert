@@ -2265,3 +2265,36 @@ residual above the dev_cal threshold at 2% false rejection**, threshold = the 98
 dev calibration half (0.887 mean over seeds; per seed in the JSON; the export uses the exported seed's own value). Second line, not the
 declared choice: residual_all (every world's residual percentile high) refuses more at the 2% target (0.327) but its test false
 rejection is 0.031, above the target.
+
+## R84 item 2, first part: measured (logs/2026-10-26_1509_ (seed 0), _1510_r78_readout_0b71b5f.txt (seed 1), _1511_r78_readout_74fd4e3.txt (seed 2); code d0f6db4 (later commits RESULTS only for this script); sop @ 82585ea; results logs/results_r78_readout_base_seed{0,1,2}.json; MEASURED)
+
+Base test, 100 utterances per world, mean over seeds 0-2. Span F1 on the same utterances: typer alone; typer + reader with the
+dispatched world; typer + reader with the gold intent's world (oracle: the readout alone).
+
+| world | dispatch | typer alone | typer + reader, dispatched | oracle world | oracle - typer | slot questions |
+|---|---|---|---|---|---|---|
+| AddToPlaylist | 1.000 | 0.867 | 0.868 | 0.868 | +0.000 | 5 |
+| BookRestaurant | 0.983 | 0.921 | 0.732 | 0.731 | **-0.191** | 14 |
+| GetWeather | 0.950 | 0.901 | 0.854 | 0.862 | -0.039 | 9 |
+| PlayMusic | 0.957 | 0.802 | 0.744 | 0.751 | -0.051 | 9 |
+| RateBook | 0.993 | 0.965 | 0.954 | 0.955 | -0.010 | 7 |
+| SearchCreativeWork | 0.983 | 0.767 | 0.753 | 0.763 | -0.004 | 2 |
+| SearchScreeningEvent | 0.893 | 0.879 | 0.772 | 0.796 | -0.084 | 7 |
+
+Which questions lose (oracle world, more than 0.02 below the typer, questions with >= 5 gold spans; head decisions per seed against the
+gold head frame): BookRestaurant loses on 13 of its 14 questions (state 0.943 -> 0.536: 13 false fills, 8 missed; city 0.903 -> 0.606:
+14 false fills, 10 missed; restaurant_name 0.769 -> 0.416; cuisine 1.000 -> 0.672: 10 false fills; timeRange 0.928 -> 0.680; country
+0.900 -> 0.663); SearchScreeningEvent: object_location_type 1.000 -> 0.786 (4 missed), timeRange 0.957 -> 0.747 (11 false fills),
+movie_type 1.000 -> 0.851 (8 false fills), movie_name 0.644 -> 0.534 (14 missed, 9 wrong heads); GetWeather: spatial_relation 0.963 ->
+0.605 (6 missed); PlayMusic: playlist 0.500 -> 0.165 (8 false fills), sort 0.800 -> 0.704 (12 false fills); wrong heads concentrate in
+SearchCreativeWork and RateBook object_name (29 and 15 per seed: a multi-word title whose head token the reader places elsewhere, the
+span then still mostly right). Summed over the losing questions: false fills 215, missed 164, wrong heads 114 (per seed, all worlds).
+
+Same-kind competition: the questions' competition shares are 0.00-0.06 (vorder's need signal fires on AddToPlaylist only, 2.4% of its
+rows, at every seed); of the true-positive spans the reader loses against the typer, 0.7 per seed are in questions with competition >=
+0.05 and 144 in questions without. **Against R84's expectation: the loss is NOT concentrated in same-kind competition**; it is in the
+PRESENCE decisions (a question filled when the gold has none, or left empty when it has one), and most in the world with the most
+questions (BookRestaurant, 14), the opposite of R78's first suspect (few questions). Dispatch costs little (dispatched vs oracle within
+0.01 except SearchScreeningEvent, 0.772 vs 0.796). Unplaced words of the oracle reading are the intents' own cue words (playlist, in,
+forecast, movie, out, the), never filled by any question. The activation part (--activate auto) is on hold (coordinator, Q37): the
+per-intent legends declare no verb word, so the verb-order route would find no verb category.
