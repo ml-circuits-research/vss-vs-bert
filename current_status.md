@@ -10,9 +10,9 @@ What was measured (RESULTS 'JP 1: synthesis' holds both tables, the confirmatory
 - The reader 1a (3.3 M): depth-3 exact match 0.98-0.99, new formulations 0.83-0.87 (below the rule and BERT). With the R46 decoder and the
   verb-order route variant b (R58; 3.47 M at its used keys, 11.7 M allocated): new formulations 1.000 on the claim set (seeds 5-9);
   variant a (R56) rejected by its own rule. Template 4 at k = 0 with route b + R46: 1.000.
-- Refusal (decoder sop @ f1af943, equal to the transcription on the world's sets): route b + R46, explained residual, claim set:
-  random 0.916, reference 0.930 rejected at 2.03% false rejection (AUROC 0.960); the demo criterion is met on two of five seeds and
-  missed on the mean by 0.03 points (the threshold is 0.0).
+- Refusal (decoder sop @ c126cbe): route b + R46, explained residual, claim set: random 0.984, reference 0.928 rejected at 0.000
+  false rejection: the demo criterion is met for those sources on all five claim seeds (also by 1a + R46); threshold 0, every in-world
+  sentence fully explained; nonce not re-scored through the tool.
 - Query emission: the reader reports unsupported identities 0.98 (MRC 0.66-0.84) and, with R54's rule, undecided roles 0.997-0.999.
 - Confirmatory: all pairs Holm-rejected except out-of-world AUROC vs BERT-mini pretrained; (i)-(ii) decided by the untrained question.
 - Legend growth: the composed question costs the reader 0 examples; BERT-tiny needs 500 examples and an lr choice; a new form costs the

@@ -133,3 +133,10 @@ sentences (1a seeds 0 and 5, route b seed 1 compared one by one); summary differ
 noise counts as rejection); random-set differences come from multi-verb sentences (verb treatment) and repeated identities (occurrence
 bound). The paper's refusal numbers are the tool's, labelled sop @ f1af943. Files opened: data/oow_seed0.json, data/oow_seed1.json,
 data/oow_seed5.json and the saved readers of those seeds. Nothing runs.
+
+## 2026-10-26 08:35 — R68 (A) and R69 (experimental session)
+
+R68 (A), the depth-invariant tagger: X3 0.282 (one seed 0.988, four 0.00-0.30): below 0.5, the example stands against this head.
+R69: the residual through sop @ c126cbe equals the transcription apart from the declared tolerance; the demo criterion for route b is
+met for the random and reference sources on all five claim seeds at a threshold of 0. R68 (B) SNIPS: BERT-tiny rows done; the reader's
+rows running (first attempt OOM under a 4% allocator cap, restarted). Files opened: none beyond the run outputs.

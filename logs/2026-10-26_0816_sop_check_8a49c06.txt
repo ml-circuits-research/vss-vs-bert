@@ -1,0 +1,151 @@
+# 2026-10-26T08:16:14+01:00  commit=8a49c06  cmd: python3 eval/sop_check.py --row vorderb_fresh --seed_start 5 --seeds 5 --demo  (guard: mem fraction 0.041, min available 16 GB, max 6 h; MemAvailable at start 76 GB; slot logs/.run.lock.6 of 22)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 4% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+sop_check (R58 item 1): main repository e531283; decoder: sop @ c126cbe (sop/SOURCE); row vorderb_fresh; seeds 5-9; demo decoder (candidates sentence, residual explained, undecided_adjacent)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 5 check                              1.00 (m 0.49) | 1.00 (m 0.50) | 0.99 (m 0.23) | 0.94 (m 0.19) | 1.00 (m 0.36) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.25)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 5   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 0.95 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 5   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 5: loaded logs/models/reader_vorderb_fresh_seed5.pt; EQUAL; tool chart vs V8.states: max relative difference 1.66e-07
+  seed 5 seen                     tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 new_ids                  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 new_form_seen_trans      tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 new_form_unseen_trans    tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 new_form_role_cues_seen  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 depth1                   tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 depth2_seen              tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 5 depth3_unseen            tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+# post-launch guard (slots 22): MemAvailable 90 s after the start 74 GB
+  seed 5 explained residual (tool): AUROC 0.9790 (R46 row 0.9801); rejected {'random': 0.984, 'reference': 0.932} (R46 {'random': 0.988, 'reference': 0.934, 'nonce_placeholder': 1.0}); false rejection 0.0000 (R46 0.0184)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 6 check                              1.00 (m 0.49) | 1.00 (m 0.51) | 1.00 (m 0.24) | 0.96 (m 0.20) | 1.00 (m 0.36) | 1.00 (m 0.40) | 1.00 (m 0.36) | 1.00 (m 0.25)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 6   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 6   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 6: loaded logs/models/reader_vorderb_fresh_seed6.pt; EQUAL; tool chart vs V8.states: max relative difference 1.59e-07
+  seed 6 seen                     tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 new_ids                  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 new_form_seen_trans      tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 new_form_unseen_trans    tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 new_form_role_cues_seen  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 depth1                   tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 depth2_seen              tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 depth3_unseen            tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 6 explained residual (tool): AUROC 0.9750 (R46 row 0.9775); rejected {'random': 0.986, 'reference': 0.914} (R46 {'random': 0.99, 'reference': 0.916, 'nonce_placeholder': 1.0}); false rejection 0.0000 (R46 0.0276)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 7 check                              1.00 (m 0.49) | 1.00 (m 0.50) | 1.00 (m 0.26) | 0.97 (m 0.20) | 1.00 (m 0.36) | 1.00 (m 0.40) | 1.00 (m 0.35) | 1.00 (m 0.24)  || depth 3 per role: A 0.98 B 1.00 C 0.99 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.975 (trained labels 0.975, inner 0.975) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.004
+  seed 7   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained 0.999, inner 0.999); depth3 cw 0.000
+  seed 7   depth-3 role accuracy by filler position (words; train max 15): seen 0.9952020202020202 (n 3960), unseen 1.0 (n 360)
+  seed 7: loaded logs/models/reader_vorderb_fresh_seed7.pt; EQUAL; tool chart vs V8.states: max relative difference 1.67e-07
+  seed 7 seen                     tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 new_ids                  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 new_form_seen_trans      tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 new_form_unseen_trans    tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 new_form_role_cues_seen  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 depth1                   tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 depth2_seen              tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 7 depth3_unseen            tool slot accuracy 0.9995 (exact 0.9986); R46 one-to-one row 0.9995; EQUAL to 3 decimals
+  seed 7 explained residual (tool): AUROC 0.9780 (R46 row 0.9793); rejected {'random': 0.984, 'reference': 0.928} (R46 {'random': 0.99, 'reference': 0.934, 'nonce_placeholder': 1.0}); false rejection 0.0000 (R46 0.0248)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 8 check                              1.00 (m 0.47) | 1.00 (m 0.48) | 1.00 (m 0.26) | 0.99 (m 0.19) | 1.00 (m 0.35) | 1.00 (m 0.39) | 1.00 (m 0.34) | 1.00 (m 0.24)  || depth 3 per role: A 0.99 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.988 (trained labels 0.988, inner 0.988) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.002
+  seed 8   rule 'one_to_one': 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 0.999 (trained 0.999, inner 0.999); depth3 cw 0.000
+  seed 8   depth-3 role accuracy by filler position (words; train max 15): seen 0.9977272727272727 (n 3960), unseen 0.9972222222222222 (n 360)
+  seed 8: loaded logs/models/reader_vorderb_fresh_seed8.pt; EQUAL; tool chart vs V8.states: max relative difference 1.67e-07
+  seed 8 seen                     tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 new_ids                  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 new_form_seen_trans      tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 new_form_unseen_trans    tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 new_form_role_cues_seen  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 depth1                   tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 depth2_seen              tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 8 depth3_unseen            tool slot accuracy 0.9995 (exact 0.9986); R46 one-to-one row 0.9995; EQUAL to 3 decimals
+  seed 8 explained residual (tool): AUROC 0.9750 (R46 row 0.9794); rejected {'random': 0.982, 'reference': 0.918} (R46 {'random': 0.988, 'reference': 0.922, 'nonce_placeholder': 1.0}); false rejection 0.0000 (R46 0.0170)
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  seed 9 check                              1.00 (m 0.50) | 1.00 (m 0.52) | 0.99 (m 0.23) | 0.97 (m 0.19) | 1.00 (m 0.36) | 1.00 (m 0.41) | 1.00 (m 0.37) | 1.00 (m 0.25)  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained labels 1.000, inner 1.000) | tau 0.000: new ids cov 1.00 cw 0.000; depth3 cov 1.00 cw 0.000
+  seed 9   rule 'one_to_one': 1.00 | 1.00 | 0.99 | 0.98 | 1.00 | 1.00 | 1.00 | 1.00  || depth 3 per role: A 1.00 B 1.00 C 1.00 X1 1.00 X2 1.00 X3 1.00  || FULL depth3 1.000 (trained 1.000, inner 1.000); depth3 cw 0.000
+  seed 9   depth-3 role accuracy by filler position (words; train max 15): seen 1.0 (n 3960), unseen 1.0 (n 360)
+  seed 9: loaded logs/models/reader_vorderb_fresh_seed9.pt; EQUAL; tool chart vs V8.states: max relative difference 1.63e-07
+  seed 9 seen                     tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 new_ids                  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 new_form_seen_trans      tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 new_form_unseen_trans    tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 new_form_role_cues_seen  tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 depth1                   tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 depth2_seen              tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 depth3_unseen            tool slot accuracy 1.0000 (exact 1.0000); R46 one-to-one row 1.0000; EQUAL to 3 decimals
+  seed 9 explained residual (tool): AUROC 0.9835 (R46 row 0.9829); rejected {'random': 0.986, 'reference': 0.948} (R46 {'random': 0.986, 'reference': 0.952, 'nonce_placeholder': 1.0}); false rejection 0.0000 (R46 0.0165)
+checklist: [x] the tool (sop/) is the reference [x] the saved readers, no retraining [x] differences recorded
