@@ -17,8 +17,7 @@ if __name__ == "__main__":
     spec = importlib.util.spec_from_file_location("sop_diag", os.path.join(a.sop_dir, "sop", "__init__.py"), submodule_search_locations=[os.path.join(a.sop_dir, "sop")])
     m = importlib.util.module_from_spec(spec); sys.modules["sop_diag"] = m; spec.loader.exec_module(m); inf = importlib.import_module("sop_diag.infer")
     src = open(os.path.join(a.sop_dir, "sop", "SOURCE")).read().strip()[:7]
-    cond = rd.load_condition("snips", a.condition); items = cond["items"]; test = cond["test"] if "test" in cond else []
-    test = [i for i in items if items[i]["partition"] == "test"] if not test else test
+    cond = rd.load_condition("snips", a.condition); items = cond["items"]; test = cond["eval"]["test"]
     intents = sorted({items[i]["intent"] for i in cond["train"]})
     print(f"q33_diag: sop @ {src} (label {a.label}); seed {a.seed}; condition {a.condition}; worlds {intents}; test utterances {len(test)}")
     out = {"sop": src, "label": a.label, "seed": a.seed, "worlds": {}}
@@ -30,12 +29,13 @@ if __name__ == "__main__":
             rows = []
             for i in ids:
                 toks = items[i]["tokens"]; wires, f, info = R.formalize(" ".join(toks), 0, inf.idgen("e"), filt=set(toks))
-                inc = bool(R.frame_incomplete(f)) if hasattr(R, "frame_incomplete") else False
-                placed = R.placed_words(f) if f.get("shape") == "ok" else set()
-                if placed and f.get("lemma") is None and f.get("event"):
-                    ev = next((t for t in toks if R.legend.event_of_lemma(R.lemma(t)) == f["event"]), None)
+                tk = info["tokens"]; ok = f.get("shape") == "ok"                       # status other than ok -> shape unknown -> residual 1.0
+                inc = ok and bool(R.frame_incomplete(f))
+                placed = R.placed_words(f) if ok else set()
+                if placed and f.get("lemma") is None and f.get("event"):         # the first-verb rule, as formalize applies it
+                    ev = next((t for t in tk if R.legend.event_of_lemma(R.lemma(t)) == f["event"]), None)
                     if ev is not None: placed = placed | {ev}
-                graded = float(R.residual_explained(info["S"], info["addr"], info["kept"], toks, placed)) if info["kept"] else 1.0
+                graded = float(R.residual_explained(info["S"], info["addr"], info["kept"], tk, placed)) if ok else 1.0
                 rows.append({"res": float(info["residual"]), "inc": inc, "graded": graded, "shape_ok": f.get("shape") == "ok", "status": info["status"]})
             return rows
         w = {"core_roles": core, "n_questions": len(R.schema.get("role_order", []))}
