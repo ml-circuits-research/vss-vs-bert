@@ -369,10 +369,15 @@ class Reader:
         has occurrences in the sentence, over EVERY question of the frame, the speakers of its levels included (a speaker is not also the
         giver unless the sentence names the same word twice). When more questions read the same head than it has occurrences, the
         questions with the larger margins keep it and the others are read again without that word; a question left with no candidate is
-        'not given' (a speaker left without one makes the frame incomplete). At most four rounds."""
+        'not given' (a speaker left without one makes the frame incomplete). The words a question lost accumulate across rounds; a question
+        still colliding after the last round is left unanswered."""
         toks = list(self._sent_tokens); occ = lambda h: max(1, sum(1 for t in toks if t == h or t.lower() == str(h).lower()))
         rep = np.conj(self.st.op("says.scope")); spk = np.conj(self.st.op("says.speaker"))
-        for _ in range(4):
+        excl = {}                                    # per question, the words it lost: accumulated across rounds (vss-vs-bert Q31)
+        def clear(kind, r):
+            if kind == "role": f["roles"].pop(r, None); f["margins"].pop(r, None); f.setdefault("one_to_one", {})[r] = "not given"
+            else: f["speakers"][r] = None; f["margins"][f"speaker.{r}"] = 0.0; f.setdefault("one_to_one", {})[f"speaker.{r}"] = "not given"
+        for rnd in range(5):
             heads = {}
             for r, fl in f["roles"].items():
                 h = self.head_of(fl)
@@ -381,16 +386,18 @@ class Reader:
                 if sp is not None: heads.setdefault(sp, []).append(("speaker", k, f["margins"].get(f"speaker.{k}", 0.0)))
             dup = {h: sl for h, sl in heads.items() if len(sl) > occ(h)}
             if not dup: return
+            last = rnd == 4
             for h, sl in dup.items():
                 sl = sorted(sl, key=lambda x: -x[2])
-                sub = {w for w in filt if w != h and w.lower() != str(h).lower()}
                 for kind, r, _m in sl[occ(h):]:
+                    ex = excl.setdefault((kind, r), set()); ex.add(str(h).lower())
+                    if last: clear(kind, r); continue            # still colliding after the rounds: the question stays unanswered
+                    sub = {w for w in filt if w.lower() not in ex}
                     if kind == "role":
                         o = self.read_role(Sn, K, r, core, sub, presence)
                         if o.get("present") and o.get("filler") is not None and self.head_of(o["filler"]) is not None:
                             f["roles"][r] = o["filler"]; f["margins"].update(o["margins"]); f.setdefault("one_to_one", {})[r] = "re-read"
-                        else:
-                            f["roles"].pop(r, None); f["margins"].pop(r, None); f.setdefault("one_to_one", {})[r] = "not given"
+                        else: clear(kind, r)
                     else:
                         w, mg, _ = self.best(Sn * rep ** r * spk, self.cands(self.schema["speaker_kinds"], sub))
                         f["speakers"][r] = w; f["margins"][f"speaker.{r}"] = mg if w is not None else 0.0

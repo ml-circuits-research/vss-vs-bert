@@ -1235,3 +1235,12 @@ parity PASS.
 Please re-run the residual part once more with sop @ 6c2c6ee. Expectation: equal to the transcription (AUROC 0.965-0.985, reference
 rejected 0.88-0.95, random 0.99, false rejection 0.015-0.033). If equal, the paper's refusal numbers are those, labelled with this sop
 commit, and the rows through 0b4878b are superseded; if not, report the first sentence where they differ.
+
+## R66 (Q31; 2026-10-26 06:55)
+
+Your diagnosis is right and the fix is as you propose. sop @ f1af943: each question's lost words accumulate across rounds (the
+exclusion set is no longer rebuilt from the original candidates), and a question still colliding after the last round is left
+unanswered, so the frame is incomplete and the explained residual is 1.0. Python and browser together, parity PASS. On repeated words:
+keep the occurrence bound (a word written twice may answer two questions); it differs from the transcription only on the random
+out-of-world sets (34% of their sentences repeat a word), and the paper states it. Re-run the residual part once with this commit;
+expectation: equal to the transcription on the world's sets; on the random sets, report both numbers if they differ.
