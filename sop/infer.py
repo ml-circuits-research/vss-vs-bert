@@ -716,6 +716,14 @@ class Reader:
         if f.get("depth_fit") is not None: top.set("_depth.fit", str(f["depth_fit"]))
         self.wire_lines(wires, status)
         info = {"tokens": tokens, "S": S, "kept": kept, "unplaced": unplaced, "addr": addr, "residual": res, "status": status}
+        if self.cfg.get("refusal") and not getattr(self, "_refusal_pass", False):
+            # R90 / R92: the refusal is a different question from the frame and may use a different readout of the same state: the
+            # decoder keys in config "refusal" override the frame's keys for a second pass whose explained residual is the refusal
+            # signal (e.g. {"presence_by_kind": false}: no kind-driven filling, so a foreign utterance keeps its charge)
+            saved = self.cfg; self.cfg = dict(saved, **saved["refusal"]); self._refusal_pass = True
+            try: _, _, info2 = self.formalize(text, sentence, (f"r{i}" for i in range(10 ** 9)), filt, force, force_depth, estimator, presence, table, token_kinds)
+            finally: self.cfg = saved; self._refusal_pass = False
+            info["residual_refusal"] = info2["residual"]; top.set("_residual.refusal", fmt(info2["residual"]))
         return wires, f, info
 
 
@@ -741,7 +749,7 @@ def formalize_text(reader, lines, filt=None):
         if "\t" in text: text, tcols = text.split("\t", 1); table = [c.strip() for c in tcols.split("|") if c.strip()]
         for r in readers:
             wires, f, info = r.formalize(text, n, idgen(start=k), filt, table=table)
-            rel = info["residual"] / max(1e-9, r.no_fit_residual())          # relative residual: >= 1.0 = this reader explains almost nothing
+            rel = info.get("residual_refusal", info["residual"]) / max(1e-9, r.no_fit_residual())          # relative residual: >= 1.0 = this reader explains almost nothing (the refusal readout when the model has one, R92)
             mm = [v for v in f.get("margins", {}).values()]; mean_margin = float(np.mean(mm)) if mm else 0.0
             cands.append(((info["status"] in ("no-sense", "unknown-event"), rel, -mean_margin), r, wires, f, info))
         cands.sort(key=lambda c: c[0]); (key, r, wires, f, info) = cands[0]
