@@ -59,6 +59,7 @@ class Worlds:
             R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"
             if decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3 / R87
             elif decoder == "presence_query": R.cfg["presence_query"] = True
+            elif decoder == "presence_by_kind": R.cfg["presence_query"] = True; R.cfg["presence_by_kind"] = True   # R88 line C / R89
             if spans: R.legend.reader["spans"] = spans
             if admission == "ctx": ctx_admission(R, rinv, cond, I, ty)
             self.W[I] = {"R": R, "rinv": rinv, "dir": wd, "train": [i for i in cond["train"] if items[i]["intent"] == I][:200]}

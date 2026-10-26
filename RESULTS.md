@@ -2454,3 +2454,29 @@ Expected to move (R88): false fills fall further; misses may rise by the typer's
 Results: ..._r81r80_presence_query_kind_run_ctx[_adm]_<rule>_..., logs/results_r86_presence_r88[a|b]_seed<s>.json,
 logs/results_r86_presence_r81all_seed<s>.json, logs/results_r84_oppoints_<condition>_presence_query_kind_run_ctx[_adm]_seed<s>.json.
 The demo's reading = the best line by in-domain span F1 at unchanged dispatch (R88).
+
+## R88 line C: presence by kinds (R89, sop @ 040d44e) (DECLARED 2026-10-26, before the run; re-score, no training)
+
+R83 paragraph. What fails: misses (164 per seed in R84 item 2; R86: in 97-100% of them the gold word's kind is admitted by the question
+and the presence ratio is under the fitted threshold, so the word is a candidate and the threshold says absent), and the false fills
+that remain after (A) / (B). Where the cause is: the reader, the presence decision by a calibrated ratio where the given kinds already
+decide. What is changed: (B) (in-context kinds, admission recomputed from them, presence_query, kind_run spans) plus the decoder key
+presence_by_kind (R89: a word of a kind that only this question admits makes the question present; no word of an admitted kind makes it
+absent; shared kinds fall back to the threshold; the deciding rule recorded per role), set at load in every reader; sop @ 040d44e
+(scratch copy of origin/main at 2c7e87c, SOURCE 040d44e; the tree was not pulled while jobs ran); the saved R81 models, no training.
+Expected to move (R88): the misses with the gold word's kind admitted turn into fills, so per-world span F1 approaches the typer's on
+questions with a unique kind; per question, which rule decided presence is reported. Readings as A / B (eval/r80_dispatch.py both
+conditions, eval/r84_oppoints.py, eval/r86_presence.py on the seven base worlds), seeds 0-2. Added before the run: eval/r86_presence.py
+now also reports each world's span F1 (its own world, typer + reader vs typer alone); it is run once more for the R81, A and B lines
+(identical readings, the new column only), so that the per-world span F1 of all four lines comes from the same code.
+
+## R85 seed 0, second launch (logs/2026-10-26_1541_run_reader_real_76a62b0.txt): INVALID as the declared test (not an acceptance)
+
+The need signal (positive rows) fired (44 rows, 2.4%) and activate.select accepted `vorder` (FULL on 417 selection rows 0.528 -> 0.563;
+calibration_dev 0.440 -> 0.460, train tenth 0.552 -> 0.591; on the 4 selection rows with same-kind competition 0/4 for both trials, i.e.
+the gain was on all selection rows, not on the rows the route is for). It is not the declared test: the route's verb kinds were
+['S:movie_name', 'w:add'], because the event's verbs were ["command", "add"] and the placeholder event verb "command" is a word of the
+typer lexicon with the kind S:movie_name, so every S:movie_name word was a verb category for the route. Fix (executes R85's declared
+test; coordinator, 2026-10-26): the event's verbs are the declared command verbs only (["add"]), and the run prints the route's verb kinds
+and aborts unless every one is w:<verb>. Seed 0 is re-run; seeds 1-2 only if seed 0 accepts. The folders *_r85act and the tag
+reader_worlds_r85act of this launch are overwritten by the re-run.
