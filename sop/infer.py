@@ -138,6 +138,12 @@ class Reader:
 
     # ---------------- words
     def kind(self, tok):
+        """the kind of a token: the IN-CONTEXT kind given for this sentence (formalize(..., token_kinds=...), e.g. a typer's; R88) when
+        there is one, else the lexicon's (the catalog word's kind, or the legend's patterns)"""
+        ck = getattr(self, "_ctx_kinds", None)
+        if ck and tok in ck: return ck[tok]
+        return self.lex_kind(tok)
+    def lex_kind(self, tok):
         e = self.words.get(tok) or self.words.get(tok.lower())
         if e is not None: return e["kind"]
         return self.legend.kind(tok)
@@ -149,6 +155,11 @@ class Reader:
         return self.lemma(tok) if self.legend.reader.get("identity") == "lemma" else tok
 
     def cands(self, kinds, filt=None):
+        ck = getattr(self, "_ctx_kinds", None)
+        if ck and filt is not None:       # R88: in-context kinds given for this sentence: the candidates are the sentence's words of the admitted kinds BY THEIR CONTEXT KIND
+            ks = set(kinds); ws = sorted({w for w in filt if self.kind(w) in ks})
+            if self.legend.reader.get("identity") == "lemma": ws = list(dict.fromkeys(self.ident(w) for w in ws))
+            return (ws, np.array([self.st.id(w) for w in ws]) / np.sqrt(self.D) if ws else np.zeros((0, self.D), complex))
         extra = ()
         if self.sentence_candidates and self._sent_tokens:
             ks = set(kinds)
@@ -189,7 +200,7 @@ class Reader:
     def encode(self, tokens):
         kept, cidx, unknown = [], [], []
         for i, t in enumerate(tokens):
-            k = self.kind(t)
+            k = self.lex_kind(t)          # the chart uses the kinds the routes were trained with (the lexicon's); context kinds act in the decoder (R88)
             if k is None or k == UNKNOWN_KIND or k not in self.rb.cat_id:
                 unknown.append(i)
                 if UNKNOWN_KIND not in self.rb.cat_id: continue          # spec 6.3: a word with no kind gets the kind `unknown` (placed, never a filler)
@@ -598,9 +609,15 @@ class Reader:
         if self.legend.reader.get("value_identity") == "bundle_alnum": ws |= {t for w in list(ws) for t in world.alnum(w)}
         return ws
 
-    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None, table=None):
-        """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both)"""
-        tokens = tokenize(text); S, kept, unknown, addr = self.chart(tokens)
+    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None, table=None, token_kinds=None):
+        """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both).
+        token_kinds (R88): the IN-CONTEXT kind of every token of this sentence (a list aligned with the tokens, or {word: kind}), e.g. a
+        typer's; used by the decoder (candidates, admission, residual, runs, adjacency), not by the chart (the routes' kinds)"""
+        tokens = tokenize(text)
+        if token_kinds is not None:
+            self._ctx_kinds = dict(zip(tokens, token_kinds)) if isinstance(token_kinds, (list, tuple)) else dict(token_kinds)
+        else: self._ctx_kinds = None
+        S, kept, unknown, addr = self.chart(tokens)
         if filt is None and self.cfg.get("candidates") == "sentence":     # the sentence-candidates decoder (R46): a role's filler is a word of the sentence
             filt = set(tokens) | {t.lower() for t in tokens}
         # a model without the key predates round 3: its primary estimator was the open-gate count
