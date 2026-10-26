@@ -524,7 +524,8 @@ class Reader:
         for r in self.legend.roles:
             if r in mg: ev.set(f"_margin.{r}", fmt(mg[r]))
             if r + ".presence" in mg: ev.set(f"_presence_margin.{r}", fmt(mg[r + ".presence"]))
-            if r in f.get("presence_queries", {}): ev.set(f"_presence_query.{r}", fmt(f["presence_queries"][r]))   # absent, near threshold: "is there a <r>?" (query wire kind undecided, presence)
+            if r in f.get("presence_queries", {}): ev.set(f"_presence_query.{r}", fmt(f["presence_queries"][r]))
+            if r in f.get("offers", {}): ev.set(f"_offer.{r}", f["offers"][r])          # the unplaced word offered to this empty role (D27)   # absent, near threshold: "is there a <r>?" (query wire kind undecided, presence)
         if "event" in mg: ev.set("_margin.event", fmt(mg["event"]))
         if "scope" in mg: ev.set("_margin.scope", fmt(mg["scope"]))
         evm = [mg[k] for k in mg if k in self.legend.roles or k == "event" or (k.endswith(".presence") and k[:-9] in self.legend.roles)]
@@ -660,6 +661,16 @@ class Reader:
             t = tokens[i]; k = self.kind(t)
             if k in self.content_kinds and t not in placed and self.lemma(t) not in placed: unplaced.append(i)
         unplaced = sorted(set(unplaced))
+        # vss-demo Q16 / D27: an unplaced word that exactly one EMPTY role of the decided event admits is offered to that role as a
+        # presence query ("is 'irina' the new name?") before the adjacency rule can make its neighbour undecided
+        if f["shape"] == "ok" and self.cfg.get("presence_query") and unplaced:
+            taken = self.legend.event_roles.get(f.get("event")) if f.get("event") else None
+            empty = [r for r in self.schema["role_order"] if f["roles"].get(r) is None and (taken is None or r in taken)]
+            for i in list(unplaced):
+                k = self.kind(tokens[i]); fits = [r for r in empty if k in set(self.schema["roles"][r].get("head_kinds") or self.schema["roles"][r].get("kinds") or [])]
+                if len(fits) == 1 and fits[0] not in f.get("offers", {}):
+                    r = fits[0]; f.setdefault("offers", {})[r] = tokens[i]; f.setdefault("presence_queries", {})[r] = f["margins"].pop(r + ".presence", 0.0)
+                    unplaced = [j for j in unplaced if j != i]
         undecided = self.undecided_adjacent(f, tokens, unplaced) if f["shape"] == "ok" and self.cfg.get("undecided_adjacent") else {}
         for r, (a, b) in undecided.items():                              # the role becomes a query: both candidates, no margin
             f["margins"][r] = 0.0; unplaced = [i for i in unplaced if tokens[i] != b]
