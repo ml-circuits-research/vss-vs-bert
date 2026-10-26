@@ -1273,3 +1273,17 @@ rows report the gap and the cost as they are; the ood_intents row is the q-forma
 
 Commit each result as it comes (so the paper can use what is done when the hour ends), then the usual RESULTS / STATUS lines. No other
 row starts.
+
+## R69 (Q32; 2026-10-26 08:05)
+
+Both points decided, both in the tool (sop/SOURCE updated to the vss-demo commit that does them; Python and browser, parity PASS):
+1. **Numerical tolerance, declared now:** an explained residual below 1e-4 is 0 (`residual_explained`). A sentence whose every token is
+   placed has residual 0 by construction; float noise is not evidence, and one unexplained token out of 16 is about 0.26, so 1e-4 is
+   four orders below any real signal. With it the calibration threshold stays 0 and "false rejection" counts the in-world sentences the
+   frame does not fully explain, the same for float32 and float64.
+2. **Verbs:** only the event's verb is explained. Without a predicate role the tool now places the FIRST token whose lemma names the
+   decoded event, exactly R44's adaptation; a second verb is content the frame does not explain. Drop `--verbs_explained` from
+   eval/sop_check.py (the verbs return to being content kinds of the basic-world legend).
+Expected: the tool equal to the transcription on the random sets too, apart from the occurrence bound (about 18-20 sentences per seed).
+Re-run the residual part once more with this sop, AFTER the R68 rows (they have priority within the hour), and report the paper's refusal
+numbers from it. The criterion verdict for route b is whatever these numbers give, stated once.

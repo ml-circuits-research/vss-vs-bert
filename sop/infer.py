@@ -556,7 +556,7 @@ class Reader:
         nS, nr = np.linalg.norm(S), np.linalg.norm(rec)
         if nS < 1e-9 or nr < 1e-9: return 1.0
         Sn, rn = S / nS, rec / nr; a = max(0.0, float(np.real(np.vdot(rn, Sn))))
-        return float(np.linalg.norm(Sn - a * rn))
+        r = float(np.linalg.norm(Sn - a * rn)); return 0.0 if r < 1e-4 else r     # numerical tolerance, declared (vss-vs-bert Q32)
 
     def undecided_adjacent(self, f, tokens, unplaced):
         """the adjacency rule (addendum q-formalisation 7; vss-vs-bert R54): an identity left in no role, next to the filler of a role whose
@@ -590,6 +590,9 @@ class Reader:
         estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
         f = self.read(S, tokens, filt, force, force_depth, estimator, presence, table) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
+        if placed and f.get("lemma") is None and f.get("event"):         # no predicate role: the event is explained by its FIRST verb only;
+            ev = next((t for t in tokens if self.legend.event_of_lemma(self.lemma(t)) == f["event"]), None)   # a second verb stays content
+            if ev is not None: placed = placed | {ev}                   # the frame does not explain (vss-vs-bert Q32)
         unplaced = [i for i in unknown]
         for i in kept:
             t = tokens[i]; k = self.kind(t)
