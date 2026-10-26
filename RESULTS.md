@@ -1660,7 +1660,7 @@ seeds (per-seed lists in the sections). Claim set = seeds 5-9.
 | reader 1a (0-4) | 3.3 M | 0.864 / 0.868 | 0.982 (0.982) | 1.000 | 0.003 | compiled residual 0.876; 1.000 / 0.989 / 1.000; 0.435 |
 | reader 1a (5-9) | 3.3 M | 0.831 / 0.835 | 0.992 (0.992) | 1.000 | 0.001 | 0.883; 1.000 / 1.000 / 1.000; 0.440 |
 | reader 1a + R46 decoder (5-9) | 3.3 M | 0.867 / 0.973 | 0.998 | 1.000 | 0.000 | explained residual 0.979; 0.988 / 0.930 / 1.000; 0.026 |
-| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained, through sop @ 6c2c6ee (the reference; 0b4878b superseded): 0.86-0.89; ref. rejected 0.56-0.61, random 0.89-0.95; FR 0.015-0.025 (transcription: 0.980; 0.988 / 0.932 / 1.000; 0.021; the tool's re-reading loop differs, see 'Decoder provenance') |
+| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained, decoder sop @ f1af943 (earlier sop rows superseded): AUROC 0.960; rejected random 0.916 / reference 0.930; FR **0.020** (transcription: 0.980; 0.988 / 0.932; 0.021; equal sentence by sentence in-world and on the reference world) |
 | reader + route a (R56; 0-4, 5-9) | 11.7 M allocated | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
 | BERT-tiny MRC pretrained (R28, R36; 0-4) | 4.4 M | 0.884 / 0.968 | 0.000 (0.972) | 0.000 | 0.171 | Mahalanobis 0.822, MSP 0.915; NULL threshold 0.992 / 0.943 / 0.954; FR 0.280 |
 | BERT-tiny pretrained (5-9) | 4.4 M | 0.834 / 0.986 | 0.000 (0.943) | 0.000 | 0.176 | Mahalanobis 0.837, MSP 0.898 |
@@ -1714,10 +1714,10 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   compiled residual and every MRC score reject the in-world generalisation rows wholesale (false rejection 0.28-0.51); the best row, the
   reader with route b and the R46 decoder, rejects 0.988 / 0.932 / 1.000 of the out-of-world sources at 2.1% false rejection on the
   claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set). Through the tool (sop @ 0b4878b, the
-  reference decoder, after R64's and R65's fixes, sop @ 6c2c6ee) the explained residual rejects the reference world at 0.56-0.61 and
-  random sentences at 0.89-0.95 (AUROC 0.86-0.89). The remaining difference from the transcription (0.88-0.95 / 0.99) is located in
-  the tool's one-to-one re-reading loop (exclusions not accumulated across rounds: the first differing sentence ends with one word in
-  two questions); until the tool settles it, the refusal numbers of the paper are the tool's, and no refusal claim is made beyond them.
+  reference decoder after R64-R66, sop @ f1af943, equal to the transcription sentence by sentence on the world's sets) route b on the
+  claim set rejects random 0.916 / reference 0.930 at 2.03% false rejection (AUROC 0.960; met on two of five seeds); the threshold
+  is 0.0, so that false rejection is the share of in-world sentences whose residual is not exactly zero. The transcription's random
+  rejection (0.99) is higher only by its first-verb-as-lemma adaptation and the occurrence bound.
 - The comparisons (i) and (ii) are decided by a question never trained for the MRC models (above); the out-of-world comparison is the
   one with content, and BERT-mini pretrained ties the reader there.
 - The reader's improvements (R46, R54, R58) were designed after reading the design-set dumps; they are held out only over identities,
@@ -1726,7 +1726,7 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   sensitivity grid and every row listed under R48 / R51 are not run.
 - Decoder provenance: the per-role and one-to-one accuracy rows of every reader are EQUAL through sop (4a92afd and 0b4878b) and carry
   that label; the explained-residual rows differ on the out-of-world sets (scope of the one-to-one) and the paper uses the tool's
-  numbers (section 'Decoder provenance'; sop @ 6c2c6ee, first differing sentence located). Legend growth at k = 5 / 10 / 20: 20 examples bring the new form to 0.98, 50 to 1.000; a
+  numbers (section 'Decoder provenance': sop @ f1af943, equal sentence by sentence on the world's sets). Legend growth at k = 5 / 10 / 20: 20 examples bring the new form to 0.98, 50 to 1.000; a
   retraining with a few examples can drop another new-formulation template by up to 0.13 on one seed.
 
 **Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 (correction of fact: the first of them, k = 5 / 10 / 20 on seeds 0-4, had been launched about a minute before this text was committed; no output of it had been read):** (1) the reader's growth rows with k = 5 / 10 / 20
@@ -1836,3 +1836,32 @@ axis and the calibration rows), 0 of the reference and nonce out-of-world senten
 random out-of-world sets do (token sequences drawn uniformly from the vocabulary): 1,704 of 5,000 test and 1,709 of 5,000 negative
 sentences (34%), e.g. 'p6 . o15 p8 p12 p8 p5 receives o5 buys p10 given p3'; there the occurrence bound of R65 lets a repeated word fill
 two questions, where the transcription admits each word once.
+
+**Decoder provenance, third re-check (R66; sop @ f1af943: exclusions accumulate across rounds, a question still colliding after the last
+round is left unanswered, the occurrence bound kept; logs/2026-10-26_0637_ to _0640_sop_check_0dfe5fa.txt, results
+logs/results_sopcheck_*_demo_vx_f1af943_*):** accuracy rows equal on every axis and seed. **Explained residual: EQUAL to the
+transcription on the world's sets, sentence by sentence.** Checked one by one (1a seeds 0 and 5, route b seed 1): every calibration and
+in-world report sentence, and every reference-world sentence, has the same residual from the tool and from common/decode.py (no
+difference above 1e-3; seed 0: 0 of 7,880 in-world and 0 of 500 reference sentences differ). The summary numbers differ slightly for one
+reason, stated: the 2% calibration threshold is **0.0** on every seed (more than 98% of the calibration residuals are exactly 0), so the
+"false rejection" counts the residuals above floating-point noise, which differs between the tool (float64) and the transcription
+(float32 states); e.g. 1a seed 5: 0.024 (tool) against 0.028, route b seed 1: 0.031 against 0.017. **On the random out-of-world sets the
+two differ**: random rejected 0.89-0.95 (tool) against 0.99 (transcription). Attribution, measured: of the differing random sentences
+297 of 315 (1a seed 5) and 316 of 336 (route b seed 1) contain two or more verbs, where the tool's configuration (the verbs as
+non-content kinds, eval/sop_check.py --verbs_explained) explains every verb while the transcription (R44's adaptation) explains only the
+first verb as the event lemma; the rest (18 / 20) are where a repeated identity answers two questions under the tool's occurrence bound
+(1a seed 0: 133 of the 335 differing random sentences repeat an identity). In-world sentences have exactly one verb and no repeated
+identity, so neither difference touches them.
+**The paper's refusal numbers, decoder: sop @ f1af943 (6c2c6ee / 0b4878b / 4a92afd rows superseded):**
+
+| reader (R46 decoder, explained residual) | AUROC in vs out (random + reference) [per seed] | rejected random | rejected reference [per seed] | false rejection [per seed] |
+|---|---|---|---|---|
+| 1a, seeds 0-4 | 0.957 [0.952 0.965 0.958 0.951 0.956] | 0.920 | 0.907 [0.882 0.906 0.920 0.904 0.924] | 0.025 [0.024 0.032 0.021 0.021 0.026] |
+| 1a, seeds 5-9 (claim) | 0.961 [0.964 0.967 0.955 0.954 0.963] | 0.914 | 0.929 [0.932 0.916 0.930 0.918 0.950] | 0.024 [0.023 0.024 0.025 0.018 0.027] |
+| route b, seeds 0-4 | 0.955 [0.947 0.961 0.956 0.948 0.964] | 0.920 | 0.908 [0.882 0.906 0.922 0.906 0.926] | 0.023 [0.019 0.031 0.024 0.025 0.015] |
+| **route b, seeds 5-9 (claim)** | **0.960** [0.969 0.959 0.955 0.951 0.965] | **0.916** | **0.930** [0.936 0.914 0.930 0.918 0.950] | **0.020** [0.019 0.020 0.016 0.021 0.025] |
+
+Transcription's random rejection beside them (R65 asked for both where they differ): 0.99 (0.986-0.996). The demo criterion (>= 0.90
+per source at <= 2% false rejection): route b on the claim set rejects random 0.916 and reference 0.930 at 2.03% false rejection (per
+seed 1.9, 2.0, 1.6, 2.1, 2.5%): **met on two of five seeds and missed on the mean by 0.03 points of false rejection; since the
+threshold is 0.0, the false rejection there is the share of in-world sentences whose residual is not exactly zero**.

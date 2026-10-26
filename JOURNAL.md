@@ -125,3 +125,11 @@ transcription; the first differing sentence (seed 0, reference test item 0, 'p3 
 one-to-one re-reading loop rebuilding its exclusions from the original candidates each round, ending with p1 in two questions. Files
 opened: data/oow_seed0.json (the reference test set), the saved 1a seed-0 reader; every frozen data file of seeds 0-9 for the
 repeated-identity count (none in the world; 34% of the random out-of-world sentences). Nothing runs.
+
+## 2026-10-26 07:00 — R66 re-check (experimental session)
+
+sop @ f1af943 re-checked (residual only): equal to the transcription sentence by sentence on the calibration, in-world and reference
+sentences (1a seeds 0 and 5, route b seed 1 compared one by one); summary differences come from the threshold being 0.0 (floating-point
+noise counts as rejection); random-set differences come from multi-verb sentences (verb treatment) and repeated identities (occurrence
+bound). The paper's refusal numbers are the tool's, labelled sop @ f1af943. Files opened: data/oow_seed0.json, data/oow_seed1.json,
+data/oow_seed5.json and the saved readers of those seeds. Nothing runs.
