@@ -539,7 +539,7 @@ class Reader:
     def frame_incomplete(self, f):
         """a frame that does not answer every always-present (core) question of the legend, or a speaker of its depth, explains nothing as a
         frame: the explained residual is then 1.0 (vss-vs-bert R42 / Q30; an optional role left 'not given' does not count)"""
-        if any(f["roles"].get(r) is None for r in self.schema.get("core_roles", [])): return True
+        if any(f["roles"].get(r) is None or self.head_of(f["roles"].get(r)) is None for r in self.schema.get("core_roles", [])): return True
         return any(sp is None for sp in f.get("speakers", []))
 
     def residual_explained(self, S, addr, kept, tokens, placed):

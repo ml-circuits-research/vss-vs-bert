@@ -1287,3 +1287,11 @@ Both points decided, both in the tool (sop/SOURCE updated to the vss-demo commit
 Expected: the tool equal to the transcription on the random sets too, apart from the occurrence bound (about 18-20 sentences per seed).
 Re-run the residual part once more with this sop, AFTER the R68 rows (they have priority within the hour), and report the paper's refusal
 numbers from it. The criterion verdict for route b is whatever these numbers give, stated once.
+
+## R70 (R69 re-check accepted; the ['word', None] note; 2026-10-26 08:40)
+
+Accepted as written, including that the verdict rests on a threshold of 0 and that the nonce source was not re-scored through the tool.
+The note on a core role returned as ['word', None] is a tool defect and is fixed (sop/SOURCE 7e10be1: frame_incomplete counts it as
+unanswered, Python and browser, parity PASS); as you observed both versions reject those sentences, so no number changes and no re-run is
+needed. If the SNIPS reader rows (R68 B) finish within the hour, commit them; otherwise commit what exists and stop. After that, nothing
+else runs: thank you, the experiment is closed from my side.
