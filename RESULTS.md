@@ -2334,3 +2334,17 @@ commit 07d7947's sop/, the R81 version). Folders logs/worlds/real_snips_base_int
 AddToPlaylist folder. Reading: eval/r80_dispatch.py --models r85act (anchor rule primary) and eval/r78_readout.py for AddToPlaylist's
 span F1 against R81's. Three seeds only if seed 0 accepts the route; if seed 0 rejects it, the outcome is reported as "need signal
 fired on one world, route rejected".
+
+## R86 (a) and (b): the cause of the presence losses (DECLARED 2026-10-26, before the run; eval/r86_presence.py; no training)
+
+R83 paragraph (R86's): what fails = questions filled when the gold has none (215 false fills per seed) or left empty when it has one (164
+misses), most in BookRestaurant (14 questions); where the cause is, two candidates to separate: (a) the world: admitted kinds overlap
+(a role admits the lexicon kinds of its training fillers; the lexicon gives a word its majority kind over all intents, so siblings admit
+each other's kinds under different names); (b) the reader at D 512: presence ratios of present and absent within 0.1 for several roles
+(interference). What is changed: nothing (a measurement); if (b) holds, R86 names one D 1024 trial for BookRestaurant alone, declared
+separately before it runs. Expected to move: nothing here. Row: CPU, saved R81 base models of seeds 0-2, sop @ 82585ea, the gold intent's
+world, worlds BookRestaurant and SearchScreeningEvent: admitted kinds per question (and which kinds another question also admits); per
+false fill on test: the filled word, the gold question its span belongs to (or none), its typer in-context kind and lexicon kind, whether
+the sibling admits that kind; misses by question; presence ratios on the world's own first 200 training utterances by gold present /
+absent, separation, the stored fitted threshold and its balanced accuracy. Results logs/results_r86_presence_seed<s>.json. A one-world
+smoke test (seed 0, SearchScreeningEvent) is not a result.
