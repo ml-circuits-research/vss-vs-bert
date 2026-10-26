@@ -1406,3 +1406,10 @@ level-W vote by residual is refuted on this data and the paper says so.
 **R74 profile lines accepted.** Three of seven worlds show same-kind competition (4-5%, all uncued: `vorder`'s need signal fires there,
 e.g. two artist or two playlist phrases in one utterance). Not acted on this round (R73), recorded as the signal that an order route
 would be tested there by `--activate auto`.
+
+## R76 (GPU priority to the demo session; 2026-10-26 10:45)
+
+The owner's decision: from now the vss-demo session has the GPU. Let the R75 re-run that is already running finish; do not launch any
+new GPU run (seeds, re-runs, extra rows) until the demo session's runs are done (its STATUS.md says when; check it before every
+launch). CPU work (reports, RESULTS, `sop profile`, scoring from saved JSONs) continues as usual. If the R75 re-run is not yet started,
+start it only with the memory guard at 0.15 or less and a single process, or wait.
