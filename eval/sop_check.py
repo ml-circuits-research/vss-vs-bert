@@ -75,11 +75,11 @@ def tool_frame(rd, tokens, depth, filt):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--write_legend", action="store_true"); ap.add_argument("--row", default="1a"); ap.add_argument("--seed_start", type=int, default=0)
-    ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--demo", action="store_true"); ap.add_argument("--verbs_explained", action="store_true"); ap.add_argument("--device", default="cpu"); a = ap.parse_args()
+    ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--demo", action="store_true"); ap.add_argument("--device", default="cpu"); a = ap.parse_args()
     print(f"sop_check (R58 item 1): main repository {mainrepo.check_pinned()}; decoder: sop @ {SOURCE} (sop/SOURCE); row {a.row}; seeds {a.seed_start}-{a.seed_start + a.seeds - 1}; {'demo decoder (candidates sentence, residual explained, undecided_adjacent)' if a.demo else 'default decoder'}")
     if a.write_legend: write_legend(); sys.exit(0)
     for seed in range(a.seed_start, a.seed_start + a.seeds):
-        m, bw, split, preds, how, chk = get_reader(a.row, seed, a.device); rd = model_folder(a.row, seed, m, bw, split, a.demo, a.verbs_explained); res = {"seed": seed, "row": a.row, "decoder": f"sop @ {SOURCE}", "demo": a.demo}
+        m, bw, split, preds, how, chk = get_reader(a.row, seed, a.device); rd = model_folder(a.row, seed, m, bw, split, a.demo); res = {"seed": seed, "row": a.row, "decoder": f"sop @ {SOURCE}", "demo": a.demo}
         cal = split["axes"]["calibration"][:50]; worst = 0.0
         with torch.no_grad():
             for it in cal:
@@ -103,17 +103,18 @@ if __name__ == "__main__":
         if a.demo:
             est = lambda items: [dict(x, depth=decode.depth_from_openers(x["tokens"])) for x in items]
             def resid(items):
+                """the explained residual exactly as the tool emits it: sop.infer.Reader.formalize (R69: from SOURCE c126cbe the event's first
+                verb is explained, a second verb is content, residuals below 1e-4 count as 0; frame_incomplete -> 1.0; status no-sense /
+                unknown-event -> 1.0), with the depth forced to the level-opener count as for the transcription"""
                 out = []
                 for it in est(items):
-                    fr, f, S, kept, addr = tool_frame(rd, it["tokens"], it["depth"], set(it["tokens"]))
-                    # as sop.infer.Reader.formalize computes it (from SOURCE 0b4878b: 1.0 when the frame is incomplete, R64 / Q30)
-                    inc = rd.frame_incomplete(f) if hasattr(rd, "frame_incomplete") else False
-                    out.append((1.0 if inc else rd.residual_explained(S, addr, kept, it["tokens"], rd.placed_words(f))) if kept and f["shape"] == "ok" else 1.0)
+                    wires, f, info = rd.formalize(" ".join(it["tokens"]), None, sop_infer.idgen(), force=(it["depth"], False))
+                    out.append(float(info["residual"]))
                 return np.array(out)
             c = resid(split["axes"]["calibration"]); t = float(np.quantile(c, 0.98)); inw = np.concatenate([resid(split["axes"][ax]) for ax in report.AXES if split["axes"][ax]])
             oow = json.load(open(os.path.join(mainrepo.ROOT, "data", f"oow_seed{seed}.json"))); o = {s: resid(oow["test"][s]) for s in ("random", "reference")}
             res["explained"] = {"auroc_pooled": auroc(inw, np.concatenate([o["random"], o["reference"]])), "rejected": {s: float(np.mean(v > t)) for s, v in o.items()}, "false_rejection_pooled": float(np.mean(inw > t)), "threshold": t}
             refx = (r46 or {}).get("oow", {}).get("explained", {})
             print(f"  seed {seed} explained residual (tool): AUROC {res['explained']['auroc_pooled']:.4f} (R46 row {refx.get('auroc_pooled_random_reference', float('nan')):.4f}); rejected {res['explained']['rejected']} (R46 {refx.get('rejected')}); false rejection {res['explained']['false_rejection_pooled']:.4f} (R46 {refx.get('false_rejection_pooled', float('nan')):.4f})", flush=True)
-        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}{'_vx' if a.verbs_explained else ''}{'_' + SOURCE if SOURCE != '4a92afd' else ''}_seed{seed}.json"), "w"))
+        json.dump(res, open(os.path.join(mainrepo.ROOT, "logs", f"results_sopcheck_{ROWS[a.row]}{'_demo' if a.demo else ''}{'_' + SOURCE if SOURCE != '4a92afd' else ''}_seed{seed}.json"), "w"))
     print("checklist: [x] the tool (sop/) is the reference [x] the saved readers, no retraining [x] differences recorded")
