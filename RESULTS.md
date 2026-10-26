@@ -2116,3 +2116,31 @@ other intents' utterances, which is the intended behaviour). With the clause ign
 Second line, sop @ 7ce5c50 (seed 2): identical to 28db081 in every number (the core roles are stored in the saved schema, and the
 reading changes in 7ce5c50 do not touch these models' frames). This is the record of the cause that R79 fixed (R79 above: every
 threshold below 1.0 with the intent anchor).
+
+## R80: measured (logs/2026-10-26_1244_r80_dispatch_6ad7cff.txt (base s0) and _1245_ to _1250_r80_dispatch_c285d50.txt (ood s0, base s1, ood s1, base s2, ood s2); code 52c5718 (6ad7cff and c285d50 changed RESULTS only); sop @ 7ce5c50; results logs/results_real_snips_*_reader_worlds_r80_<rule>_full_seed{0,1,2}.json; MEASURED)
+
+Saved R79 models, no reader retrained; the re-fitted typer's lexicon equal to every world's kinds.tsv (checked). Check passed: the
+residual_raw rule reproduces R79's intent accuracy exactly on every set of every seed and condition. The anchor and the structure
+score coincide in BookRestaurant, GetWeather, PlayMusic and SearchScreeningEvent (core = intent only) and differ on every row in
+AddToPlaylist, RateBook and SearchCreativeWork, so the structure rule is the sixth line.
+
+| rule | test intent [per seed] | new slot values | unseen templates | test span F1 [per seed] | head-frame exact | ood_intents in-domain intent | in-domain span F1 | AUROC held-out vs in-domain, residual (test) [per seed] | AUROC, anchor pct (test) | AUROC residual (dev_rep) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| residual raw (= R79) | 0.731 ± 0.012 [0.716 0.734 0.744] | 0.729 | 0.750 | 0.720 ± 0.007 [0.711 0.726 0.724] | 0.462 | 0.737 | 0.713 | 0.747 ± 0.019 [0.721 0.754 0.766] | 0.695 | 0.771 |
+| residual percentile | 0.659 ± 0.007 [0.650 0.659 0.667] | 0.641 | 0.622 | 0.668 ± 0.008 | 0.436 | 0.643 | 0.647 | 0.730 ± 0.022 | 0.645 | 0.745 |
+| **anchor percentile** | **0.863 ± 0.011** [0.861 0.851 0.877] | 0.878 | 0.825 | 0.802 ± 0.007 [0.805 0.808 0.792] | 0.535 | 0.868 | 0.789 | 0.849 ± 0.022 [0.822 0.849 0.877] | 0.622 | 0.881 |
+| anchor, then residual | 0.854 ± 0.012 [0.849 0.843 0.870] | 0.863 | 0.810 | 0.794 ± 0.006 | 0.529 | 0.863 | 0.786 | 0.850 ± 0.022 | 0.622 | 0.878 |
+| sum of percentile ranks | 0.855 ± 0.010 [0.847 0.849 0.869] | 0.865 | 0.814 | 0.784 ± 0.003 | 0.544 | 0.863 | 0.773 | 0.797 ± 0.016 | 0.619 | 0.795 |
+| structure percentile (sixth line) | 0.817 ± 0.021 [0.793 0.814 0.844] | 0.821 | 0.787 | 0.785 ± 0.006 | 0.510 | 0.840 | 0.782 | 0.792 ± 0.013 | 0.636 | 0.848 |
+
+References: one-world reader (R71) intent 0.977, residual AUROC 0.933; typer-only span F1 0.886; BERT-tiny intent 0.985.
+Rejection (rule-independent): every world's residual above its threshold, ood_intents: held-out 0.020 (test) / 0.000 (dev_rep),
+in-domain false rejection 0.002; second line, every world's anchor percentile under 0.02: held-out **0.280 ± 0.022** [0.250 0.290 0.300]
+(test) / 0.267 (dev_rep), in-domain false rejection **0.038 ± 0.006** [0.030 0.038 0.045] (test) / 0.021 (dev_rep); base test 0.047.
+
+**Against R80's expectations written before the run.** The anchor rule moves dispatch intent well above 0.716: met (0.863, +0.13 over
+R79's 0.731), and with it span F1 (0.720 -> 0.802), head-frame exact (0.462 -> 0.535) and the residual AUROC (0.747 -> 0.849). The anchor
+alone reaches 0.9: NOT met (0.863; every seed 0.851-0.877). By R80's rule, the per-intent configuration is not kept with this rule for
+the demo, R78 (1) is not run on it, and option 2 (one-vs-rest negatives in training) is next, to be declared by the author; option 3
+stays the fallback. The calibrated residual (percentile) is worse than the raw one (0.659); the lexicographic and sum rules do not beat
+the anchor alone. R78 (1) remains on HOLD and was not started.
