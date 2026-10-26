@@ -1980,3 +1980,18 @@ fine-tuned encoder": the typer's spans are above BERT-tiny's (0.886 vs 0.831; ne
 0.805), the reader's intent slightly below (0.977 vs 0.985), the head-token frame below (0.505 vs 0.715), and the size larger (17.4 M +
 2.7 M against 4.4 M). On held-out intents the reader's residual separates them at AUROC 0.933 and its intent margin at 0.939, both
 below BERT-tiny's intent margin (0.982).
+
+## R72 item 4 as run: one world per intent (vss/run_reader_real.py --worlds per_intent; logs/2026-10-26_0905_ / _0907_run_reader_real_df8fc3c.txt; results logs/results_real_snips_*_reader_worlds_full_seed{0,1}.json) — CONFIGURATION ERROR (R72 wording), SUPERSEDED BY R75
+
+Kept as measured, not to be used: each world's lexicon mapped the other intents' slot kinds to O (as R72 item 4 was worded), so a wrong
+world was not charged for them and the residual could not separate worlds (R75). Seeds 0 and 1 completed; both runs were stopped after
+seed 1 for the hour's budget (09:50 / 09:52), the seed-2 runs started at 09:55 were stopped at 10:05 when R75 superseded them. D 512,
+10 epochs, three routes, read through sop @ bb6db1b with the explained residual. Seeds 0 / 1: dispatch (intent) accuracy test 0.447 /
+0.487, span F1 0.511 / 0.542; new slot values 0.430 / 0.483 and 0.472 / 0.518; unseen templates 0.405 / 0.443 and 0.466 / 0.499;
+ood_intents: in-domain intent 0.467 / 0.453, residual AUROC held-out vs in-domain 0.555 / 0.578, intent-margin AUROC 0.495 / 0.565;
+rejected by every world (status or residual) in-domain 0.20-0.25, held-out 0.49-0.52; by the residual alone 0.000 everywhere. Size: 7
+readers 20.9 M phases (base; 16.1 M ood) + the typer 2.69 M; 18.7 ms per utterance for all 7 (concurrent). R74's `sop profile` on these
+7 worlds (logs/2026-10-26_*_sop_profile_*.txt): same-kind competition / order-dependent share / tokens without a kind = AddToPlaylist
+4.1% / 4.1% / 0.0%, BookRestaurant 5.1 / 5.1 / 0.0, GetWeather 0.3 / 0.3 / 0.0, PlayMusic 0.8 / 0.8 / 0.0, RateBook 0.3 / 0.3 / 0.0,
+SearchCreativeWork 3.8 / 3.8 / 0.0, SearchScreeningEvent 0.3 / 0.3 / 0.0; vorder's need signal FIRES on AddToPlaylist, BookRestaurant and
+SearchCreativeWork (against the expectation written in R74); not acted on (R73).
