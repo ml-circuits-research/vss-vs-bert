@@ -2390,3 +2390,27 @@ mean absent (mean over seeds): BookRestaurant lowest city 0.360, state 0.435, co
 (BookRestaurant city) and >= 0.946 (SearchScreeningEvent). By R86's rule the D 1024 trial is NOT run. The losses are in the WORLD's
 admitted kinds (overlap), with the presence decision deciding between sibling candidates; this is what R86's decoder rule "presence by
 kinds where a kind names one question" addresses (the author's, in sop source; to be run as a re-score line when announced).
+
+## R84 item 3: measured (logs/2026-10-26_1515_ to _1529_r80_dispatch_*.txt: A base s0 _1515 (f9fbac8), A ood s0 _1517 and B ood s0 _1518 (42213e8), B base s0 _1516 (f9fbac8), the rest db2ca09; every code commit after f9fbac8 changed other files only; MEASURED)
+
+Saved R81 models, anchor-percentile dispatch (the primary rule), seeds 0-2 [per seed]. Line A rewrote R81's r81r80_<rule> JSONs with
+identical numbers (same models, same sop, deterministic; checked: intent 0.966 [0.963 0.964 0.970], span F1 0.824), plus the new fields.
+
+| line | condition | dispatch intent [per seed] | span F1 | head-frame exact | chosen frame abstains [per seed] | share with a presence query | frame coverage at tau |
+|---|---|---|---|---|---|---|---|
+| A: sop 82585ea, decoder paper (= R81) | base test | 0.966 ± 0.003 | 0.824 | 0.565 | 0.528 ± 0.009 [0.514 0.536 0.533] | 0.000 | 0.284 |
+| A | ood_intents in-domain test | 0.965 ± 0.005 | 0.825 | 0.564 | 0.514 ± 0.015 | 0.000 | 0.336 |
+| B: sop b467e4b, full contract | base test | 0.966 ± 0.003 | 0.833 | 0.587 | **0.821 ± 0.008** [0.813 0.819 0.831] | 0.175 | 0.222 |
+| B | ood_intents in-domain test | 0.965 ± 0.005 | 0.829 | 0.574 | 0.814 ± 0.004 | 0.160 | 0.219 |
+| **C: sop b467e4b, presence_query alone** | base test | 0.966 ± 0.003 | 0.824 | 0.565 | **0.450 ± 0.012** [0.434 0.453 0.463] | 0.175 | 0.284 |
+
+ood_intents, line B: residual AUROC held-out vs in-domain 0.937 (A 0.941), rejection by every world's residual 0.027 (A 0.030).
+
+**Against item 3's expectations.** Line C (the rule R84 named): chosen-frame abstention down, 0.528 -> 0.450 (17.5% of utterances carry
+a presence query instead of abstaining); dispatch and spans unchanged (identical): met. Line B (the full contract of b467e4b):
+abstention UP, 0.528 -> 0.821, dispatch unchanged, span F1 +0.009: not met. Cause, checked by hand (four dev_rep utterances, both sop
+versions, each rule alone; reported to the coordinator, put to the author as Q38): the contract rule undecided_adjacent on head-token
+readings of multi-word slots (the span's other words are unplaced neighbours of an admitted kind, so each multi-word slot becomes an
+undecided query with margin 0); it happens with 82585ea as well, so it is the rule's domain (one-token fillers), not a version mismatch.
+The author fixed it at the source (R87, sop @ de11429, reader.spans = kind_run); lines B and C are being re-scored under R87 (declared
+above).
