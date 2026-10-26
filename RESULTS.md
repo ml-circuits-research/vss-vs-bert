@@ -2621,3 +2621,17 @@ re-loaded export checked against the in-memory typer on 200 dev_rep utterances; 
 percentile with each world's 200 calibration anchors; frame: line C's keys and per-question admission sets; refusal: line A's keys and
 the pooled dev_cal 2% threshold of seed 2 (0.8128 in R90), per-world thresholds as a second, unmeasured field). Folder:
 logs/export/snips_demo_seed2/ (untracked, binary; kept).
+
+## R92 step 1: the demo reading as one config per world, checked against R90 item 1 (DECLARED 2026-10-26, before the run; eval/r92_check.py; no training)
+
+Not a training row (R83: no paragraph required; stated anyway): what is checked = that one config per world (sop @ 60f861b: frame keys
+candidates sentence, undecided_adjacent, residual explained, presence_query, presence_by_kind; "refusal": {"presence_by_kind": false};
+legend reader.spans kind_run; the schema's admission sets = R88 (B)'s; token_kinds = the typer's at reading) reproduces R90 item 1 (frame of
+line C, refusal of line A). Reading copies of the saved R81 models (the originals are not modified; the copies' config carries
+legend_sha256 of the edited legend and legend_sha256_at_training) in logs/export/r92_reading_copies/<condition>_seed<s>/<intent>/; seeds
+0-2, both conditions; dispatch by the anchor percentile; refusal threshold = the pooled dev_cal 2% quantile of the refusal pass's residual
+(as R90), per-world quantiles written as well. Expected (R92): R90's numbers (dispatch 0.966, span F1 0.892, refusal 0.460 at 0.016).
+Stated before the run, from the config itself: it differs from R90's two reader sets in two ways, (i) the frame adds candidates
+sentence and undecided_adjacent (with kind_run) to line C's keys, (ii) the refusal pass reads with (B)'s admission sets in the schema,
+whereas line A read with the stored admission sets (the schema is shared by both passes); line B's refusal at 2% was 0.380, line A's
+0.460, so the check may not reproduce the refusal; any difference is reported with this cause. A 40-item smoke test is not a result.
