@@ -1865,3 +1865,13 @@ Transcription's random rejection beside them (R65 asked for both where they diff
 per source at <= 2% false rejection): route b on the claim set rejects random 0.916 and reference 0.930 at 2.03% false rejection (per
 seed 1.9, 2.0, 1.6, 2.1, 2.5%): **met on two of five seeds and missed on the mean by 0.03 points of false rejection; since the
 threshold is 0.0, the false rejection there is the share of in-world sentences whose residual is not exactly zero**.
+
+## R68 (B): SNIPS, declared by R68 (2026-10-26 07:55); execution notes written before the runs
+
+Runs (RUNBOOK 8b / 8c reduced as R68 lists them; the frozen data/real/splits_snips.json; the SNIPS files downloaded and checked against
+data/real/checksums.json, 15 files 'ok'): the reader `vss/run_reader_real.py --dataset snips --sizes full --seeds 3 --test --save_model
+--epochs 10` and `--condition ood_intents --test --seeds 3 --epochs 10`; BERT-tiny `models/bert_real.py --dataset snips --model
+google/bert_uncased_L-2_H-128_A-2 --sizes full --seeds 3 --test --save_model --lrs 1e-4 --epochs 10` and the same with `--condition
+ood_intents`. Stated deviation of form: R68's reader command has no --epochs; with `--sizes full` alone the script pairs 'full' with the
+FIRST value of its default list (60), while RUNBOOK 8b's value for the full size is 10, so --epochs 10 is passed. The four runs run
+concurrently with the (A) runs: no time is a cost number.
