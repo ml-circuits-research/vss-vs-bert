@@ -117,3 +117,11 @@ accuracy rows equal; the explained residual differs, first by the missing undeco
 0b4878b), then by the scope of the one-to-one (inner roles in the tool, all roles of the depth in the transcription); files opened for
 that diagnosis: data/oow_seed0.json (60 reference sentences) with the saved 1a seed-0 reader. The tool is the reference; the paper uses
 its numbers. The session stopped at about 23:35 when its login expired and resumed after; no run was lost. Nothing runs now.
+
+## 2026-10-26 06:40 — R65 re-check (experimental session)
+
+sop @ 6c2c6ee re-checked (residual only, plus the accuracy rows, which stay equal): the explained residual still differs from the
+transcription; the first differing sentence (seed 0, reference test item 0, 'p3 claims that p1 gives o0 .') shows the tool's
+one-to-one re-reading loop rebuilding its exclusions from the original candidates each round, ending with p1 in two questions. Files
+opened: data/oow_seed0.json (the reference test set), the saved 1a seed-0 reader; every frozen data file of seeds 0-9 for the
+repeated-identity count (none in the world; 34% of the random out-of-world sentences). Nothing runs.

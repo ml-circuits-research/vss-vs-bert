@@ -1660,7 +1660,7 @@ seeds (per-seed lists in the sections). Claim set = seeds 5-9.
 | reader 1a (0-4) | 3.3 M | 0.864 / 0.868 | 0.982 (0.982) | 1.000 | 0.003 | compiled residual 0.876; 1.000 / 0.989 / 1.000; 0.435 |
 | reader 1a (5-9) | 3.3 M | 0.831 / 0.835 | 0.992 (0.992) | 1.000 | 0.001 | 0.883; 1.000 / 1.000 / 1.000; 0.440 |
 | reader 1a + R46 decoder (5-9) | 3.3 M | 0.867 / 0.973 | 0.998 | 1.000 | 0.000 | explained residual 0.979; 0.988 / 0.930 / 1.000; 0.026 |
-| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained, through sop @ 0b4878b (the reference): 0.863-0.888; ref. rejected 0.56-0.61, random 0.89-0.95; FR 0.015-0.025 (transcription: 0.980; 0.988 / 0.932 / 1.000; 0.021) |
+| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained, through sop @ 6c2c6ee (the reference; 0b4878b superseded): 0.86-0.89; ref. rejected 0.56-0.61, random 0.89-0.95; FR 0.015-0.025 (transcription: 0.980; 0.988 / 0.932 / 1.000; 0.021; the tool's re-reading loop differs, see 'Decoder provenance') |
 | reader + route a (R56; 0-4, 5-9) | 11.7 M allocated | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
 | BERT-tiny MRC pretrained (R28, R36; 0-4) | 4.4 M | 0.884 / 0.968 | 0.000 (0.972) | 0.000 | 0.171 | Mahalanobis 0.822, MSP 0.915; NULL threshold 0.992 / 0.943 / 0.954; FR 0.280 |
 | BERT-tiny pretrained (5-9) | 4.4 M | 0.834 / 0.986 | 0.000 (0.943) | 0.000 | 0.176 | Mahalanobis 0.837, MSP 0.898 |
@@ -1714,9 +1714,10 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   compiled residual and every MRC score reject the in-world generalisation rows wholesale (false rejection 0.28-0.51); the best row, the
   reader with route b and the R46 decoder, rejects 0.988 / 0.932 / 1.000 of the out-of-world sources at 2.1% false rejection on the
   claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set). Through the tool (sop @ 0b4878b, the
-  reference decoder, after R64's fix) the explained residual rejects the reference world at 0.56-0.61 and random sentences at
-  0.89-0.95 (AUROC 0.86-0.89): the transcription's higher rejection comes from its one-to-one over all roles of the depth (a speaker
-  may not also be A or C), which the tool's one-to-one (inner roles only) does not apply; the paper uses the tool's numbers.
+  reference decoder, after R64's and R65's fixes, sop @ 6c2c6ee) the explained residual rejects the reference world at 0.56-0.61 and
+  random sentences at 0.89-0.95 (AUROC 0.86-0.89). The remaining difference from the transcription (0.88-0.95 / 0.99) is located in
+  the tool's one-to-one re-reading loop (exclusions not accumulated across rounds: the first differing sentence ends with one word in
+  two questions); until the tool settles it, the refusal numbers of the paper are the tool's, and no refusal claim is made beyond them.
 - The comparisons (i) and (ii) are decided by a question never trained for the MRC models (above); the out-of-world comparison is the
   one with content, and BERT-mini pretrained ties the reader there.
 - The reader's improvements (R46, R54, R58) were designed after reading the design-set dumps; they are held out only over identities,
@@ -1725,7 +1726,7 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
   sensitivity grid and every row listed under R48 / R51 are not run.
 - Decoder provenance: the per-role and one-to-one accuracy rows of every reader are EQUAL through sop (4a92afd and 0b4878b) and carry
   that label; the explained-residual rows differ on the out-of-world sets (scope of the one-to-one) and the paper uses the tool's
-  numbers (section 'Decoder provenance'). Legend growth at k = 5 / 10 / 20: 20 examples bring the new form to 0.98, 50 to 1.000; a
+  numbers (section 'Decoder provenance'; sop @ 6c2c6ee, first differing sentence located). Legend growth at k = 5 / 10 / 20: 20 examples bring the new form to 0.98, 50 to 1.000; a
   retraining with a few examples can drop another new-formulation template by up to 0.13 on one seed.
 
 **Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 (correction of fact: the first of them, k = 5 / 10 / 20 on seeds 0-4, had been launched about a minute before this text was committed; no output of it had been read):** (1) the reader's growth rows with k = 5 / 10 / 20
@@ -1815,3 +1816,23 @@ rejected 0.56-0.61, random 0.89-0.95, false rejection 0.015-0.032; the demo crit
 check (sop @ 4a92afd, logs/results_sopcheck_*_demo_vx_seed*.json) is superseded by this fix; the transcription's rows (0.88-0.95) stay,
 labelled "decoder: common/decode.py, one-to-one over all roles of the depth (differs from sop @ 0b4878b)". Which scope the one-to-one
 should have (a speaker may not also be the giver in this world's legend) is the tool's decision (sop/, the author's).
+
+**Decoder provenance, second re-check (R65; sop @ 6c2c6ee: the one-to-one over every question of the frame, speakers included, each word
+bounded by its occurrences; logs/2026-10-26_0622_ to _0625_sop_check_ba631b6.txt, results logs/results_sopcheck_*_demo_vx_6c2c6ee_*):**
+accuracy rows unchanged (equal on every axis and seed). Explained residual: **still NOT EQUAL**, practically unchanged from 0b4878b (AUROC
+0.863-0.887 against the transcription's 0.965-0.985; reference rejected 0.56-0.61 against 0.88-0.95; random 0.89-0.95 against 0.99;
+in-world false rejection 0.015-0.032, equal in level). **First differing sentence** (seed 0, reader 1a, out-of-world reference test item
+0): 'p3 claims that p1 gives o0 .' (depth 1). Transcription: A not decoded, B o0, C p1, X1 p3; residual 1.0. Tool: A p1, B o0, C p1,
+speaker p3; one_to_one {'A': 're-read'}; complete; residual 0.0. What happens in sop/infer.py one_to_one: round 1, A = p3 collides with
+the speaker p3 and A (smaller margin) is read again without p3, giving p1; round 2, A = p1 collides with C = p1 and A is read again
+without p1, but the set excluded is rebuilt from the ORIGINAL candidates (`sub = {w for w in filt if w != h ...}`), so p3 is admitted
+again; the rounds alternate A between p3 and p1, and after the fourth round the frame is left with A = C = p1, which no occurrence bound
+allows (p1 occurs once). The transcription's rule (Hungarian assignment over every question with the guard) leaves A without a
+candidate. The difference is therefore the non-cumulative exclusion in the tool's re-reading loop, not the scope; R65's rule, applied
+with exclusions that accumulate, would give the transcription's frame on this sentence. The tool stays the reference: the paper's
+refusal numbers wait for the tool; the 0b4878b check is superseded by this one; the transcription's rows stay as labelled.
+**Repeated identities (R65 item 3):** no sentence of the world repeats an identity: 0 of 78,800 frozen-split sentences (seeds 0-9, every
+axis and the calibration rows), 0 of the reference and nonce out-of-world sentences, 0 of the planted and growth sentences. Only the
+random out-of-world sets do (token sequences drawn uniformly from the vocabulary): 1,704 of 5,000 test and 1,709 of 5,000 negative
+sentences (34%), e.g. 'p6 . o15 p8 p12 p8 p5 receives o5 buys p10 given p3'; there the occurrence bound of R65 lets a repeated word fill
+two questions, where the transcription admits each word once.

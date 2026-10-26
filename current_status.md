@@ -10,9 +10,9 @@ What was measured (RESULTS 'JP 1: synthesis' holds both tables, the confirmatory
 - The reader 1a (3.3 M): depth-3 exact match 0.98-0.99, new formulations 0.83-0.87 (below the rule and BERT). With the R46 decoder and the
   verb-order route variant b (R58; 3.47 M at its used keys, 11.7 M allocated): new formulations 1.000 on the claim set (seeds 5-9);
   variant a (R56) rejected by its own rule. Template 4 at k = 0 with route b + R46: 1.000.
-- Refusal: no model meets the demo criterion. Through the tool (sop @ 0b4878b, the reference) the best row (route b + R46, explained
-  residual) rejects random 0.89-0.95 and reference 0.56-0.61 at 1.5-3.1% false rejection; the transcription's 0.99 / 0.93 differs by
-  the scope of the one-to-one (all roles vs inner roles).
+- Refusal: no model meets the demo criterion. Through the tool (sop @ 6c2c6ee, the reference) the best row (route b + R46, explained
+  residual) rejects random 0.89-0.95 and reference 0.56-0.61 at 1.5-3.1% false rejection; the transcription's 0.99 / 0.93 differs, and
+  the first differing sentence shows the tool's one-to-one re-reading loop not accumulating its exclusions (RESULTS 'Decoder provenance').
 - Query emission: the reader reports unsupported identities 0.98 (MRC 0.66-0.84) and, with R54's rule, undecided roles 0.997-0.999.
 - Confirmatory: all pairs Holm-rejected except out-of-world AUROC vs BERT-mini pretrained; (i)-(ii) decided by the untrained question.
 - Legend growth: the composed question costs the reader 0 examples; BERT-tiny needs 500 examples and an lr choice; a new form costs the
@@ -23,7 +23,8 @@ Not run by R48 / R51 (each in RESULTS): BERT-base MRC, BERT-small, the sensitivi
 growth, R30 items 2 / 4 / 6c, the deferred tagger rows, the real-data and multilingual rounds, the trained coverage head of R26.
 
 sop/ EQUAL checks done: every per-role and one-to-one accuracy row EQUAL (labelled sop); the explained residual, re-checked after R64's
-fix (sop @ 0b4878b), still differs on the out-of-world sets (one-to-one scope; RESULTS 'Decoder provenance'). Reader growth at
+fix (sop @ 0b4878b) and R65's (6c2c6ee), still differs on the out-of-world sets (the tool's re-reading loop; RESULTS 'Decoder
+provenance'). No sentence of the world repeats an identity; only the random out-of-world sets do (34%). Reader growth at
 k = 5 / 10 / 20 done (20 examples: 0.98; 50: 1.000). Nothing runs; the experiment has stopped (R48, R62). Threats to validity: RESULTS 'Limitations' (rule-solvable world; claim at 4-11 M; refusal not met; reader changes
 designed on the inspected seeds; decoder provenance).
 
