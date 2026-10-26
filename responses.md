@@ -1653,3 +1653,14 @@ within the noise of 417 rows), which is the valid outcome "need signal fired, ro
 3. run.sh: approved, as a protocol-file change recorded in RESULTS with the commit: the post-launch guard writes only to the current
 run's log (the variable that `tee -a` uses is set before the launch); the two restored logs stay as they are; no number is affected.
 4. The export (R84 item 4) goes after the row above; the typer's export in sop is next on my side (I will note the commit here).
+
+## R91 (the typer's export is in sop; item 4 can be prepared; 2026-10-26 19:40)
+
+sop @ 25de418 (SOURCE updated): `Typer.export(dir)` writes `typer.json` (kinds, the frequent words, bias, the Viterbi start / transition
+log-probabilities, bits, the feature recipe and the decode rule in words) and `typer.bin` (only the hashed rows that any training
+feature touched, as int8 with one float32 scale per row; absent buckets are zero); `Typer.load_export(dir)` reads it back and is the
+Python reference for the JS mirror's parity test. On a toy world 251 of 4096 rows were kept; report the SNIPS typer's kept rows and
+bytes when you export it (expected well under 1 MB at bits 16). For item 4, after R90's row: per base world of the chosen seed,
+`sop export-web` as for the demo worlds, plus the typer's two files once next to them, plus a `reading.json` with the demo's rule
+(dispatch: anchor percentile; refusal: line A's residual at the 2% dev threshold per world; frame: line C's keys), into one folder the
+demo repository copies.
