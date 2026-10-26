@@ -129,7 +129,7 @@ class Typer:
         return int(self.W.size + self.b.size)
 
     # ---------------- export (R91): the table the browser needs, pruned and quantised
-    def export(self, out_dir):
+    def export(self, out_dir, weight_bits=8, min_row_abs=0.0):
         """typer.json + typer.bin in out_dir. Only the hashed rows that any training feature touched are kept (the others are zero and
         act as zero in the browser: a bucket absent from the index contributes nothing); each kept row is stored as int8 with one
         float32 scale per row (symmetric: w = q * scale). The JSON carries the kinds, the frequent words (their own kind), the start
@@ -137,21 +137,22 @@ class Typer:
         (CRC-32 of the UTF-8 feature string, masked to bits) exactly. Returns the sizes."""
         import json, os
         os.makedirs(out_dir, exist_ok=True)
-        rows = np.where(np.abs(self.W).sum(1) > 0)[0].astype(np.int32)
-        Wk = self.W[rows]; scale = (np.maximum(np.abs(Wk).max(1), 1e-12) / 127.0).astype(np.float32)
-        q = np.clip(np.round(Wk / scale[:, None]), -127, 127).astype(np.int8)
+        rows = np.where(np.abs(self.W).max(1) > min_row_abs)[0].astype(np.int32)     # min_row_abs > 0 prunes rows whose weights are all small (R94)
+        qmax = 127 if weight_bits == 8 else 32767
+        Wk = self.W[rows]; scale = (np.maximum(np.abs(Wk).max(1), 1e-12) / qmax).astype(np.float32)
+        q = np.clip(np.round(Wk / scale[:, None]), -qmax, qmax).astype(np.int8 if weight_bits == 8 else np.int16)
         with open(os.path.join(out_dir, "typer.bin"), "wb") as f:
             f.write(rows.tobytes()); f.write(scale.tobytes()); f.write(q.tobytes())
-        meta = {"format": "sop typer 1", "bits": self.bits, "n_freq": self.n_freq, "kinds": list(self.kinds), "singles": sorted(self.singles),
+        meta = {"format": "sop typer 1", "bits": self.bits, "weight_bits": weight_bits, "min_row_abs": min_row_abs, "n_freq": self.n_freq, "kinds": list(self.kinds), "singles": sorted(self.singles),
                 "bias": [float(x) for x in self.b], "logT": self.logT.tolist(), "states": self.states, "rows": int(len(rows)), "K": int(len(self.kinds)),
-                "layout": "typer.bin = int32 rows[n] (bucket index of each kept row, ascending) | float32 scale[n] | int8 q[n][K] (row-major); w[bucket] = q * scale; absent buckets are zero",
+                "layout": f"typer.bin = int32 rows[n] (bucket index of each kept row, ascending) | float32 scale[n] | int{weight_bits} q[n][K] (row-major); w[bucket] = q * scale; absent buckets are zero",
                 "features": "w=<lower word>; sh=<shape: runs of X (upper) x (lower) d (digit) o (other alnum) or the char, first 6>; c2/c3/c4=<char n-grams of '<'+word+'>'>; "
                             "p-2,p-1,p1,p2=<lower neighbour or <s> / </s>>; p-1p1=<prev>|<next>; bucket = crc32(utf8(feature)) & ((1 << bits) - 1)",
                 "decode": "kind_in_context: argmax(sum_f w[bucket_f] + bias), state W -> 'w:' + word if word in singles else 'O'; sentence_kinds: Viterbi over logT with "
                           "emissions log_softmax(z), state W forbidden for a word not in singles",
-                "quantisation": "int8 symmetric per row, scale = max |w| of the row / 127, w = q * scale"}
+                "quantisation": f"int{weight_bits} symmetric per row, scale = max |w| of the row / {qmax}, w = q * scale"}
         with open(os.path.join(out_dir, "typer.json"), "w") as f: json.dump(meta, f)
-        return {"rows_kept": int(len(rows)), "rows_total": int(self.W.shape[0]), "bytes_bin": int(len(rows) * (4 + 4 + len(self.kinds))),
+        return {"rows_kept": int(len(rows)), "rows_total": int(self.W.shape[0]), "bytes_bin": int(len(rows) * (4 + 4 + len(self.kinds) * (weight_bits // 8))),
                 "bytes_json": os.path.getsize(os.path.join(out_dir, "typer.json"))}
 
     @classmethod
@@ -160,7 +161,8 @@ class Typer:
         import json, os
         meta = json.load(open(os.path.join(out_dir, "typer.json"))); n, K = meta["rows"], meta["K"]
         raw = open(os.path.join(out_dir, "typer.bin"), "rb").read()
-        rows = np.frombuffer(raw[:4 * n], dtype=np.int32); scale = np.frombuffer(raw[4 * n:8 * n], dtype=np.float32); q = np.frombuffer(raw[8 * n:], dtype=np.int8).reshape(n, K)
+        wb = meta.get("weight_bits", 8)
+        rows = np.frombuffer(raw[:4 * n], dtype=np.int32); scale = np.frombuffer(raw[4 * n:8 * n], dtype=np.float32); q = np.frombuffer(raw[8 * n:], dtype=np.int8 if wb == 8 else np.int16).reshape(n, K)
         t = cls(n_freq=meta["n_freq"], bits=meta["bits"]); t.kinds = meta["kinds"]; t.singles = set(meta["singles"]); t.b = np.array(meta["bias"], dtype=np.float32)
         t.logT = np.array(meta["logT"]); t.states = meta["states"]
         t.W = np.zeros((1 << meta["bits"], K), dtype=np.float32); t.W[rows] = q.astype(np.float32) * scale[:, None]

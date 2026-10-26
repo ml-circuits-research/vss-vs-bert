@@ -720,9 +720,17 @@ class Reader:
             # R90 / R92: the refusal is a different question from the frame and may use a different readout of the same state: the
             # decoder keys in config "refusal" override the frame's keys for a second pass whose explained residual is the refusal
             # signal (e.g. {"presence_by_kind": false}: no kind-driven filling, so a foreign utterance keeps its charge)
-            saved = self.cfg; self.cfg = dict(saved, **saved["refusal"]); self._refusal_pass = True
+            saved = self.cfg; ov = dict(saved["refusal"]); adm = ov.pop("admission", None); self.cfg = dict(saved, **ov); self._refusal_pass = True
+            saved_roles = None
+            if adm:        # Q42 / R94: the refusal pass may read with its own admission sets ({role: {"kinds": [...], "head_kinds": [...]}}, e.g. the stored ones)
+                saved_roles = {r: dict(rs) for r, rs in self.schema["roles"].items()}
+                for r, kv in adm.items():
+                    if r in self.schema["roles"]: self.schema["roles"][r] = dict(self.schema["roles"][r], **kv)
+                self._cands = {k: v for k, v in self._cands.items() if k == "__verbs"}
             try: _, _, info2 = self.formalize(text, sentence, (f"r{i}" for i in range(10 ** 9)), filt, force, force_depth, estimator, presence, table, token_kinds)
-            finally: self.cfg = saved; self._refusal_pass = False
+            finally:
+                self.cfg = saved; self._refusal_pass = False
+                if saved_roles is not None: self.schema["roles"] = saved_roles; self._cands = {k: v for k, v in self._cands.items() if k == "__verbs"}
             info["residual_refusal"] = info2["residual"]; top.set("_residual.refusal", fmt(info2["residual"]))
         return wires, f, info
 
