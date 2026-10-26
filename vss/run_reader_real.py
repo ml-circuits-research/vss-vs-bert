@@ -321,7 +321,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
     SR = load_sop_repo(); items = cond["items"]; intents = sorted({items[i]["intent"] for i in cond["train"]})
     print(f"[R72] {len(intents)} worlds (one per intent): {intents}; D {a.D}; routes path + chainL + bigram; decoder: sop @ {open(os.path.join(mainrepo.ROOT, 'sop', 'SOURCE')).read().strip()[:7]} (residual explained)")
     rank = lambda st: {"ok": 0, "abstain": 1}.get(st, 2); allrows = []; all_types = set()
-    for seed in range(a.seeds):
+    for seed in range(a.seed_start, a.seed_start + a.seeds):
         worlds = {}; nparam = 0; t0 = time.time()
         for I in intents:
             tr = [i for i in cond["train"] if items[i]["intent"] == I]; cal = [i for i in cond["dev_cal"] if items[i]["intent"] == I]
@@ -420,6 +420,7 @@ if __name__ == "__main__":
     ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="copy the seed-0 model/ folder of each size to logs/models/")
     ap.add_argument("--kinds", default="skipgram", choices=["skipgram", "typer"], help="R71: 'typer' = the kinds learned from the training annotation by sop/typer.py (default: the skip-gram clusters)")
     ap.add_argument("--worlds", default="one", choices=["one", "per_intent"], help="R72 item 4: one world per intent with the dispatcher (needs --kinds typer)")
+    ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
     if a.max_train: cond["train_order"] = cond["train_order"][:a.max_train]; keep = set(cond["train_order"]); cond["train"] = [i for i in cond["train"] if i in keep]
@@ -453,7 +454,7 @@ if __name__ == "__main__":
         rates = span_rates(cond, train_ids); per = []; nk = nested_kinds(cond, train_ids, legend, rmap) if nested else None
         print(f"[world] {wd}: legend {legend.sha[:19]}..., roles {len(legend.roles)} (intent + {len(legend.roles) - 1} slot types), intents {len(legend.reader['closed_values']['intent'])}, "
               f"kinds {len(set(kinds.values()))}; rows train {len(splits['train'])}, calibration_dev {len(splits['calibration_dev'])}")
-        for seed in range(a.seeds):
+        for seed in range(a.seed_start, a.seed_start + a.seeds):
             ns = types.SimpleNamespace(D=a.D, star_seed=f"seed{seed}", identities="stars", device=dev_, length_buckets=True, epochs=eps[size], batch=a.batch, shuffle=True,
                                        max_train=0, code_list=["path", "chainL", "bigram"], no_ckpt=True, resume=False, log_every=500, lr=a.lr, n_cal=a.n_cal, tau=0.05,
                                        world_name=os.path.basename(wd), language="en", commit=mainrepo.check_pinned(), depth_estimator="kinds", threshold_rule="fit", store_presence_ratios=False)

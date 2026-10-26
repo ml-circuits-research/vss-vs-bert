@@ -1,0 +1,14 @@
+# 2026-10-26T09:55:00+01:00  commit=8594fc9  cmd: python3 vss/run_reader_real.py --dataset snips --condition ood_intents --test --seeds 1 --seed_start 2 --epochs 10 --kinds typer --worlds per_intent --D 512  (guard: mem fraction 0.150, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock.2 of 6)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 15% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+usage: run_reader_real.py [-h] --dataset {snips,massive,topv2}
+                          [--condition CONDITION] [--locale LOCALE]
+                          [--sizes SIZES] [--epochs EPOCHS] [--seeds SEEDS]
+                          [--D D] [--batch BATCH] [--lr LR] [--n_freq N_FREQ]
+                          [--k_clusters K_CLUSTERS]
+                          [--unseen_kind {cluster,unknown}] [--n_cal N_CAL]
+                          [--device DEVICE] [--test] [--max_eval MAX_EVAL]
+                          [--max_train MAX_TRAIN] [--cost_n COST_N]
+                          [--save_model] [--kinds {skipgram,typer}]
+                          [--worlds {one,per_intent}]
+run_reader_real.py: error: unrecognized arguments: --seed_start 2
