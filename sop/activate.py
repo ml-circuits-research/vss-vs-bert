@@ -157,8 +157,9 @@ def select(a, legend, rows, splits, schema, train_one, evaluate, lexical, bag, s
     prof = profile(rows, legend, schema); needs = need_signals(prof)
     declared = list(a.code_list)
     cands = [c for c in CANDIDATE_CODES if needs[c][0]]
-    rep = {"rule": "a candidate route is on iff its need signal fires and, on selection rows its trials did not train on, it loses no split by "
-                   f"more than tol and wins the rows its need signal marked (or all rows) by more than tol; tol = max(eps={eps}, one row of the split)",
+    rep = {"rule": "a candidate route is on iff its need signal fires and, on selection rows its trials did not train on (the SAME rows read by both "
+                   "bundles), it wins the rows its need signal marked (or all rows) beyond the binomial noise of the discordant rows (2 sqrt(wins + losses)) "
+                   "and no split loses beyond that noise (paired test, D24)",
            "profile": {k: ({kk: vv for kk, vv in v.items() if kk != "rows"} if isinstance(v, dict) and "rows" in v else v) for k, v in prof.items()},
            "need_signals": {c: {"fires": f, "reason": r} for c, (f, r) in needs.items()}, "declared_codes": declared, "candidates": cands, "trials": {}}
     base = [c for c in BASE_CODES]
@@ -192,7 +193,7 @@ def select(a, legend, rows, splits, schema, train_one, evaluate, lexical, bag, s
                 sub = [r for r in sel if saved[r["id"]] == s]; n_split[s] = len(sub)
                 by_split[s] = evaluate(rd, sub, legend, schema, a.tau, None, lexical, 10 ** 9, bag=bag, seen_words=seen_words, modes="primary")["acc"]["FULL"]
             scores[tuple(codes)] = {"FULL": ev["acc"]["FULL"], "FULL_marked": ev_od["acc"]["FULL"] if ev_od else None, "n": len(sel), "n_marked": len(sel_od),
-                                    "by_split": by_split, "n_split": n_split, "residual_mean": ev["residual_mean"]}
+                                    "by_split": by_split, "n_split": n_split, "residual_mean": ev["residual_mean"], "_rows": dict(ev.get("full_rows", []))}
             log(f"[activate] trial {'+'.join(codes)}: FULL {ev['acc']['FULL']:.3f} on {len(sel)} selection rows" +
                 (f", {ev_od['acc']['FULL']:.3f} on the {len(sel_od)} with same-kind competition" if ev_od else "") + " | " + " ".join(f"{s} {v:.3f}" for s, v in by_split.items()))
     finally:
@@ -200,19 +201,31 @@ def select(a, legend, rows, splits, schema, train_one, evaluate, lexical, bag, s
         shutil.rmtree(tmp, ignore_errors=True)
     b = scores[tuple(base)]
     tol = lambda n: max(eps, 1.0 / max(1, n))          # a split of n rows cannot move by less than one row: the tolerance is at least one row
+    # PAIRED test on the same selection rows (vss-demo Q15 / D24): wins = rows the trial reads right and the base wrong, losses = the
+    # reverse; a difference counts only beyond the binomial noise of the discordant rows, 2 * sqrt(wins + losses). A route is accepted
+    # when it wins (on the marked rows, or on all rows) beyond the noise and no split loses beyond the noise.
+    def paired(t, ids_):
+        w = sum(1 for i in ids_ if t["_rows"].get(i) and not b["_rows"].get(i)); l = sum(1 for i in ids_ if b["_rows"].get(i) and not t["_rows"].get(i))
+        return w, l, 2.0 * (w + l) ** 0.5
+    sel_ids = [r["id"] for r in sel]; marked_ids = [r["id"] for r in sel_od]; split_ids = {s: [r["id"] for r in sel if saved[r["id"]] == s] for s in b["by_split"]}
     accepted = []
     for c in cands:
         t = scores[tuple(base + [c])]
-        loses = [s for s, v in t["by_split"].items() if v < b["by_split"][s] - tol(b["n_split"][s])]
-        wins_marked = (t["FULL_marked"] is not None and b["FULL_marked"] is not None and t["FULL_marked"] > b["FULL_marked"] + tol(t["n_marked"])) if c == "vorder" else False
-        wins_all = t["FULL"] > b["FULL"] + tol(t["n"])
+        pw = {"all": paired(t, sel_ids), "marked": paired(t, marked_ids) if marked_ids else None, "splits": {s: paired(t, ids_) for s, ids_ in split_ids.items()}}
+        loses = [s for s, (w, l, noise) in pw["splits"].items() if l - w > noise]
+        wins_marked = bool(pw["marked"]) and pw["marked"][0] - pw["marked"][1] > pw["marked"][2] if c == "vorder" else False
+        wins_all = pw["all"][0] - pw["all"][1] > pw["all"][2]
         ok = not loses and (wins_marked or wins_all)
-        rep["trials"]["+".join(base + [c])] = dict(t, loses=loses, wins_marked_rows=wins_marked, wins_all=wins_all, accepted=ok)
+        rep["trials"]["+".join(base + [c])] = dict({k: v for k, v in t.items() if k != "_rows"}, paired={"all": pw["all"], "marked": pw["marked"], "splits": pw["splits"]},
+                                                   loses=loses, wins_marked_rows=wins_marked, wins_all=wins_all, accepted=ok)
+        log(f"[activate] paired {'+'.join(base + [c])} vs base: all wins {pw['all'][0]} losses {pw['all'][1]} (noise {pw['all'][2]:.1f})" +
+            (f"; marked wins {pw['marked'][0]} losses {pw['marked'][1]} (noise {pw['marked'][2]:.1f})" if pw["marked"] else "") +
+            "; splits " + " ".join(f"{s} +{w}/-{l}" for s, (w, l, _) in pw["splits"].items()) + f" -> {'accepted' if ok else 'rejected'}")
         if ok: accepted.append(c)
-    rep["trials"]["+".join(base)] = b
+    rep["trials"]["+".join(base)] = {k: v for k, v in b.items() if k != "_rows"}
     codes = base + accepted
     if len(accepted) > 1 and tuple(base + cands) in scores:
-        t = scores[tuple(base + cands)]; rep["trials"]["+".join(base + cands)] = t
+        t = scores[tuple(base + cands)]; rep["trials"]["+".join(base + cands)] = {k: v for k, v in t.items() if k != "_rows"}
         if any(t["by_split"][s] < scores[tuple(base + [accepted[0]])]["by_split"][s] - tol(t["n_split"][s]) for s in t["by_split"]):
             log(f"[activate] the routes together lose a split that one alone keeps: only {accepted[0]} kept"); codes = base + accepted[:1]; accepted = accepted[:1]
     fail = None

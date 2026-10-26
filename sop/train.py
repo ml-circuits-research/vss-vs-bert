@@ -277,7 +277,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
     estimate]` = the depth estimated by the fit (the check); depth GIVEN (as the repository scripts); depth and negation GIVEN. The negation
     is chosen by the fit unless given. All other axes use the primary mode."""
     rs = rows if len(rows) <= n_max else [rows[i] for i in sorted(np.random.default_rng(rng_seed).choice(len(rows), n_max, replace=False))]
-    cal = Calib(); acc = collections.defaultdict(list); status = collections.Counter(); resid = []; ids = (f"e{i}" for i in range(10 ** 9))
+    cal = Calib(); acc = collections.defaultdict(list); status = collections.Counter(); resid = []; ids = (f"e{i}" for i in range(10 ** 9)); full_rows = []
     pred, drop = legend.reader["predicate_role"], tuple(legend.reader.get("full_excludes") or ())
     per_form = collections.defaultdict(list)
     for row in rs:
@@ -302,6 +302,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
             acc["FULL" + label].append(same(drop))
+            if mode == "estimated": full_rows.append((row["id"], bool(same(drop))))        # per-row FULL, for paired comparisons (activate.py)
             if mode in ("presence not decided", "pooled midpoint (comparison)"):
                 for r in schema["role_order"]:
                     acc[f"role {r} [{mode}]"].append(json.dumps(world.reduce_filler(g["roles"].get(r), drop)) == json.dumps(world.reduce_filler(f["roles"].get(r) if f_ok else None, drop)))
@@ -358,7 +359,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
     forms = sorted(((k, len(v), float(np.mean(v))) for k, v in per_form.items()), key=lambda x: (x[2], -x[1]))
     m = {"n": len(rs), "of": len(rows), "acc": {k: float(np.mean(v)) for k, v in acc.items()},
          "calibration": {ax: cal.report(ax, tau) for ax in cal.rows}, "residual_mean": float(np.mean(resid)) if resid else None,
-         "status": dict(status), "worst_formulations": [{"formulation": k, "n": n, "FULL": v} for k, n, v in forms[:5]]}
+         "status": dict(status), "worst_formulations": [{"formulation": k, "n": n, "FULL": v} for k, n, v in forms[:5]], "full_rows": full_rows}
     return m
 
 
