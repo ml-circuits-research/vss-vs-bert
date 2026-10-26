@@ -1995,3 +1995,31 @@ readers 20.9 M phases (base; 16.1 M ood) + the typer 2.69 M; 18.7 ms per utteran
 4.1% / 4.1% / 0.0%, BookRestaurant 5.1 / 5.1 / 0.0, GetWeather 0.3 / 0.3 / 0.0, PlayMusic 0.8 / 0.8 / 0.0, RateBook 0.3 / 0.3 / 0.0,
 SearchCreativeWork 3.8 / 3.8 / 0.0, SearchScreeningEvent 0.3 / 0.3 / 0.0; vorder's need signal FIRES on AddToPlaylist, BookRestaurant and
 SearchCreativeWork (against the expectation written in R74); not acted on (R73).
+
+## R75: one world per intent, fixed (every typer kind in every world; dispatch by the explained residual) (vss/run_reader_real.py --worlds per_intent --world_kinds all --dispatch residual --D 512; logs/2026-10-26_1012_ to _1017_run_reader_real_4668217.txt, one process per seed and condition; results logs/results_real_snips_*_reader_worlds_r75_full_seed{0,1,2}.json; MEASURED)
+
+Seeds 0-2, both conditions, six concurrent processes (times are not cost numbers); D 512, 10 epochs, path + chainL + bigram; the typer
+kinds of R71 kept whole in every world's lexicon; read through sop @ 28db081 (every process imported that commit; sop/ was not pulled
+while they ran); per-world thresholds at the 98th percentile of the world's explained residual on 200 of its own training utterances.
+Per-world model folders kept: logs/worlds/real_snips_<condition>_intent_<intent>_seed<s>/model_seed (untracked, for the demo).
+
+| set | dispatch (intent) accuracy [per seed] | span F1 (typer + reader) | typer only | head-frame exact | rejected by every world's residual | by status (second line) | chosen frame abstains |
+|---|---|---|---|---|---|---|---|
+| test (700) | 0.595 ± 0.005 [0.601 0.596 0.589] | 0.602 | 0.886 | 0.312 | 0.000 | 0.030 | 0.667 |
+| new slot values (207) | 0.626 | 0.621 | 0.858 | 0.309 | 0.000 | 0.027 | 0.659 |
+| unseen templates (402) | 0.550 | 0.558 | 0.876 | 0.249 | 0.000 | 0.049 | 0.721 |
+| ood_intents, in-domain test (600) | 0.647 ± 0.008 | 0.629 | 0.870 | 0.334 | **0.000 (false rejection)** | 0.041 | 0.641 |
+| ood_intents, held-out intents (100) | — | — | — | — | **0.000** | 0.000 | 0.783 |
+
+Held-out vs in-domain AUROC of the chosen world's explained residual: **0.775 ± 0.013** [0.781 0.757 0.787] (R72 as run: 0.555-0.578;
+one world, R71: 0.933); of the dispatch margin (second-best minus best residual): 0.713. Size: 7 readers 61.0 M phases (44.3 M on
+ood_intents) + typer 2.69 M; 50-71 ms per utterance for all worlds (concurrent).
+**Against R75's expectations written before the run: NOT met.** Residual AUROC > 0.9: no (0.775; it moved from 0.555, so item 1 did
+change it, but not to the expected level); dispatch intent near 0.977: no (0.595); held-out rejection far above 0.49: no (0.000);
+in-domain false rejection < 0.05: yes, trivially (0.000, nothing is rejected). Why nothing is rejected, from the run: the thresholds of
+four of seven worlds are exactly 1.0 (BookRestaurant, GetWeather, PlayMusic, SearchScreeningEvent; AddToPlaylist 0.75, RateBook 0.52,
+SearchCreativeWork 0.92), because more than 2% of a world's own training utterances leave a core question of that world unanswered
+(frame_incomplete -> residual 1.0), so the 98th percentile is 1.0 and no residual can exceed it. As R75 wrote, the paper states that on
+this data the per-intent dispatch by the explained residual does not reach the one-world configuration (intent 0.595 vs 0.977, residual
+AUROC 0.775 vs 0.933); the level-W vote is not refuted outright (the AUROC moved), but it does not hold at the expected level. R78's rows
+(the per-intent readout, --activate auto, the held-out refusal) are NOT started: R78 makes them conditional on R75's expectations.
