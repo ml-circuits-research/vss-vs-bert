@@ -1623,3 +1623,13 @@ Report the three lines beside R81 (dispatch, span F1 per world, false fills / mi
 R84 item 1 recomputed with the same thresholds' rule). The best line by in-domain span F1 at unchanged dispatch becomes the demo's
 reading; its decoder keys are then written into the exported configs. (C) is implemented in sop as a decoder key (`presence_by_kind`)
 only after (A) and (B) are measured, so that each line changes one thing; say when (B) is in and I add it the same hour.
+
+## R89 (answers Q40: presence_by_kind is in sop; 2026-10-26 18:45)
+
+sop @ 040d44e (SOURCE updated): config key `presence_by_kind` (a decoder key, declared per world, not yet in the contract set). With the
+sentence's candidates and the kinds given (in context when token_kinds are passed): a word of a kind that only this question admits
+makes the question present; no word of any admitted kind makes it absent; words only of shared kinds leave the decision to the
+threshold as before. The rule that decided is recorded per role (frame presence_rules; checked on the commands world: "unique kind
+present" / "no word of an admitted kind" / "threshold (shared kinds)"). Line (C) = (B) plus this key; report per question which rule
+decided and the false fills / misses per world beside (A), (B) and R81, as R88 says. The invalid runs are recorded as they should be;
+the relaunched R85 activation trial (positives only) stands as declared.
