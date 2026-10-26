@@ -1,0 +1,150 @@
+# 2026-10-26T09:07:20+01:00  commit=df8fc3c  cmd: python3 vss/run_reader_real.py --dataset snips --condition ood_intents --test --seeds 3 --epochs 10 --kinds typer --worlds per_intent --D 512  (guard: mem fraction 0.180, min available 16 GB, max 6 h; MemAvailable at start 90 GB; slot logs/.run.lock.4 of 5)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 18% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_real: main repository e531283; dataset snips / condition ood_intents; device cuda; D 512; batch 32; lr 0.02; sizes ['full'], epochs {'full': 10}; seeds 3; train 11184, dev calibration 300; eval dev_rep:in_domain 300, ood:dev_rep 50, test:in_domain 600, ood:test 100
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test
+kinds (typer, R71): fitted on 11184 training utterances (train accuracy 0.985); 68 kinds over 12162 words; 2424869 typer weights
+[R72] 6 worlds (one per intent): ['AddToPlaylist', 'BookRestaurant', 'PlayMusic', 'RateBook', 'SearchCreativeWork', 'SearchScreeningEvent']; D 512; routes path + chainL + bigram; decoder: sop @ bb6db1b (residual explained)
+[train] seed 0: 1842 training rows x 10 epoch(s) -> 18420 steps' sentences; D=512; kinds 39; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: add dean martin track to metal xplorer playlist
+[trace] tokens/kinds: add/w:add dean/S:artist martin/S:artist track/S:music_item to/w:to metal/S:playlist xplorer/S:playlist playlist/w:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "martin"], "music_item": ["word", "track"], "playlist": ["word", "xplorer"]}, "scope": null, "shape": "ok", "speakers": []}
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/tool/sop/train.py:445: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
+[trace] target |S_world| = 57.24 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 1.30 GB | torch alloc 0.26 GB reserved 0.29 GB | MemAvailable 84.2 GB
+# post-launch guard (slots 5): MemAvailable 90 s after the start 80 GB
+[train seed 0] step 500 sent 16000/18420 loss -0.863 (75s) | RSS 2.43 GB | torch alloc 0.38 GB reserved 1.51 GB | MemAvailable 80.4 GB
+[train seed 0] end: RSS 2.43 GB | torch alloc 0.38 GB reserved 0.43 GB | MemAvailable 81.5 GB (87s)
+[export] numpy reader vs torch states: max relative difference 6.23e-08 (float32 phases in the route book)
+[R72] seed 0 world AddToPlaylist: 1842 training utterances, 5 slot questions, 38 kinds, 2.38 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 0: 1873 training rows x 10 epoch(s) -> 18730 steps' sentences; D=512; kinds 48; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: find a reservation at the roseland theater at 10 pm
+[trace] tokens/kinds: find/w:find a/w:a reservation/O at/w:at the/w:the roseland/S:restaurant_name theater/O at/w:at 10/S:party_size_number pm/S:timeRange
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"restaurant_name": ["word", "theater"], "timeRange": ["word", "pm"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 45.55 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 2.94 GB | torch alloc 0.34 GB reserved 0.43 GB | MemAvailable 83.3 GB
+[train seed 0] step 500 sent 16000/18730 loss -0.790 (137s) | RSS 2.94 GB | torch alloc 0.42 GB reserved 2.94 GB | MemAvailable 79.2 GB
+[train seed 0] end: RSS 2.94 GB | torch alloc 0.42 GB reserved 0.47 GB | MemAvailable 81.7 GB (165s)
+[export] numpy reader vs torch states: max relative difference 6.84e-08 (float32 phases in the route book)
+[R72] seed 0 world BookRestaurant: 1873 training utterances, 14 slot questions, 47 kinds, 3.59 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 0: 1900 training rows x 10 epoch(s) -> 19000 steps' sentences; D=512; kinds 43; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: play a record from the seventies
+[trace] tokens/kinds: play/w:play a/w:a record/S:music_item from/w:from the/w:the seventies/S:year
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"music_item": ["word", "record"], "year": ["word", "seventies"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 46.19 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 3.78 GB | torch alloc 0.33 GB reserved 0.47 GB | MemAvailable 81.8 GB
+[train seed 0] step 500 sent 16000/19000 loss -0.794 (52s) | RSS 3.78 GB | torch alloc 0.40 GB reserved 1.25 GB | MemAvailable 80.6 GB
+[train seed 0] end: RSS 3.78 GB | torch alloc 0.40 GB reserved 0.45 GB | MemAvailable 81.4 GB (62s)
+[export] numpy reader vs torch states: max relative difference 1.02e-07 (float32 phases in the route book)
+[R72] seed 0 world PlayMusic: 1900 training utterances, 9 slot questions, 42 kinds, 2.88 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 0: 1856 training rows x 10 epoch(s) -> 18560 steps' sentences; D=512; kinds 41; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: put four rating on the raging quiet
+[trace] tokens/kinds: put/O four/S:rating_value rating/O on/w:on the/w:the raging/S:object_name quiet/S:object_name
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"object_name": ["word", "quiet"], "rating_value": ["word", "four"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 45.65 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 3.36 GB | torch alloc 0.33 GB reserved 0.45 GB | MemAvailable 87.2 GB
+[train seed 0] step 500 sent 16000/18560 loss -0.872 (35s) | RSS 3.36 GB | torch alloc 0.39 GB reserved 2.02 GB | MemAvailable 84.1 GB
+[train seed 0] end: RSS 3.36 GB | torch alloc 0.39 GB reserved 0.45 GB | MemAvailable 87.3 GB (40s)
+[export] numpy reader vs torch states: max relative difference 7.01e-08 (float32 phases in the route book)
+[R72] seed 0 world RateBook: 1856 training utterances, 7 slot questions, 40 kinds, 2.62 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 0: 1854 training rows x 10 epoch(s) -> 18540 steps' sentences; D=512; kinds 36; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: find a photograph called free the universe
+[trace] tokens/kinds: find/w:find a/w:a photograph/S:object_type called/O free/O the/w:the universe/S:object_name
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"object_name": ["word", "universe"], "object_type": ["word", "photograph"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 45.13 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 3.05 GB | torch alloc 0.32 GB reserved 0.45 GB | MemAvailable 90.9 GB
+[train seed 0] step 500 sent 16000/18540 loss -0.776 (40s) | RSS 3.05 GB | torch alloc 0.37 GB reserved 1.56 GB | MemAvailable 78.1 GB
+[train seed 0] end: RSS 3.05 GB | torch alloc 0.37 GB reserved 0.43 GB | MemAvailable 79.3 GB (51s)
+[export] numpy reader vs torch states: max relative difference 5.37e-08 (float32 phases in the route book)
+[R72] seed 0 world SearchCreativeWork: 1854 training utterances, 2 slot questions, 35 kinds, 2.03 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 0: 1859 training rows x 10 epoch(s) -> 18590 steps' sentences; D=512; kinds 41; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: find movie times for nine pm .
+[trace] tokens/kinds: find/w:find movie/S:object_type times/S:object_type for/w:for nine/O pm/S:timeRange ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"object_type": ["word", "times"], "timeRange": ["word", "pm"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 46.20 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 3.04 GB | torch alloc 0.33 GB reserved 0.43 GB | MemAvailable 75.3 GB
+[train seed 0] step 500 sent 16000/18590 loss -0.827 (78s) | RSS 3.01 GB | torch alloc 0.39 GB reserved 1.68 GB | MemAvailable 72.7 GB
+[train seed 0] end: RSS 3.01 GB | torch alloc 0.39 GB reserved 0.43 GB | MemAvailable 74.1 GB (91s)
+[export] numpy reader vs torch states: max relative difference 8.91e-08 (float32 phases in the route book)
+[R72] seed 0 world SearchScreeningEvent: 1859 training utterances, 7 slot questions, 40 kinds, 2.62 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+  seed 0 size full VSS, one world per intent + dispatcher (R72) | dev_rep:in_domain (n 300): FULL 0.323 intent 0.483 slot heads 0.501 | frame tau 0.109: coverage 0.20 confident-wrong 0.053 | intent abstain 0.840 | span F1 0.520
+  seed 0 size full VSS, one world per intent + dispatcher (R72) | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.163 | frame tau 0.109: coverage 0.04 confident-wrong 0.040 | intent abstain 0.980 | span F1 0.155
+  seed 0 size full VSS, one world per intent + dispatcher (R72) | test:in_domain (n 600): FULL 0.307 intent 0.467 slot heads 0.486 | frame tau 0.109: coverage 0.20 confident-wrong 0.060 | intent abstain 0.847 | span F1 0.502
+  seed 0 size full VSS, one world per intent + dispatcher (R72) | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.269 | frame tau 0.109: coverage 0.06 confident-wrong 0.060 | intent abstain 0.910 | span F1 0.203
+  seed 0: rejected by every world {'dev_rep:in_domain': 0.23, 'ood:dev_rep': 0.46, 'test:in_domain': 0.20333333333333334, 'ood:test': 0.49}; by the residual alone {'dev_rep:in_domain': 0.0, 'ood:dev_rep': 0.0, 'test:in_domain': 0.0, 'ood:test': 0.0}; cost 16.12 M phases (7 readers, D 512) + 2.42 M typer weights; 14.8 ms per utterance for all worlds
+[train] seed 1: 1842 training rows x 10 epoch(s) -> 18420 steps' sentences; D=512; kinds 39; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: place this tune onto my dinner for 2 playlist .
+[trace] tokens/kinds: place/O this/w:this tune/S:music_item onto/O my/S:playlist_owner dinner/S:playlist for/w:for 2/O playlist/w:playlist ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"music_item": ["word", "tune"], "playlist": ["word", "2"], "playlist_owner": ["word", "my"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 53.17 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 4.02 GB | torch alloc 0.32 GB reserved 0.43 GB | MemAvailable 74.1 GB
+[train seed 1] step 500 sent 16000/18420 loss -0.815 (59s) | RSS 4.02 GB | torch alloc 0.38 GB reserved 1.49 GB | MemAvailable 71.0 GB
+[train seed 1] end: RSS 4.02 GB | torch alloc 0.38 GB reserved 0.43 GB | MemAvailable 72.1 GB (70s)
+[export] numpy reader vs torch states: max relative difference 5.47e-08 (float32 phases in the route book)
+[R72] seed 1 world AddToPlaylist: 1842 training utterances, 5 slot questions, 38 kinds, 2.38 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 1: 1873 training rows x 10 epoch(s) -> 18730 steps' sentences; D=512; kinds 48; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: i would like a restaurant reservation for this year for 4 people .
+[trace] tokens/kinds: i/w:i would/O like/O a/w:a restaurant/S:restaurant_type reservation/O for/w:for this/w:this year/S:timeRange for/w:for 4/O people/O ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"party_size_number": ["word", "4"], "restaurant_type": ["word", "restaurant"], "timeRange": ["word", "year"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 55.11 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 4.06 GB | torch alloc 0.34 GB reserved 0.43 GB | MemAvailable 72.8 GB
+[train seed 1] step 500 sent 16000/18730 loss -0.793 (147s) | RSS 4.06 GB | torch alloc 0.42 GB reserved 2.94 GB | MemAvailable 72.7 GB
+[train seed 1] end: RSS 4.06 GB | torch alloc 0.42 GB reserved 0.49 GB | MemAvailable 72.8 GB (168s)
+[export] numpy reader vs torch states: max relative difference 8.91e-08 (float32 phases in the route book)
+[R72] seed 1 world BookRestaurant: 1873 training utterances, 14 slot questions, 47 kinds, 3.59 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 1: 1900 training rows x 10 epoch(s) -> 19000 steps' sentences; D=512; kinds 43; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: could you play the album b men gahå by nathaniel shilkret
+[trace] tokens/kinds: could/O you/O play/w:play the/w:the album/S:music_item b/S:artist men/O gahå/S:album by/w:by nathaniel/S:artist shilkret/S:artist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"album": ["word", "gah\u00e5\u008d"], "artist": ["word", "shilkret"], "music_item": ["word", "album"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 56.16 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 4.77 GB | torch alloc 0.33 GB reserved 0.49 GB | MemAvailable 74.0 GB
+[train seed 1] step 500 sent 16000/19000 loss -0.781 (33s) | RSS 4.77 GB | torch alloc 0.40 GB reserved 1.25 GB | MemAvailable 78.0 GB
+[train seed 1] end: RSS 4.77 GB | torch alloc 0.40 GB reserved 0.45 GB | MemAvailable 78.9 GB (38s)
+[export] numpy reader vs torch states: max relative difference 8.59e-08 (float32 phases in the route book)
+[R72] seed 1 world PlayMusic: 1900 training utterances, 9 slot questions, 42 kinds, 2.88 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 1: 1856 training rows x 10 epoch(s) -> 18560 steps' sentences; D=512; kinds 41; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: my rating for some doves and pythons is four
+[trace] tokens/kinds: my/O rating/O for/w:for some/O doves/S:object_name and/O pythons/S:object_name is/w:is four/S:rating_value
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"object_name": ["word", "pythons"], "rating_value": ["word", "four"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 46.51 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 4.33 GB | torch alloc 0.33 GB reserved 0.45 GB | MemAvailable 74.3 GB
+[train seed 1] step 500 sent 16000/18560 loss -0.891 (56s) | RSS 4.33 GB | torch alloc 0.39 GB reserved 2.02 GB | MemAvailable 70.0 GB
+[train seed 1] end: RSS 4.33 GB | torch alloc 0.39 GB reserved 0.45 GB | MemAvailable 71.6 GB (64s)
+[export] numpy reader vs torch states: max relative difference 9.71e-08 (float32 phases in the route book)
+[R72] seed 1 world RateBook: 1856 training utterances, 7 slot questions, 40 kinds, 2.62 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 1: 1854 training rows x 10 epoch(s) -> 18540 steps' sentences; D=512; kinds 36; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: i'm looking to find kiss me goodbye .
+[trace] tokens/kinds: i'm/O looking/O to/w:to find/w:find kiss/S:object_name me/w:me goodbye/S:object_name ./w:.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"object_name": ["word", "goodbye"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 31.63 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 3.97 GB | torch alloc 0.32 GB reserved 0.45 GB | MemAvailable 72.2 GB
+[train seed 1] step 500 sent 16000/18540 loss -0.789 (58s) | RSS 3.97 GB | torch alloc 0.37 GB reserved 1.56 GB | MemAvailable 72.3 GB
+[train seed 1] end: RSS 3.97 GB | torch alloc 0.37 GB reserved 0.43 GB | MemAvailable 73.4 GB (66s)
+[export] numpy reader vs torch states: max relative difference 7.78e-08 (float32 phases in the route book)
+[R72] seed 1 world SearchCreativeWork: 1854 training utterances, 2 slot questions, 35 kinds, 2.03 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+[train] seed 1: 1859 training rows x 10 epoch(s) -> 18590 steps' sentences; D=512; kinds 41; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: can i get the movie schedules for speakeasy theaters ?
+[trace] tokens/kinds: can/w:can i/w:i get/O the/w:the movie/S:object_type schedules/S:object_type for/w:for speakeasy/S:location_name theaters/S:location_name ?/w:?
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"location_name": ["word", "theaters"], "object_type": ["word", "schedules"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 46.25 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 3.94 GB | torch alloc 0.33 GB reserved 0.43 GB | MemAvailable 71.6 GB
+[train seed 1] step 500 sent 16000/18590 loss -0.829 (72s) | RSS 3.94 GB | torch alloc 0.39 GB reserved 1.68 GB | MemAvailable 71.5 GB
+[train seed 1] end: RSS 3.94 GB | torch alloc 0.39 GB reserved 0.43 GB | MemAvailable 72.4 GB (85s)
+[export] numpy reader vs torch states: max relative difference 9.69e-08 (float32 phases in the route book)
+[R72] seed 1 world SearchScreeningEvent: 1859 training utterances, 7 slot questions, 40 kinds, 2.62 M phases; chart of sop/ vs the pinned tool: relative difference 0.0e+00
+  seed 1 size full VSS, one world per intent + dispatcher (R72) | dev_rep:in_domain (n 300): FULL 0.327 intent 0.503 slot heads 0.521 | frame tau 0.101: coverage 0.22 confident-wrong 0.050 | intent abstain 0.773 | span F1 0.525
+  seed 1 size full VSS, one world per intent + dispatcher (R72) | ood:dev_rep (n 50): FULL 0.000 intent 0.000 slot heads 0.220 | frame tau 0.101: coverage 0.02 confident-wrong 0.020 | intent abstain 0.920 | span F1 0.173
+  seed 1 size full VSS, one world per intent + dispatcher (R72) | test:in_domain (n 600): FULL 0.287 intent 0.453 slot heads 0.474 | frame tau 0.101: coverage 0.23 confident-wrong 0.075 | intent abstain 0.797 | span F1 0.481
+  seed 1 size full VSS, one world per intent + dispatcher (R72) | ood:test (n 100): FULL 0.000 intent 0.000 slot heads 0.236 | frame tau 0.101: coverage 0.05 confident-wrong 0.050 | intent abstain 0.930 | span F1 0.169
+  seed 1: rejected by every world {'dev_rep:in_domain': 0.25, 'ood:dev_rep': 0.48, 'test:in_domain': 0.24833333333333332, 'ood:test': 0.52}; by the residual alone {'dev_rep:in_domain': 0.0, 'ood:dev_rep': 0.0, 'test:in_domain': 0.0, 'ood:test': 0.0}; cost 16.12 M phases (7 readers, D 512) + 2.42 M typer weights; 14.5 ms per utterance for all worlds
+[train] seed 2: 1842 training rows x 10 epoch(s) -> 18420 steps' sentences; D=512; kinds 39; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: put jtr on the top classical playlist
+[trace] tokens/kinds: put/O jtr/S:entity_name on/w:on the/w:the top/O classical/S:playlist playlist/w:playlist
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"entity_name": ["word", "jtr"], "playlist": ["word", "classical"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 45.39 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 4.05 GB | torch alloc 0.32 GB reserved 0.43 GB | MemAvailable 88.4 GB
+[train seed 2] step 500 sent 16000/18420 loss -0.828 (50s) | RSS 4.05 GB | torch alloc 0.38 GB reserved 1.49 GB | MemAvailable 88.4 GB
+[train seed 2] end: RSS 4.05 GB | torch alloc 0.38 GB reserved 0.43 GB | MemAvailable 89.6 GB (56s)
+[export] numpy reader vs torch states: max relative difference 5.32e-08 (float32 phases in the route book)

@@ -1,0 +1,113 @@
+# sop profile (R74) on the 7 per-intent SNIPS worlds (seed 0 folders), sop @ 28db081, commit 751a117; run directly with python3 -m sop (no training)
+## real_snips_base_intent_AddToPlaylist_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 909; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 37 (4.1%); of them order-dependent (no cue): 37 (4.1%)
+- rigid absolute order (min over core roles): 19%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: FIRES: 37 training rows (4.1%) fill two roles with the same kind; in 37 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 19% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_BookRestaurant_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1064; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 54 (5.1%); of them order-dependent (no cue): 54 (5.1%)
+- rigid absolute order (min over core roles): 18%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: FIRES: 54 training rows (5.1%) fill two roles with the same kind; in 54 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 18% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_GetWeather_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1004; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 3 (0.3%); of them order-dependent (no cue): 3 (0.3%)
+- rigid absolute order (min over core roles): 15%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: off: 3 training rows (0.3%) fill two roles with the same kind; in 3 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 15% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_PlayMusic_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1121; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 9 (0.8%); of them order-dependent (no cue): 9 (0.8%)
+- rigid absolute order (min over core roles): 20%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: off: 9 training rows (0.8%) fill two roles with the same kind; in 9 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 20% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_RateBook_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1158; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 4 (0.3%); of them order-dependent (no cue): 4 (0.3%)
+- rigid absolute order (min over core roles): 22%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: off: 4 training rows (0.3%) fill two roles with the same kind; in 4 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 22% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_SearchCreativeWork_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1456; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 56 (3.8%); of them order-dependent (no cue): 56 (3.8%)
+- rigid absolute order (min over core roles): 17%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: FIRES: 56 training rows (3.8%) fill two roles with the same kind; in 56 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 17% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained
+## real_snips_base_intent_SearchScreeningEvent_seed0
+# World profile (the nature of the world, from its training rows)
+
+- training rows: 1250; kinds source: lexicon; tokens without a kind: 0.0%
+- rows with same-kind competition (two roles, one kind): 4 (0.3%); of them order-dependent (no cue): 4 (0.3%)
+- rigid absolute order (min over core roles): 26%
+- rows with levels: 0 (0.0%); level openers declared: False; cues declared: []
+
+## Need signals (candidate routes)
+
+- `vorder`: off: 4 training rows (0.3%) fill two roles with the same kind; in 4 of them neither word is cued, so only the order relative to the verb separates them
+- `pos`: off: the most frequent absolute position of a core role's head covers only 26% of the rows: the order is not rigid
+
+## Contract rules (always on with decoder `contract`)
+
+- candidates=sentence, undecided_adjacent=True, residual=explained

@@ -1,0 +1,99 @@
+# 2026-10-26T09:04:14+01:00  commit=df8fc3c  cmd: python3 vss/run_reader_real.py --dataset snips --sizes full --seeds 3 --test --epochs 10 --kinds typer  (guard: mem fraction 0.180, min available 16 GB, max 6 h; MemAvailable at start 115 GB; slot logs/.run.lock of 5)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 18% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+run_reader_real: main repository e531283; dataset snips / condition base; device cuda; D 1024; batch 32; lr 0.02; sizes ['full'], epochs {'full': 10}; seeds 3; train 13084, dev calibration 350; eval dev_rep 350, dev_rep:new_slot_values 96, dev_rep:unseen_template 174, test 700, test:new_slot_values 207, test:unseen_template 402
+regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test
+kinds (typer, R71): fitted on 13084 training utterances (train accuracy 0.985); 74 kinds over 12162 words; 2687017 typer weights
+chance (size full): intent 1/7 = 0.143, majority intent 0.145; a slot head: 1 / (the utterance's tokens of the role's kinds)
+[world] /home/salboaie/work/ml-circuits-research/vss-vs-bert/logs/worlds/real_snips_base_full: legend sha256:fd4d0006eca9..., roles 40 (intent + 39 slot types), intents 7, kinds 74; rows train 13084, calibration_dev 350
+[train] seed 0: 13084 training rows x 10 epoch(s) -> 130840 steps' sentences; D=1024; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: when was the soundtrack for those were the days – the best of leningrad cowboys published ?
+[trace] tokens/kinds: when/O was/O the/w:the soundtrack/S:object_type for/w:for those/S:object_name were/S:object_name the/w:the days/S:timeRange –/S:object_name the/w:the best/O of/w:of leningrad/S:object_name cowboys/S:object_name published/O ?/w:?
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "SearchCreativeWork"], "object_name": ["word", "cowboys"], "object_type": ["word", "soundtrack"]}, "scope": null, "shape": "ok", "speakers": []}
+/home/salboaie/work/ml-circuits-research/vss-vs-bert/third_party/vsa-semantic-space/tool/sop/train.py:445: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
+[trace] target |S_world| = 79.23 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 5.09 GB | torch alloc 2.42 GB reserved 2.50 GB | MemAvailable 108.1 GB
+[train seed 0] step 500 sent 16000/130840 loss -0.738 (39s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 102.3 GB
+# post-launch guard (slots 5): MemAvailable 90 s after the start 98 GB
+[train seed 0] step 1000 sent 32000/130840 loss -0.837 (108s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 98.8 GB
+[train seed 0] step 1500 sent 48000/130840 loss -0.839 (173s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 86.3 GB
+[train seed 0] step 2000 sent 64000/130840 loss -0.809 (338s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 80.9 GB
+[train seed 0] step 2500 sent 80000/130840 loss -0.831 (512s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 79.2 GB
+[train seed 0] step 3000 sent 96000/130840 loss -0.843 (630s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 80.8 GB
+[train seed 0] step 3500 sent 112000/130840 loss -0.835 (744s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 80.6 GB
+[train seed 0] step 4000 sent 128000/130840 loss -0.846 (844s) | RSS 5.31 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 80.9 GB
+[train seed 0] end: RSS 5.31 GB | torch alloc 2.87 GB reserved 2.93 GB | MemAvailable 86.1 GB (861s)
+[export] numpy reader vs torch states: max relative difference 9.71e-08 (float32 phases in the route book)
+  seed 0 size full VSS reader (sop tool) | dev_rep (n 350): FULL 0.531 intent 0.969 slot heads 0.877 | frame tau 0.078: coverage 0.47 confident-wrong 0.086 | intent abstain 0.000 | span F1 0.817
+  seed 0 size full VSS reader (sop tool) | dev_rep:new_slot_values (n 96): FULL 0.479 intent 0.958 slot heads 0.865 new-value heads 0.780 (n 100) | frame tau 0.078: coverage 0.45 confident-wrong 0.135 | intent abstain 0.000 | span F1 0.785
+  seed 0 size full VSS reader (sop tool) | dev_rep:unseen_template (n 174): FULL 0.437 intent 0.966 slot heads 0.866 | frame tau 0.078: coverage 0.43 confident-wrong 0.098 | intent abstain 0.000 | span F1 0.795
+  seed 0 size full VSS reader (sop tool) | test (n 700): FULL 0.544 intent 0.979 slot heads 0.878 | frame tau 0.078: coverage 0.41 confident-wrong 0.054 | intent abstain 0.000 | span F1 0.810
+  seed 0 size full VSS reader (sop tool) | test:new_slot_values (n 207): FULL 0.469 intent 0.981 slot heads 0.852 new-value heads 0.767 (n 219) | frame tau 0.078: coverage 0.37 confident-wrong 0.097 | intent abstain 0.000 | span F1 0.768
+  seed 0 size full VSS reader (sop tool) | test:unseen_template (n 402): FULL 0.445 intent 0.965 slot heads 0.860 | frame tau 0.078: coverage 0.36 confident-wrong 0.065 | intent abstain 0.000 | span F1 0.780
+  seed 0 size full: cost 17.43M phases, routebook.npz 64.5 MB (8.7 MB at 4 bits), 7.03 ms/sentence (numpy, CPU, read + scoring rule)
+[train] seed 1: 13084 training rows x 10 epoch(s) -> 130840 steps' sentences; D=1024; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: rate the current series 1 points
+[trace] tokens/kinds: rate/w:rate the/w:the current/S:object_select series/S:object_part_of_series_type 1/S:rating_value points/S:rating_unit
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"intent": ["word", "RateBook"], "object_part_of_series_type": ["word", "series"], "object_select": ["word", "current"], "rating_unit": ["word", "points"], "rating_value": ["word", "1"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 99.67 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 9.48 GB | torch alloc 2.48 GB reserved 2.93 GB | MemAvailable 82.0 GB
+[train seed 1] step 500 sent 16000/130840 loss -0.735 (105s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 75.1 GB
+[train seed 1] step 1000 sent 32000/130840 loss -0.785 (206s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 75.5 GB
+[train seed 1] step 1500 sent 48000/130840 loss -0.844 (354s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 74.7 GB
+[train seed 1] step 2000 sent 64000/130840 loss -0.825 (457s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 72.8 GB
+[train seed 1] step 2500 sent 80000/130840 loss -0.876 (596s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 72.6 GB
+[train seed 1] step 3000 sent 96000/130840 loss -0.851 (755s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 67.5 GB
+[train seed 1] step 3500 sent 112000/130840 loss -0.832 (841s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 79.2 GB
+[train seed 1] step 4000 sent 128000/130840 loss -0.854 (900s) | RSS 9.48 GB | torch alloc 2.87 GB reserved 7.95 GB | MemAvailable 74.7 GB
+[train seed 1] end: RSS 9.48 GB | torch alloc 2.87 GB reserved 2.93 GB | MemAvailable 79.0 GB (918s)
+[export] numpy reader vs torch states: max relative difference 5.42e-08 (float32 phases in the route book)
+  seed 1 size full VSS reader (sop tool) | dev_rep (n 350): FULL 0.497 intent 0.969 slot heads 0.859 | frame tau 0.112: coverage 0.34 confident-wrong 0.057 | intent abstain 0.000 | span F1 0.815
+  seed 1 size full VSS reader (sop tool) | dev_rep:new_slot_values (n 96): FULL 0.417 intent 0.958 slot heads 0.857 new-value heads 0.780 (n 100) | frame tau 0.112: coverage 0.19 confident-wrong 0.042 | intent abstain 0.000 | span F1 0.786
+  seed 1 size full VSS reader (sop tool) | dev_rep:unseen_template (n 174): FULL 0.420 intent 0.960 slot heads 0.834 | frame tau 0.112: coverage 0.29 confident-wrong 0.069 | intent abstain 0.000 | span F1 0.807
+  seed 1 size full VSS reader (sop tool) | test (n 700): FULL 0.499 intent 0.976 slot heads 0.872 | frame tau 0.112: coverage 0.28 confident-wrong 0.030 | intent abstain 0.000 | span F1 0.799
+  seed 1 size full VSS reader (sop tool) | test:new_slot_values (n 207): FULL 0.411 intent 0.976 slot heads 0.848 new-value heads 0.749 (n 219) | frame tau 0.112: coverage 0.16 confident-wrong 0.029 | intent abstain 0.000 | span F1 0.747
+  seed 1 size full VSS reader (sop tool) | test:unseen_template (n 402): FULL 0.430 intent 0.963 slot heads 0.858 | frame tau 0.112: coverage 0.24 confident-wrong 0.035 | intent abstain 0.000 | span F1 0.779
+  seed 1 size full: cost 17.43M phases, routebook.npz 64.5 MB (8.7 MB at 4 bits), 12.48 ms/sentence (numpy, CPU, read + scoring rule)
+[train] seed 2: 13084 training rows x 10 epoch(s) -> 130840 steps' sentences; D=1024; kinds 75; vocab 12163; predicate lemma not found in 0 targets
+[trace] text: on deezer play fourties tunes by jona bechtolt and a ballad
+[trace] tokens/kinds: on/w:on deezer/S:service play/w:play fourties/S:year tunes/O by/w:by jona/S:artist bechtolt/S:artist and/S:party_size_description a/w:a ballad/S:music_item
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"artist": ["word", "bechtolt"], "intent": ["word", "PlayMusic"], "music_item": ["word", "ballad"], "service": ["word", "deezer"], "year": ["word", "fourties"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 102.39 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 8.65 GB | torch alloc 2.48 GB reserved 2.93 GB | MemAvailable 74.8 GB
+[train seed 2] step 500 sent 16000/130840 loss -0.743 (119s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 71.5 GB
+[train seed 2] step 1000 sent 32000/130840 loss -0.809 (247s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 73.2 GB
+[train seed 2] step 1500 sent 48000/130840 loss -0.809 (377s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 71.7 GB
+[train seed 2] step 2000 sent 64000/130840 loss -0.790 (500s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 78.5 GB
+[train seed 2] step 2500 sent 80000/130840 loss -0.813 (559s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 81.1 GB
+[train seed 2] step 3000 sent 96000/130840 loss -0.866 (611s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 89.2 GB
+[train seed 2] step 3500 sent 112000/130840 loss -0.848 (693s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 89.4 GB
+[train seed 2] step 4000 sent 128000/130840 loss -0.847 (745s) | RSS 8.65 GB | torch alloc 2.87 GB reserved 7.99 GB | MemAvailable 94.3 GB
+[train seed 2] end: RSS 8.65 GB | torch alloc 2.87 GB reserved 2.95 GB | MemAvailable 99.5 GB (752s)
+[export] numpy reader vs torch states: max relative difference 6.90e-08 (float32 phases in the route book)
+  seed 2 size full VSS reader (sop tool) | dev_rep (n 350): FULL 0.480 intent 0.971 slot heads 0.869 | frame tau 0.084: coverage 0.41 confident-wrong 0.069 | intent abstain 0.000 | span F1 0.795
+  seed 2 size full VSS reader (sop tool) | dev_rep:new_slot_values (n 96): FULL 0.375 intent 0.958 slot heads 0.836 new-value heads 0.770 (n 100) | frame tau 0.084: coverage 0.33 confident-wrong 0.073 | intent abstain 0.000 | span F1 0.753
+  seed 2 size full VSS reader (sop tool) | dev_rep:unseen_template (n 174): FULL 0.362 intent 0.966 slot heads 0.846 | frame tau 0.084: coverage 0.34 confident-wrong 0.069 | intent abstain 0.000 | span F1 0.771
+  seed 2 size full VSS reader (sop tool) | test (n 700): FULL 0.473 intent 0.976 slot heads 0.874 | frame tau 0.084: coverage 0.34 confident-wrong 0.044 | intent abstain 0.000 | span F1 0.785
+  seed 2 size full VSS reader (sop tool) | test:new_slot_values (n 207): FULL 0.425 intent 0.976 slot heads 0.859 new-value heads 0.763 (n 219) | frame tau 0.084: coverage 0.26 confident-wrong 0.058 | intent abstain 0.000 | span F1 0.755
+  seed 2 size full VSS reader (sop tool) | test:unseen_template (n 402): FULL 0.391 intent 0.963 slot heads 0.858 | frame tau 0.084: coverage 0.30 confident-wrong 0.060 | intent abstain 0.000 | span F1 0.760
+  seed 2 size full: cost 17.43M phases, routebook.npz 64.5 MB (8.7 MB at 4 bits), 5.17 ms/sentence (numpy, CPU, read + scoring rule)
+
+== VSS reader (sop tool): snips / base / size full: mean ± std over 3 seeds [per seed] ==
+  dev_rep (n 350): FULL 0.503±0.021 [0.531 0.497 0.480] | intent 0.970±0.001 [0.969 0.969 0.971] | slot heads 0.868±0.008 [0.877 0.859 0.869]
+      frame coverage 0.410±0.053 [0.471 0.343 0.414] confident-wrong 0.070±0.012 [0.086 0.057 0.069] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.985±0.001 [0.985 0.985 0.983] | span F1 0.809±0.010 [0.817 0.815 0.795]
+  dev_rep:new_slot_values (n 96): FULL 0.424±0.043 [0.479 0.417 0.375] | intent 0.958±0.000 [0.958 0.958 0.958] | slot heads 0.852±0.012 [0.865 0.857 0.836] | new-value heads 0.777±0.005 [0.780 0.780 0.770]
+      frame coverage 0.323±0.107 [0.448 0.188 0.333] confident-wrong 0.083±0.039 [0.135 0.042 0.073] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.982±0.001 [0.983 0.980 0.982] | span F1 0.774±0.015 [0.785 0.786 0.753]
+  dev_rep:unseen_template (n 174): FULL 0.406±0.032 [0.437 0.420 0.362] | intent 0.964±0.003 [0.966 0.960 0.966] | slot heads 0.849±0.013 [0.866 0.834 0.846]
+      frame coverage 0.356±0.057 [0.431 0.293 0.345] confident-wrong 0.079±0.014 [0.098 0.069 0.069] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.981±0.003 [0.981 0.984 0.977] | span F1 0.791±0.015 [0.795 0.807 0.771]
+  test (n 700): FULL 0.505±0.030 [0.544 0.499 0.473] | intent 0.977±0.001 [0.979 0.976 0.976] | slot heads 0.875±0.003 [0.878 0.872 0.874]
+      frame coverage 0.342±0.054 [0.410 0.279 0.337] confident-wrong 0.043±0.010 [0.054 0.030 0.044] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.982±0.001 [0.984 0.982 0.981] | span F1 0.798±0.010 [0.810 0.799 0.785]
+  test:new_slot_values (n 207): FULL 0.435±0.025 [0.469 0.411 0.425] | intent 0.977±0.002 [0.981 0.976 0.976] | slot heads 0.853±0.004 [0.852 0.848 0.859] | new-value heads 0.760±0.008 [0.767 0.749 0.763]
+      frame coverage 0.264±0.083 [0.367 0.164 0.261] confident-wrong 0.061±0.028 [0.097 0.029 0.058] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.979±0.002 [0.981 0.976 0.979] | span F1 0.757±0.009 [0.768 0.747 0.755]
+  test:unseen_template (n 402): FULL 0.422±0.023 [0.445 0.430 0.391] | intent 0.964±0.001 [0.965 0.963 0.963] | slot heads 0.858±0.001 [0.860 0.858 0.858]
+      frame coverage 0.297±0.048 [0.356 0.239 0.296] confident-wrong 0.053±0.013 [0.065 0.035 0.060] | intent abstain 0.000±0.000 [0.000 0.000 0.000] | absent read absent 0.978±0.001 [0.979 0.979 0.977] | span F1 0.773±0.009 [0.780 0.779 0.760]
+  written interpretation: INSTRUCTIONS_REAL_2026-10-24.md table R7 (the axes and what each outcome will be said to mean)
+reference: none in the main repository for these data (a new round); the written interpretation is INSTRUCTIONS_REAL_2026-10-24.md table R7
+
+checklist: [x] world addresses or the same frozen gold [x] same frozen splits for every model [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] thresholds on calibration rows only (25) [x] regime named (24) [x] mean over seeds with the per-seed list (27) [x] memory curve in the log (21) [x] the same condition rows and scorer as the BERT rows [x] kinds from training text only, no gold label [x] test only with --test
