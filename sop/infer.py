@@ -365,26 +365,36 @@ class Reader:
     def head_of(fl): return fl[1] if fl and fl[0] in ("entity", "word", "negword") else None
 
     def one_to_one(self, Sn, K, core, f, filt, presence):
-        """the one-to-one rule of the sentence-candidates decoder (vss-vs-bert R10 / R46): a word fills at most one role. When two roles read
-        the same head, the role with the larger margin keeps it and the other is read again without that word; a role left with no
-        candidate becomes 'not given'. At most three rounds (three core roles)."""
-        for _ in range(3):
+        """the one-to-one rule of the sentence-candidates decoder (vss-vs-bert R10 / R46 / R64): a word fills at most as many questions as it
+        has occurrences in the sentence, over EVERY question of the frame, the speakers of its levels included (a speaker is not also the
+        giver unless the sentence names the same word twice). When more questions read the same head than it has occurrences, the
+        questions with the larger margins keep it and the others are read again without that word; a question left with no candidate is
+        'not given' (a speaker left without one makes the frame incomplete). At most four rounds."""
+        toks = list(self._sent_tokens); occ = lambda h: max(1, sum(1 for t in toks if t == h or t.lower() == str(h).lower()))
+        rep = np.conj(self.st.op("says.scope")); spk = np.conj(self.st.op("says.speaker"))
+        for _ in range(4):
             heads = {}
             for r, fl in f["roles"].items():
                 h = self.head_of(fl)
-                if h is not None: heads.setdefault(h, []).append(r)
-            dup = {h: rs for h, rs in heads.items() if len(rs) > 1}
+                if h is not None: heads.setdefault(h, []).append(("role", r, f["margins"].get(r, 0.0)))
+            for k, sp in enumerate(f["speakers"]):
+                if sp is not None: heads.setdefault(sp, []).append(("speaker", k, f["margins"].get(f"speaker.{k}", 0.0)))
+            dup = {h: sl for h, sl in heads.items() if len(sl) > occ(h)}
             if not dup: return
-            for h, rs in dup.items():
-                keep = max(rs, key=lambda r: f["margins"].get(r, 0.0))
-                for r in rs:
-                    if r == keep: continue
-                    sub = {w for w in filt if w != h and w.lower() != h.lower()}
-                    o = self.read_role(Sn, K, r, core, sub, presence)
-                    if o.get("present") and o.get("filler") is not None and self.head_of(o["filler"]) is not None:
-                        f["roles"][r] = o["filler"]; f["margins"].update(o["margins"]); f.setdefault("one_to_one", {})[r] = "re-read"
+            for h, sl in dup.items():
+                sl = sorted(sl, key=lambda x: -x[2])
+                sub = {w for w in filt if w != h and w.lower() != str(h).lower()}
+                for kind, r, _m in sl[occ(h):]:
+                    if kind == "role":
+                        o = self.read_role(Sn, K, r, core, sub, presence)
+                        if o.get("present") and o.get("filler") is not None and self.head_of(o["filler"]) is not None:
+                            f["roles"][r] = o["filler"]; f["margins"].update(o["margins"]); f.setdefault("one_to_one", {})[r] = "re-read"
+                        else:
+                            f["roles"].pop(r, None); f["margins"].pop(r, None); f.setdefault("one_to_one", {})[r] = "not given"
                     else:
-                        f["roles"].pop(r, None); f["margins"].pop(r, None); f.setdefault("one_to_one", {})[r] = "not given"
+                        w, mg, _ = self.best(Sn * rep ** r * spk, self.cands(self.schema["speaker_kinds"], sub))
+                        f["speakers"][r] = w; f["margins"][f"speaker.{r}"] = mg if w is not None else 0.0
+                        f.setdefault("one_to_one", {})[f"speaker.{r}"] = "re-read" if w is not None else "not given"
 
     def read_scope(self, Sn, K, core, f):
         """the quantifier world v2 (C2c, RESULTS 9c-sexies): category-local terms R_wide (x) R_role (x) f_head (wide-scope marker) and

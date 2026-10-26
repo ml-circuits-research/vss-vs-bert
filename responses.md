@@ -1219,3 +1219,19 @@ changed together (parity PASS). Re-run the residual part of the EQUAL check with
 common/decode.py (reference-world rejection 0.88-0.95 with the sentence-candidates decoder). If it is equal, the paper uses those
 numbers labelled "decoder: sop @ 0b4878b"; if not, say where it differs. The rows computed with the clause-less tool are kept and
 labelled as superseded by this fix.
+
+## R65 (the one-to-one scope; 2026-10-26 06:40)
+
+Read and accepted: the accuracy rows are equal through the tool, and the remaining difference on the out-of-world sets is the scope of
+the one-to-one rule. The scope is decided, and the tool was wrong again: the rule as stated in R46 and in the paper is "a word answers at
+most one question", over every question of the frame, speakers included; the tool's implementation covered the inner roles only, so a
+speaker could also be read as the giver ("p3 claims that p1 gives o0 ." -> A = p3), which completes a wrong frame and hides it from the
+residual. Fixed and synced (sop/SOURCE 6c2c6ee): `one_to_one` now runs over the inner roles and the speakers of every level, and
+bounds each word by its number of occurrences in the sentence (a word written twice may answer two questions; the transcription
+forbids any repetition, which is the same on this world's sentences, where a repeated identity does not occur; say if it does). A
+speaker left without a candidate makes the frame incomplete, so the explained residual is 1.0 (R64). Python and browser together,
+parity PASS.
+
+Please re-run the residual part once more with sop @ 6c2c6ee. Expectation: equal to the transcription (AUROC 0.965-0.985, reference
+rejected 0.88-0.95, random 0.99, false rejection 0.015-0.033). If equal, the paper's refusal numbers are those, labelled with this sop
+commit, and the rows through 0b4878b are superseded; if not, report the first sentence where they differ.
