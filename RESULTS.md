@@ -1660,7 +1660,7 @@ seeds (per-seed lists in the sections). Claim set = seeds 5-9.
 | reader 1a (0-4) | 3.3 M | 0.864 / 0.868 | 0.982 (0.982) | 1.000 | 0.003 | compiled residual 0.876; 1.000 / 0.989 / 1.000; 0.435 |
 | reader 1a (5-9) | 3.3 M | 0.831 / 0.835 | 0.992 (0.992) | 1.000 | 0.001 | 0.883; 1.000 / 1.000 / 1.000; 0.440 |
 | reader 1a + R46 decoder (5-9) | 3.3 M | 0.867 / 0.973 | 0.998 | 1.000 | 0.000 | explained residual 0.979; 0.988 / 0.930 / 1.000; 0.026 |
-| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained (transcription) 0.980; 0.988 / 0.932 / 1.000; **0.021**; through sop: reference rejected 0.01-0.02 (see 'Decoder provenance') |
+| **reader + verb-order route b + R46 (R58; 5-9)** | 3.47 M used (11.7 M allocated) | **1.000 / 1.000** | **0.999** | 1.000 | 0.000 | explained, through sop @ 0b4878b (the reference): 0.863-0.888; ref. rejected 0.56-0.61, random 0.89-0.95; FR 0.015-0.025 (transcription: 0.980; 0.988 / 0.932 / 1.000; 0.021) |
 | reader + route a (R56; 0-4, 5-9) | 11.7 M allocated | 0.656 / 0.912 (5-9: 0.664 / 0.912) | 0.996 / 0.997 | 1.000 | — | rejected by its own rule |
 | BERT-tiny MRC pretrained (R28, R36; 0-4) | 4.4 M | 0.884 / 0.968 | 0.000 (0.972) | 0.000 | 0.171 | Mahalanobis 0.822, MSP 0.915; NULL threshold 0.992 / 0.943 / 0.954; FR 0.280 |
 | BERT-tiny pretrained (5-9) | 4.4 M | 0.834 / 0.986 | 0.000 (0.943) | 0.000 | 0.176 | Mahalanobis 0.837, MSP 0.898 |
@@ -1713,18 +1713,20 @@ after reading their per-item dumps and are claimed on seeds 5-9 only. The verb-o
 - **Refusal at a calibration threshold is met by no model**: at 2% false rejection on the training distribution the
   compiled residual and every MRC score reject the in-world generalisation rows wholesale (false rejection 0.28-0.51); the best row, the
   reader with route b and the R46 decoder, rejects 0.988 / 0.932 / 1.000 of the out-of-world sources at 2.1% false rejection on the
-  claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set). Through the tool (sop @ 4a92afd, the
-  reference decoder) the explained residual does not reject the reference world at all (0.01-0.04): the transcription's rejection of it
-  comes from its undecoded-role clause (R42's text), which the tool does not have (questions.md Q30); the claim of an out-of-world
-  rejection by the explained residual therefore holds for random and nonce sentences only.
+  claim set (the demo criterion is <= 2%; met on the design set at 1.8%, not on the claim set). Through the tool (sop @ 0b4878b, the
+  reference decoder, after R64's fix) the explained residual rejects the reference world at 0.56-0.61 and random sentences at
+  0.89-0.95 (AUROC 0.86-0.89): the transcription's higher rejection comes from its one-to-one over all roles of the depth (a speaker
+  may not also be A or C), which the tool's one-to-one (inner roles only) does not apply; the paper uses the tool's numbers.
 - The comparisons (i) and (ii) are decided by a question never trained for the MRC models (above); the out-of-world comparison is the
   one with content, and BERT-mini pretrained ties the reader there.
 - The reader's improvements (R46, R54, R58) were designed after reading the design-set dumps; they are held out only over identities,
   draws and transitions, not over templates (R39).
 - BERT-mini kinds given has 3 seeds (R51); the 'all six questions' rows, the trained coverage head of R26, BERT-mini growth rows, the
   sensitivity grid and every row listed under R48 / R51 are not run.
-- Decoder provenance: the per-role and one-to-one accuracy rows of every reader are EQUAL through sop @ 4a92afd and carry that label;
-  the explained-residual rows differ and keep the transcription's label (section 'Decoder provenance').
+- Decoder provenance: the per-role and one-to-one accuracy rows of every reader are EQUAL through sop (4a92afd and 0b4878b) and carry
+  that label; the explained-residual rows differ on the out-of-world sets (scope of the one-to-one) and the paper uses the tool's
+  numbers (section 'Decoder provenance'). Legend growth at k = 5 / 10 / 20: 20 examples bring the new form to 0.98, 50 to 1.000; a
+  retraining with a few examples can drop another new-formulation template by up to 0.13 on one seed.
 
 **Additions requested by R60 / R61 / R62, declared 2026-10-25 22:55 (correction of fact: the first of them, k = 5 / 10 / 20 on seeds 0-4, had been launched about a minute before this text was committed; no output of it had been read):** (1) the reader's growth rows with k = 5 / 10 / 20
 template-4 sentences (vss/reader_growth.py --ks 5,10,20, both seed ranges; the two runs and the other CPU jobs below run concurrently, so
@@ -1776,3 +1778,40 @@ NestedRoleWorld draw of R_A, R_B, R_C, R_X, R_rep, R59) and read by sop.infer.Re
   the explained residual and are flagged instead as frames with a role 'not given'. These residual rows keep the label "decoder:
   common/decode.py (transcription; differs from sop @ 4a92afd)" and the paper uses the tool's numbers. Whether the tool's
   residual_explained should carry R42's clause is the author's question (sop/), recorded in questions.md.
+
+## R60 / R61: the reader's growth rows at k = 5 / 10 / 20 (vss/reader_growth.py --ks 5,10,20; logs/2026-10-25_2259_reader_growth_dc9c6b6.txt (seeds 0-4), _2300_reader_growth_018f3a9.txt (seeds 5-9); MEASURED)
+
+Template-4 cell of the new-formulation rows after a full retraining with k template-4 sentences added (1a, the per-role rule). These two
+runs ran concurrently with each other and with CPU checks: their training times (237-323 s; the logs print "(alone)" because the script's
+label is fixed) are NOT alone wall-clock; the alone time of a full retraining is the 135-137 s measured above.
+
+| k | cell slot, seeds 0-4 [per seed] | exact | worst drop on an old row [per seed] | cell slot, seeds 5-9 (claim) [per seed] | exact | worst drop [per seed] |
+|---|---|---|---|---|---|---|
+| 0 (before) | 0.632 | 0.078-0.2 | — | 0.541 | — | — |
+| 5 | 0.796 ± 0.026 [0.798 0.774 0.833 0.761 0.813] | 0.391 | 0.002 [0.000 0.001 0.001 0.007 0.000] | 0.819 ± 0.035 [0.813 0.754 0.835 0.848 0.843] | 0.458 | 0.001 [0.000 0.003 0.000 0.000 0.000] |
+| 10 | 0.883 ± 0.029 [0.848 0.885 0.931 0.891 0.859] | 0.652 | 0.040 [0.022 0.003 0.000 **0.131** 0.046] | 0.901 ± 0.015 [0.889 0.883 0.904 0.906 0.926] | 0.708 | 0.011 [0.000 0.001 0.000 0.056 0.000] |
+| 20 | 0.979 ± 0.018 [0.944 0.983 0.991 0.994 0.980] | 0.936 | 0.027 [0.000 0.000 0.000 **0.117** 0.020] | 0.984 ± 0.025 [0.998 0.933 0.998 0.993 0.996] | 0.951 | 0.023 [0.000 0.012 0.000 0.080 0.021] |
+| 50 | 1.000 ± 0.001 | 0.999 | 0.008 [0.027 0.000 0.004 0.008 0.000] | 0.999 ± 0.001 | 0.998 | 0.002 [0.003 0.006 0.000 0.000 0.000] |
+| 500 | 1.000 | 1.000 | 0.017 [0.005 0.002 0.002 0.042 0.034] | 1.000 | 1.000 | 0.006 [0.001 0.000 0.006 0.021 0.003] |
+
+The worst drops fall on new formulations with seen transitions (seed 3: 0.131 at k = 10 and 0.117 at k = 20, design set; seed 8: 0.056 /
+0.080, claim set), larger than that row's seed std (0.069 / 0.055): with a few template-4 sentences in training, the retrained reader's
+learned gate set and routes can move for another template, which a full retraining does not protect against (no replay question arises,
+every old sentence is still in training). The minimum for the per-role rule: 20 examples bring the cell to 0.98 on both seed ranges, 50 to
+1.000. (The route-b reader reaches 1.000 at k = 0 with the R46 decoder; section above.)
+
+**Decoder provenance, the residual re-checked with the fixed tool (R64; sop @ 0b4878b, frame_incomplete -> 1.0; logs/2026-10-25_2329_ to
+_2332_sop_check_2f35838.txt):** accuracy rows unchanged (every axis and seed equal to the R46 / R58 rows within 0.0005). Explained residual,
+1a and route b, both seed ranges, tool against transcription: in-world false rejection now EQUAL in level (1a 0.021-0.032 against
+0.023-0.033; route b 0.015-0.031 against 0.015-0.028), but **NOT EQUAL on the out-of-world sets**: AUROC 0.863-0.888 against 0.965-0.985;
+reference rejected **0.56-0.61** against 0.88-0.95; random 0.89-0.95 against 0.99. **Where it differs**, from a sentence-by-sentence
+comparison on seed 0: the tool's one-to-one runs over the inner roles A, B, C only, so a speaker's word may also fill A or C ('p3 claims
+that p1 gives o0 .' -> A = p3 = the speaker X1; 'p10 claims that o0 is offered by p8 .' -> C = p10 = X1), which completes the frame and
+explains every token (residual 0); the transcription's one-to-one (R10, metrics.one_to_one) runs over every role of the depth, speakers
+included, so the speaker cannot also be A or C, the role stays undecoded and the residual is 1.0. The remaining difference is therefore the
+SCOPE of the one-to-one rule (inner roles vs all roles of the depth), not the residual. Following R58 the tool is the reference: **the
+paper's explained-residual numbers are the tool's (decoder: sop @ 0b4878b): AUROC 0.866-0.885 (1a) / 0.863-0.888 (route b), reference
+rejected 0.56-0.61, random 0.89-0.95, false rejection 0.015-0.032; the demo criterion is not met on either seed range.** The clause-less
+check (sop @ 4a92afd, logs/results_sopcheck_*_demo_vx_seed*.json) is superseded by this fix; the transcription's rows (0.88-0.95) stay,
+labelled "decoder: common/decode.py, one-to-one over all roles of the depth (differs from sop @ 0b4878b)". Which scope the one-to-one
+should have (a speaker may not also be the giver in this world's legend) is the tool's decision (sop/, the author's).

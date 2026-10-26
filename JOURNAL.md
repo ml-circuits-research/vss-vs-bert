@@ -108,3 +108,12 @@ the minute (two launches in one minute share a file: the 16:08 / 16:09 block log
 watchdog killed a grid chain that printed nothing per epoch (progress lines added); untracked result files block run.sh launches.
 JP 1 is written in RESULTS ('JP 1: synthesis'); the experiment stops here (R48). Next, outside this session: the paper; sop EQUAL
 checks are reported in RESULTS as they finish.
+
+## 2026-10-26 00:20 — after JP 1: R60-R64 additions measured (experimental session)
+
+The reader's growth rows at k = 5 / 10 / 20 (20 examples: 0.98; 50: 1.000; one-seed drops up to 0.13 on another template), the route's
+used keys (146 keys, 0.15 M; the reader 3.47 M), template 4 at k = 0 for route b (1.000 with the R46 decoder), and the sop EQUAL checks:
+accuracy rows equal; the explained residual differs, first by the missing undecoded-role clause (fixed by the author, R64, sop
+0b4878b), then by the scope of the one-to-one (inner roles in the tool, all roles of the depth in the transcription); files opened for
+that diagnosis: data/oow_seed0.json (60 reference sentences) with the saved 1a seed-0 reader. The tool is the reference; the paper uses
+its numbers. The session stopped at about 23:35 when its login expired and resumed after; no run was lost. Nothing runs now.
