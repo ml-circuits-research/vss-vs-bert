@@ -61,6 +61,8 @@ def load_typer():
     import importlib.util
     spec = importlib.util.spec_from_file_location("sop_typer_r71", os.path.join(mainrepo.ROOT, "sop", "typer.py")); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
 
+R85_VERBS = {"AddToPlaylist": ["add", "put"], "PlayMusic": ["play", "listen"], "BookRestaurant": ["book", "reserve"], "RateBook": ["rate", "give"],
+             "SearchCreativeWork": ["find", "show", "search"], "SearchScreeningEvent": ["find", "show", "search"], "GetWeather": ["is", "what", "will"]}   # responses R85
 SOP_DIR = None   # --sop_dir: a directory holding the 'sop' package of a named version (R82: the tree's sop/ may be newer than a row's)
 
 def sop_source():
@@ -334,9 +336,14 @@ def per_intent(cond, a, kinds, ty, T, ev):
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
             kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
-            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r84act" if a.activate == "auto" else "_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r85act" if a.activate == "auto" else "_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
+            retrain = a.retrain_worlds is None or I in a.retrain_worlds.split(",")
+            # R85: the intent's command verbs as lemmas of the event 'command' (predicate_role stays false), only those whose typer kind is their own
+            # (w:<verb>): the route marks verb CATEGORIES, and a verb of kind O would make every O word a verb; only in the retrained worlds
+            vb = [w for w in R85_VERBS.get(I, []) if kI.get(w) == "w:" + w] if (a.declare_verbs and retrain) else []
+            if a.declare_verbs and retrain: print(f"[R85] seed {seed} world {I}: command verbs declared {vb}; left out (kind not their own): {[(w, kI.get(w)) for w in R85_VERBS.get(I, []) if w not in vb]}", flush=True)
             anchor = a.intent_anchor and "intent" not in rmap.values()   # R79 (b): the closed-value intent role, one value, in every example (rate 1.0: the core question)
-            legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
+            legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"] + vb}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
                       "reader": dict({"predicate_role": False, "occupancy_marker": True, "definite_dets": [], "no_sense_share": 1.0}, **({"closed_values": {"intent": [I]}} if anchor else {}))}
             if os.path.exists(wd): shutil.rmtree(wd)
@@ -383,7 +390,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
                 ACT = importlib.import_module("sop_repo.activate"); ns.seed = seed; ns.tau = 0.05
                 needs = ACT.need_signals(ACT.profile(rows, L, schema)); fires = [c for c in ACT.CANDIDATE_CODES if needs[c][0]]
                 print(f"[R84] seed {seed} world {I}: need signals " + "; ".join(f"{c} {'FIRES' if needs[c][0] else 'no'} ({needs[c][1]})" for c in ACT.CANDIDATE_CODES), flush=True)
-                if not fires:   # no candidate: the R81 configuration exactly; its saved model is copied, not retrained (declared)
+                if not fires or not retrain:   # no candidate (or a world not retrained, R85): the R81 configuration exactly; its saved model is copied, not retrained (declared)
                     src_md = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}_r81", "model_seed")
                     shutil.copytree(src_md, md); R = SR.infer.Reader(md); print(f"[R84] seed {seed} world {I}: no candidate fires: the R81 model copied ({src_md})", flush=True)
                 else:
@@ -473,6 +480,8 @@ if __name__ == "__main__":
     ap.add_argument("--intent_anchor", action="store_true", help="R79: keep the closed-value intent role (one value) in every per-intent world and example; schema by sop @ SOURCE")
     ap.add_argument("--negatives", action="store_true", help="R81: one-vs-rest negatives (other intents' training utterances, balanced, anchor role only, _negative=true); trained by sop @ SOURCE; needs --intent_anchor")
     ap.add_argument("--activate", default="off", choices=["off", "auto"], help="R84 item 2: sop activate.py's acceptance test per world (with --negatives); folders *_r84act")
+    ap.add_argument("--declare_verbs", action="store_true", help="R85: the intents' command verbs as lemmas of the event 'command' in the retrained worlds' legends")
+    ap.add_argument("--retrain_worlds", default=None, help="R85: comma list of the worlds trained (acceptance test); the others copy their R81 model")
     ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version to train / read with (R82)")
     ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
