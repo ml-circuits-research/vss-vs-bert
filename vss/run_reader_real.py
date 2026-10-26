@@ -336,7 +336,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
             kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
-            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r85act" if a.activate == "auto" else "_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r85act" + a.run_tag if a.activate == "auto" else "_r81" if a.negatives else "_r79" if a.intent_anchor else ""))   # R79 / R81: own folders; earlier ones kept
             retrain = a.retrain_worlds is None or I in a.retrain_worlds.split(",")
             # R85: the intent's command verbs as lemmas of the event 'command' (predicate_role stays false), only those whose typer kind is their own
             # (w:<verb>): the route marks verb CATEGORIES, and a verb of kind O would make every O word a verb; only in the retrained worlds
@@ -458,7 +458,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
         rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
         rej_s = {k: float(np.mean([p["rejected_by_status"] for p in v])) for k, v in preds.items()}; abst = {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()}
         cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
-        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor + negatives, residual dispatch (R81)" if a.negatives else "VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r85act" if a.activate == "auto" else "reader_worlds_r81" if a.negatives else "reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor + negatives, residual dispatch (R81)" if a.negatives else "VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r85act" + a.run_tag if a.activate == "auto" else "reader_worlds_r81" if a.negatives else "reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
                                    extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "rejected_by_status": rej_s, "chosen_abstains": abst, "world_thresholds": thr, "worlds": intents, "world_kinds": a.world_kinds, "dispatch": a.dispatch})
         print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; by status {rej_s}; chosen frame abstains {abst}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
         allrows.append(row)
@@ -486,6 +486,7 @@ if __name__ == "__main__":
     ap.add_argument("--intent_anchor", action="store_true", help="R79: keep the closed-value intent role (one value) in every per-intent world and example; schema by sop @ SOURCE")
     ap.add_argument("--negatives", action="store_true", help="R81: one-vs-rest negatives (other intents' training utterances, balanced, anchor role only, _negative=true); trained by sop @ SOURCE; needs --intent_anchor")
     ap.add_argument("--activate", default="off", choices=["off", "auto"], help="R84 item 2: sop activate.py's acceptance test per world (with --negatives); folders *_r84act")
+    ap.add_argument("--run_tag", default="", help="R90 item 2: a suffix for the activation run's folders and result tag (e.g. _paired), so that a re-decision does not overwrite the earlier row")
     ap.add_argument("--declare_verbs", action="store_true", help="R85: the intents' command verbs as lemmas of the event 'command' in the retrained worlds' legends")
     ap.add_argument("--retrain_worlds", default=None, help="R85: comma list of the worlds trained (acceptance test); the others copy their R81 model")
     ap.add_argument("--sop_dir", default=None, help="a directory holding the 'sop' package of the version to train / read with (R82)")

@@ -2565,3 +2565,27 @@ logs/2026-10-26_0953_ / _0955_run_reader_real_8594fc9.txt is the guard's own lin
 the logs had been committed (the runs failed at once on an argparse error); the 16:29 modification time came from a git pull with
 --autostash, which re-writes modified tracked files. No change to run.sh is needed; it is not edited. The two logs stay restored to their
 committed text.
+
+## R85 seeds 1-2 under the 82585ea acceptance rule (logs/2026-10-26_1844_run_reader_real_e139f6d.txt (seed 1), _1845_run_reader_real_58a794c.txt (seed 2); sop @ 82585ea; route verb kinds ['w:add']; MEASURED)
+
+| seed | selection rows (marked) | base FULL | + vorder FULL | calibration_dev base / + vorder | train tenth base / + vorder | marked rows | verdict |
+|---|---|---|---|---|---|---|---|
+| 0 | 417 (4) | 0.528 | 0.571 | 0.440 / 0.460 | 0.552 / 0.602 | 0/4 both | accepted |
+| 1 | 429 (2) | 0.475 | 0.487 | 0.460 / 0.420 | 0.479 / 0.502 | 0/2 both | **rejected** (loses calibration_dev) |
+| 2 | 402 (5) | 0.507 | 0.538 | 0.380 / 0.440 | 0.543 / 0.566 | 0/5 both | accepted |
+
+Under the 82585ea rule the route is accepted on 2 of 3 seeds, and in no seed on the marked rows (0 of 2-5 same-kind-competition
+selection rows read right with or without it). Kept as measured; R90 item 2 re-decides all three seeds under the paired test (below).
+
+## R90 item 2: R85 re-decided under the paired acceptance test (DECLARED 2026-10-26, before the run)
+
+R83 paragraph (R85's, unchanged): what fails = the same-kind slot pairs of AddToPlaylist (2.4% of its rows); cause = no address separates
+them; change = the command verb "add" declared (route verb kinds ['w:add'], checked), `vorder` decided by the acceptance test; expected to
+move = span F1 on the competing rows, the world's span F1 by at most about 0.02. What differs from the 82585ea runs: the acceptance rule
+only, sop @ 25de418 (scratch copy of repo HEAD 79af0b0's sop/; activate.py 2f3806f's PAIRED test: a route must win the marked rows (or
+all rows) beyond the binomial noise of the discordant rows, 2 sqrt(wins + losses), and lose no split beyond it). Training is that of the
+same version: sop/train.py's changes since 82585ea are the per-row FULL record (for the paired test) and content_kinds_of, which the
+per-intent path does not use (it takes the pinned tool's content_kinds_of), so the trained models differ only by the acceptance. Seeds
+0-2, AddToPlaylist only (the other six worlds copy their R81 models), --run_tag _paired (folders *_r85act_paired, tag
+reader_worlds_r85act_paired; the 82585ea runs are not overwritten). Expected (R90): rejected, i.e. "need signal fired on one world,
+route rejected".
