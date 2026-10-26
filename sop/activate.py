@@ -50,18 +50,26 @@ DECODERS = {"contract": CONTRACT, "paper": {}}
 
 # ------------------------------------------------------------------ the nature of a world
 def _head_positions(row, legend):
-    """[(role, token index of the role's head, kind of the head, cued?)] for the word/entity fillers of a training row; a word used
-    twice is resolved left to right; cued = the token before the head is a role cue (legend reader.gates_given.open) """
+    """[(role, token index of the role's head, kind of the head, cued?)] for the word/entity fillers of a training row, in sentence
+    order. The head is matched by surface form or by the legend's lemma map (a gold head is a lemma in dictionary / bilingual worlds:
+    vss-demo Q2.1); a word used twice is resolved left to right. cued = a role cue (legend reader.gates_given.open) opens the head's
+    phrase: the nearest cue between the previous head (or the verb, or the start) and this head (vss-demo Q2.2)."""
     cues = set((legend.reader.get("gates_given") or {}).get("open") or [])
-    toks = row["tokens"]; used = set(); out = []
+    verbs = set(legend.all_verbs())
+    toks = row["tokens"]; used = set(); found = []
     for role, fl in sorted(row["frame"]["roles"].items(), key=lambda kv: kv[0]):
         if fl is None or fl[0] not in ("word", "negword", "entity"): continue
-        h = fl[1]
-        js = [j for j, t in enumerate(toks) if (t == h or t.lower() == h.lower()) and j not in used]
+        h = fl[1]; hl = h.lower()
+        js = [j for j, t in enumerate(toks) if j not in used and (t == h or t.lower() == hl or legend.lemma_of(t) == h or legend.lemma_of(t).lower() == hl)]
         if not js: continue
-        j = js[0]; used.add(j)
-        cued = j > 0 and (legend.kind(toks[j - 1]) in cues or toks[j - 1] in cues)
-        out.append((role, j, legend.kind(h), cued))
+        j = js[0]; used.add(j); found.append((role, j, legend.kind(h) or legend.kind(toks[j])))
+    found.sort(key=lambda x: x[1]); out = []; prev = -1
+    for role, j, k in found:
+        start = prev + 1
+        for i in range(j - 1, prev, -1):        # back to the previous head: a verb also closes the window
+            if legend.lemma_of(toks[i]) in verbs or toks[i] in verbs: start = i + 1; break
+        cued = any(legend.kind(toks[i]) in cues or toks[i] in cues for i in range(start, j))
+        out.append((role, j, k, cued)); prev = j
     return out
 
 

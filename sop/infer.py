@@ -270,13 +270,15 @@ class Reader:
                     a2 = self.best(Sn * ka * np.conj(self.st.op("not")), ca)
                     if a2[2] > a1[2]: a1, neg = a2, True
                 aratio = a1[2] / top if top > 1e-9 else 0.0; athr = self.th.get("attr_presence", {}).get(r); out["attr_ratio"] = aratio
-                if (aratio >= athr) if athr is not None else rs.get("attr_rate", 0) >= 0.5:
+                # vss-demo Q1 / D1: an attribute (or determiner) is given only when a candidate exists; with sentence candidates an
+                # adjective outside the catalog leaves no candidate, and the word is then reported as unplaced (the query-wire case)
+                if a1[0] is not None and ((aratio >= athr) if athr is not None else rs.get("attr_rate", 0) >= 0.5):
                     attr = ["negword" if neg else "word", a1[0]]; out["margins"][r + ".attr"] = a1[1]
             det = None
             if rs.get("det_kinds"):
                 d1 = self.best(Sn * key * np.conj(self.st.op("det")), self.cands(rs["det_kinds"], filt))
                 dratio = d1[2] / top if top > 1e-9 else 0.0; dthr = self.th.get("det_presence", {}).get(r); out["det_ratio"] = dratio; out["det_best"] = (d1[0], d1[1])
-                if (dratio >= dthr) if dthr is not None else rs.get("det_rate", 0) >= 0.5:
+                if d1[0] is not None and ((dratio >= dthr) if dthr is not None else rs.get("det_rate", 0) >= 0.5):
                     det = d1[0]; out["margins"][r + ".det"] = d1[1]
             out["filler"] = ["entity", h, attr, det]
         else:
