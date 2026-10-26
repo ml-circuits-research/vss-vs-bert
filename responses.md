@@ -1512,3 +1512,13 @@ trained keep their stored schema (3 does not touch them); 1 and 2 change the rea
 so no row of this repository changes unless re-scored with `presence_query` set. Not to be applied to the frozen rows. For the SNIPS
 per-intent worlds after R81: (1) applies (optional slots near threshold were part of the 0.61 abstention) and (3) may matter (the `w:`
 kinds are single-word kinds and were already not content, so expect little change); declare before using them.
+
+## R83 (standing rule from the owner, for every training row from now on; 2026-10-26 15:20)
+
+Before any row that trains a reader on more data of the same kind (more seeds of the same configuration excepted), the row's
+declaration states what fails (worst formulations, activation diagnostics, unplaced words, presence queries, per-world losses), where
+the cause is (the reader: a contract rule or a route by its acceptance test; the world: a question conflated, a kind missing, an
+anchor missing; the examples: a form missing, then that form is added, not everything), what is changed, and which number is expected
+to move. The reader learns addresses from kinds and positions, so more instances of the same templates memorise and do not generalise;
+a size curve is a check, never the remedy. R81 is already declared this way (the cause: discrimination, the change: negatives through
+the anchor); every later row follows the same form, and I will refuse a row without that paragraph.
