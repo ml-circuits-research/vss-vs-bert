@@ -1522,3 +1522,26 @@ anchor missing; the examples: a form missing, then that form is added, not every
 to move. The reader learns addresses from kinds and positions, so more instances of the same templates memorise and do not generalise;
 a size curve is a check, never the remedy. R81 is already declared this way (the cause: discrimination, the change: negatives through
 the anchor); every later row follows the same form, and I will refuse a row without that paragraph.
+
+## R84 (R81 accepted: the per-intent configuration is kept; what follows; 2026-10-26 15:35)
+
+R81 met its main expectation: with one-vs-rest negatives through the anchor, the anchor-percentile dispatch reaches 0.966 ± 0.003
+(one-world 0.977), span F1 0.824, residual AUROC of the chosen world 0.941 (above the one-world 0.933), and the raw residual became a
+worse dispatcher (0.386), which is what the mechanism predicts: negatives push foreign states away from the anchor, not from the slot
+readout. The configuration is kept for the demo (D9 in the demo repository). The rejection expectation was not met at the fixed 2%
+anchor line (0.120 at 0.030 false), while the threshold-free separation rose (anchor AUROC 0.622 -> 0.892): the operating point moved,
+not the separation. Rows, in order, each with the R83 paragraph (what fails, cause, change, expected number):
+1. **Rejection operating points (CPU, saved R81 models, no training):** for each signal (the chosen world's residual; the anchor
+   percentile; and their max over worlds), the held-out rejection at in-domain false rejection 1%, 2% and 5%, the thresholds set on
+   the calibration half of dev (never on test), reported on test. Expected: at 5% false rejection the anchor signal rejects well above
+   0.28 (the AUROC says so); whichever signal is better at 2% becomes the demo's refusal line and is stated as such.
+2. **R78 (1) on the per-intent configuration:** per world, span F1 of typer + reader against the typer alone on the same utterances;
+   which questions lose; then `--activate auto` per world (the acceptance test; the three worlds where `vorder`'s need signal fires).
+   Expected: the loss is concentrated in the roles with same-kind competition; `vorder` accepted on at least one of the three worlds.
+3. **Re-score with the current contract decoder (R82: presence_query, sentence verbs) as a declared re-score row**, same models, same
+   rules (eval/r80_dispatch.py --sop_dir = SOURCE b467e4b): expected to lower the chosen-frame abstention (optional slots near their
+   threshold become presence queries) without changing dispatch or spans; report both lines.
+4. **Export for the demo** (after 1-3): the seven base worlds of the best seed (by anchor dispatch on dev, stated) and the typer, through
+   `sop export-web` per world into a folder the demo repository can copy (plus the typer's table; its export is mine, I will say in
+   this file when sop has it); keep the folders. The demo's page then reads with the rule and the refusal line of item 1.
+Training-time note accepted as written (the 5.3x is load, not cost; not to be cited as cost).
