@@ -16,12 +16,34 @@ def load_sop(sop_dir):
     return sys.modules["sop_repo"], open(os.path.join(sop_dir, "sop", "SOURCE")).read().strip()[:7]
 
 
+def ctx_admission(R, rinv, cond, I, ty, share=0.02):
+    """R88 (B): per role of world I, the typer's IN-CONTEXT kinds of the gold head tokens of its fillers on the world's positive training
+    utterances, kept when they carry >= share of the role's fillers; written into R.schema (roles[r].kinds and head_kinds) at load (the saved
+    schema files are not rewritten; no retraining). Returns {question: (stored kinds, new kinds)}."""
+    items = cond["items"]; cnt = {}; rmap = {v: k for k, v in rinv.items()}
+    for i in cond["train"]:
+        it = items[i]
+        if it["intent"] != I: continue
+        ks = ty.sentence_kinds(it["tokens"]); seen = set()
+        for (t, s_, e_, _) in sorted(it["slots"], key=lambda x: x[1]):
+            if t in seen or t not in rmap: continue
+            seen.add(t); cnt.setdefault(t, {}); k = ks[e_ - 1]; cnt[t][k] = cnt[t].get(k, 0) + 1
+    out = {}
+    for q, c in cnt.items():
+        r = rmap[q]; n = sum(c.values()); new = sorted(k for k, v in c.items() if v >= share * n); rs = R.schema["roles"][r]
+        old = sorted(set(rs.get("kinds") or []) | set(rs.get("head_kinds") or [])); rs["kinds"] = list(new)
+        if rs.get("head_kinds"): rs["head_kinds"] = list(new)
+        out[q] = (old, new)
+    return out
+
+
 def pct(cal, x):
     return float(np.mean(cal < x)) if len(cal) else 0.0
 
 
 class Worlds:
-    def __init__(self, SR, cond, condition, seed, models, kinds=None, decoder="paper", spans=None):
+    def __init__(self, SR, cond, condition, seed, models, kinds=None, decoder="paper", spans=None, ty=None, admission="stored"):
+        self.ty = ty   # R88: when given, every reading passes the typer's in-context kinds (token_kinds)
         self.SR = SR; items = cond["items"]; self.items = items
         self.intents = sorted({items[i]["intent"] for i in cond["train"]}); self.W = {}
         for I in self.intents:
@@ -38,6 +60,7 @@ class Worlds:
             if decoder == "contract": R.cfg.update(importlib.import_module("sop_repo.activate").DECODERS["contract"])   # R84 item 3 / R87
             elif decoder == "presence_query": R.cfg["presence_query"] = True
             if spans: R.legend.reader["spans"] = spans
+            if admission == "ctx": ctx_admission(R, rinv, cond, I, ty)
             self.W[I] = {"R": R, "rinv": rinv, "dir": wd, "train": [i for i in cond["train"] if items[i]["intent"] == I][:200]}
         self.cal = {}
         for I, w in self.W.items():
@@ -47,7 +70,8 @@ class Worlds:
 
     def read_one(self, I, toks):
         w = self.W[I]; R = w["R"]; rinv = w["rinv"]; SR = self.SR
-        wires, f, info = R.formalize(" ".join(toks), 0, SR.infer.idgen("e"), filt=set(toks)); S = info["S"]; nS = np.linalg.norm(S)
+        tk = {"token_kinds": dict(zip(toks, self.ty.sentence_kinds(toks)))} if self.ty is not None else {}
+        wires, f, info = R.formalize(" ".join(toks), 0, SR.infer.idgen("e"), filt=set(toks), **tk); S = info["S"]; nS = np.linalg.norm(S)
         anchor = structure = 0.0
         if nS > 1e-9 and info["kept"]:
             Sn = S / nS; d = f.get("depth", 0) or 0

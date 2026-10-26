@@ -388,6 +388,8 @@ def per_intent(cond, a, kinds, ty, T, ev):
             md = os.path.join(wd, "model_seed"); tw = time.time(); R = None
             if a.activate == "auto":   # R84 item 2: the acceptance test of sop activate.py per world (need signal on the positive training rows)
                 ACT = importlib.import_module("sop_repo.activate"); ns.seed = seed; ns.tau = 0.05
+                if not getattr(ACT, "_r85_pos_only", False):   # the profile (need signals) from the POSITIVE rows: negatives never enter the schema or the profile (R81)
+                    _prof = ACT.profile; ACT.profile = lambda rows_, *x, **k: _prof([r for r in rows_ if not r.get("negative")], *x, **k); ACT._r85_pos_only = True
                 needs = ACT.need_signals(ACT.profile(rows, L, schema)); fires = [c for c in ACT.CANDIDATE_CODES if needs[c][0]]
                 print(f"[R84] seed {seed} world {I}: need signals " + "; ".join(f"{c} {'FIRES' if needs[c][0] else 'no'} ({needs[c][1]})" for c in ACT.CANDIDATE_CODES), flush=True)
                 if not fires or not retrain:   # no candidate (or a world not retrained, R85): the R81 configuration exactly; its saved model is copied, not retrained (declared)
@@ -452,7 +454,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
         rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
         rej_s = {k: float(np.mean([p["rejected_by_status"] for p in v])) for k, v in preds.items()}; abst = {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()}
         cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
-        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor + negatives, residual dispatch (R81)" if a.negatives else "VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r81" if a.negatives else "reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor + negatives, residual dispatch (R81)" if a.negatives else "VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r85act" if a.activate == "auto" else "reader_worlds_r81" if a.negatives else "reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
                                    extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "rejected_by_status": rej_s, "chosen_abstains": abst, "world_thresholds": thr, "worlds": intents, "world_kinds": a.world_kinds, "dispatch": a.dispatch})
         print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; by status {rej_s}; chosen frame abstains {abst}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
         allrows.append(row)

@@ -2414,3 +2414,43 @@ readings of multi-word slots (the span's other words are unplaced neighbours of 
 undecided query with margin 0); it happens with 82585ea as well, so it is the rule's domain (one-token fillers), not a version mismatch.
 The author fixed it at the source (R87, sop @ de11429, reader.spans = kind_run); lines B and C are being re-scored under R87 (declared
 above).
+
+## Failed / invalid runs, recorded (2026-10-26)
+
+- R87 re-score, the nine eval/r80_dispatch.py runs (logs/2026-10-26_1530_ to _1538_r80_dispatch_*.txt, lines B and C with sop @
+  de11429 and kind_run): FAILED after the first rule, with no result. Cause: my code (commit ad2ff2e) put the declaration `spans` into the
+  result row's extra fields, which overwrote the row's span-F1 table, and the print then failed. The residual_raw JSONs they wrote are
+  corrupt and will be overwritten. Fixed (key renamed spans_declaration) and relaunched. The six R87 eval/r84_oppoints.py runs (logs
+  _1530_, _1531_, _1533_, _1534_, _1536_, _1537_r84_oppoints_*.txt) did not have this defect and are valid.
+- R85 activation, seed 0 (logs/2026-10-26_1530_run_reader_real_ad2ff2e.txt): INVALID as the declared test. The acceptance step's need
+  signal was computed on the training rows INCLUDING the negatives (R81's one-vs-rest rows have shape ok), which halves the share:
+  AddToPlaylist 44 rows = 1.2% < 2%, so no candidate fired and every world's R81 model was copied (no trial ran). The readout's profile
+  (positive rows only) gives 2.4% (fires). The run also wrote its evaluation under R81's tag
+  (logs/results_real_snips_base_reader_worlds_r81_full_seed0.json): the metrics are identical (all seven models were R81's copies: test
+  intent 0.397, span F1 0.520), but the file's train_s now reads 8.2 instead of R81's 5686.7 (RESULTS keeps 5686.7). Fixed: the
+  profile used by activate.select gets the positive rows only (negatives never enter the profile, as they never enter the schema), and
+  an activation run writes its own tag reader_worlds_r85act. R85 seed 0 relaunched as declared.
+
+## R88: the typer's in-context kinds in the decoder, lines A and B (DECLARED 2026-10-26, before the run; re-score, no training)
+
+Common to both lines: the saved R81 models (base and ood_intents, seeds 0-2), sop @ 4a0eba8 (scratch copy of repo commit 7834107's sop/),
+each reader with presence_query on and the legend's reader.spans = kind_run (set at load), and every reading passed token_kinds = the
+typer's in-context kinds of the utterance (formalize token_kinds, as {word: kind} of the utterance's tokens). Readings:
+eval/r80_dispatch.py (R80 rules; dispatch, span F1, abstention, AUROC), eval/r86_presence.py on all seven base worlds (false fills /
+misses per world, the sibling analysis), eval/r84_oppoints.py (the refusal operating points by the same thresholds' rule). Beside them,
+R81 as read (sop 82585ea, paper decoder) in r86_presence.py on all seven worlds as the reference per-world line.
+
+(A) R83 paragraph. What fails: false fills (215 per seed), 70-100% of them words of a sibling question whose kind both admit (R86 (a)).
+Where the cause is: the world's kinds as the decoder sees them: the lexicon gives each word its majority kind over all intents, so a
+word the typer types S:movie_name in context is a candidate of timeRange (lexicon S:object_name). What is changed: the decoder reads the
+in-context kinds (candidates, admission, residual, spans, adjacency); the chart keeps the lexicon kinds (no retraining); admission sets
+as stored. Expected to move (R88): sibling false fills fall by most of their share; misses unchanged.
+(B) R83 paragraph. What fails: the admission sets are wide (restaurant_name 19 kinds, city 16, movie_name 35) because they were built
+from lexicon kinds of the training fillers. Where the cause is: the world (the admission record). What is changed: (A) plus, per role,
+the admission set recomputed from the typer's in-context kinds of the gold head tokens of the role's fillers on the world's positive
+training utterances, kinds with >= 2% of the role's fillers, set in the loaded schema (roles[r].kinds and head_kinds; the saved schema
+files are not rewritten here; for the export they will be). Seen in a 40-item smoke test: the sets shrink to 1-3 kinds per question.
+Expected to move (R88): false fills fall further; misses may rise by the typer's own confusion on gold fillers.
+Results: ..._r81r80_presence_query_kind_run_ctx[_adm]_<rule>_..., logs/results_r86_presence_r88[a|b]_seed<s>.json,
+logs/results_r86_presence_r81all_seed<s>.json, logs/results_r84_oppoints_<condition>_presence_query_kind_run_ctx[_adm]_seed<s>.json.
+The demo's reading = the best line by in-domain span F1 at unchanged dispatch (R88).

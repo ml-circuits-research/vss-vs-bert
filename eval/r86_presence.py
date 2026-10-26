@@ -19,17 +19,20 @@ import numpy as np
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--sop_dir", required=True); ap.add_argument("--seed", type=int, required=True)
-    ap.add_argument("--worlds", default="BookRestaurant,SearchScreeningEvent"); ap.add_argument("--models", default="r81"); ap.add_argument("--n_freq", type=int, default=40); a = ap.parse_args()
+    ap.add_argument("--worlds", default="BookRestaurant,SearchScreeningEvent"); ap.add_argument("--models", default="r81"); ap.add_argument("--decoder", default="paper", choices=["paper", "presence_query"]); ap.add_argument("--spans", default=None, choices=["token", "kind_run"]); ap.add_argument("--token_kinds", default=None, choices=["typer"]); ap.add_argument("--admission", default="stored", choices=["stored", "ctx"]); ap.add_argument("--tag", default=""); ap.add_argument("--n_freq", type=int, default=40); a = ap.parse_args()
     SR, src = wr.load_sop(a.sop_dir)
     from vss import run_reader_real as rr
     cond = rd.load_condition("snips", "base"); items = cond["items"]
     kinds, ty, T = rr.build_kinds_typer(cond, types.SimpleNamespace(n_freq=a.n_freq))
-    print(f"r86_presence: models {a.models}; sop @ {src}; seed {a.seed}; worlds {a.worlds}")
+    print(f"r86_presence: models {a.models}; sop @ {src}; decoder {a.decoder}; spans {a.spans}; token_kinds {a.token_kinds}; admission {a.admission}; seed {a.seed}; worlds {a.worlds}")
     out = {"sop": src, "seed": a.seed, "worlds": {}}
     for I in a.worlds.split(","):
         wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_snips_base_intent_{I}_seed{a.seed}_{a.models}")
         leg = json.load(open(os.path.join(wd, "legend.json"))); rinv = {r["id"]: r["question"][5:] for r in leg["roles"] if r["question"].startswith("slot ")}; rmap = {v: k for k, v in rinv.items()}
         R = SR.infer.Reader(os.path.join(wd, "model_seed")); R.cfg["residual"] = "explained"; sch = R.schema
+        if a.decoder == "presence_query": R.cfg["presence_query"] = True          # R88 lines
+        if a.spans: R.legend.reader["spans"] = a.spans
+        adm_new = wr.ctx_admission(R, rinv, cond, I, ty) if a.admission == "ctx" else None
         thr = json.load(open(os.path.join(wd, "model_seed", "config.json")))["thresholds"]["presence"]
         adm = {rinv[r]: {"kinds": sorted(sch["roles"][r].get("kinds") or []), "head_kinds": sorted(sch["roles"][r].get("head_kinds") or [])} for r in sch["role_order"] if r in rinv}
         kind_owners = collections.defaultdict(set)
@@ -40,7 +43,8 @@ if __name__ == "__main__":
             sh = sorted({k for k in set(d['kinds']) | set(d['head_kinds']) if len(kind_owners[k]) > 1})
             print(f"   {q:24s} kinds {d['kinds']} | head {d['head_kinds']} | shared with another question: {sh}")
         def read(toks):
-            w, f, info = R.formalize(" ".join(toks), 0, SR.infer.idgen("e"), filt=set(toks)); return f
+            tk = {"token_kinds": dict(zip(toks, ty.sentence_kinds(toks)))} if a.token_kinds == "typer" else {}
+            w, f, info = R.formalize(" ".join(toks), 0, SR.infer.idgen("e"), filt=set(toks), **tk); return f
         # (b) presence ratios on the calibration utterances
         own = [i for i in cond["train"] if items[i]["intent"] == I][:200]; st = collections.defaultdict(lambda: {"present": [], "absent": []})
         for i in own:
@@ -84,5 +88,5 @@ if __name__ == "__main__":
         print(f"   false fill (question <- the word's gold question): {summ['false_fill_pairs']}"); print(f"   misses by question: {summ['miss_by_question']}")
         for x in ff[:12]: print(f"     false fill {x['q']}: '{x['word']}' (gold question {x['sibling']}, typer kind {x['kind']}, lexicon {x['lex_kind']}; ratio {x['ratio']:.3f} vs threshold {x['thr'] if x['thr'] is not None else float('nan'):.3f})")
         out["worlds"][I] = {"admitted": adm, "presence": sep, "summary": summ, "false_fills": ff, "misses": miss}
-    json.dump(out, open(os.path.join(mainrepo.ROOT, "logs", f"results_r86_presence_seed{a.seed}.json"), "w"), indent=1, default=str)
+    json.dump(out, open(os.path.join(mainrepo.ROOT, "logs", f"results_r86_presence{a.tag}_seed{a.seed}.json"), "w"), indent=1, default=str)
     metrics.checklist(1, "[x] saved R81 models, no training [x] oracle world (the readout alone) [x] calibration rows = the world's own training rows [x] sop version named")
