@@ -87,8 +87,11 @@ def content_kinds_of(rows, legend):
         for sp in r["frame"]["speakers"]:
             k = legend.kind(sp or "")
             if k: ks.add(k)
-    per = collections.Counter(legend.lexicon.values())
-    return ks | {k for k, n in per.items() if n >= 2}
+    # D14 item 2: content kinds = the kinds that fill a question (or a speaker) in the training rows, plus the kinds the legend names in
+    # reader.content_kinds; a kind that never answers a question (prefix and function words with their own kinds) is NOT content, so the
+    # explained residual does not charge it. (Before: every kind with 2+ lexicon words counted as content, which made "please", "you",
+    # "want" unexplained words and short sentences no-sense in the diagram world.) Models trained earlier keep their stored schema.
+    return ks | set(legend.reader.get("content_kinds") or [])
 
 
 # ------------------------------------------------------------------ splits

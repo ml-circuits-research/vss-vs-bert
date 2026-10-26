@@ -346,7 +346,11 @@ class Reader:
             sp, mg, _ = self.best(Sn * rep ** k * np.conj(self.st.op("says.speaker")), self.cands(sch["speaker_kinds"], filt))
             f["speakers"].append(sp); f["margins"][f"speaker.{k}"] = mg
         if self.legend.reader["predicate_role"]:
-            lem, mg, _ = self.best(Sn * K * np.conj(self.st.op("pred")), self.verb_cands())
+            vc = self.verb_cands()
+            if self.cfg.get("candidates") == "sentence":          # D14 item 4: the predicate's candidates are the sentence's verbs (the contract: the answer is in the sentence)
+                inv = {w: i for i, w in enumerate(vc[0])}; js = sorted({inv[self.lemma(t)] for t in tokens if self.lemma(t) in inv})
+                if js: vc = ([vc[0][j] for j in js], vc[1][js])
+            lem, mg, _ = self.best(Sn * K * np.conj(self.st.op("pred")), vc)
             f["lemma"] = lem; f["event"] = self.legend.event_of_lemma(lem); f["margins"]["event"] = mg
         else:
             f["event"] = sch.get("single_event") or next((self.legend.event_of_lemma(self.lemma(t)) for t in tokens if self.legend.event_of_lemma(self.lemma(t))), None)
@@ -355,7 +359,9 @@ class Reader:
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
             if "member_ratios" in o: f["presence"][r + ".members"] = o["member_ratios"]
-            if "presence_margin" in o: f["margins"][r + ".presence"] = o["presence_margin"]
+            if "presence_margin" in o:
+                if o.get("present") or not self.cfg.get("presence_query"): f["margins"][r + ".presence"] = o["presence_margin"]
+                elif o["presence_margin"] < self.tau: f.setdefault("presence_queries", {})[r] = o["presence_margin"]   # D14 item 1: an absent role near its threshold is a query, not an abstention of the frame
             if o.get("present") and o.get("filler") is not None:
                 f["roles"][r] = o["filler"]; f["margins"].update(o["margins"])
                 if "presence_margin" in o:
@@ -489,6 +495,7 @@ class Reader:
         for r in self.legend.roles:
             if r in mg: ev.set(f"_margin.{r}", fmt(mg[r]))
             if r + ".presence" in mg: ev.set(f"_presence_margin.{r}", fmt(mg[r + ".presence"]))
+            if r in f.get("presence_queries", {}): ev.set(f"_presence_query.{r}", fmt(f["presence_queries"][r]))   # absent, near threshold: "is there a <r>?" (query wire kind undecided, presence)
         if "event" in mg: ev.set("_margin.event", fmt(mg["event"]))
         if "scope" in mg: ev.set("_margin.scope", fmt(mg["scope"]))
         evm = [mg[k] for k in mg if k in self.legend.roles or k == "event" or (k.endswith(".presence") and k[:-9] in self.legend.roles)]

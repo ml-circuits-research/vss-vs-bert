@@ -44,7 +44,10 @@ from . import world
 
 BASE_CODES = ("path", "chainL", "bigram")
 CANDIDATE_CODES = ("vorder", "pos")
-CONTRACT = {"candidates": "sentence", "undecided_adjacent": True, "residual": "explained"}      # the contract rules, as config.json keys
+CONTRACT = {"candidates": "sentence", "undecided_adjacent": True, "residual": "explained", "presence_query": True}      # the contract rules, as config.json keys
+# presence_query (D14 item 1): an ABSENT role whose presence margin is under tau is reported as a presence query (_presence_query.<role>)
+# and does not enter the frame's margin or status; the paper decoder lets it lower the margin (an abstention of the whole frame).
+# candidates=sentence also restricts the predicate's candidates to the sentence's verbs (D14 item 4).
 DECODERS = {"contract": CONTRACT, "paper": {}}
 
 

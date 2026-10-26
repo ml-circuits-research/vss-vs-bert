@@ -19,7 +19,7 @@ KNOWN_OPERATORS = set(OPERATOR_KEYS)
 READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_dets": ["the"], "scope_terms": None, "scope_rule": None,
                    "rel_emitters": None, "full_excludes": [], "gates_given": None, "level_openers": None,
                    "value_identity": "last_token", "closed_values": None, "table_roles": None, "set_roles": None, "value_terms": False,
-                   "no_sense_share": None, "codes": None,
+                   "no_sense_share": None, "codes": None, "content_kinds": None,
                    # "lemma": every token is deposited and read by the identity of its lexicon lemma (kinds.tsv third column), so that the
                    # surface forms of several languages map to the one canonical value of the legend (roșie, red -> red); vss-demo addition
                    "identity": "token"}
