@@ -1875,3 +1875,23 @@ google/bert_uncased_L-2_H-128_A-2 --sizes full --seeds 3 --test --save_model --l
 ood_intents`. Stated deviation of form: R68's reader command has no --epochs; with `--sizes full` alone the script pairs 'full' with the
 FIRST value of its default list (60), while RUNBOOK 8b's value for the full size is 10, so --epochs 10 is passed. The four runs run
 concurrently with the (A) runs: no time is a cost number.
+
+## R68 (A): the depth-invariant tagger, BERT-tiny with one speaker label (models/bert_spk.py --speaker_label single; logs/2026-10-26_0755_bert_spk_5ee98a1.txt; CLAIM SET seeds 5-9; MEASURED)
+
+The tagger form of 2a (models/bert_basic.py's Tagger, data and recipe; that script unchanged) with X1 / X2 / X3 collapsed to SPK in
+training; at decoding the speakers are the words tagged SPK in order of appearance (the depth NOT given: the level count is the number
+of SPK words). BERT-tiny pretrained, lr 1e-4, 5 epochs, batch 32 (R68's fixed configuration), seeds 5-9; concurrent (52-55 s per seed:
+not a cost number); tau 0.000 on every seed (rule 18 on the calibration rows).
+
+| axis | slot accuracy [per seed] | exact match six | inner frame | confident error |
+|---|---|---|---|---|
+| seen / new ids / role cues / depth 1 / depth 2 | 1.000 | 1.000 | 1.000 | 0.000 |
+| new form. seen trans. | 0.867 ± 0.163 [1.000 0.667 0.667 1.000 1.000] | 0.800 | 0.800 | 0.133 |
+| new form. UNSEEN trans. | 0.956 ± 0.040 [0.889 0.931 0.981 0.977 1.000] | 0.934 | 0.934 | 0.044 |
+| depth 3 (UNSEEN), depth not given | 0.873 ± 0.063 [0.990 0.854 0.809 0.883 0.830] | **0.273 ± 0.352** [0.943 0.125 0.000 0.299 0.000] | 0.957 ± 0.055 | 0.127 ± 0.063 |
+| depth 3: **X3 slot accuracy** | **0.282 ± 0.369 [0.988 0.125 0.000 0.299 0.000]** | level count right 0.282 (same list) | | |
+
+Reading, as R68 wrote it before the run: X3 = 0.282 < 0.5, so **the example also stands against this head**: with one speaker label
+and levels by order, the tagger reaches the third level on one seed of five (0.988) and on the others tags at most two speakers in most
+depth-3 sentences (the level count equals X3's accuracy: the third speaker is left untagged); its inner frame stays at 0.957 and its
+confident error at depth 3 is 0.127 against the reader's 0.001 on the same seeds.
