@@ -42,7 +42,7 @@ Training (not tuned, INSTRUCTIONS section 4: the reader takes the paper's config
 v11), epochs 60 / 20 / 10 at 1k / 5k / full (stated before the runs, sized as v12's 60 / 20 / 3 at 1k / 5k / 56k); stars per seed
 (rule 6). Thresholds of the scorer on the dev calibration half.
 Run: python3 vss/run_reader_real.py --dataset snips|massive|topv2 [--condition base] [--sizes 1000,5000,full] [--seeds 5] [--test] [--save_model]"""
-import argparse, collections, copy, json, os, shutil, sys, time, types
+import argparse, collections, copy, importlib, json, os, shutil, sys, time, types
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from common import mainrepo
 v5, v7 = mainrepo.import_experiment()
@@ -328,10 +328,11 @@ def per_intent(cond, a, kinds, ty, T, ev):
             types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
             rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
             kI = dict(kinds) if a.world_kinds == "all" else {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}   # R75: 'all' keeps every typer kind
-            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}")
-            legend = {"version": 1, "roles": [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}" + ("_r79" if a.intent_anchor else ""))   # R79: own folders; R75's are kept
+            anchor = a.intent_anchor and "intent" not in rmap.values()   # R79 (b): the closed-value intent role, one value, in every example (rate 1.0: the core question)
+            legend = {"version": 1, "roles": ([{"id": "intent", "question": "what does the user want done?"}] if anchor else []) + [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
                       "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
-                      "reader": {"predicate_role": False, "occupancy_marker": True, "definite_dets": [], "no_sense_share": 1.0}}
+                      "reader": dict({"predicate_role": False, "occupancy_marker": True, "definite_dets": [], "no_sense_share": 1.0}, **({"closed_values": {"intent": [I]}} if anchor else {}))}
             if os.path.exists(wd): shutil.rmtree(wd)
             for d in ("examples", "model", "runs"): os.makedirs(os.path.join(wd, d))
             json.dump(legend, open(os.path.join(wd, "legend.json"), "w"), indent=1); sha = sha256_file(os.path.join(wd, "legend.json"))
@@ -343,6 +344,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
                 doc = soplang.Doc(directives=[("world", os.path.basename(wd), None), ("legend", sha, None), ("generated", "vss/run_reader_real.py --worlds per_intent (R72)", None)]); g = idgen()
                 for i in ids_:
                     it = items[i]; w = soplang.Wire(next(g), "command"); w.set("_text", " ".join(it["tokens"])); w.set("_item", it["id"]); seen = set()
+                    if anchor: w.set("intent", I)
                     for sl in sorted(it["tree"]["slots"], key=lambda s_: s_["start"]):
                         r = rmap[sl["type"]]
                         if r in seen: continue
@@ -356,7 +358,10 @@ def per_intent(cond, a, kinds, ty, T, ev):
             tset, cset = set(tr), set(cal); splits = collections.defaultdict(list)
             for r in rows:
                 iid = r["wire"].value("_item"); r["split"] = "train" if iid in tset else ("calibration_dev" if iid in cset else "unused"); splits[r["split"]].append(r["id"])
-            trr = [r for r in rows if r["split"] == "train"]; schema = fix_schema(strain.build_schema(trr, L)); schema["content_kinds"] = sorted(strain.content_kinds_of(trr, L))
+            trr = [r for r in rows if r["split"] == "train"]
+            bs = importlib.import_module("sop_repo.train").build_schema if a.intent_anchor else strain.build_schema   # R79 (a): the schema of sop @ SOURCE (no silent anchor; it warns)
+            schema = fix_schema(bs(trr, L)); schema["content_kinds"] = sorted(strain.content_kinds_of(trr, L))
+            if a.intent_anchor: print(f"[R79] seed {seed} world {I}: core roles {schema['core_roles']}, structure anchor {schema.get('structure_anchor')}", flush=True)
             ns = types.SimpleNamespace(D=a.D, star_seed=f"seed{seed}", identities="stars", device=a.device, length_buckets=True, epochs=int(a.epochs.split(",")[-1]), batch=a.batch, shuffle=True,
                                        max_train=0, code_list=["path", "chainL", "bigram"], no_ckpt=True, resume=False, log_every=500, lr=a.lr, n_cal=a.n_cal, tau=0.05,
                                        world_name=os.path.basename(wd), language="en", commit=mainrepo.check_pinned(), depth_estimator="kinds", threshold_rule="fit", store_presence_ratios=False)
@@ -405,7 +410,7 @@ def per_intent(cond, a, kinds, ty, T, ev):
         rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
         rej_s = {k: float(np.mean([p["rejected_by_status"] for p in v])) for k, v in preds.items()}; abst = {k: float(np.mean([p["chosen_abstains"] for p in v])) for k, v in preds.items()}
         cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
-        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else "VSS, one world per intent, residual dispatch (R75)", "reader_worlds" if a.dispatch == "status" else "reader_worlds_r75", cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)" if a.dispatch == "status" else ("VSS, one world per intent + intent anchor, residual dispatch (R79)" if a.intent_anchor else "VSS, one world per intent, residual dispatch (R75)"), "reader_worlds" if a.dispatch == "status" else ("reader_worlds_r79" if a.intent_anchor else "reader_worlds_r75"), cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
                                    extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "rejected_by_status": rej_s, "chosen_abstains": abst, "world_thresholds": thr, "worlds": intents, "world_kinds": a.world_kinds, "dispatch": a.dispatch})
         print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; by status {rej_s}; chosen frame abstains {abst}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
         allrows.append(row)
@@ -430,6 +435,7 @@ if __name__ == "__main__":
     ap.add_argument("--worlds", default="one", choices=["one", "per_intent"], help="R72 item 4: one world per intent with the dispatcher (needs --kinds typer)")
     ap.add_argument("--world_kinds", default="own", choices=["own", "all"], help="R75: 'all' keeps every typer kind in every per-intent world (default 'own' = R72 as run)")
     ap.add_argument("--dispatch", default="status", choices=["status", "residual"], help="R75: 'residual' = dispatch by the explained residual, ties by the min margin; rejection by the residual (default = R72 as run)")
+    ap.add_argument("--intent_anchor", action="store_true", help="R79: keep the closed-value intent role (one value) in every per-intent world and example; schema by sop @ SOURCE")
     ap.add_argument("--seed_start", type=int, default=0, help="first seed (seeds seed_start .. seed_start + seeds - 1), to split seeds across processes")
     a = ap.parse_args(); dev_ = a.device
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
