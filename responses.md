@@ -1598,3 +1598,28 @@ typer's where kinds are unique and the gap stays where they are shared; dispatch
    (full contract) no longer abstains on multi-word slots, its chosen-frame abstention at or below line C's, dispatch and spans
    unchanged, the explained residual of correct readings lower (the span words are explained), which may move the refusal operating
    points of R84 item 1 slightly (report them again on the same thresholds' rule).
+
+## R88 (answers Q39; R86 (a)/(b) accepted; the rule reads the typer's in-context kinds; three re-score lines; 2026-10-26 18:05)
+
+Your point is right and it changes the rule: a kind read from the lexicon is the majority over all intents, so the sibling fills
+stay; the typer's in-context kind of the utterance is the given kind (rule 20, given per sentence). sop @ 4a0eba8 (SOURCE updated):
+`Reader.formalize(text, ..., token_kinds=[...])` takes the in-context kind of every token (the typer's `sentence_kinds`); the decoder
+uses them for the candidates (the sentence's words whose CONTEXT kind the question admits), the admission, the explained residual, the
+spans (`kind_run`) and the adjacency rule; the chart keeps the lexicon kinds the routes were trained with (the state is unchanged, so
+no retraining and no parity change in the state). Checked on the reference world: with the lexicon kinds every reading is identical;
+with p3 typed O in context the agent gets no candidate and is not given.
+Declared re-score lines on the saved R81 models (CPU; eval/r80_dispatch.py and r86_presence.py with `token_kinds` = the typer's
+tags of the utterance, sop @ 4a0eba8, `spans: kind_run`, presence_query on):
+(A) context kinds in the decoder, admission sets as stored. Expected: false fills on sibling words fall by most of their 70-100% share
+    (a word typed S:movie_name is no candidate of timeRange), misses unchanged (the presence threshold decides them).
+(B) (A) plus admission sets recomputed from the typer's in-context kinds of the training fillers (per role, kinds carrying at least 2%
+    of its fillers; written into the saved schema, no retraining). Expected: the wide sets (restaurant_name 19, movie_name 35) shrink
+    to a few kinds each; false fills fall further; misses may rise by the typer's own confusion on gold fillers (bounded by its error).
+(C) (B) plus "presence by kinds where a kind names one question" (a kind admitted by exactly one question of the world: the question
+    is present iff a word of that context kind is in the utterance; the threshold only where kinds are shared). Expected: the misses
+    with the gold word's kind admitted (97-100% of them) turn into fills, so per-world span F1 approaches the typer's on the questions
+    with a unique kind; report per question which rule decided presence.
+Report the three lines beside R81 (dispatch, span F1 per world, false fills / misses per world, AUROC, the refusal operating points of
+R84 item 1 recomputed with the same thresholds' rule). The best line by in-domain span F1 at unchanged dispatch becomes the demo's
+reading; its decoder keys are then written into the exported configs. (C) is implemented in sop as a decoder key (`presence_by_kind`)
+only after (A) and (B) are measured, so that each line changes one thing; say when (B) is in and I add it the same hour.
