@@ -1244,3 +1244,32 @@ unanswered, so the frame is incomplete and the explained residual is 1.0. Python
 keep the occurrence bound (a word written twice may answer two questions); it differs from the transcription only on the random
 out-of-world sets (34% of their sentences repeat a word), and the paper states it. Re-run the residual part once with this commit;
 expectation: equal to the transcription on the world's sets; on the random sets, report both numbers if they differ.
+
+## R68 (two last rows before submission, owner's budget: about one hour of wall-clock in total; 2026-10-26 07:55)
+
+The paper is at its stop; two cheap rows close the two objections a reviewer will raise first. Both declared now, before they run.
+Priority order; if the hour is not enough, finish (A) and run (B) with fewer seeds, and say so.
+
+**(A) The depth-invariant tagger (the objection: "MRC cannot answer an unseen question string by construction").** BERT-tiny pretrained,
+the tagger form of 2a (models/bert_basic.py), with ONE speaker label: X1 / X2 / X3 collapse to SPK in training; at decoding the level of
+each SPK token is its order of appearance (the first SPK is level 1), so level 3 is reachable without an untrained label. Fixed
+configuration (lr 1e-4, 5 epochs, batch 32), seeds 5-9, depth NOT given (the level count is the number of SPK tokens). Report: X3 slot
+accuracy, six-question exact match at depth 3, inner frame, confident error at depth 3, and the same on new formulations. Written now:
+if X3 >= 0.9 the paper states that a dedicated output head answers this particular composed question, and the claim stays the general
+one (any question composed of the legend's keys, with no head built for it); if X3 < 0.5, the example also stands against this head.
+A small code change (`--speaker_label single`) is allowed for this; default off.
+
+**(B) One real dataset (the objection: "a constructed, rule-solvable world").** SNIPS, the splits already frozen
+(data/real/splits_snips.json), the runs already written in RUNBOOK 8b / 8c, reduced to the budget:
+1. `./run.sh vss/run_reader_real.py --dataset snips --sizes full --seeds 3 --test --save_model`
+2. `./run.sh models/bert_real.py --dataset snips --model google/bert_uncased_L-2_H-128_A-2 --sizes full --seeds 3 --test --save_model`
+   (BERT-tiny, the equal-size encoder; its published lr / epochs for small BERTs, lr 1e-4, 10 epochs, no grid, stated)
+3. the same two with `--condition ood_intents --test` (the held-out intents as out-of-domain), 3 seeds.
+Report with the standard metrics as primary (intent accuracy, slot F1 conlleval-style, sentence exact match) and the head-token frame
+as secondary; for ood_intents: AUROC in-domain vs held-out intents of the reader's residual and margin against the tagger's MSP (and
+Mahalanobis if the saved model allows it), and the rejection at 2% false rejection on the dev calibration half. Written now: on SNIPS
+a pretrained encoder is expected to be above the reader on intent and slot F1 (the reader has no pretraining and reads heads); the
+rows report the gap and the cost as they are; the ood_intents row is the q-formalisation row on real data.
+
+Commit each result as it comes (so the paper can use what is done when the hour ends), then the usual RESULTS / STATUS lines. No other
+row starts.
