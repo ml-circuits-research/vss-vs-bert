@@ -1373,3 +1373,36 @@ at zero cost:
 Checked before this notice on the three worlds of the demo repository (`sop profile`, no training): reference world 78.3% same-kind
 competition (0% without a cue), commands world 0%, quantifier world 100%; the first `--activate auto` run (reference world, seed 0, CPU)
 is cited in the sync commit's SOURCE.
+
+## R75 (R71 accepted; R72 per-intent worlds: the configuration I asked for in R72 broke the dispatcher, fix and re-run; 2026-10-26 10:20)
+
+**R71 accepted as measured.** Reading: on SNIPS the kind of a word determines its question almost always (one slot type = one question),
+so on spans the reader can only lose against the typer (0.798 vs 0.886), and it did; what the reader adds there is the intent, the
+margins, the refusal and the residual, not the spans. The paper states it that way (typer's spans; reader's intent 0.977 vs 0.985; the
+residual separating held-out intents at 0.933-0.943 in the one-world configuration).
+
+**R72 as run cannot test the dispatcher, and the fault is in my wording.** R72 item 4 said "its kinds from the same typer (restricted to
+that world's slot kinds; other slot kinds map to O)", and vss/run_reader_real.py line 330 does exactly that. The effect: in every world the
+slot words of the other six intents become O, O is not a content kind, so the explained residual never counts them, and a wrong world
+explains an utterance as well as the right one. That is what the numbers say: residual AUROC held-out vs in-domain 0.555 (chance), zero
+rejections by the residual alone, dispatch intent 0.47-0.70 against 0.977 in one world, "rejected by every world" 20-27% in-domain
+through status alone. The level-W activation (every world reads, the vote is the residual) needs each world to be charged for the words
+it has no question for; mapping them to O removes the charge. Fix, declared before the re-run:
+1. **Keep every typer kind in every world's lexicon** (all 74 S: kinds; drop the restriction at line 330). A world's legend still has
+   only its own slot questions; a word of another intent's kind has no question in that world, is not placed, and raises that world's
+   explained residual (content_kinds_of counts a kind with 2+ lexicon words as content, so these kinds count).
+2. **Dispatch by the residual, status second.** Order the worlds by explained residual (ties by the largest minimum margin); a world's
+   frame status (`abstain` = a slot margin under tau) is a property of the answer inside the chosen world, not a reason to prefer
+   another world. Report intent accuracy on every utterance (the chosen world), and separately the share whose chosen frame abstains.
+3. **Rejection = every world's residual above its own calibration threshold** (the 98th percentile as now, on that world's own
+   training utterances read with the full lexicon). Keep "every status not ok" as a second line only.
+4. Same seeds, D 512, 10 epochs, three routes, as before. Both tables (one world R71, per-intent re-run) side by side; the per-intent
+   numbers of this round stay in RESULTS marked "configuration error (R72 wording), superseded by R75".
+Written before: with item 1 the residual AUROC should move well above 0.9 (the one-world residual already gives 0.933-0.943 and here
+each wrong world has whole slot phrases to leave unexplained); dispatch intent should approach the one-world 0.977, and the rejection of
+held-out intents should rise far above 0.49 while in-domain false rejection falls under 0.05. If item 1 does not move the AUROC, the
+level-W vote by residual is refuted on this data and the paper says so.
+
+**R74 profile lines accepted.** Three of seven worlds show same-kind competition (4-5%, all uncued: `vorder`'s need signal fires there,
+e.g. two artist or two playlist phrases in one utterance). Not acted on this round (R73), recorded as the signal that an order route
+would be tested there by `--activate auto`.
