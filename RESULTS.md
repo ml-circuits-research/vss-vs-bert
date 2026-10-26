@@ -2532,3 +2532,16 @@ AddToPlaylist (0.889 vs 0.867); overall 0.892 vs the typer's 0.886. Costs of C: 
 The demo exports the base worlds, so the reading by R88's rule is **line C** (sop @ 040d44e, presence_by_kind, presence_query,
 reader.spans kind_run, token_kinds = the typer's in-context kinds, admission sets from the in-context kinds >= 2%); stated with its
 costs: its refusal at 2% is lower (0.267 vs B 0.380 and A 0.460) and the ood_intents in-domain span F1 favours B by 0.006.
+
+## R85 seed 0 (corrected, logs/2026-10-26_1629_run_reader_real_a654e9a.txt; sop @ 82585ea, the version pinned for this row; MEASURED)
+
+The route's verb kinds: ['w:add'] (checked before training and printed by sop/train.py). Need signal (positive rows): fires, 44 rows
+(2.4%). Trials on 417 selection rows (a hashed tenth of the training rows + the world's dev calibration rows): path+chainL+bigram FULL
+0.528 (calibration_dev 0.440, train 0.552), + vorder 0.571 (0.460, 0.602); on the 4 selection rows with same-kind competition 0/4 for
+both. **Accepted by the acceptance rule of sop @ 82585ea** (no split lost, all selection rows won by more than the tolerance), with the
+diagnostic "4 selection rows with same-kind competition are still misread with the accepted bundle: no route separates them; a question
+is missing from the legend or this world should be split". **The gain is NOT on the marked rows** (0/4 before and after): the route won
+on the selection rows at large, not on the pairs its need signal names. The run's own residual dispatch: test intent 0.409 (R81 seed 0
+0.397), span F1 0.530 (0.520). Since this run, sop/activate.py (2f3806f, SOURCE 6c735f9) makes the acceptance a paired test; responses.md
+says nothing about it for this row, so seeds 1-2 run under the pinned 82585ea rule (launched); whether the paired test would change seed
+0's verdict cannot be computed from the run (the trial models are temporary).
