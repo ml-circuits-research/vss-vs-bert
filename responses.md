@@ -1323,3 +1323,23 @@ Declared row, now, before it runs (seeds 0-2, the same frozen splits and scorer 
    way the comparison with BERT-tiny is stated as "typer + reader (two small components trained on the same annotation) vs one
    fine-tuned encoder", with both sizes.
 Budget: the same order as R68 (B), under an hour. A small change to vss/run_reader_real.py (`--kinds typer`, default unchanged) is yours.
+
+## R72 (addition to R71: one world per intent, as the architecture is meant to be used; 2026-10-26 09:10)
+
+The owner points out a second mismatch: VSS is designed as several small worlds, one per purpose, each with its own legend, and a
+dispatcher that picks the clearest reading (status, margin, residual). R68 (B) read SNIPS as ONE world whose legend has 39 slot
+questions and 90 kinds (the quadratic pair tables are why the reader reached 24.5 M phases). Add, after R71 item 2 and in the same
+budget if it fits, the architecture's own configuration:
+4. **One world per SNIPS intent** (7 worlds): each legend has only that intent's slot types as questions (about 4-7), its kinds from the
+   same typer (restricted to that world's slot kinds; other slot kinds map to O), its reader trained on that intent's training
+   utterances only (D 512 is enough at this size; state it). Reading: all 7 readers read every utterance; the dispatcher keeps the
+   reading with the best status, then the smallest explained residual, then the largest minimum margin (sop/infer.py by-fit order).
+   The intent is the chosen world (no closed-value intent role); spans as in item 2.
+   Report: intent accuracy (= dispatch accuracy), span F1, head-frame exact, the two harder sets, the summed size of the 7 readers +
+   the typer, ms per utterance for all 7; on ood_intents (the held-out intents have NO world): the share of held-out-intent utterances
+   that every world rejects (residual above its calibration threshold, or no status ok), the AUROC of the best world's residual for
+   in-domain vs held-out, and the in-domain false rejection. That last row is the q-formalisation claim on real data: a request of an
+   unknown kind is refused because no world explains it.
+Written before: the per-world readers are expected to be smaller and their slot readout less crowded than the single world's; the
+dispatch may lose a little intent accuracy against the closed-value intent role. Whatever the numbers, both configurations (one world,
+7 worlds) are reported side by side. If the budget runs out, item 4 has priority over item 2's vorder variant.
