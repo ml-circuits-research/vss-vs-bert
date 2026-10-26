@@ -2144,3 +2144,25 @@ alone reaches 0.9: NOT met (0.863; every seed 0.851-0.877). By R80's rule, the p
 the demo, R78 (1) is not run on it, and option 2 (one-vs-rest negatives in training) is next, to be declared by the author; option 3
 stays the fallback. The calibrated residual (percentile) is worse than the raw one (0.659); the lexicographic and sum rules do not beat
 the anchor alone. R78 (1) remains on HOLD and was not started.
+
+## R81: one-vs-rest negatives in the per-intent worlds (DECLARED 2026-10-26, before the run)
+
+Configuration: R79's (seeds 0-2, D 512, 10 epochs, routes path + chainL + bigram, --world_kinds all, --intent_anchor, --dispatch residual,
+conditions base and ood_intents, one process per seed and condition, OMP_NUM_THREADS 3, nice 10), plus `--negatives`
+(vss/run_reader_real.py): in every per-intent world, negatives = the OTHER intents' training utterances of that condition, as many as the
+world's positives, sampled with np.random.default_rng(seed) without replacement, split "train", written in examples/negatives.sop with the
+anchor role only (`intent=I`) and `_negative=true`. Such a world is loaded, schema-built and trained by sop @ 82585ea end to end (target of
+a negative = minus its compiled state; negatives never enter the schema, the calibration rows or the threshold rows), with decoder
+"paper" so that config.json carries no contract keys and inference is unchanged from R79. Folders
+logs/worlds/real_snips_<condition>_intent_<I>_seed<s>_r81 (R79's kept). The run's own residual-dispatch results:
+logs/results_real_snips_*_reader_worlds_r81_full_seed{0,1,2}.json. Then eval/r80_dispatch.py --models r81 (CPU, R80's rules unchanged):
+results logs/results_real_snips_*_reader_worlds_r81r80_<rule>_full_seed{0,1,2}.json; primary = anchor-percentile dispatch; residual raw is
+the check (it must reproduce the run's own residual dispatch exactly); both rejection lines (every world's residual above its threshold;
+every world's anchor percentile under 0.02). Training time per world is printed for every world ([R81] lines, concurrent); the reference
+without negatives is R79's train_s per seed divided by the number of worlds (R79 printed no per-world time). A 1-epoch smoke test (seed
+9, ood_intents, 30 items per set; not a result, outputs deleted) trained every world with 1842-1900 negatives and ran every rule.
+
+Expectations written by R81 before the run: anchor dispatch >= 0.9 (one-world reference 0.977; if >= 0.95 the configuration is kept for
+the demo and R78 (1) runs on it); held-out rejection by the anchor line above R80's 0.28 at false rejection under 0.05; in-domain span F1
+not below R80's 0.802. If the anchor dispatch stays under 0.9: option 3 (the one-world intent as the gate, the per-world frame, refusal
+by the chosen world) is run as the last per-intent row, and the paper reports the per-intent vote as below the one-world reader.
