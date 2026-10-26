@@ -35,6 +35,8 @@ def evaluate(name, tag, cond, seed, size, preds, cal_ids, cal_preds, roles, vari
         row["sets"][k] = metrics.score_real(g, p, roles, taus, newp, [items[i]["depth"] for i in ids])
         if p and "spans" in p[0]: row["spans"][k] = metrics.span_f1([gold_spans(items[i]) for i in ids], [x["spans"] for x in p])
         if p and "spans_rule_on_gold" in p[0]: row["spans"][k + " [span rule on GOLD heads: its ceiling]"] = metrics.span_f1([gold_spans(items[i]) for i in ids], [x["spans_rule_on_gold"] for x in p])
+        for extra_k, label in (("spans_by_rule", " [spans by the rule, second line, R71]"), ("spans_typer_only", " [typer only, R71 item 1]")):   # additive (R71)
+            if p and extra_k in p[0]: row["spans"][k + label] = metrics.span_f1([gold_spans(items[i]) for i in ids], [x[extra_k] for x in p])
         if p and "status" in p[0]:
             st = {}
             for x in p: st[x["status"]] = st.get(x["status"], 0) + 1
@@ -42,6 +44,8 @@ def evaluate(name, tag, cond, seed, size, preds, cal_ids, cal_preds, roles, vari
     for k in [x for x in preds if x.startswith("ood:")]:        # threshold-free: does the intent margin separate in-domain from out-of-domain?
         ind = k.split(":", 1)[1] + ":in_domain"
         if ind in preds: row.setdefault("ood_auroc_intent_margin", {})[k] = auroc([x["margins"].get("intent", 0.0) for x in preds[ind]], [x["margins"].get("intent", 0.0) for x in preds[k]])
+        if ind in preds and preds[ind] and "residual" in preds[ind][0]:   # additive (R71): in-domain should have the SMALLER residual
+            row.setdefault("ood_auroc_residual", {})[k] = auroc([-x["residual"] for x in preds[ind]], [-x["residual"] for x in preds[k]])
     row.update(extra or {})
     for k, s in row["sets"].items():
         if s is None: continue

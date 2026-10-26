@@ -56,6 +56,51 @@ from sop.infer import Reader, idgen
 from common import real_data as rd, report_real
 from eval import metrics
 
+def load_typer():
+    """this repository's sop/typer.py (R71; the author's file, read only), loaded by path: the pinned tool is also a package named 'sop'"""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("sop_typer_r71", os.path.join(mainrepo.ROOT, "sop", "typer.py")); m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+
+def load_sop_repo():
+    """this repository's sop/ (the reader's single implementation since R58) as the package 'sop_repo', beside the pinned tool"""
+    import importlib.util
+    if "sop_repo" in sys.modules: return sys.modules["sop_repo"]
+    spec = importlib.util.spec_from_file_location("sop_repo", os.path.join(mainrepo.ROOT, "sop", "__init__.py"), submodule_search_locations=[os.path.join(mainrepo.ROOT, "sop")])
+    m = importlib.util.module_from_spec(spec); sys.modules["sop_repo"] = m; spec.loader.exec_module(m)
+    import importlib; importlib.import_module("sop_repo.infer"); return m
+
+def build_kinds_typer(cond, a):
+    """R71: the kinds learned from the TRAINING annotation by sop/typer.py (no evaluation label; text only for the lexicon): returns
+    ({word: kind}, typer)"""
+    T = load_typer(); items = cond["items"]
+    sents = [(items[i]["tokens"], [(t, s_, e) for t, s_, e, _ in items[i]["slots"]]) for i in cond["train"]]
+    ty = T.Typer(n_freq=a.n_freq, seed=0).fit(sents); lex = ty.lexicon([it["tokens"] for it in items.values()])
+    print(f"kinds (typer, R71): fitted on {len(sents)} training utterances (train accuracy {ty.train_acc:.3f}); {len(set(lex.values()))} kinds over {len(lex)} words; {ty.n_params()} typer weights")
+    return lex, ty, T
+
+def spans_by_typer(tokens, flat, ty, T):
+    """R71: the span of each decoded slot = kind_run over the typer's in-context kinds around the decoded head (its leftmost unused occurrence)"""
+    ks = ty.sentence_kinds(tokens); used, out = set(), []
+    for r, h in flat.items():
+        if r == "intent" or "/" in r or h == rd.NESTED: continue
+        js = [j for j, t in enumerate(tokens) if t == h and j not in used]
+        if not js: continue
+        s_, e = T.kind_run(ks, js[0])
+        if any(k in used for k in range(s_, e)): s_, e = js[0], js[0] + 1
+        used |= set(range(s_, e)); out.append((r, s_, e))
+    return out
+
+def spans_typer_only(tokens, ty):
+    """R71 item 1: spans = the maximal runs of one S: kind in the typer's in-context kinds (no reader)"""
+    ks = ty.sentence_kinds(tokens); out = []; j = 0
+    while j < len(ks):
+        if str(ks[j]).startswith("S:"):
+            e = j + 1
+            while e < len(ks) and ks[e] == ks[j]: e += 1
+            out.append((ks[j][2:], j, e)); j = e
+        else: j += 1
+    return out
+
 def role_id(t):
     """a slot type as a legend role id (^[A-Za-z][A-Za-z0-9_]*$): other characters -> '_', a leading non-letter gets 'r_'"""
     s = "".join(c if c.isalnum() or c == "_" else "_" for c in t)
@@ -227,6 +272,8 @@ def fit_nested(R, items, rmap, nk):
           f"{th.get('_pooled', float('nan')):.3f} ({len(P)} present / {len(Q)} absent cases), used for a role without its own (nor a top-level one)")
     return th
 
+TYPER = None   # (typer, module) when --kinds typer (R71)
+
 def predict(R, items, rinv, rates, th_nested=None, nested=False, nk=None, nth=None):
     out = []; g = idgen("e")
     for it in items:
@@ -240,7 +287,9 @@ def predict(R, items, rinv, rates, th_nested=None, nested=False, nk=None, nth=No
                 if fl is not None and fl[1] is not None: fr[name] = fl[1]; mg[name] = float(f["margins"].get(r, 0.0))
                 else: mg[name] = float(f["margins"].get(r + ".presence", 0.0))
         p = {"frame": fr, "margins": mg, "status": info["status"], "residual": float(info["residual"])}
-        if not nested:
+        if not nested and TYPER is not None:     # R71: spans from the typer's kinds around the decoded head; the rule kept as a second line
+            p["spans"] = spans_by_typer(it["tokens"], fr, *TYPER); p["spans_by_rule"] = spans_by_rule(it["tokens"], fr, rates); p["spans_typer_only"] = spans_typer_only(it["tokens"], TYPER[0])
+        elif not nested:
             p["spans"] = spans_by_rule(it["tokens"], fr, rates); p["spans_rule_on_gold"] = spans_by_rule(it["tokens"], report_real.gold_flat(it), rates)
         out.append(p)
     return out
@@ -262,6 +311,104 @@ def fit_nested_threshold(R, items, rmap):
     t = strain.fit_threshold(pos, neg); print(f"[nested] threshold {t:.3f} fitted on {len(pos)} nested / {len(neg)} word slots of the dev calibration half (mean {np.mean(pos):.3f} / {np.mean(neg):.3f})")
     return t
 
+def per_intent(cond, a, kinds, ty, T, ev):
+    """R72 item 4: one world per intent (its slot types only as questions; the typer's kinds with every other slot kind mapped to O; its
+    reader trained on that intent's training utterances only, D = --D, the three routes path + chainL + bigram, R73), read through this
+    repository's sop/ (the reference since R58; residual 'explained'); all worlds read every utterance; the DISPATCHER keeps the reading
+    with the best status (ok, then abstain, then the rest), then the smallest explained residual, then the largest minimum margin; the
+    intent is the chosen world. Rejection: every world rejects when each has a status other than ok or a residual above its own
+    threshold (the 98% quantile of its residual on its own intent's dev calibration utterances, rule 25)."""
+    SR = load_sop_repo(); items = cond["items"]; intents = sorted({items[i]["intent"] for i in cond["train"]})
+    print(f"[R72] {len(intents)} worlds (one per intent): {intents}; D {a.D}; routes path + chainL + bigram; decoder: sop @ {open(os.path.join(mainrepo.ROOT, 'sop', 'SOURCE')).read().strip()[:7]} (residual explained)")
+    rank = lambda st: {"ok": 0, "abstain": 1}.get(st, 2); allrows = []; all_types = set()
+    for seed in range(a.seeds):
+        worlds = {}; nparam = 0; t0 = time.time()
+        for I in intents:
+            tr = [i for i in cond["train"] if items[i]["intent"] == I]; cal = [i for i in cond["dev_cal"] if items[i]["intent"] == I]
+            types_ = sorted({sl["type"] for i in tr + cal for sl in items[i]["tree"]["slots"]}); all_types |= set(types_)
+            rmap = {t: role_id(t) for t in types_}; rinv = {v: k for k, v in rmap.items()}
+            kI = {w: (k if not str(k).startswith("S:") or k[2:] in types_ else "O") for w, k in kinds.items()}
+            wd = os.path.join(mainrepo.ROOT, "logs", "worlds", f"real_{a.dataset}_{a.condition}_intent_{I}_seed{seed}")
+            legend = {"version": 1, "roles": [{"id": rmap[t], "question": f"slot {t}"} for t in types_], "events": [{"id": "command", "verbs": ["command"]}], "operators": [],
+                      "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
+                      "reader": {"predicate_role": False, "occupancy_marker": True, "definite_dets": [], "no_sense_share": 1.0}}
+            if os.path.exists(wd): shutil.rmtree(wd)
+            for d in ("examples", "model", "runs"): os.makedirs(os.path.join(wd, d))
+            json.dump(legend, open(os.path.join(wd, "legend.json"), "w"), indent=1); sha = sha256_file(os.path.join(wd, "legend.json"))
+            with open(os.path.join(wd, "kinds.tsv"), "w") as f:
+                f.write(f"# word\tkind: the typer's kinds (R71), slot kinds of other intents mapped to O (R72 world {I})\n")
+                for w in sorted(kI): f.write(f"{w}\t{kI[w]}\n")
+            json.dump({"name": os.path.basename(wd), "language": "en", "description": f"{a.dataset}: the intent {I}", "version": 1}, open(os.path.join(wd, "world.json"), "w"), indent=1)
+            for fname, ids_ in (("train.sop", tr), ("calibration.sop", cal)):
+                doc = soplang.Doc(directives=[("world", os.path.basename(wd), None), ("legend", sha, None), ("generated", "vss/run_reader_real.py --worlds per_intent (R72)", None)]); g = idgen()
+                for i in ids_:
+                    it = items[i]; w = soplang.Wire(next(g), "command"); w.set("_text", " ".join(it["tokens"])); w.set("_item", it["id"]); seen = set()
+                    for sl in sorted(it["tree"]["slots"], key=lambda s_: s_["start"]):
+                        r = rmap[sl["type"]]
+                        if r in seen: continue
+                        seen.add(r); w.set(r, it["tokens"][sl["end"] - 1])
+                    doc.wires.append(w)
+                with open(os.path.join(wd, "examples", fname), "w") as f: f.write(soplang.write(doc))
+            L = Legend(os.path.join(wd, "legend.json"))
+            if L.errors: raise SystemExit(f"legend errors ({I}): " + "; ".join(L.errors))
+            rows, errors, _ = strain.load_rows(wd, L)
+            if errors: raise SystemExit(f"examples rejected ({I}):\n" + "\n".join(errors[:10]))
+            tset, cset = set(tr), set(cal); splits = collections.defaultdict(list)
+            for r in rows:
+                iid = r["wire"].value("_item"); r["split"] = "train" if iid in tset else ("calibration_dev" if iid in cset else "unused"); splits[r["split"]].append(r["id"])
+            trr = [r for r in rows if r["split"] == "train"]; schema = fix_schema(strain.build_schema(trr, L)); schema["content_kinds"] = sorted(strain.content_kinds_of(trr, L))
+            ns = types.SimpleNamespace(D=a.D, star_seed=f"seed{seed}", identities="stars", device=a.device, length_buckets=True, epochs=int(a.epochs.split(",")[-1]), batch=a.batch, shuffle=True,
+                                       max_train=0, code_list=["path", "chainL", "bigram"], no_ckpt=True, resume=False, log_every=500, lr=a.lr, n_cal=a.n_cal, tau=0.05,
+                                       world_name=os.path.basename(wd), language="en", commit=mainrepo.check_pinned(), depth_estimator="kinds", threshold_rule="fit", store_presence_ratios=False)
+            md = os.path.join(wd, "model_seed"); R, ex = strain.train_one(ns, L, rows, splits, schema, seed, md, os.path.join(wd, "runs"))
+            z = np.load(os.path.join(md, "routebook.npz")); np_ = int(sum(z[k].size for k in ("path", "bg0", "bg", "A", "L", "logits"))); nparam += np_
+            RR = SR.infer.Reader(md); RR.cfg["residual"] = "explained"
+            s0 = items[tr[0]]["tokens"]; d0 = float(np.linalg.norm(R.chart(s0)[0] - RR.chart(s0)[0]) / max(1e-9, np.linalg.norm(R.chart(s0)[0])))
+            worlds[I] = {"R": RR, "rinv": rinv, "rates": span_rates(cond, tr), "types": types_, "cal": cal, "params": np_}
+            print(f"[R72] seed {seed} world {I}: {len(tr)} training utterances, {len(types_)} slot questions, {len(set(kI.values()))} kinds, {np_ / 1e6:.2f} M phases; chart of sop/ vs the pinned tool: relative difference {d0:.1e}", flush=True)
+        t_train = time.time() - t0
+        def read_all(it):
+            text = " ".join(it["tokens"]); outs = {}
+            for I, W in worlds.items():
+                wires, f, info = W["R"].formalize(text, 0, SR.infer.idgen("e"), filt=set(it["tokens"]))
+                fr = {}
+                for r in W["R"].schema["role_order"]:
+                    fl = f["roles"].get(r)
+                    if fl is not None and fl[1] is not None: fr[W["rinv"].get(r, r)] = fl[1]
+                mm = [float(v) for v in f.get("margins", {}).values()]
+                outs[I] = {"frame": fr, "status": info["status"], "residual": float(info["residual"]), "min_margin": min(mm) if mm else 0.0,
+                           "margins": {W["rinv"].get(r, r): float(f["margins"].get(r, 0.0)) for r in W["R"].schema["role_order"]}}
+            return outs
+        thr = {}
+        for I, W in worlds.items():
+            res = [read_all(items[i])[I]["residual"] for i in W["cal"][:200]]; thr[I] = float(np.quantile(res, 0.98)) if res else 1.0
+        def predict_w(ids):
+            out = []
+            for i in ids:
+                it = items[i]; outs = read_all(it); order = sorted(outs, key=lambda I: (rank(outs[I]["status"]), outs[I]["residual"], -outs[I]["min_margin"]))
+                b = outs[order[0]]; fr = dict(b["frame"]); fr["intent"] = order[0]; mg = dict(b["margins"])
+                mg["intent"] = (outs[order[1]]["residual"] - b["residual"]) if len(order) > 1 else 1.0
+                rej = all(o["status"] != "ok" or o["residual"] > thr[I] for I, o in outs.items())
+                rej_res = all(o["residual"] > thr[I] for I, o in outs.items())          # second line: the residual alone, status ignored
+                p = {"frame": fr, "margins": mg, "status": b["status"], "residual": b["residual"], "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_res,
+                     "spans": spans_by_typer(it["tokens"], fr, ty, T), "spans_by_rule": spans_by_rule(it["tokens"], fr, worlds[order[0]]["rates"]), "spans_typer_only": spans_typer_only(it["tokens"], ty)}
+                out.append(p)
+            return out
+        cal_p = predict_w(cond["dev_cal"]); preds = {k: predict_w(ids) for k, ids in ev.items()}
+        sub = (ev.get("dev_rep") or next(iter(ev.values())))[:a.cost_n]; t1 = time.time(); predict_w(sub); ms_ = 1000 * (time.time() - t1) / max(1, len(sub))
+        rej = {k: float(np.mean([p["rejected_by_every_world"] for p in v])) for k, v in preds.items()}
+        rej_r = {k: float(np.mean([p["rejected_by_residual_alone"] for p in v])) for k, v in preds.items()}
+        cost = {"params_7_readers": nparam, "params_typer": ty.n_params(), "bytes_4bit_readers": nparam // 2, "cpu_ms_per_utterance_all_worlds": ms_, "train_s": round(t_train, 1), "D": a.D}
+        row = report_real.evaluate("VSS, one world per intent + dispatcher (R72)", "reader_worlds", cond, seed, None, preds, cond["dev_cal"], cal_p, sorted(all_types),
+                                   extra={"cost": cost, "rejected_by_every_world": rej, "rejected_by_residual_alone": rej_r, "world_thresholds": thr, "worlds": intents})
+        print(f"  seed {seed}: rejected by every world {rej}; by the residual alone {rej_r}; cost {nparam / 1e6:.2f} M phases (7 readers, D {a.D}) + {ty.n_params() / 1e6:.2f} M typer weights; {ms_:.1f} ms per utterance for all worlds", flush=True)
+        allrows.append(row)
+    report_real.summarize(allrows, "VSS, one world per intent + dispatcher (R72)")
+    ms = lambda xs: f"{np.mean(xs):.3f} ± {np.std(xs):.3f} [{' '.join(f'{x:.3f}' for x in xs)}]"
+    for k in allrows[0]["rejected_by_every_world"]: print(f"  rejected by every world, {k}: {ms([r['rejected_by_every_world'][k] for r in allrows])}")
+    for k in allrows[0]["rejected_by_residual_alone"]: print(f"  rejected by the residual of every world (status ignored), {k}: {ms([r['rejected_by_residual_alone'][k] for r in allrows])}")
+    metrics.checklist(a.seeds, "[x] worlds from the training annotation only [x] thresholds on the dev calibration half [x] three routes only (R73)")
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--dataset", required=True, choices=rd.DATASETS); ap.add_argument("--condition", default="base"); ap.add_argument("--locale", default="en-US")
@@ -271,6 +418,8 @@ if __name__ == "__main__":
     ap.add_argument("--n_cal", type=int, default=400); ap.add_argument("--device", default="cuda"); ap.add_argument("--test", action="store_true")
     ap.add_argument("--max_eval", type=int, default=None, help="smoke tests only: the first n items of each eval set"); ap.add_argument("--max_train", type=int, default=None, help="smoke tests only")
     ap.add_argument("--cost_n", type=int, default=200); ap.add_argument("--save_model", action="store_true", help="copy the seed-0 model/ folder of each size to logs/models/")
+    ap.add_argument("--kinds", default="skipgram", choices=["skipgram", "typer"], help="R71: 'typer' = the kinds learned from the training annotation by sop/typer.py (default: the skip-gram clusters)")
+    ap.add_argument("--worlds", default="one", choices=["one", "per_intent"], help="R72 item 4: one world per intent with the dispatcher (needs --kinds typer)")
     a = ap.parse_args(); dev_ = a.device
     cond = rd.load_condition(a.dataset, a.condition, a.locale); items = cond["items"]
     if a.max_train: cond["train_order"] = cond["train_order"][:a.max_train]; keep = set(cond["train_order"]); cond["train"] = [i for i in cond["train"] if i in keep]
@@ -281,7 +430,12 @@ if __name__ == "__main__":
           f"sizes {sizes}, epochs {eps}; seeds {a.seeds}; train {len(cond['train'])}, dev calibration {len(cond['dev_cal'])}; eval " + ", ".join(f"{k} {len(v)}" for k, v in report_real.eval_sets(cond, a.test).items()))
     print("regime (rule 24): real utterances, the dataset's own annotation; head-token frame (intent + the LAST token of the first span of each slot type); "
           "the intent as a closed-value role, slots as roles with the occupancy marker; thresholds on the dev calibration half; test only with --test" + ("; nested intents read by the wrapper" if nested else ""))
-    kinds = build_kinds(cond, a, dev_); ev = report_real.eval_sets(cond, a.test, a.max_eval)
+    if a.kinds == "typer": kinds, ty_, T_ = build_kinds_typer(cond, a); TYPER = (ty_, T_)
+    else: kinds = build_kinds(cond, a, dev_)
+    ev = report_real.eval_sets(cond, a.test, a.max_eval)
+    if a.worlds == "per_intent":
+        assert a.kinds == "typer", "--worlds per_intent needs --kinds typer (R72)"
+        per_intent(cond, a, kinds, ty_, T_, ev); sys.exit(0)
     allrows = []
     for size in sizes:
         n = len(cond["train"]) if size == "full" else int(size); train_ids = cond["train_order"][:n] if a.condition == "base" else cond["train"]
