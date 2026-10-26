@@ -179,9 +179,17 @@ def build_schema(rows, legend):
             rs["det_kinds"] = sorted({legend.kind(d) for d in dt if legend.kind(d)}); rs["det_rate"] = len(dt) / len(ents)
         roles[r] = rs
     setr = set(legend.reader.get("set_roles") or [])
-    core = [r for r, rs in roles.items() if rs["rate"] >= 0.95 and r not in setr] or ([max((r for r in roles if r not in setr), key=lambda r: roles[r]["rate"])] if roles else [])
+    core = [r for r, rs in roles.items() if rs["rate"] >= 0.95 and r not in setr]
+    anchor = "core roles" if core else ("predicate" if legend.reader["predicate_role"] else None)
+    if not core and not legend.reader["predicate_role"]:
+        # R79: a world with no always-present question has no structure anchor: the structure score falls back to the mean over every
+        # role's top (weak when most roles are absent) and no frame is 'incomplete' by a role. Declare an anchor instead: a closed-value
+        # role present in every example (an intent / world marker), or a predicate role. Rounds before R79 silently took the most
+        # frequent role as the core, which made frames incomplete whenever that optional role was absent (SNIPS per-intent worlds, R75).
+        print(f"[schema] WARNING: no question is present in >= 95% of the training rows and no predicate role: no structure anchor; "
+              f"declare one (a closed-value role present in every example, or reader.predicate_role); structure score = mean over all roles")
     sk = sorted({legend.kind(s) for f in ok for s in f["speakers"] if s and legend.kind(s)})
-    return {"roles": roles, "role_order": [r for r in legend.roles if r in roles], "core_roles": core, "speaker_kinds": sk,
+    return {"roles": roles, "role_order": [r for r in legend.roles if r in roles], "core_roles": core, "structure_anchor": anchor, "speaker_kinds": sk,
             "max_depth": max([len(f["speakers"]) for f in ok] or [0]), "neg_event": any(f["neg"] for f in ok),
             "single_event": next(iter(legend.events)) if len(legend.events) == 1 else None,
             "unsupported_shapes": dict(collections.Counter(r["frame"]["shape"] for r in rows if r["frame"]["shape"] != "ok"))}

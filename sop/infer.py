@@ -218,7 +218,10 @@ class Reader:
         return self.best(Sn * key, self.cands(rs["kinds"], filt))
 
     def structure_score(self, Sn, K, filt=None):
-        tops = [self._filler_top(Sn, K * np.conj(self.st.role(r)), r, filt)[2] for r in self.schema["core_roles"]]
+        """the anchor every presence ratio is divided by: the mean top of the core roles (present in >= 95% of the training rows) and of
+        the predicate; a world with neither (R79) falls back to the mean over every role, which is weak when most roles are absent"""
+        core = self.schema["core_roles"] or ([] if self.legend.reader["predicate_role"] else self.schema["role_order"])
+        tops = [self._filler_top(Sn, K * np.conj(self.st.role(r)), r, filt)[2] for r in core]
         if self.legend.reader["predicate_role"]: tops.append(self.best(Sn * K * np.conj(self.st.op("pred")), self.verb_cands())[2])
         return float(np.mean(tops)) if tops else 0.0
 
