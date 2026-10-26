@@ -2313,3 +2313,24 @@ undecided_adjacent. Conditions base and ood_intents for A and B, seeds 0-2. Whic
 abstention down; dispatch and spans unchanged. Results logs/results_real_snips_<condition>_reader_worlds_r81r80[_contract |
 _presence_query]_<rule>_full_seed<s>.json. Seen before the run in a 40-item smoke test (seed 0, base, B; not a result): the chosen frame
 abstained on every dev_rep utterance under B, which the C line is there to explain.
+
+## R85: the activation test on AddToPlaylist with the command verbs declared (DECLARED 2026-10-26, before the run; vss/run_reader_real.py --activate auto --declare_verbs --retrain_worlds AddToPlaylist)
+
+R83 paragraph (R85's, as written): what fails = the same-kind slot pairs (two artists, two playlists) in AddToPlaylist (2.4% of its
+training rows, the only world where `vorder`'s need signal fires with the typer's kinds, at every seed); cause = no address separates
+them (no cue, no verb category: the per-intent legends declared only the event verb `command`, no word of the utterances); change =
+the intent's command verbs declared as lemmas of `command` (predicate_role stays false, so the readout does not change, only the route's
+verb categories), and `vorder` decided by sop activate.py's acceptance test; expected to move = span F1 on the competing rows of
+AddToPlaylist, so the world's span F1 by at most about 0.02. Reading of R85, stated before the run (confirmed by the coordinator): R85
+names add / put; the route marks verb CATEGORIES (sop/train.py: the kinds of every declared verb lemma), and "put" has the typer kind O,
+so declaring it would make every O word a verb for the route; only verbs whose typer kind is their own (w:<verb>) are declared, here
+"add" (w:add); "put" is left out (sop/train.py cannot declare a lemma without marking its kind; sop/ is not edited).
+Row: the R81 configuration (D 512, 10 epochs, --world_kinds all, --intent_anchor, --negatives, condition base), seed 0 first; only
+AddToPlaylist is trained (the acceptance test: trials path+chainL+bigram vs + vorder on the training rows minus a hashed tenth, scored on
+the selection rows = that tenth + the world's dev calibration rows; negatives are never scored; then the final model with the accepted
+codes); the six other worlds copy their R81 models and keep their R81 legends. The vorder model class is the reference
+sop/v8_gates_vorder_ref.py (set_vorder) in place of the pinned v8_gates, which has no vorder route. sop @ 82585ea (scratch copy of repo
+commit 07d7947's sop/, the R81 version). Folders logs/worlds/real_snips_base_intent_<I>_seed0_r85act; the run's activation.json in the
+AddToPlaylist folder. Reading: eval/r80_dispatch.py --models r85act (anchor rule primary) and eval/r78_readout.py for AddToPlaylist's
+span F1 against R81's. Three seeds only if seed 0 accepts the route; if seed 0 rejects it, the outcome is reported as "need signal
+fired on one world, route rejected".
