@@ -1954,3 +1954,29 @@ held-out intents BERT-tiny's intent margin separates in- from out-of-domain bett
 hour, stated: the AUROC of the reader's residual (the scripts store the intent-margin AUROC only) and BERT-tiny's Mahalanobis score;
 the 2% threshold row above is the scripts' frame-margin rule. The ood_intents row is the q-formalisation row on real data as R68 wrote:
 both models leave nearly every held-out-intent sentence below their frame threshold (coverage 0.02-0.03).
+
+## R71: SNIPS with the kinds learned from the training annotation (vss/run_reader_real.py --kinds typer; logs/2026-10-26_0904_ (base) and _0906_run_reader_real_df8fc3c.txt (ood_intents); results logs/results_real_snips_*_reader_typer_full_seed*.json; MEASURED)
+
+sop/typer.py (sop @ bb6db1b; the author's file, loaded by path) fitted on the training annotation only (13,084 utterances, train
+accuracy 0.985; 74 kinds over 12,162 words; 2.69 M weights; the lexicon from the text of every utterance); the reader as R68 (B) (D
+1,024, 10 epochs, path + chainL + bigram, no vorder: R73); spans = kind_run around the decoded head (the rule kept as a second line);
+3 seeds (0-2), concurrent (times are not cost numbers). BERT-tiny's rows from R68 (B) beside.
+
+| test set | measure | typer only (item 1) | typer + reader (item 2) [per seed] | same, spans by the rule | R68 (B) reader (skip-gram kinds) | BERT-tiny |
+|---|---|---|---|---|---|---|
+| test (700) | span F1 | **0.886** | 0.798 ± 0.010 [0.810 0.799 0.785] | 0.594 | 0.387 | 0.831 |
+| test (700) | intent accuracy | — | 0.977 ± 0.001 | | 0.976 | 0.985 |
+| test (700) | head-token frame exact (secondary) | — | 0.505 ± 0.030 | | 0.135 | 0.715 |
+| new slot values (207) | span F1 / intent | 0.858 / — | 0.757 / 0.977 | 0.556 | 0.270 / 0.986 | 0.783 / 0.992 |
+| unseen templates (402) | span F1 / intent | 0.876 / — | 0.773 / 0.964 | 0.575 | 0.342 / 0.964 | 0.805 / 0.975 |
+| ood_intents, in-domain test (600) | span F1 / intent | 0.870 / — | 0.782 / 0.981 | 0.597 | 0.418 / 0.971 | 0.823 / 0.985 |
+| held-out intents vs in-domain (test) | AUROC | — | **residual 0.933 ± 0.007**; intent margin 0.939 ± 0.004 | | intent margin 0.951 | intent margin 0.982 |
+
+Cost: the reader 17.4 M phases (64.5 MB fp32, 8.7 MB at 4 bits; 14.8 M on ood_intents) + the typer 2.69 M weights, against BERT-tiny
+4.4 M; CPU 7.0 ms per sentence for the reader (concurrent). Reading, as R71 wrote it before the run: the typer + reader's span F1
+(0.798) is BELOW the typer alone (0.886), so **the reader's role readout loses information the kinds carried, and the paper reports the
+typer + reader with the typer's spans**; stated as "typer + reader (two small components trained on the same annotation) vs one
+fine-tuned encoder": the typer's spans are above BERT-tiny's (0.886 vs 0.831; new slot values 0.858 vs 0.783; unseen templates 0.876 vs
+0.805), the reader's intent slightly below (0.977 vs 0.985), the head-token frame below (0.505 vs 0.715), and the size larger (17.4 M +
+2.7 M against 4.4 M). On held-out intents the reader's residual separates them at AUROC 0.933 and its intent margin at 0.939, both
+below BERT-tiny's intent margin (0.982).
