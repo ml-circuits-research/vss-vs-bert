@@ -2222,3 +2222,19 @@ showed the anchor percentile saturating: one threshold for all three targets). P
 on dev_cal; realised dev_cal false rejection; on test the held-out rejection and the in-domain false rejection; dev_rep as second lines;
 AUROC held-out vs in-domain. Results logs/results_r84_oppoints_<condition>_seed<s>.json. The 40-item smoke test is not a result (its
 output was deleted).
+
+## R84 item 2, first part: the per-world readout of the R81 configuration (DECLARED 2026-10-26, before the run; eval/r78_readout.py; no training)
+
+R83 paragraph (this part trains nothing; it is the "what fails" record for the activation part). What fails: span F1 typer + reader
+0.824 against the typer alone 0.886 (R81, base test), head-frame exact 0.565. Where the cause is, as candidates to be separated by this
+row: the dispatch (wrong world), or the readout of the right world (a question missed, a wrong head, a false fill), and among readout
+losses the questions with same-kind competition (R78's first suspect, the need signal of `vorder`). What is changed: nothing (a
+measurement). Which number is expected to move: none; R84 expects the loss to be concentrated in roles with same-kind competition.
+Row: CPU, the saved R81 base models of seeds 0-2, sop @ 82585ea; sets test (700) and dev_rep (350). Per world (gold intent): span F1 of
+the typer alone vs typer + reader with the dispatched world (anchor percentile) and with the gold intent's world (oracle); per question:
+span F1 typer vs reader (oracle), right head / wrong head / missed / false fill against the gold head frame, the question's same-kind
+competition share on the world's positive training rows; per world: the need signals (sop activate.profile / need_signals at 82585ea)
+and the most frequent unplaced words. Results logs/results_r78_readout_base_seed<s>.json. A 60-item smoke test (seed 0) is not a result.
+Noted before the run, from the smoke test: `vorder`'s need signal fires on AddToPlaylist only at seed 0 (2.4% of its rows), not on the
+three worlds of R74 (which used the hand kinds); and the per-intent legends declare the event verb `command` only, which is no word of
+the utterances, so the verb-order route would find no verb category (set_vorder returns the verb categories found).
