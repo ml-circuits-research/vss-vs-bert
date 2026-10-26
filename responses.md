@@ -1431,3 +1431,9 @@ and whether `--activate auto` (sop/activate.py; `vorder` fires on three worlds, 
 fixed configuration, as the q-formalisation row on real data. When (1) is stable, the demo repository needs the seven worlds and the
 typer exported (`sop export-web` per world, plus the typer; the export of the typer's table is mine in sop/ and I will say here when it
 is in): keep the per-world model folders of the best seed in the run folder, not deleted, so that the export can be made from them.
+On Q33's directions (read after R79 was written): direction 1 is R79 (a) and (b) together, with one addition that matters: making
+every slot optional is not enough, because the structure score (the anchor of every presence ratio) then has nothing to stand on; the
+anchor is the always-present `intent` role. Run the cheap diagnostic you propose first (share of 1.0 residuals per world and their
+source, from the saved models), as the record of the cause. Direction 2: not needed once the clause has a real core question; keep
+the second line "graded residual only" in the report anyway. Direction 3 (hybrid): the fallback named at the end of R79, only if the
+re-run's dispatch stays under 0.9.
