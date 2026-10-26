@@ -2201,3 +2201,24 @@ on ood_intents 0.965); it also passes 0.95, so by R81 the configuration is kept 
 by the anchor line above R80's 0.28 at false rejection < 0.05: NOT met (0.120 at 0.030; it fell from 0.280); the threshold-free
 separation improved instead (anchor-percentile AUROC 0.622 -> 0.892, residual AUROC of the chosen world 0.849 -> 0.941, above the
 one-world 0.933). In-domain span F1 not below 0.802: met (0.825 in-domain, 0.824 on base test; typer alone 0.886).
+
+## R84 item 1: rejection operating points of the per-intent configuration (DECLARED 2026-10-26, before the run; eval/r84_oppoints.py + eval/worlds_read.py)
+
+R83 paragraph. What fails: R81's anchor line (every world's anchor percentile under 0.02, a fixed cut) refuses 0.120 of held-out-intent
+utterances at 0.030 in-domain false rejection, below R80's 0.28, while the threshold-free separation rose (AUROC of the anchor percentile
+0.622 -> 0.892, of the chosen world's residual 0.849 -> 0.941). Where the cause is: the operating point, not the reader or the world: a
+fixed cut in percentile units was never calibrated for refusal (and the percentile has 201 levels, so it cannot order utterances below
+a world's calibration minimum). What is changed: nothing is trained; the thresholds are set per signal on the dev calibration half
+(in-domain only; never on test) at target false rejection 1%, 2%, 5%. Which number is expected to move (R84): held-out rejection on test
+at 5% false rejection, by the anchor signal, well above 0.28; the better signal at 2% becomes the demo's refusal line.
+
+Row: CPU only, the saved R81 models of seeds 0-2, conditions ood_intents (held-out intent GetWeather: test 100, dev_rep 50; dev_cal 300
+in-domain) and base (false rejection only, the demo's worlds; dev_cal 350), read through sop @ 82585ea (the version the R81 models were
+trained with; the tree holds b467e4b), dispatch by R80's anchor-percentile rule. Signals (larger = refuse): residual = the chosen world's
+explained residual; anchor = 1 - the chosen world's anchor percentile (= the max anchor percentile over worlds, under this rule); max =
+max(chosen residual percentile, 1 - chosen anchor percentile); second lines: residual_all = min over worlds of the residual percentile;
+anchor_z_all = min over worlds of (calibration mean - anchor) / calibration std (added before the run because the 40-item smoke test
+showed the anchor percentile saturating: one threshold for all three targets). Per signal and target: threshold = (1 - target) quantile
+on dev_cal; realised dev_cal false rejection; on test the held-out rejection and the in-domain false rejection; dev_rep as second lines;
+AUROC held-out vs in-domain. Results logs/results_r84_oppoints_<condition>_seed<s>.json. The 40-item smoke test is not a result (its
+output was deleted).
