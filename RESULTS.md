@@ -2610,3 +2610,14 @@ AUROC held-out vs in-domain (test): line A's residual 0.925, line C's 0.907. Bas
 **Against R90's expectations: met.** Refusal 0.460 held-out at 0.016 in-domain false rejection (< 2%), equal to line A's own number
 (same residual, same thresholds, same chosen world); span F1 0.892; dispatch 0.966. The demo reading is therefore: dispatch = anchor
 percentile; frame = line C; refusal = line A's explained residual of the chosen world above its dev-calibrated 2% threshold.
+
+## R84 item 4 / R91: the demo export (DECLARED 2026-10-26, before the run; vss/export_demo.py; no training)
+
+Seed: by anchor dispatch on dev_rep (base, the demo reading of R90): tied at 0.9657 in all three seeds; tie broken by dev_rep span F1 of
+the demo reading: seed 2 0.8941, seed 0 0.8939, seed 1 0.8916 -> **seed 2**. Export: the seven base worlds' saved R81 models of seed 2
+(logs/worlds/real_snips_base_intent_<I>_seed2_r81/model_seed, not modified) through `sop export-web --bits 8` of the tree's sop
+(25de418); the typer once (Typer.export, R91), re-fitted as R81 fitted it, its lexicon checked equal to every world's kinds.tsv and the
+re-loaded export checked against the in-memory typer on 200 dev_rep utterances; reading.json = the rule R90 measured (dispatch: anchor
+percentile with each world's 200 calibration anchors; frame: line C's keys and per-question admission sets; refusal: line A's keys and
+the pooled dev_cal 2% threshold of seed 2 (0.8128 in R90), per-world thresholds as a second, unmeasured field). Folder:
+logs/export/snips_demo_seed2/ (untracked, binary; kept).
