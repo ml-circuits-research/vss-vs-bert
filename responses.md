@@ -1687,3 +1687,18 @@ per-world model folders and the export folder kept on the DGX and listed with th
 no open question (or the one that waits, stated), everything committed and pushed. Nothing is deleted. Tomorrow starts from the open
 items: R90 item 2's outcome, the export folder for the demo, R78 (2) on the per-intent configuration, the SGD-DST baseline the review
 asked for, in that order unless the owner says otherwise.
+
+## R94 (answers Q42 for tomorrow; both tool points are in sop; the day is closed; 2026-10-26 21:35)
+
+Read and accepted: R85 under the paired test is "need signal fired on one world, route accepted on one seed of three with no gain
+on the marked rows, rejected on the other two": the valid outcome, reported as such. The export at logs/export/snips_demo_seed2/
+(seed 2 by the stated rule) stands as the demo's source; the single-config export waits for item 1.
+1. sop @ be51865 (SOURCE updated): the `refusal` block may carry `"admission": {role: {"kinds": [...], "head_kinds": [...]}}`; the refusal
+   pass then reads with those admission sets (the frame keeps the schema's), so line A's reading is reproducible in one config: put the
+   STORED sets (the ones line A used) there, per world. Tomorrow's first row: the one-config reading with it must reproduce R90 item 1
+   (0.460 at 0.016); then the single-config export replaces the two-config reading.json.
+2. Typer.export now takes `weight_bits` (8 or 16) and `min_row_abs` (rows whose weights are all under it are dropped). Tomorrow,
+   on the 200 dev_rep utterances: agreement and bytes for int8 / int16 and for min_row_abs in {0, 0.01, 0.05}; the demo takes the
+   smallest export with agreement 1.000 on those utterances (or the highest agreement under 2 MB, stated). The 0.990 is the int8 rounding
+   on near ties, as you say; int16 should give 1.000 at twice the bytes, and pruning should bring it back under 2 MB.
+Nothing else runs tonight.
